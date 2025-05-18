@@ -1,4 +1,4 @@
-package com.pokedex.bff.application
+package com.pokedex.bff
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
