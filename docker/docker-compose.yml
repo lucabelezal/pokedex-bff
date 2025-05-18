@@ -1,22 +1,9 @@
 version: '3.8'
 
 services:
-  pokedex-bff:
-    build: .
-    container_name: pokedex-bff
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-    environment:
-      SPRING_PROFILES_ACTIVE: dev
-    networks:
-      - pokedex-network
-
-  db:
-    image: postgres:15
+  postgres:
+    image: postgres:15-alpine
     container_name: postgres-db
-    restart: always
     environment:
       POSTGRES_DB: pokedex
       POSTGRES_USER: postgres
@@ -25,11 +12,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    networks:
-      - pokedex-network
-
-networks:
-  pokedex-network:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres-data:

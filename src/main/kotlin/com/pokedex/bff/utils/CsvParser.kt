@@ -13,9 +13,7 @@ object CsvParser {
                 .setSkipHeaderRecord(true)
                 .build()
             CSVParser(reader, format).use { parser ->
-                return parser.records.map { record ->
-                    record.toMap()
-                }
+                return parser.records.map { it.toMap() }
             }
         }
     }
