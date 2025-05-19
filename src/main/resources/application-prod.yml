@@ -1,16 +1,21 @@
 spring:
+  config:
+    activate:
+      on-profile: prod
   datasource:
-    url: jdbc:postgresql://db:5432/pokedex
-    username: postgres
-    password: postgres
+    url: jdbc:postgresql://postgres-db:5432/pokedex
+    username: ${DB_USER:postgres}  # Pega do .env ou usa 'admin' como fallback
+    password: ${DB_PASSWORD:postgres}
+    hikari:
+      maximum-pool-size: 10
+      connection-timeout: 30000
+
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: false
-  jackson:
-    serialization:
-      indent_output: true
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+      ddl-auto: validate  # Nunca altera schema automaticamente em produção
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics

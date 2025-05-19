@@ -1,13 +1,5 @@
-#spring:
-#  profiles:
-#    active: dev
-
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/pokedex
-    username: postgres
-    password: postgres
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update # Para desenvolvimento
+  application:
+    name: pokedex-bff
+server:
+  port: 8080
