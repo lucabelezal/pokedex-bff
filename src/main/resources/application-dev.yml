@@ -1,21 +1,22 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/pokedex
+    url: jdbc:postgresql://localhost:5432/pokedex_db
     username: postgres
     password: postgres
-    driver-class-name: org.postgresql.Driver
-    hikari:
-      maximum-pool-size: 3
-
   jpa:
-    hibernate:
-      ddl-auto: update # Permite atualizações automáticas do schema
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        hbm2ddl:
+          auto: update   # Pode ser 'update', 'create', 'create-drop' ou 'validate'
 
 logging:
   level:
-    org.hibernate.SQL: DEBUG
-    com.pokedex: DEBUG
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
