@@ -4,12 +4,16 @@ spring:
     username: postgres
     password: postgres
   jpa:
+    hibernate:
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
         format_sql: true
-        hbm2ddl:
-          auto: update   # Pode ser 'update', 'create', 'create-drop' ou 'validate'
+
+data:
+  csv:
+    path: ./docker/data/csv/pokemon.csv
 
 logging:
   level:

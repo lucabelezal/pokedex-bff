@@ -33,3 +33,4 @@ data class Pokemon(
     @Column(name = "is_default")
     val isDefault: Boolean
 )
+
