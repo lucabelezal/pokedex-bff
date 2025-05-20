@@ -1,17 +1,18 @@
 version: '3.8'
 
 services:
-  postgres:
-    image: postgres:16-alpine
+  db:
+    image: postgres:16
     container_name: pokedex-db
-    ports:
-      - "5432:5432"
     environment:
+      POSTGRES_DB: pokedex_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: pokedex_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/db-scripts/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
 
 volumes:
   postgres_data:

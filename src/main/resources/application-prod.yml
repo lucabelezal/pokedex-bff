@@ -4,7 +4,7 @@ spring:
       on-profile: prod
   datasource:
     url: jdbc:postgresql://postgres-db:5432/pokedex
-    username: ${DB_USER:postgres}  # Pega do .env ou usa 'admin' como fallback
+    username: ${DB_USER:postgres}
     password: ${DB_PASSWORD:postgres}
     hikari:
       maximum-pool-size: 10
@@ -12,10 +12,10 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate  # Nunca altera schema automaticamente em produção
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,info,metrics
+      ddl-auto: validate
+    properties:
+      hibernate:
+        connection.provider_disables_autocommit: true
+        jdbc:
+          batch_size: 50
+          order_inserts: true
