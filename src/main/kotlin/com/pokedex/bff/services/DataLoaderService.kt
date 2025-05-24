@@ -28,7 +28,7 @@ class DataLoaderService(
 
             // Nível 0: Tabelas sem dependências de FK para outras tabelas
             loadTable("regions.csv", "regions", listOf("id", "identifier"))
-            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier"))
+            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier")) // Corrected path/name
             loadTable("super_contest_effects.csv", "super_contest_effects", listOf("id", "appeal"))
             loadTable("move_targets.csv", "move_targets", listOf("id", "identifier"))
             loadTable("move_effects.csv", "move_effects", listOf("id"))
@@ -40,7 +40,7 @@ class DataLoaderService(
             loadTable("pokemon_habitats.csv", "pokemon_habitats", listOf("id", "identifier"))
             loadTable("contest_types.csv", "contest_types", listOf("id", "identifier"))
             loadTable("contest_effects.csv", "contest_effects", listOf("id", "appeal", "jam"))
-            loadTable("flavors.csv", "flavors", listOf("id", "identifier"))
+            loadTable("flavors.csv", "flavors", listOf("id", "identifier")) // This is the ONLY place flavors should be loaded
             loadTable("pokemon_move_methods.csv", "pokemon_move_methods", listOf("id", "identifier"))
             loadTable("item_categories.csv", "item_categories", listOf("id", "pocket_id", "identifier"))
             loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "display_order"))
@@ -91,7 +91,8 @@ class DataLoaderService(
             loadTable("pokemon_types.csv", "pokemon_types", listOf("pokemon_id", "type_id", "slot"))
             loadTable("pokemon_abilities.csv", "pokemon_abilities", listOf("pokemon_id", "ability_id"))
             loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("pokemon_species_id", "egg_group_id"))
-            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor_id"))
+            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor")) // Changed "flavor_id" to "flavor"
+            // REMOVIDO: loadTable("flavors.csv", "flavors", listOf("id", "identifier")) // DUPLICADO E FORA DE ORDEM
             loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
             loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect"))
             loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
@@ -183,7 +184,7 @@ class DataLoaderService(
                         "growth_rate_id", "forms_switchable", "is_legendary", "is_mythical", "order_index",
                         "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
                         "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
-                        "egg_group_id", "berry_id", "flavor_id", "version_group_id",
+                        "egg_group_id", "berry_id", "contest_type_id", "flavor", "version_group_id", // Changed "flavor_id" to "flavor"
                         "language_id", "item_id", "category_id", "cost", "fling_power",
                         "fling_effect_id", "level", "pokemon_move_method_id", "move_id",
                         "game_index", "gene_mod_5", "decreased_stat_id", "increased_stat_id",
