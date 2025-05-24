@@ -77,12 +77,22 @@ run-bff:
 # Comandos de Orquestração Completa
 # ==============================================================================
 
-setup-dev: load-data
-	@echo "==================================================================="
-	@echo " Ambiente de desenvolvimento completo iniciado! "
-	@echo " PostgreSQL rodando como 'pokedex-db' na porta 5432."
-	@echo " BFF rodando (e dados carregados) na porta 8080."
-	@echo "==================================================================="
+# Target para iniciar o ambiente de desenvolvimento
+setup-dev:
+	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
+	docker compose -f docker/docker-compose.dev.yml up -d db
+	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
+	sleep 5 # Ajuste conforme necessário
+	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db' para status detalhado."
+	@echo "--- Iniciando o BFF e carregando dados CSV no DB ---"
+	./gradlew bootRun --args='--spring.profiles.active=dev' # <--- AJUSTADO: REMOVIDO 'cd PASTA_BFF' E USANDO '--args'
+
+# setup-dev: load-data
+# 	@echo "==================================================================="
+# 	@echo " Ambiente de desenvolvimento completo iniciado! "
+# 	@echo " PostgreSQL rodando como 'pokedex-db' na porta 5432."
+# 	@echo " BFF rodando (e dados carregados) na porta 8080."
+# 	@echo "==================================================================="
 
 clean-all: stop-db clean-db clean-bff
 	@echo "==================================================================="
@@ -94,3 +104,19 @@ force-remove-db-container:
 	-docker stop pokedex-db || true
 	-docker rm pokedex-db || true
 	@echo "Contêiner 'pokedex-db' removido (se existia). Tente 'make setup-dev' novamente."
+
+deep-clean-gradle:
+	@echo "--- Realizando limpeza profunda do Gradle (incluindo caches) ---"
+	./gradlew clean --refresh-dependencies --no-build-cache
+	rm -rf build .gradle
+	@echo "--- Limpeza profunda do Gradle concluída. ---"
+
+# Target para parar e remover tudo (DB e builds do projeto)
+clean-all: deep-clean-gradle # Agora clean-all depende de deep-clean-gradle
+	@echo "--- Parando o contêiner do banco de dados PostgreSQL ---"
+	docker compose -f docker/docker-compose.dev.yml stop db
+	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
+	docker compose -f docker/docker-compose.dev.yml down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
+	@echo "==================================================================="
+	@echo " Todos os contêineres, volumes e builds limpos. "
+	@echo "==================================================================="
