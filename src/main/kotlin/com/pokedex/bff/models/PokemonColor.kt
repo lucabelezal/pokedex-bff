@@ -3,11 +3,11 @@
 //import jakarta.persistence.*
 //
 //@Entity
-//@Table(name = "regions")
-//data class Region(
+//@Table(name = "pokemon_colors")
+//data class PokemonColor(
 //    @Id
 //    val id: Int,
 //
-//    @Column(nullable = false)
+//    @Column(name = "identifier")
 //    val identifier: String
 //)

@@ -17,17 +17,25 @@ class CsvUploadController(
     private val csvImportService: CsvImportService
 ) {
     @PostMapping("/import")
-    fun uploadCsv(@RequestParam("file") file: MultipartFile): ResponseEntity<String> {
+    fun uploadCsv(
+        @RequestParam("file") file: MultipartFile,
+        @RequestParam("tableName") tableName: String // Adicionado o parâmetro tableName
+    ): ResponseEntity<String> {
         if (file.isEmpty) {
             return ResponseEntity.badRequest().body("O arquivo está vazio.")
         }
         try {
-            csvImportService.importPokemonFromCsv(file.inputStream)
-            return ResponseEntity.ok("CSV importado com sucesso.")
+            // AQUI ESTÁ A MUDANÇA: Chamando o novo método e passando o tableName
+            val insertedCount = csvImportService.importCsvForTable(tableName, file.inputStream)
+            return ResponseEntity.ok("CSV para a tabela '$tableName' importado com sucesso. $insertedCount linhas inseridas.")
+        } catch (e: IllegalArgumentException) {
+            // Captura erros de tableName inválido ou mapeamento não encontrado
+            return ResponseEntity.badRequest().body("Erro: ${e.message}")
         } catch (e: IOException) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao ler o arquivo: ${e.message}")
         } catch (e: Exception) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro durante a importação do CSV: ${e.message}")
+            // Para capturar NumberFormatException, DataIntegrityViolationException, etc.
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro durante a importação do CSV para a tabela '$tableName': ${e.message}")
         }
     }
 
