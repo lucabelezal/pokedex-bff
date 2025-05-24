@@ -43,7 +43,7 @@ class DataLoaderService(
             loadTable("flavors.csv", "flavors", listOf("id", "identifier"))
             loadTable("pokemon_move_methods.csv", "pokemon_move_methods", listOf("id", "identifier"))
             loadTable("item_categories.csv", "item_categories", listOf("id", "pocket_id", "identifier"))
-            loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "order"))
+            loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "display_order"))
 
 
             // Nível 1: Tabelas que dependem apenas das tabelas de Nível 0
@@ -55,7 +55,7 @@ class DataLoaderService(
             loadTable("natures.csv", "natures", listOf("id", "identifier", "decreased_stat_id", "increased_stat_id", "hates_flavor_id", "likes_flavor_id", "game_index"))
             loadTable("items.csv", "items", listOf("id", "identifier", "category_id", "cost", "fling_power", "fling_effect_id"))
             loadTable("locations.csv", "locations", listOf("id", "region_id", "identifier"))
-            loadTable("version_groups.csv", "version_groups", listOf("id", "identifier", "generation_id", "order"))
+            loadTable("version_groups.csv", "version_groups", listOf("id", "identifier", "generation_id", "group_order"))
             loadTable("evolution_chains.csv", "evolution_chains", listOf("id", "baby_trigger_item_id"))
             loadTable("berries.csv", "berries", listOf("id", "identifier", "growth_time", "max_harvest", "natural_gift_power", "size", "smoothness", "item_id"))
 
@@ -95,7 +95,7 @@ class DataLoaderService(
             loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
             loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect"))
             loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
-            loadTable("pokemon_moves.csv", "pokemon_moves", listOf("pokemon_id", "version_group_id", "move_id", "pokemon_move_method_id", "level", "order", "mastery"))
+            loadTable("pokemon_moves.csv", "pokemon_moves", listOf("pokemon_id", "version_group_id", "move_id", "pokemon_move_method_id", "level", "move_order", "mastery"))
 
 
             println("===================================================================")
@@ -189,7 +189,7 @@ class DataLoaderService(
                         "game_index", "gene_mod_5", "decreased_stat_id", "increased_stat_id",
                         "hates_flavor_id", "likes_flavor_id", "pocket_id", "growth_time",
                         "max_harvest", "natural_gift_power", "size", "smoothness",
-                        "local_language_id", "order" -> {
+                        "local_language_id", "display_order" -> {
                             value.toIntOrNull() // Tenta converter para Int
                         }
                         "is_battle_only", "is_baby", "has_gender_differences", "forms_switchable",
