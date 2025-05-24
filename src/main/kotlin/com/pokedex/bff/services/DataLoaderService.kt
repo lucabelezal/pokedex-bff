@@ -28,7 +28,7 @@ class DataLoaderService(
 
             // Nível 0: Tabelas sem dependências de FK para outras tabelas
             loadTable("regions.csv", "regions", listOf("id", "identifier"))
-            loadTable("damage_classes.csv", "damage_classes", listOf("id", "identifier"))
+            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier"))
             loadTable("super_contest_effects.csv", "super_contest_effects", listOf("id", "appeal"))
             loadTable("move_targets.csv", "move_targets", listOf("id", "identifier"))
             loadTable("move_effects.csv", "move_effects", listOf("id"))
