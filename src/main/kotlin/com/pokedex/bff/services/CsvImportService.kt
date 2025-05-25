@@ -6,11 +6,15 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.slf4j.LoggerFactory
+import org.springframework.data.jpa.domain.AbstractPersistable_
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
+import org.springframework.data.jpa.domain.AbstractPersistable_.id
+
+
 
 @Service
 class CsvImportService(
@@ -41,7 +45,7 @@ class CsvImportService(
     private val pokemonFormRepository: PokemonFormRepository,
     private val pokemonStatRepository: PokemonStatRepository,
     private val pokemonTypeRepository: PokemonTypeRepository,
-    private val abilityRepository: AbilityRepository, // <-- CORREÇÃO AQUI: era 'AbilityRepositor'
+    private val abilityRepository: AbilityRepository,
     private val pokemonAbilityRepository: PokemonAbilityRepository,
     private val pokemonEggGroupRepository: PokemonEggGroupRepository,
     private val locationRepository: LocationRepository,
@@ -410,13 +414,15 @@ class CsvImportService(
         "berries" to (berryRepository to { record ->
             Berry(
                 id = record.get("id").toInt(),
-                identifier = record.get("identifier"),
                 growthTime = record.get("growth_time").toIntOrNull(),
                 maxHarvest = record.get("max_harvest").toIntOrNull(),
                 naturalGiftPower = record.get("natural_gift_power").toIntOrNull(),
                 size = record.get("size").toIntOrNull(),
                 smoothness = record.get("smoothness").toIntOrNull(),
-                itemId = record.get("item_id").toIntOrNull()
+                firmnessId = record.get("firmness_id").toIntOrNull(),
+                itemId = record.get("item_id").toIntOrNull(),
+                naturalGiftTypeId = record.get("natural_gift_type_id").toIntOrNull(),
+                soilDryness = record.get("soil_dryness").toIntOrNull()
             )
         }),
         "berry_flavors" to (berryFlavorRepository to { record ->

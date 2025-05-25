@@ -5,12 +5,11 @@
 # ==============================================================================
 # Caminho para o arquivo Docker Compose de desenvolvimento
 DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
-# Removida: BFF_PROJECT_DIR não é mais necessária.
 
 # ==============================================================================
 # Comandos PHONY (Garante que os targets são comandos, não arquivos)
 # ==============================================================================
-.PHONY: help setup-dev start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container
+.PHONY: help setup-dev start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle
 
 # ==============================================================================
 # Comandos de Ajuda
@@ -19,6 +18,8 @@ help:
 	@echo "==================================================================="
 	@echo "                 Comandos do Makefile para Pokedex BFF             "
 	@echo "==================================================================="
+	@echo "  make help                   - Exibe esta mensagem de ajuda."
+	@echo ""
 	@echo "  make setup-dev              - Configura e inicia o ambiente de desenvolvimento completo:"
 	@echo "                                  1. Inicia o PostgreSQL via Docker Compose."
 	@echo "                                  2. Aguarda o DB estar acessível."
@@ -34,8 +35,9 @@ help:
 	@echo "  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo)."
 	@echo ""
 	@echo "  make clean-all              - Limpa o ambiente de desenvolvimento completo:"
-	@echo "                                  1. Para o DB. 2. Remove o DB e seus volumes. 3. Limpa o BFF."
+	@echo "                                  1. Para o DB. 2. Remove o DB e seus volumes. 3. Limpa o BFF (incluindo caches do Gradle)."
 	@echo "  make force-remove-db-container - Força a remoção de um contêiner 'pokedex-db' órfão ou travado."
+	@echo "  make deep-clean-gradle      - Realiza uma limpeza profunda dos caches e artefatos do Gradle."
 	@echo "==================================================================="
 
 # ==============================================================================
@@ -55,7 +57,7 @@ stop-db:
 
 clean-db:
 	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
+	docker compose -f $(Docker_Compose_File) down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
 
 # ==============================================================================
 # Comandos do BFF (Spring Boot/Kotlin)
@@ -63,38 +65,30 @@ clean-db:
 
 clean-bff:
 	@echo "--- Limpando o projeto BFF (gradle clean) ---"
-	./gradlew clean # <--- AJUSTADO: REMOVIDO 'cd PASTA_BFF'
+	./gradlew clean
 
 load-data: start-db
 	@echo "--- Iniciando o BFF e carregando dados CSV no DB ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev' # <--- AJUSTADO: REMOVIDO 'cd PASTA_BFF' E USANDO '--args'
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 run-bff:
 	@echo "--- Iniciando o BFF ---"
-	./gradlew bootRun # <--- AJUSTADO: REMOVIDO 'cd PASTA_BFF'
+	./gradlew bootRun
 
 # ==============================================================================
 # Comandos de Orquestração Completa
 # ==============================================================================
 
-# Target para iniciar o ambiente de desenvolvimento
 setup-dev:
 	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker/docker-compose.dev.yml up -d db
+	docker compose -f $(DOCKER_COMPOSE_FILE) up -d db
 	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
 	sleep 5 # Ajuste conforme necessário
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db' para status detalhado."
 	@echo "--- Iniciando o BFF e carregando dados CSV no DB ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev' # <--- AJUSTADO: REMOVIDO 'cd PASTA_BFF' E USANDO '--args'
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
-# setup-dev: load-data
-# 	@echo "==================================================================="
-# 	@echo " Ambiente de desenvolvimento completo iniciado! "
-# 	@echo " PostgreSQL rodando como 'pokedex-db' na porta 5432."
-# 	@echo " BFF rodando (e dados carregados) na porta 8080."
-# 	@echo "==================================================================="
-
-clean-all: stop-db clean-db clean-bff
+clean-all: deep-clean-gradle stop-db clean-db
 	@echo "==================================================================="
 	@echo " Todos os contêineres, volumes e builds limpos. "
 	@echo "==================================================================="
@@ -110,13 +104,3 @@ deep-clean-gradle:
 	./gradlew clean --refresh-dependencies --no-build-cache
 	rm -rf build .gradle
 	@echo "--- Limpeza profunda do Gradle concluída. ---"
-
-# Target para parar e remover tudo (DB e builds do projeto)
-clean-all: deep-clean-gradle # Agora clean-all depende de deep-clean-gradle
-	@echo "--- Parando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker/docker-compose.dev.yml stop db
-	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
-	docker compose -f docker/docker-compose.dev.yml down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
-	@echo "==================================================================="
-	@echo " Todos os contêineres, volumes e builds limpos. "
-	@echo "==================================================================="

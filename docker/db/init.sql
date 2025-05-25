@@ -15,7 +15,6 @@ DROP TABLE IF EXISTS natures CASCADE;
 DROP TABLE IF EXISTS characteristics CASCADE;
 DROP TABLE IF EXISTS types CASCADE;
 DROP TABLE IF EXISTS stats CASCADE;
-DROP TABLE IF EXISTS abilities CASCADE;
 DROP TABLE IF EXISTS pokemon CASCADE;
 DROP TABLE IF EXISTS pokemon_species CASCADE;
 DROP TABLE IF EXISTS evolution_chains CASCADE;
@@ -31,17 +30,18 @@ DROP TABLE IF EXISTS move_targets CASCADE;
 DROP TABLE IF EXISTS contest_types CASCADE;
 DROP TABLE IF EXISTS contest_effects CASCADE;
 DROP TABLE IF EXISTS super_contest_effects CASCADE;
-DROP TABLE IF EXISTS languages CASCADE;
-DROP TABLE IF EXISTS flavors CASCADE;
-DROP TABLE IF EXISTS item_categories CASCADE;
-DROP TABLE IF EXISTS items CASCADE;
-DROP TABLE IF EXISTS pokemon_move_methods CASCADE;
 DROP TABLE IF EXISTS versions CASCADE;
 DROP TABLE IF EXISTS version_groups CASCADE;
 DROP TABLE IF EXISTS locations CASCADE;
 DROP TABLE IF EXISTS regions CASCADE;
 DROP TABLE IF EXISTS berries CASCADE;
 DROP TABLE IF EXISTS berry_flavors CASCADE;
+DROP TABLE IF EXISTS flavors CASCADE;
+DROP TABLE IF EXISTS items CASCADE;
+DROP TABLE IF EXISTS item_categories CASCADE;
+DROP TABLE IF EXISTS abilities CASCADE;
+DROP TABLE IF EXISTS pokemon_move_methods CASCADE;
+DROP TABLE IF EXISTS languages CASCADE;
 
 
 -- Basic Tables
@@ -147,7 +147,7 @@ CREATE TABLE languages (
   iso3166 VARCHAR(255) NOT NULL,
   identifier VARCHAR(255) NOT NULL,
   official BOOLEAN NOT NULL,
-  display_order INT -- Renomeado de "order" para "display_order"
+  display_order INT
 );
 
 CREATE TABLE move_effect_prose (
@@ -158,6 +158,18 @@ CREATE TABLE move_effect_prose (
   PRIMARY KEY (move_effect_id, local_language_id),
   CONSTRAINT fk_move_effect_prose_effect FOREIGN KEY (move_effect_id) REFERENCES move_effects(id),
   CONSTRAINT fk_move_effect_prose_language FOREIGN KEY (local_language_id) REFERENCES languages(id)
+);
+
+-- Contests (Moved up as referenced by moves)
+CREATE TABLE contest_types (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE contest_effects (
+  id INT PRIMARY KEY,
+  appeal INT NOT NULL,
+  jam INT NOT NULL
 );
 
 CREATE TABLE moves (
@@ -204,7 +216,7 @@ CREATE TABLE pokemon_habitats (
 
 CREATE TABLE evolution_chains (
   id INT PRIMARY KEY,
-  baby_trigger_item_id INT -- FK for items, will be added after items
+  baby_trigger_item_id INT
 );
 
 CREATE TABLE pokemon_species (
@@ -253,8 +265,16 @@ CREATE TABLE version_groups (
   id INT PRIMARY KEY,
   identifier VARCHAR(255) NOT NULL,
   generation_id INT NOT NULL,
-  group_order INT, -- Renomeado de "order" para "group_order"
+  group_order INT,
   CONSTRAINT fk_version_groups_generation FOREIGN KEY (generation_id) REFERENCES generations(id)
+);
+
+-- ADDED versions table
+CREATE TABLE versions (
+  id INT PRIMARY KEY,
+  version_group_id INT NOT NULL,
+  identifier VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_versions_version_group FOREIGN KEY (version_group_id) REFERENCES version_groups(id)
 );
 
 CREATE TABLE pokemon_forms (
@@ -292,6 +312,15 @@ CREATE TABLE pokemon_types (
   CONSTRAINT fk_pokemon_types_type FOREIGN KEY (type_id) REFERENCES types(id)
 );
 
+-- Moved abilities table definition here for correct FK referencing
+CREATE TABLE abilities (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  is_main_series BOOLEAN,
+  CONSTRAINT fk_abilities_generation FOREIGN KEY (generation_id) REFERENCES generations(id)
+);
+
 CREATE TABLE pokemon_abilities (
   pokemon_id INT NOT NULL,
   ability_id INT NOT NULL,
@@ -303,7 +332,7 @@ CREATE TABLE pokemon_abilities (
 CREATE TABLE pokemon_egg_groups (
   pokemon_species_id INT NOT NULL,
   egg_group_id INT NOT NULL,
-  PRIMARY   KEY (pokemon_species_id, egg_group_id),
+  PRIMARY KEY (pokemon_species_id, egg_group_id),
   CONSTRAINT fk_pokemon_egg_groups_species FOREIGN KEY (pokemon_species_id) REFERENCES pokemon_species(id),
   CONSTRAINT fk_pokemon_egg_groups_egg_group FOREIGN KEY (egg_group_id) REFERENCES egg_groups(id)
 );
@@ -324,22 +353,10 @@ CREATE TABLE pokemon_location_areas (
   CONSTRAINT fk_pokemon_location_areas_location FOREIGN KEY (location_id) REFERENCES locations(id)
 );
 
--- Contests
-CREATE TABLE contest_types (
-  id INT PRIMARY KEY,
-  identifier VARCHAR(255) NOT NULL
-);
-
-CREATE TABLE contest_effects (
-  id INT PRIMARY KEY,
-  appeal INT NOT NULL,
-  jam INT NOT NULL
-);
-
--- Items and Item Categories
+-- Items and Item Categories (Moved item_categories before items)
 CREATE TABLE item_categories (
   id INT PRIMARY KEY,
-  pocket_id INT, -- Assuming 'pockets' would be another table if needed
+  pocket_id INT,
   identifier VARCHAR(255) NOT NULL
 );
 
@@ -354,14 +371,6 @@ CREATE TABLE items (
 );
 
 -- Abilities and their Texts
-CREATE TABLE abilities (
-  id INT PRIMARY KEY,
-  identifier VARCHAR(255) NOT NULL,
-  generation_id INT NOT NULL,
-  is_main_series BOOLEAN,
-  CONSTRAINT fk_abilities_generation FOREIGN KEY (generation_id) REFERENCES generations(id)
-);
-
 CREATE TABLE ability_prose (
   ability_id INT NOT NULL,
   local_language_id INT NOT NULL,
@@ -394,7 +403,7 @@ CREATE TABLE pokemon_moves (
   move_id INT NOT NULL,
   pokemon_move_method_id INT NOT NULL,
   level INT NOT NULL,
-  move_order INT, -- Renomeado de "order" para "move_order"
+  move_order INT,
   mastery INT,
   PRIMARY KEY (pokemon_id, version_group_id, move_id, pokemon_move_method_id),
   CONSTRAINT fk_pokemon_moves_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
@@ -406,13 +415,15 @@ CREATE TABLE pokemon_moves (
 -- Berries and their Flavors
 CREATE TABLE berries (
   id INT PRIMARY KEY,
-  identifier VARCHAR(255) NOT NULL,
   growth_time INT,
   max_harvest INT,
   natural_gift_power INT,
   size INT,
   smoothness INT,
   item_id INT,
+  firmness_id INT,
+  natural_gift_type_id INT,
+  soil_dryness INT,
   CONSTRAINT fk_berries_item FOREIGN KEY (item_id) REFERENCES items(id)
 );
 

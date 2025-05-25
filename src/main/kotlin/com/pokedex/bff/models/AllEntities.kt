@@ -424,6 +424,20 @@ data class VersionGroup(
 )
 
 @Entity
+@Table(name = "versions") // Nova tabela adicionada
+data class Version(
+    @Id
+    @Column(name = "id")
+    val id: Int,
+
+    @Column(name = "version_group_id")
+    val versionGroupId: Int,
+
+    @Column(name = "identifier")
+    val identifier: String
+)
+
+@Entity
 @Table(name = "pokemon_forms")
 data class PokemonForm(
     @Id
@@ -586,9 +600,6 @@ data class Berry(
     @Column(name = "id")
     val id: Int,
 
-    @Column(name = "identifier")
-    val identifier: String,
-
     @Column(name = "growth_time")
     val growthTime: Int?,
 
@@ -604,8 +615,17 @@ data class Berry(
     @Column(name = "smoothness")
     val smoothness: Int?,
 
+    @Column(name = "firmness_id")
+    val firmnessId: Int?,
+
     @Column(name = "item_id")
-    val itemId: Int?
+    val itemId: Int?,
+
+    @Column(name = "natural_gift_type_id")
+    val naturalGiftTypeId: Int?,
+
+    @Column(name = "soil_dryness")
+    val soilDryness: Int?
 )
 
 // --- Classes @Embeddable para Chaves Compostas ---
