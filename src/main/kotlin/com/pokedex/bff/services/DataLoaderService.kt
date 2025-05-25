@@ -14,21 +14,53 @@ class DataLoaderService(
     @Value("\${app.csv.location}") private val csvFilesLocation: String
 ) : CommandLineRunner {
 
-    // Este método é executado automaticamente quando a aplicação Spring Boot é iniciada
+    // Optimized set of column names that should be converted to Int
+    private val intColumns = setOf(
+        "id", "appeal", "jam", "main_region_id", "generation_id",
+        "damage_class_id", "power", "pp", "accuracy", "priority",
+        "target_id", "effect_id", "effect_chance", "contest_type_id",
+        "contest_effect_id", "super_contest_effect_id", "evolves_from_species_id",
+        "evolution_chain_id", "color_id", "shape_id", "habitat_id",
+        "gender_rate", "capture_rate", "base_happiness", "hatch_counter",
+        "growth_rate_id", "forms_switchable", "is_legendary", "is_mythical", "order_index",
+        "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
+        "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
+        "egg_group_id", "berry_id", "flavor_id", "version_group_id",
+        "language_id", "item_id", "category_id", "cost", "fling_power",
+        "fling_effect_id", "level", "pokemon_move_method_id", "move_id",
+        "game_index", "gene_mod_5", "decreased_stat_id", "increased_stat_id",
+        "hates_flavor_id", "likes_flavor_id", "pocket_id", "growth_time",
+        "max_harvest", "natural_gift_power", "size", "smoothness",
+        "local_language_id", "display_order", "region_id", "group_order",
+        "baby_trigger_item_id", "move_effect_id", "pokemon_id", "introduced_in_version_group_id",
+        "firmness_id", "natural_gift_type_id", "soil_dryness"
+    )
+
+    // Optimized set of boolean column names
+    private val booleanColumns = setOf(
+        "is_battle_only", "is_baby", "has_gender_differences", "forms_switchable",
+        "is_legendary", "is_mythical", "is_default", "is_main_series",
+        "is_mega", "official"
+    )
+
+    /**
+     * This method runs automatically when the Spring Boot application starts.
+     * It orchestrates the loading of data from CSV files into the database.
+     */
     override fun run(vararg args: String?) {
         println("===================================================================")
-        println(" Iniciando o carregamento de dados do CSV para o banco de dados...")
-        println(" Localização dos CSVs: $csvFilesLocation")
+        println(" Starting CSV data loading into the database...")
+        println(" CSVs location: $csvFilesLocation")
         println("===================================================================")
 
         try {
-            // *** ORDEM DE CARREGAMENTO É CRÍTICA DEVIDO ÀS CHAVES ESTRANGEIRAS ***
-            // Carregue as tabelas "pai" primeiro (que não dependem de outras tabelas),
-            // depois as tabelas "filhas" que dependem das tabelas pai, e assim por diante.
+            // *** LOADING ORDER IS CRITICAL DUE TO FOREIGN KEY CONSTRAINTS ***
+            // Load "parent" tables first (those without foreign key dependencies on other tables),
+            // then "child" tables that depend on parent tables, and so on.
 
-            // Nível 0: Tabelas sem dependências de FK para outras tabelas
+            // Level 0: Tables without FK dependencies on other tables
             loadTable("regions.csv", "regions", listOf("id", "identifier"))
-            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier")) // Corrected path/name
+            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier"))
             loadTable("super_contest_effects.csv", "super_contest_effects", listOf("id", "appeal"))
             loadTable("move_targets.csv", "move_targets", listOf("id", "identifier"))
             loadTable("move_effects.csv", "move_effects", listOf("id"))
@@ -40,13 +72,13 @@ class DataLoaderService(
             loadTable("pokemon_habitats.csv", "pokemon_habitats", listOf("id", "identifier"))
             loadTable("contest_types.csv", "contest_types", listOf("id", "identifier"))
             loadTable("contest_effects.csv", "contest_effects", listOf("id", "appeal", "jam"))
-            loadTable("flavors.csv", "flavors", listOf("id", "identifier")) // This is the ONLY place flavors should be loaded
+            loadTable("flavors.csv", "flavors", listOf("id", "identifier"))
             loadTable("pokemon_move_methods.csv", "pokemon_move_methods", listOf("id", "identifier"))
             loadTable("item_categories.csv", "item_categories", listOf("id", "pocket_id", "identifier"))
             loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "display_order"))
 
 
-            // Nível 1: Tabelas que dependem apenas das tabelas de Nível 0
+            // Level 1: Tables that only depend on Level 0 tables
             loadTable("generations.csv", "generations", listOf("id", "main_region_id", "identifier"))
             loadTable("types.csv", "types", listOf("id", "identifier", "generation_id", "damage_class_id"))
             loadTable("stats.csv", "stats", listOf("id", "damage_class_id", "identifier", "is_battle_only", "game_index"))
@@ -57,10 +89,10 @@ class DataLoaderService(
             loadTable("locations.csv", "locations", listOf("id", "region_id", "identifier"))
             loadTable("version_groups.csv", "version_groups", listOf("id", "identifier", "generation_id", "group_order"))
             loadTable("evolution_chains.csv", "evolution_chains", listOf("id", "baby_trigger_item_id"))
-            loadTable("berries.csv", "berries", listOf("id", "identifier", "growth_time", "max_harvest", "natural_gift_power", "size", "smoothness", "item_id"))
+            loadTable("berries.csv", "berries", listOf("id", "item_id", "firmness_id", "natural_gift_power", "natural_gift_type_id", "size", "max_harvest", "growth_time", "soil_dryness", "smoothness"))
 
 
-            // Nível 2: Tabelas com dependências de Nível 1 ou PKs compostas
+            // Level 2: Tables with dependencies on Level 1 or composite primary keys
             loadTable("move_effect_prose.csv", "move_effect_prose", listOf("move_effect_id", "local_language_id", "short_effect", "effect"))
             loadTable("moves.csv", "moves", listOf(
                 "id", "identifier", "generation_id", "type_id", "power", "pp",
@@ -84,15 +116,12 @@ class DataLoaderService(
             ))
 
 
-            // Nível 3: Tabelas de junção com PKs compostas ou dependências de Nível 2
-            // ATENÇÃO: As cláusulas ON CONFLICT para tabelas com PK composta DEVEM ser
-            // ajustadas na função `getInsertSql` ou tratadas individualmente.
+            // Level 3: Join tables with composite primary keys or Level 2 dependencies
             loadTable("pokemon_stats.csv", "pokemon_stats", listOf("pokemon_id", "stat_id", "base_stat", "effort"))
             loadTable("pokemon_types.csv", "pokemon_types", listOf("pokemon_id", "type_id", "slot"))
             loadTable("pokemon_abilities.csv", "pokemon_abilities", listOf("pokemon_id", "ability_id"))
             loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("pokemon_species_id", "egg_group_id"))
-            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor")) // Changed "flavor_id" to "flavor"
-            // REMOVIDO: loadTable("flavors.csv", "flavors", listOf("id", "identifier")) // DUPLICADO E FORA DE ORDEM
+            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor_id"))
             loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
             loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect"))
             loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
@@ -100,147 +129,125 @@ class DataLoaderService(
 
 
             println("===================================================================")
-            println(" Carregamento de dados concluído com sucesso!")
+            println(" Data loading completed successfully!")
             println("===================================================================")
 
         } catch (e: Exception) {
             System.err.println("===================================================================")
-            System.err.println(" ERRO DURANTE O CARREGAMENTO DE DADOS:")
-            System.err.println(" Mensagem: ${e.message}")
-            System.err.println(" Por favor, verifique:")
-            System.err.println(" 1. A ordem de carregamento dos CSVs (chaves estrangeiras).")
-            System.err.println(" 2. Os nomes das colunas nos CSVs e no código.")
-            System.err.println(" 3. Os tipos de dados nos CSVs versus os tipos no DB.")
-            System.err.println(" 4. As cláusulas ON CONFLICT para chaves primárias compostas.")
+            System.err.println(" ERROR DURING DATA LOADING:")
+            System.err.println(" Message: ${e.message}")
+            System.err.println(" Please check:")
+            System.err.println(" 1. The loading order of CSVs (foreign keys).")
+            System.err.println(" 2. Column names in CSVs and in the code.")
+            System.err.println(" 3. Data types in CSVs versus database types.")
+            System.err.println(" 4. ON CONFLICT clauses for composite primary keys.")
             System.err.println("===================================================================")
             e.printStackTrace()
-            // Em caso de erro fatal na inicialização, você pode querer lançar uma exceção para
-            // impedir que a aplicação continue com dados incompletos ou incorretos.
-            throw RuntimeException("Falha ao carregar dados iniciais.", e)
+            throw RuntimeException("Failed to load initial data.", e)
         }
     }
 
     /**
-     * Carrega dados de um arquivo CSV para uma tabela do banco de dados.
-     * @param csvFileName O nome do arquivo CSV (ex: "regions.csv").
-     * @param tableName O nome da tabela no banco de dados.
-     * @param columnNames A lista de nomes das colunas na ordem em que aparecem no CSV e na tabela.
+     * Loads data from a CSV file into a database table.
+     * @param csvFileName The name of the CSV file (e.g., "regions.csv").
+     * @param tableName The name of the database table.
+     * @param columnNames The list of column names in the order they appear in the CSV and the table.
      */
     private fun loadTable(csvFileName: String, tableName: String, columnNames: List<String>) {
         val csvFile = File(csvFilesLocation, csvFileName)
         if (!csvFile.exists()) {
-            println("AVISO: Arquivo CSV não encontrado para $tableName em $csvFile. Pulando carregamento.")
+            println("WARNING: CSV file not found for $tableName at $csvFile. Skipping load.")
             return
         }
 
-        println("  -> Carregando '$csvFileName' para a tabela '$tableName'...")
+        println("  -> Loading '$csvFileName' into table '$tableName'...")
 
         val insertSql = getInsertSql(tableName, columnNames)
         val batchArgs = mutableListOf<Array<Any?>>()
         var lineCount = 0
 
-        // --- INÍCIO DA CORREÇÃO: Lendo todas as linhas para uma lista ---
         val allLines = csvFile.readLines(StandardCharsets.UTF_8)
         if (allLines.isEmpty()) {
-            System.err.println("  ERRO: CSV '$csvFileName' está vazio.")
+            System.err.println("  ERROR: CSV '$csvFileName' is empty.")
             return
         }
 
         val header = allLines.first().split(",").map { it.trim() }
-        val dataLines = allLines.drop(1) // As linhas de dados sem o cabeçalho
+        val dataLines = allLines.drop(1)
 
         if (header.isEmpty()) {
-            System.err.println("  ERRO: CSV '$csvFileName' sem cabeçalho.")
+            System.err.println("  ERROR: CSV '$csvFileName' has no header.")
             return
         }
-        // Verifica se todas as colunas esperadas estão no cabeçalho do CSV
         if (!columnNames.all { it in header }) {
             val missingCols = columnNames.filter { it !in header }
-            System.err.println("  ERRO: CSV '$csvFileName' não contém todas as colunas esperadas: $missingCols. Cabeçalho CSV: $header")
+            System.err.println("  ERROR: CSV '$csvFileName' does not contain all expected columns: $missingCols. CSV Header: $header")
             return
         }
 
-        for (line in dataLines) { // Iterando sobre a lista de linhas de dados
+        for (line in dataLines) {
             if (line.isBlank()) continue
 
             lineCount++
             val values = line.split(",").map { it.trim() }
+            if (values.size != header.size) {
+                System.err.println("  WARNING: Skipping malformed line in '$csvFileName'. Expected ${header.size} columns, got ${values.size}. Line: '$line'")
+                continue
+            }
             val rowMap = header.zip(values).toMap()
 
-            // Converte os valores da linha CSV para os tipos apropriados para o JDBC
             val args: Array<Any?> = columnNames.map { colName ->
-                val value = rowMap[colName]
-                if (value == null || value.isBlank()) {
-                    null // Trata strings vazias ou nulas do CSV como NULL para o banco de dados
+                val stringValue = rowMap[colName]?.trim()
+                if (stringValue.isNullOrBlank()) {
+                    null // Always pass null for blank/null strings, let DB handle default/nullable
                 } else {
-                    // Tenta converter para o tipo correto baseado no nome da coluna ou um padrão
                     when (colName) {
-                        "id", "appeal", "jam", "main_region_id", "generation_id",
-                        "damage_class_id", "power", "pp", "accuracy", "priority",
-                        "target_id", "effect_id", "effect_chance", "contest_type_id",
-                        "contest_effect_id", "super_contest_effect_id", "evolves_from_species_id",
-                        "evolution_chain_id", "color_id", "shape_id", "habitat_id",
-                        "gender_rate", "capture_rate", "base_happiness", "hatch_counter",
-                        "growth_rate_id", "forms_switchable", "is_legendary", "is_mythical", "order_index",
-                        "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
-                        "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
-                        "egg_group_id", "berry_id", "contest_type_id", "flavor", "version_group_id", // Changed "flavor_id" to "flavor"
-                        "language_id", "item_id", "category_id", "cost", "fling_power",
-                        "fling_effect_id", "level", "pokemon_move_method_id", "move_id",
-                        "game_index", "gene_mod_5", "decreased_stat_id", "increased_stat_id",
-                        "hates_flavor_id", "likes_flavor_id", "pocket_id", "growth_time",
-                        "max_harvest", "natural_gift_power", "size", "smoothness",
-                        "local_language_id", "display_order" -> {
-                            value.toIntOrNull() // Tenta converter para Int
-                        }
-                        "is_battle_only", "is_baby", "has_gender_differences", "forms_switchable",
-                        "is_legendary", "is_mythical", "is_default", "is_main_series",
-                        "is_mega", "official" -> { // 'official' no languages.csv é um booleano (0 ou 1)
-                            when (value.lowercase()) {
+                        in intColumns -> stringValue.toIntOrNull() // Use toIntOrNull for safer parsing
+                        in booleanColumns -> {
+                            when (stringValue.lowercase()) {
                                 "true", "1" -> true
                                 "false", "0" -> false
-                                else -> null // ou lançar erro se não for válido
+                                else -> {
+                                    System.err.println("  WARNING: Invalid boolean value for column '$colName' in '$csvFileName': '$stringValue'. Setting to null.")
+                                    null
+                                }
                             }
                         }
-                        else -> value // Manter como String para outras colunas
+                        else -> stringValue
                     }
                 }
             }.toTypedArray()
 
             batchArgs.add(args)
         }
-        // --- FIM DA CORREÇÃO ---
-
 
         if (batchArgs.isNotEmpty()) {
             try {
                 val updatedRows = jdbcTemplate.batchUpdate(insertSql, batchArgs)
-                println("  -> Inseridas ${updatedRows.size} linhas na tabela '$tableName' de um total de $lineCount linhas no CSV.")
+                println("  -> Inserted ${updatedRows.size} rows into table '$tableName' from a total of $lineCount lines in CSV.")
             } catch (e: DataIntegrityViolationException) {
-                System.err.println("  ERRO DE INTEGRIDADE DE DADOS ao carregar '$tableName': ${e.message}")
-                System.err.println("  Isso pode ocorrer se houver dados no CSV que violam NOT NULL, FKs ou chaves únicas.")
-                System.err.println("  SQL utilizado: $insertSql")
-                throw e // Relançar para que a exceção seja tratada pelo método run
+                System.err.println("  DATA INTEGRITY ERROR when loading '$tableName': ${e.message}")
+                System.err.println("  This can happen if there's data in the CSV violating NOT NULL, FKs, or unique keys.")
+                System.err.println("  SQL used: $insertSql")
+                throw e
             } catch (e: Exception) {
-                System.err.println("  ERRO DESCONHECIDO ao carregar '$tableName': ${e.message}")
-                System.err.println("  SQL utilizado: $insertSql")
+                System.err.println("  UNKNOWN ERROR when loading '$tableName': ${e.message}")
+                System.err.println("  SQL used: $insertSql")
                 e.printStackTrace()
-                throw e // Relançar
+                throw e
             }
         } else {
-            println("  Nenhuma linha válida para inserir na tabela '$tableName' do arquivo '$csvFileName'.")
+            println("  No valid rows to insert into table '$tableName' from file '$csvFileName'.")
         }
     }
 
     /**
-     * Constrói a query SQL de INSERT com a cláusula ON CONFLICT apropriada.
+     * Constructs the SQL INSERT query with the appropriate ON CONFLICT clause.
      */
     private fun getInsertSql(tableName: String, columnNames: List<String>): String {
         val placeHolders = columnNames.joinToString { "?" }
         val columns = columnNames.joinToString(", ")
 
-        // Define a cláusula ON CONFLICT baseada na chave primária da tabela
-        // VOCÊ DEVE GARANTIR QUE ISTO ESTÁ COMPLETO PARA TODAS AS SUAS TABELAS COM CHAVES COMPOSTAS
         val onConflictClause = when (tableName) {
             "pokemon_stats" -> "ON CONFLICT (pokemon_id, stat_id) DO NOTHING"
             "pokemon_types" -> "ON CONFLICT (pokemon_id, type_id) DO NOTHING"
@@ -251,8 +258,8 @@ class DataLoaderService(
             "ability_flavor_text" -> "ON CONFLICT (ability_id, version_group_id, language_id) DO NOTHING"
             "move_effect_prose" -> "ON CONFLICT (move_effect_id, local_language_id) DO NOTHING"
             "pokemon_moves" -> "ON CONFLICT (pokemon_id, version_group_id, move_id, pokemon_move_method_id) DO NOTHING"
-            // Adicione outras tabelas com PK composta aqui se houver
-            else -> "ON CONFLICT (id) DO NOTHING" // Padrão para tabelas com PK 'id'
+            // Default ON CONFLICT for single-column primary keys (assuming 'id')
+            else -> "ON CONFLICT (id) DO NOTHING"
         }
 
         return "INSERT INTO $tableName ($columns) VALUES ($placeHolders) $onConflictClause"
