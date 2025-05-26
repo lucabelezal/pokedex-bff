@@ -241,10 +241,10 @@ class CsvImportService(
                 hatchCounter = record.get("hatch_counter").toIntOrNull(),
                 hasGenderDifferences = record.get("has_gender_differences").toBooleanStrictOrNull() ?: false,
                 growthRateId = record.get("growth_rate_id").toIntOrNull(),
-                formsSwitchable = record.get("forms_switchable").toBooleanStrictOrNull() ?: false,
+                formsSwitchable = record.get("forms_switchable").toIntOrNull(),
                 isLegendary = record.get("is_legendary").toBooleanStrictOrNull() ?: false,
                 isMythical = record.get("is_mythical").toBooleanStrictOrNull() ?: false,
-                orderIndex = record.get("order_index").toIntOrNull(),
+                orderIndex = record.get("order").toIntOrNull(),
                 conquestOrder = record.get("conquest_order").toIntOrNull()
             )
         }),

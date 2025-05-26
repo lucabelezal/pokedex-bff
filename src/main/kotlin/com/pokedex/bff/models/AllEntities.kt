@@ -362,7 +362,7 @@ data class PokemonSpecies(
     val growthRateId: Int?,
 
     @Column(name = "forms_switchable")
-    val formsSwitchable: Boolean,
+    val formsSwitchable: Int?,
 
     @Column(name = "is_legendary")
     val isLegendary: Boolean,
@@ -764,7 +764,6 @@ data class PokemonAbility(
 data class PokemonEggGroup(
     @EmbeddedId
     val id: PokemonEggGroupId
-    // Se não houver outras colunas além da PK composta, a entidade pode ser assim.
 )
 
 @Entity
