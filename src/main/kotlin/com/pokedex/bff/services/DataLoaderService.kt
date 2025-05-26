@@ -7,12 +7,20 @@ import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Component
 import java.io.File
 import java.nio.charset.StandardCharsets
+import org.apache.commons.csv.CSVFormat // Import necessário
+import org.apache.commons.csv.CSVParser // Import necessário
+import org.apache.commons.csv.CSVRecord // Import necessário
+
 
 @Component
 class DataLoaderService(
     private val jdbcTemplate: JdbcTemplate,
     @Value("\${app.csv.location}") private val csvFilesLocation: String
 ) : CommandLineRunner {
+
+    // Contadores para o resumo final
+    private var successCount: Int = 0
+    private var failCount: Int = 0
 
     // Optimized set of column names that should be converted to Int
     private val intColumns = setOf(
@@ -24,7 +32,7 @@ class DataLoaderService(
         "gender_rate", "capture_rate", "base_happiness", "hatch_counter",
         "growth_rate_id", "forms_switchable", "is_legendary", "is_mythical", "order_index",
         "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
-        "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
+        "effort", "type_id", "slot", "ability_id", "pokemon_species_id", // Changed from pokemon_species_id to species_id as per previous discussions for pokemon_egg_groups.csv, make sure your DDL/CSV match
         "egg_group_id", "berry_id", "flavor_id", "version_group_id",
         "language_id", "item_id", "category_id", "cost", "fling_power",
         "fling_effect_id", "level", "pokemon_move_method_id", "move_id",
@@ -33,7 +41,7 @@ class DataLoaderService(
         "max_harvest", "natural_gift_power", "size", "smoothness",
         "local_language_id", "display_order", "region_id", "group_order",
         "baby_trigger_item_id", "move_effect_id", "pokemon_id", "introduced_in_version_group_id",
-        "firmness_id", "natural_gift_type_id", "soil_dryness"
+        "firmness_id", "natural_gift_type_id", "soil_dryness", "order" // Added 'order' for pokemon_species and pokemon_forms
     )
 
     // Optimized set of boolean column names
@@ -49,16 +57,20 @@ class DataLoaderService(
      */
     override fun run(vararg args: String?) {
         println("===================================================================")
-        println(" Starting CSV data loading into the database...")
-        println(" CSVs location: $csvFilesLocation")
+        println(" Iniciando o carregamento de dados CSV para o banco de dados...")
+        println(" Localização dos CSVs: $csvFilesLocation")
         println("===================================================================")
 
         try {
-            // *** LOADING ORDER IS CRITICAL DUE TO FOREIGN KEY CONSTRAINTS ***
-            // Load "parent" tables first (those without foreign key dependencies on other tables),
-            // then "child" tables that depend on parent tables, and so on.
+            // Resetar contadores a cada execução
+            successCount = 0
+            failCount = 0
 
-            // Level 0: Tables without FK dependencies on other tables
+            // *** A ORDEM DE CARREGAMENTO É CRÍTICA DEVIDO ÀS RESTRIÇÕES DE CHAVE ESTRANGEIRA ***
+            // Carregue as tabelas "pai" primeiro (aquelas sem dependências de chave estrangeira em outras tabelas),
+            // depois as tabelas "filhas" que dependem das tabelas pai, e assim por diante.
+
+            // Nível 0: Tabelas sem dependências de FK em outras tabelas
             loadTable("regions.csv", "regions", listOf("id", "identifier"))
             loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier"))
             loadTable("super_contest_effects.csv", "super_contest_effects", listOf("id", "appeal"))
@@ -78,7 +90,7 @@ class DataLoaderService(
             loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "display_order"))
 
 
-            // Level 1: Tables that only depend on Level 0 tables
+            // Nível 1: Tabelas que dependem apenas de tabelas do Nível 0
             loadTable("generations.csv", "generations", listOf("id", "main_region_id", "identifier"))
             loadTable("types.csv", "types", listOf("id", "identifier", "generation_id", "damage_class_id"))
             loadTable("stats.csv", "stats", listOf("id", "damage_class_id", "identifier", "is_battle_only", "game_index"))
@@ -92,7 +104,8 @@ class DataLoaderService(
             loadTable("berries.csv", "berries", listOf("id", "item_id", "firmness_id", "natural_gift_power", "natural_gift_type_id", "size", "max_harvest", "growth_time", "soil_dryness", "smoothness"))
 
 
-            // Level 2: Tables with dependencies on Level 1 or composite primary keys
+            // Nível 2: Tabelas com dependências no Nível 1 ou chaves primárias compostas
+            // Atualizado para as 4 colunas de move_effect_prose
             loadTable("move_effect_prose.csv", "move_effect_prose", listOf("move_effect_id", "local_language_id", "short_effect", "effect"))
             loadTable("moves.csv", "moves", listOf(
                 "id", "identifier", "generation_id", "type_id", "power", "pp",
@@ -105,45 +118,47 @@ class DataLoaderService(
                 "evolution_chain_id", "color_id", "shape_id", "habitat_id",
                 "gender_rate", "capture_rate", "base_happiness", "is_baby",
                 "hatch_counter", "has_gender_differences", "growth_rate_id",
-                "forms_switchable", "is_legendary", "is_mythical", "order_index",
+                "forms_switchable", "is_legendary", "is_mythical", "order", // 'order_index' para 'order'
                 "conquest_order"
             ))
             loadTable("pokemon.csv", "pokemon", listOf("id", "identifier", "species_id", "height", "weight", "base_experience", "order_index", "is_default"))
             loadTable("pokemon_location_areas.csv", "pokemon_location_areas", listOf("id", "location_id", "game_index", "identifier"))
             loadTable("pokemon_forms.csv", "pokemon_forms", listOf(
                 "id", "identifier", "form_identifier", "pokemon_id", "introduced_in_version_group_id",
-                "is_default", "is_battle_only", "is_mega", "form_order", "order_index"
+                "is_default", "is_battle_only", "is_mega", "form_order", "order" // 'order_index' para 'order'
             ))
 
 
-            // Level 3: Join tables with composite primary keys or Level 2 dependencies
+            // Nível 3: Tabelas de junção com chaves primárias compostas ou dependências do Nível 2
             loadTable("pokemon_stats.csv", "pokemon_stats", listOf("pokemon_id", "stat_id", "base_stat", "effort"))
             loadTable("pokemon_types.csv", "pokemon_types", listOf("pokemon_id", "type_id", "slot"))
             loadTable("pokemon_abilities.csv", "pokemon_abilities", listOf("pokemon_id", "ability_id"))
-            loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("pokemon_species_id", "egg_group_id"))
-            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor_id"))
+            loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("species_id", "egg_group_id")) // 'pokemon_species_id' para 'species_id'
+            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor")) // 'flavor_id' para 'flavor'
             loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
-            loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect"))
+            loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect", "effect")) // Adicionado 'effect' para consistência
             loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
             loadTable("pokemon_moves.csv", "pokemon_moves", listOf("pokemon_id", "version_group_id", "move_id", "pokemon_move_method_id", "level", "move_order", "mastery"))
 
 
             println("===================================================================")
-            println(" Data loading completed successfully!")
+            println(" Carregamento de dados finalizado!")
+            println(" CSVs processados com sucesso: ${successCount}")
+            println(" CSVs com falha: ${failCount}")
             println("===================================================================")
 
         } catch (e: Exception) {
             System.err.println("===================================================================")
-            System.err.println(" ERROR DURING DATA LOADING:")
-            System.err.println(" Message: ${e.message}")
-            System.err.println(" Please check:")
-            System.err.println(" 1. The loading order of CSVs (foreign keys).")
-            System.err.println(" 2. Column names in CSVs and in the code.")
-            System.err.println(" 3. Data types in CSVs versus database types.")
-            System.err.println(" 4. ON CONFLICT clauses for composite primary keys.")
+            System.err.println(" ERRO DURANTE O CARREGAMENTO DOS DADOS:")
+            System.err.println(" Mensagem: ${e.message}")
+            System.err.println(" Por favor, verifique:")
+            System.err.println(" 1. A ordem de carregamento dos CSVs (chaves estrangeiras).")
+            System.err.println(" 2. Nomes das colunas nos CSVs e no código.")
+            System.err.println(" 3. Tipos de dados nos CSVs vs. tipos de banco de dados.")
+            System.err.println(" 4. Cláusulas ON CONFLICT para chaves primárias compostas.")
             System.err.println("===================================================================")
             e.printStackTrace()
-            throw RuntimeException("Failed to load initial data.", e)
+            throw RuntimeException("Falha ao carregar os dados iniciais.", e)
         }
     }
 
@@ -156,88 +171,101 @@ class DataLoaderService(
     private fun loadTable(csvFileName: String, tableName: String, columnNames: List<String>) {
         val csvFile = File(csvFilesLocation, csvFileName)
         if (!csvFile.exists()) {
-            println("WARNING: CSV file not found for $tableName at $csvFile. Skipping load.")
+            println("  AVISO: Arquivo CSV não encontrado para '$tableName' em $csvFile. Ignorando carregamento.")
+            failCount++ // Incrementar falha se o arquivo não for encontrado
             return
         }
 
-        println("  -> Loading '$csvFileName' into table '$tableName'...")
+        println("  -> Carregando '$csvFileName' na tabela '$tableName'...")
 
         val insertSql = getInsertSql(tableName, columnNames)
         val batchArgs = mutableListOf<Array<Any?>>()
         var lineCount = 0
+        var recordCount = 0 // Contador de registros processados com sucesso
 
-        val allLines = csvFile.readLines(StandardCharsets.UTF_8)
-        if (allLines.isEmpty()) {
-            System.err.println("  ERROR: CSV '$csvFileName' is empty.")
-            return
-        }
+        try {
+            // Usando Apache Commons CSV para parsing
+            csvFile.bufferedReader(StandardCharsets.UTF_8).use { reader ->
+                val parser = CSVFormat.DEFAULT
+                    .withHeader(*columnNames.toTypedArray()) // Espera as colunas definidas
+                    .withSkipHeaderRecord(true) // Pula a primeira linha (cabeçalho)
+                    .withDelimiter(',') // Delimitador padrão (vírgula)
+                    .withQuote('"') // Caractere de aspas
+                    .withIgnoreSurroundingSpaces(true) // Ignora espaços em branco ao redor dos campos
+                    .parse(reader)
 
-        val header = allLines.first().split(",").map { it.trim() }
-        val dataLines = allLines.drop(1)
+                val headerMap = parser.headerMap // Obter o mapa do cabeçalho
+                if (headerMap.isEmpty()) {
+                    System.err.println("  ERRO: CSV '$csvFileName' não tem cabeçalho ou o cabeçalho não pôde ser lido pelo Commons CSV.")
+                    failCount++
+                    return
+                }
 
-        if (header.isEmpty()) {
-            System.err.println("  ERROR: CSV '$csvFileName' has no header.")
-            return
-        }
-        if (!columnNames.all { it in header }) {
-            val missingCols = columnNames.filter { it !in header }
-            System.err.println("  ERROR: CSV '$csvFileName' does not contain all expected columns: $missingCols. CSV Header: $header")
-            return
-        }
+                // Verifica se todas as colunas esperadas estão presentes no cabeçalho lido pelo Commons CSV
+                if (!columnNames.all { it in headerMap }) {
+                    val missingCols = columnNames.filter { it !in headerMap }
+                    System.err.println("  ERRO: CSV '$csvFileName' não contém todas as colunas esperadas: $missingCols. Cabeçalho lido: $headerMap")
+                    failCount++
+                    return
+                }
 
-        for (line in dataLines) {
-            if (line.isBlank()) continue
+                for (record: CSVRecord in parser) {
+                    lineCount++ // Contar linhas do CSV
+                    val args: Array<Any?> = columnNames.map { colName ->
+                        val stringValue = record.get(colName)?.trim() // Obtém o valor pelo nome da coluna
 
-            lineCount++
-            val values = line.split(",").map { it.trim() }
-            if (values.size != header.size) {
-                System.err.println("  WARNING: Skipping malformed line in '$csvFileName'. Expected ${header.size} columns, got ${values.size}. Line: '$line'")
-                continue
-            }
-            val rowMap = header.zip(values).toMap()
-
-            val args: Array<Any?> = columnNames.map { colName ->
-                val stringValue = rowMap[colName]?.trim()
-                if (stringValue.isNullOrBlank()) {
-                    null // Always pass null for blank/null strings, let DB handle default/nullable
-                } else {
-                    when (colName) {
-                        in intColumns -> stringValue.toIntOrNull() // Use toIntOrNull for safer parsing
-                        in booleanColumns -> {
-                            when (stringValue.lowercase()) {
-                                "true", "1" -> true
-                                "false", "0" -> false
-                                else -> {
-                                    System.err.println("  WARNING: Invalid boolean value for column '$colName' in '$csvFileName': '$stringValue'. Setting to null.")
-                                    null
+                        if (stringValue.isNullOrBlank()) {
+                            null // Passa null para strings em branco/nulas, deixa o DB lidar com default/nullable
+                        } else {
+                            when (colName) {
+                                in intColumns -> stringValue.toIntOrNull() // Usa toIntOrNull para parsing seguro
+                                in booleanColumns -> {
+                                    when (stringValue.lowercase()) {
+                                        "true", "1" -> true
+                                        "false", "0" -> false
+                                        else -> {
+                                            System.err.println("  AVISO: Linha ${record.recordNumber}, valor booleano inválido para coluna '$colName' em '$csvFileName': '$stringValue'. Definindo como null.")
+                                            null
+                                        }
+                                    }
                                 }
+                                else -> stringValue // Para outros tipos, mantém como String
                             }
                         }
-                        else -> stringValue
-                    }
+                    }.toTypedArray()
+                    batchArgs.add(args)
+                    recordCount++
                 }
-            }.toTypedArray()
+            } // 'use' garante que o reader seja fechado
 
-            batchArgs.add(args)
+        } catch (e: Exception) {
+            System.err.println("  ERRO ao ler o CSV '$csvFileName' com Apache Commons CSV: ${e.message}")
+            System.err.println("  Verifique a formatação do CSV. A linha do erro pode ser próxima à linha ${lineCount + 1}.")
+            failCount++
+            e.printStackTrace()
+            return // Para o processamento desta tabela
         }
 
         if (batchArgs.isNotEmpty()) {
             try {
                 val updatedRows = jdbcTemplate.batchUpdate(insertSql, batchArgs)
-                println("  -> Inserted ${updatedRows.size} rows into table '$tableName' from a total of $lineCount lines in CSV.")
+                println("  -> Inseridas ${updatedRows.size} registros na tabela '$tableName' de um total de $recordCount registros válidos no CSV.")
+                successCount++ // Incrementar sucesso
             } catch (e: DataIntegrityViolationException) {
-                System.err.println("  DATA INTEGRITY ERROR when loading '$tableName': ${e.message}")
-                System.err.println("  This can happen if there's data in the CSV violating NOT NULL, FKs, or unique keys.")
-                System.err.println("  SQL used: $insertSql")
-                throw e
+                System.err.println("  ERRO DE INTEGRIDADE DE DADOS ao carregar '$tableName': ${e.message}")
+                System.err.println("  Isso pode acontecer se houver dados no CSV violando NOT NULL, FKs ou chaves únicas.")
+                System.err.println("  SQL utilizado: $insertSql")
+                failCount++ // Incrementar falha
+                throw e // Relança a exceção para parar o carregamento total, se preferir um comportamento mais resiliente, remova este throw
             } catch (e: Exception) {
-                System.err.println("  UNKNOWN ERROR when loading '$tableName': ${e.message}")
-                System.err.println("  SQL used: $insertSql")
+                System.err.println("  ERRO DESCONHECIDO ao carregar '$tableName': ${e.message}")
+                System.err.println("  SQL utilizado: $insertSql")
                 e.printStackTrace()
-                throw e
+                failCount++ // Incrementar falha
+                throw e // Relança a exceção
             }
         } else {
-            println("  No valid rows to insert into table '$tableName' from file '$csvFileName'.")
+            println("  Nenhum registro válido para inserir na tabela '$tableName' do arquivo '$csvFileName'.")
         }
     }
 
@@ -252,13 +280,15 @@ class DataLoaderService(
             "pokemon_stats" -> "ON CONFLICT (pokemon_id, stat_id) DO NOTHING"
             "pokemon_types" -> "ON CONFLICT (pokemon_id, type_id) DO NOTHING"
             "pokemon_abilities" -> "ON CONFLICT (pokemon_id, ability_id) DO NOTHING"
-            "pokemon_egg_groups" -> "ON CONFLICT (pokemon_species_id, egg_group_id) DO NOTHING"
+            // Atenção: Use 'species_id' aqui se o seu CSV e a DDL para pokemon_egg_groups usam 'species_id'
+            "pokemon_egg_groups" -> "ON CONFLICT (species_id, egg_group_id) DO NOTHING"
             "berry_flavors" -> "ON CONFLICT (berry_id, contest_type_id) DO NOTHING"
             "ability_prose" -> "ON CONFLICT (ability_id, local_language_id) DO NOTHING"
             "ability_flavor_text" -> "ON CONFLICT (ability_id, version_group_id, language_id) DO NOTHING"
-            "move_effect_prose" -> "ON CONFLICT (move_effect_id, local_language_id) DO NOTHING"
+            // Atenção: Use 'move_effect_id' sem local_language_id se o seu DDL e CSV não tiverem
+            "move_effect_prose" -> "ON CONFLICT (move_effect_id, local_language_id) DO NOTHING" // AGORA COM local_language_id
             "pokemon_moves" -> "ON CONFLICT (pokemon_id, version_group_id, move_id, pokemon_move_method_id) DO NOTHING"
-            // Default ON CONFLICT for single-column primary keys (assuming 'id')
+            // Default ON CONFLICT para chaves primárias de coluna única (assumindo 'id')
             else -> "ON CONFLICT (id) DO NOTHING"
         }
 
