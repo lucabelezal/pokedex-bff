@@ -31,7 +31,7 @@ help:
 	@echo ""
 	@echo "  make load-data              - Inicia o BFF para carregar os dados CSV no DB."
 	@echo "                                  (Requer que o DB já esteja rodando e acessível)."
-	@echo "  make clean-bff              - Limpa o projeto BFF (executa 'gradlew clean')."
+	@echo "  make clean-bff              - Limpa o projeto BFF (executa './gradlew clean')."
 	@echo "  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo)."
 	@echo ""
 	@echo "  make clean-all              - Limpa o ambiente de desenvolvimento completo:"
@@ -57,7 +57,7 @@ stop-db:
 
 clean-db:
 	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
-	docker compose -f $(Docker_Compose_File) down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
+	docker compose -f $(DOCKER_COMPOSE_FILE) down -v --remove-orphans # Adicionado --remove-orphans para limpeza completa
 
 # ==============================================================================
 # Comandos do BFF (Spring Boot/Kotlin)
@@ -81,7 +81,7 @@ run-bff:
 
 setup-dev:
 	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) up -d db
+	docker compose -f docker/docker-compose.dev.yml up -d db
 	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
 	sleep 5 # Ajuste conforme necessário
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db' para status detalhado."
