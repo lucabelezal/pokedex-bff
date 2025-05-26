@@ -1,278 +1,442 @@
-package com.pokedex.bff.services
+-- IMPORTANT: The order of DROP TABLE is crucial to avoid dependency errors.
+-- Start with tables that have FKs to others, and finish with tables that are referenced.
 
-import org.springframework.beans.factory.annotation.Value
-import org.springframework.boot.CommandLineRunner
-import org.springframework.dao.DataIntegrityViolationException
-import org.springframework.jdbc.core.JdbcTemplate
-import org.springframework.stereotype.Component
-import java.io.File
-import java.nio.charset.StandardCharsets
-import org.apache.commons.csv.CSVFormat
-import org.apache.commons.csv.CSVParser
-import org.apache.commons.csv.CSVRecord
-
-
-@Component
-class DataLoaderService(
-    private val jdbcTemplate: JdbcTemplate,
-    @Value("\${app.csv.location}") private val csvFilesLocation: String
-) : CommandLineRunner {
-
-    // Contadores para o resumo final
-    private var successCount: Int = 0
-    private var failCount: Int = 0
-
-    // Optimized set of column names that should be converted to Int
-    private val intColumns = setOf(
-        "id", "appeal", "jam", "main_region_id", "generation_id",
-        "damage_class_id", "power", "pp", "accuracy", "priority",
-        "target_id", "effect_id", "effect_chance", "contest_type_id",
-        "contest_effect_id", "super_contest_effect_id", "evolves_from_species_id",
-        "evolution_chain_id", "color_id", "shape_id", "habitat_id",
-        "gender_rate", "capture_rate", "base_happiness", "hatch_counter",
-        "growth_rate_id",
-        "forms_switchable", // Já é um INT
-        "is_legendary", "is_mythical", "order_index", // <-- MUDADO DE 'order' PARA 'order_index'
-        "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
-        "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
-        "egg_group_id", "berry_id", "flavor_id", "version_group_id",
-        "language_id", "item_id", "category_id", "cost", "fling_power",
-        "fling_effect_id", "level", "pokemon_move_method_id", "move_id",
-        "game_index", "gene_mod_5", "decreased_stat_id", "increased_stat_id",
-        "hates_flavor_id", "likes_flavor_id", "pocket_id", "growth_time",
-        "max_harvest", "natural_gift_power", "size", "smoothness",
-        "local_language_id", "display_order", "region_id", "group_order",
-        "baby_trigger_item_id", "move_effect_id", "pokemon_id", "introduced_in_version_group_id",
-        "firmness_id", "natural_gift_type_id", "soil_dryness"
-    )
-
-    // Optimized set of boolean column names
-    private val booleanColumns = setOf(
-        "is_battle_only", "is_baby", "has_gender_differences",
-        "is_legendary", "is_mythical", "is_default", "is_main_series",
-        "is_mega", "official"
-        // 'forms_switchable' foi removido daqui e 'order' não é mais uma palavra reservada no CSV
-    )
-
-    override fun run(vararg args: String?) {
-        println("===================================================================")
-        println(" Iniciando o carregamento de dados CSV para o banco de dados...")
-        println(" Localização dos CSVs: $csvFilesLocation")
-        println("===================================================================")
-
-        try {
-            successCount = 0
-            failCount = 0
-
-            // *** A ORDEM DE CARREGAMENTO É CRÍTICA DEVIDO ÀS RESTRIÇÕES DE CHAVE ESTRANGEIRA ***
-
-            loadTable("regions.csv", "regions", listOf("id", "identifier"))
-            loadTable("move_damage_classes.csv", "damage_classes", listOf("id", "identifier"))
-            loadTable("super_contest_effects.csv", "super_contest_effects", listOf("id", "appeal"))
-            loadTable("move_targets.csv", "move_targets", listOf("id", "identifier"))
-            loadTable("move_effects.csv", "move_effects", listOf("id"))
-            loadTable("growth_rates.csv", "growth_rates", listOf("id", "identifier", "formula"))
-            loadTable("egg_groups.csv", "egg_groups", listOf("id", "identifier"))
-            loadTable("genders.csv", "genders", listOf("id", "identifier"))
-            loadTable("pokemon_colors.csv", "pokemon_colors", listOf("id", "identifier"))
-            loadTable("pokemon_shapes.csv", "pokemon_shapes", listOf("id", "identifier"))
-            loadTable("pokemon_habitats.csv", "pokemon_habitats", listOf("id", "identifier"))
-            loadTable("contest_types.csv", "contest_types", listOf("id", "identifier"))
-            loadTable("contest_effects.csv", "contest_effects", listOf("id", "appeal", "jam"))
-            loadTable("flavors.csv", "flavors", listOf("id", "identifier"))
-            loadTable("pokemon_move_methods.csv", "pokemon_move_methods", listOf("id", "identifier"))
-            loadTable("item_categories.csv", "item_categories", listOf("id", "pocket_id", "identifier"))
-            loadTable("languages.csv", "languages", listOf("id", "iso639", "iso3166", "identifier", "official", "display_order"))
-
-            loadTable("generations.csv", "generations", listOf("id", "main_region_id", "identifier"))
-            loadTable("types.csv", "types", listOf("id", "identifier", "generation_id", "damage_class_id"))
-            loadTable("stats.csv", "stats", listOf("id", "damage_class_id", "identifier", "is_battle_only", "game_index"))
-            loadTable("abilities.csv", "abilities", listOf("id", "identifier", "generation_id", "is_main_series"))
-            loadTable("characteristics.csv", "characteristics", listOf("id", "stat_id", "gene_mod_5"))
-            loadTable("natures.csv", "natures", listOf("id", "identifier", "decreased_stat_id", "increased_stat_id", "hates_flavor_id", "likes_flavor_id", "game_index"))
-            loadTable("items.csv", "items", listOf("id", "identifier", "category_id", "cost", "fling_power", "fling_effect_id"))
-            loadTable("locations.csv", "locations", listOf("id", "region_id", "identifier"))
-            loadTable("version_groups.csv", "version_groups", listOf("id", "identifier", "generation_id", "group_order"))
-            loadTable("evolution_chains.csv", "evolution_chains", listOf("id", "baby_trigger_item_id"))
-            loadTable("berries.csv", "berries", listOf("id", "item_id", "firmness_id", "natural_gift_power", "natural_gift_type_id", "size", "max_harvest", "growth_time", "soil_dryness", "smoothness"))
-
-            loadTable("move_effect_prose.csv", "move_effect_prose", listOf("move_effect_id", "local_language_id", "short_effect", "effect"))
-            loadTable("moves.csv", "moves", listOf(
-                "id", "identifier", "generation_id", "type_id", "power", "pp",
-                "accuracy", "priority", "target_id", "damage_class_id",
-                "effect_id", "effect_chance", "contest_type_id", "contest_effect_id",
-                "super_contest_effect_id"
-            ))
-            loadTable("pokemon_species.csv", "pokemon_species", listOf(
-                "id", "identifier", "generation_id", "evolves_from_species_id",
-                "evolution_chain_id", "color_id", "shape_id", "habitat_id",
-                "gender_rate", "capture_rate", "base_happiness", "is_baby",
-                "hatch_counter", "has_gender_differences", "growth_rate_id",
-                "forms_switchable",
-                "is_legendary", "is_mythical", "order_index", // <-- MUDADO AQUI
-                "conquest_order"
-            ))
-            loadTable("pokemon.csv", "pokemon", listOf("id", "identifier", "species_id", "height", "weight", "base_experience", "order_index", "is_default"))
-            loadTable("pokemon_location_areas.csv", "pokemon_location_areas", listOf("id", "location_id", "game_index", "identifier"))
-            loadTable("pokemon_forms.csv", "pokemon_forms", listOf(
-                "id", "identifier", "form_identifier", "pokemon_id", "introduced_in_version_group_id",
-                "is_default", "is_battle_only", "is_mega", "form_order", "order_index" // <-- MUDADO AQUI
-            ))
-
-            loadTable("pokemon_stats.csv", "pokemon_stats", listOf("pokemon_id", "stat_id", "base_stat", "effort"))
-            loadTable("pokemon_types.csv", "pokemon_types", listOf("pokemon_id", "type_id", "slot"))
-            loadTable("pokemon_abilities.csv", "pokemon_abilities", listOf("pokemon_id", "ability_id"))
-            loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("pokemon_species_id", "egg_group_id")) // <-- VERIFIQUE SE O CSV USA pokemon_species_id AQUI!
-            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor_id")) // <-- VERIFIQUE SE O CSV USA flavor_id AQUI!
-            loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
-            loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect", "effect"))
-            loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
-            loadTable("pokemon_moves.csv", "pokemon_moves", listOf("pokemon_id", "version_group_id", "move_id", "pokemon_move_method_id", "level", "move_order", "mastery"))
+DROP TABLE IF EXISTS pokemon_moves CASCADE;
+DROP TABLE IF EXISTS ability_flavor_text CASCADE;
+DROP TABLE IF EXISTS ability_prose CASCADE;
+DROP TABLE IF EXISTS pokemon_forms CASCADE;
+DROP TABLE IF EXISTS pokemon_location_areas CASCADE;
+DROP TABLE IF EXISTS pokemon_stats CASCADE;
+DROP TABLE IF EXISTS pokemon_types CASCADE;
+DROP TABLE IF EXISTS pokemon_abilities CASCADE;
+DROP TABLE IF EXISTS pokemon_egg_groups CASCADE;
+DROP TABLE IF EXISTS moves CASCADE;
+DROP TABLE IF EXISTS natures CASCADE;
+DROP TABLE IF EXISTS characteristics CASCADE;
+DROP TABLE IF EXISTS types CASCADE;
+DROP TABLE IF EXISTS stats CASCADE;
+DROP TABLE IF EXISTS pokemon CASCADE;
+DROP TABLE IF EXISTS pokemon_species CASCADE;
+DROP TABLE IF EXISTS evolution_chains CASCADE;
+DROP TABLE IF EXISTS pokemon_colors CASCADE;
+DROP TABLE IF EXISTS pokemon_shapes CASCADE;
+DROP TABLE IF EXISTS pokemon_habitats CASCADE;
+DROP TABLE IF EXISTS growth_rates CASCADE;
+DROP TABLE IF EXISTS egg_groups CASCADE;
+DROP TABLE IF EXISTS genders CASCADE;
+DROP TABLE IF EXISTS move_effect_prose CASCADE;
+DROP TABLE IF EXISTS move_effects CASCADE;
+DROP TABLE IF EXISTS move_targets CASCADE;
+DROP TABLE IF EXISTS contest_types CASCADE;
+DROP TABLE IF EXISTS contest_effects CASCADE;
+DROP TABLE IF EXISTS super_contest_effects CASCADE;
+DROP TABLE IF EXISTS versions CASCADE;
+DROP TABLE IF EXISTS version_groups CASCADE;
+DROP TABLE IF EXISTS locations CASCADE;
+DROP TABLE IF EXISTS regions CASCADE;
+DROP TABLE IF EXISTS berries CASCADE;
+DROP TABLE IF EXISTS berry_flavors CASCADE;
+DROP TABLE IF EXISTS flavors CASCADE;
+DROP TABLE IF EXISTS items CASCADE;
+DROP TABLE IF EXISTS item_categories CASCADE;
+DROP TABLE IF EXISTS abilities CASCADE;
+DROP TABLE IF EXISTS pokemon_move_methods CASCADE;
+DROP TABLE IF EXISTS languages CASCADE;
 
 
-            println("===================================================================")
-            println(" Carregamento de dados finalizado!")
-            println(" CSVs processados com sucesso: ${successCount}")
-            println(" CSVs com falha: ${failCount}")
-            println("===================================================================")
+-- Basic Tables
+CREATE TABLE super_contest_effects (
+  id INT PRIMARY KEY,
+  appeal INT NOT NULL
+);
 
-        } catch (e: Exception) {
-            System.err.println("===================================================================")
-            System.err.println(" ERRO DURANTE O CARREGAMENTO DOS DADOS:")
-            System.err.println(" Mensagem: ${e.message}")
-            System.err.println(" Por favor, verifique:")
-            System.err.println(" 1. A ordem de carregamento dos CSVs (chaves estrangeiras).")
-            System.err.println(" 2. Nomes das colunas nos CSVs e no código.")
-            System.err.println(" 3. Tipos de dados nos CSVs vs. tipos de banco de dados.")
-            System.err.println(" 4. Cláusulas ON CONFLICT para chaves primárias compostas.")
-            System.err.println("===================================================================")
-            e.printStackTrace()
-            throw RuntimeException("Falha ao carregar os dados iniciais.", e)
-        }
-    }
+CREATE TABLE regions (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-    private fun loadTable(csvFileName: String, tableName: String, columnNames: List<String>) {
-        val csvFile = File(csvFilesLocation, csvFileName)
-        if (!csvFile.exists()) {
-            println("  AVISO: Arquivo CSV não encontrado para '$tableName' em $csvFile. Ignorando carregamento.")
-            failCount++
-            return
-        }
+CREATE TABLE generations (
+  id INT PRIMARY KEY,
+  main_region_id INT,
+  identifier VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_generations_main_region FOREIGN KEY (main_region_id) REFERENCES regions(id)
+);
 
-        println("  -> Carregando '$csvFileName' na tabela '$tableName'...")
+CREATE TABLE damage_classes (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-        val insertSql = getInsertSql(tableName, columnNames)
-        val batchArgs = mutableListOf<Array<Any?>>()
-        var lineCount = 0
-        var recordCount = 0
+-- Types and Stats
+CREATE TABLE types (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  damage_class_id INT,
+  CONSTRAINT fk_types_generation FOREIGN KEY (generation_id) REFERENCES generations(id),
+  CONSTRAINT fk_types_damage_class FOREIGN KEY (damage_class_id) REFERENCES damage_classes(id)
+);
 
-        try {
-            csvFile.bufferedReader(StandardCharsets.UTF_8).use { reader ->
-                val parser = CSVFormat.DEFAULT
-                    .withHeader(*columnNames.toTypedArray())
-                    .withSkipHeaderRecord(true)
-                    .withDelimiter(',')
-                    .withQuote('"')
-                    .withIgnoreSurroundingSpaces(true)
-                    .parse(reader)
+CREATE TABLE stats (
+  id INT PRIMARY KEY,
+  damage_class_id INT,
+  identifier VARCHAR(255) NOT NULL,
+  is_battle_only BOOLEAN NOT NULL,
+  game_index INT,
+  CONSTRAINT fk_stats_damage_class FOREIGN KEY (damage_class_id) REFERENCES damage_classes(id)
+);
 
-                val headerMap = parser.headerMap
-                if (headerMap.isEmpty()) {
-                    System.err.println("  ERRO: CSV '$csvFileName' não tem cabeçalho ou o cabeçalho não pôde ser lido pelo Commons CSV.")
-                    failCount++
-                    return
-                }
+-- Growth and Egg Groups
+CREATE TABLE growth_rates (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  formula TEXT
+);
 
-                if (!columnNames.all { it in headerMap }) {
-                    val missingCols = columnNames.filter { it !in headerMap }
-                    System.err.println("  ERRO: CSV '$csvFileName' não contém todas as colunas esperadas: $missingCols. Cabeçalho lido: $headerMap")
-                    failCount++
-                    return
-                }
+CREATE TABLE egg_groups (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-                for (record: CSVRecord in parser) {
-                    lineCount++
-                    val args: Array<Any?> = columnNames.map { colName ->
-                        val stringValue = record.get(colName)?.trim()
+-- Genders and Characteristics
+CREATE TABLE genders (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-                        if (stringValue.isNullOrBlank()) {
-                            null // Passa null para strings em branco/nulas
-                        } else {
-                            when {
-                                colName in intColumns -> stringValue.toIntOrNull()
-                                colName in booleanColumns -> {
-                                    when (stringValue.lowercase()) {
-                                        "true", "1" -> true
-                                        "false", "0" -> false
-                                        else -> {
-                                            System.err.println("  AVISO: Linha ${record.recordNumber}, valor booleano inválido para coluna '$colName' em '$csvFileName': '$stringValue'. Definindo como null.")
-                                            null
-                                        }
-                                    } as Boolean? // Cast explícito para Boolean?
-                                }
-                                else -> stringValue // Para outros tipos, mantém como String
-                            }
-                        }
-                    }.toTypedArray()
-                    batchArgs.add(args)
-                    recordCount++
-                }
-            }
-        } catch (e: Exception) {
-            System.err.println("  ERRO ao ler o CSV '$csvFileName' com Apache Commons CSV: ${e.message}")
-            System.err.println("  Verifique a formatação do CSV. A linha do erro pode ser próxima à linha ${lineCount + 1}.")
-            failCount++
-            e.printStackTrace()
-            return
-        }
+CREATE TABLE characteristics (
+  id INT PRIMARY KEY,
+  stat_id INT NOT NULL,
+  gene_mod_5 INT NOT NULL,
+  CONSTRAINT fk_characteristics_stat FOREIGN KEY (stat_id) REFERENCES stats(id)
+);
 
-        if (batchArgs.isNotEmpty()) {
-            try {
-                val updatedRows = jdbcTemplate.batchUpdate(insertSql, batchArgs)
-                println("  -> Inseridas ${updatedRows.size} registros na tabela '$tableName' de um total de $recordCount registros válidos no CSV.")
-                successCount++
-            } catch (e: DataIntegrityViolationException) {
-                System.err.println("  ERRO DE INTEGRIDADE DE DADOS ao carregar '$tableName': ${e.message}")
-                System.err.println("  Isso pode acontecer se houver dados no CSV violando NOT NULL, FKs ou chaves únicas.")
-                System.err.println("  SQL utilizado: $insertSql")
-                failCount++
-                throw e
-            } catch (e: Exception) {
-                System.err.println("  ERRO DESCONHECIDO ao carregar '$tableName': ${e.message}")
-                System.err.println("  SQL utilizado: $insertSql")
-                e.printStackTrace()
-                failCount++
-                throw e
-            }
-        } else {
-            println("  Nenhum registro válido para inserir na tabela '$tableName' do arquivo '$csvFileName'.")
-        }
-    }
+-- Flavors and Natures
+CREATE TABLE flavors (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-    private fun getInsertSql(tableName: String, columnNames: List<String>): String {
-        val placeHolders = columnNames.joinToString { "?" }
-        val columns = columnNames.joinToString(", ") { col ->
-            when (col) {
-                // Se a coluna for 'order_index' não é mais uma palavra reservada, então não precisa de aspas.
-                // Se você tiver outras palavras reservadas que usem aspas, adicione-as aqui.
-                else -> col
-            }
-        }
+CREATE TABLE natures (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  decreased_stat_id INT NOT NULL,
+  increased_stat_id INT NOT NULL,
+  hates_flavor_id INT NOT NULL,
+  likes_flavor_id INT NOT NULL,
+  game_index INT,
+  CONSTRAINT fk_natures_decreased_stat FOREIGN KEY (decreased_stat_id) REFERENCES stats(id),
+  CONSTRAINT fk_natures_increased_stat FOREIGN KEY (increased_stat_id) REFERENCES stats(id),
+  CONSTRAINT fk_natures_hates_flavor FOREIGN KEY (hates_flavor_id) REFERENCES flavors(id),
+  CONSTRAINT fk_natures_likes_flavor FOREIGN KEY (likes_flavor_id) REFERENCES flavors(id)
+);
 
-        val onConflictClause = when (tableName) {
-            "pokemon_stats" -> "ON CONFLICT (pokemon_id, stat_id) DO NOTHING"
-            "pokemon_types" -> "ON CONFLICT (pokemon_id, type_id) DO NOTHING"
-            "pokemon_abilities" -> "ON CONFLICT (pokemon_id, ability_id) DO NOTHING"
-            "pokemon_egg_groups" -> "ON CONFLICT (pokemon_species_id, egg_group_id) DO NOTHING" // <-- ATENÇÃO AQUI!
-            "berry_flavors" -> "ON CONFLICT (berry_id, contest_type_id) DO NOTHING"
-            "ability_prose" -> "ON CONFLICT (ability_id, local_language_id) DO NOTHING"
-            "ability_flavor_text" -> "ON CONFLICT (ability_id, version_group_id, language_id) DO NOTHING"
-            "move_effect_prose" -> "ON CONFLICT (move_effect_id, local_language_id) DO NOTHING"
-            "pokemon_moves" -> "ON CONFLICT (pokemon_id, version_group_id, move_id, pokemon_move_method_id) DO NOTHING"
-            // Default ON CONFLICT para chaves primárias de coluna única (assumindo 'id')
-            else -> "ON CONFLICT (id) DO NOTHING"
-        }
+-- Moves and Effects
+CREATE TABLE move_targets (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
 
-        return "INSERT INTO $tableName ($columns) VALUES ($placeHolders) $onConflictClause"
-    }
-}
+CREATE TABLE move_effects (
+  id INT PRIMARY KEY
+);
+
+CREATE TABLE languages (
+  id INT PRIMARY KEY,
+  iso639 VARCHAR(255) NOT NULL,
+  iso3166 VARCHAR(255) NOT NULL,
+  identifier VARCHAR(255) NOT NULL,
+  official BOOLEAN NOT NULL,
+  display_order INT
+);
+
+CREATE TABLE move_effect_prose (
+  move_effect_id INT NOT NULL,
+  local_language_id INT NOT NULL,
+  short_effect VARCHAR(255) NOT NULL,
+  effect TEXT,
+  PRIMARY KEY (move_effect_id, local_language_id),
+  CONSTRAINT fk_move_effect_prose_effect FOREIGN KEY (move_effect_id) REFERENCES move_effects(id),
+  CONSTRAINT fk_move_effect_prose_language FOREIGN KEY (local_language_id) REFERENCES languages(id)
+);
+
+-- Contests (Moved up as referenced by moves)
+CREATE TABLE contest_types (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE contest_effects (
+  id INT PRIMARY KEY,
+  appeal INT NOT NULL,
+  jam INT NOT NULL
+);
+
+CREATE TABLE moves (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  type_id INT NOT NULL,
+  power INT,
+  pp INT,
+  accuracy INT,
+  priority INT NOT NULL,
+  target_id INT,
+  damage_class_id INT,
+  effect_id INT,
+  effect_chance INT,
+  contest_type_id INT,
+  contest_effect_id INT,
+  super_contest_effect_id INT,
+  CONSTRAINT fk_moves_generation FOREIGN KEY (generation_id) REFERENCES generations(id),
+  CONSTRAINT fk_moves_type FOREIGN KEY (type_id) REFERENCES types(id),
+  CONSTRAINT fk_moves_target FOREIGN KEY (target_id) REFERENCES move_targets(id),
+  CONSTRAINT fk_moves_damage_class FOREIGN KEY (damage_class_id) REFERENCES damage_classes(id),
+  CONSTRAINT fk_moves_effect FOREIGN KEY (effect_id) REFERENCES move_effects(id),
+  CONSTRAINT fk_moves_contest_type FOREIGN KEY (contest_type_id) REFERENCES contest_types(id),
+  CONSTRAINT fk_moves_contest_effect FOREIGN KEY (contest_effect_id) REFERENCES contest_effects(id),
+  CONSTRAINT fk_moves_super_contest_effect FOREIGN KEY (super_contest_effect_id) REFERENCES super_contest_effects(id)
+);
+
+-- Pokémon and Species
+CREATE TABLE pokemon_colors (
+    id INT PRIMARY KEY,
+    identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE pokemon_shapes (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE pokemon_habitats (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE evolution_chains (
+  id INT PRIMARY KEY,
+  baby_trigger_item_id INT
+);
+
+CREATE TABLE pokemon_species (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  evolves_from_species_id INT,
+  evolution_chain_id INT NOT NULL,
+  color_id INT NOT NULL,
+  shape_id INT NOT NULL,
+  habitat_id INT NOT NULL,
+  gender_rate INT NOT NULL,
+  capture_rate INT NOT NULL,
+  base_happiness INT NOT NULL,
+  is_baby BOOLEAN NOT NULL,
+  hatch_counter INT,
+  has_gender_differences BOOLEAN NOT NULL,
+  growth_rate_id INT NULL,
+  forms_switchable IN NULL,
+  is_legendary BOOLEAN NOT NULL,
+  is_mythical BOOLEAN NOT NULL,
+  order_index INT,
+  conquest_order INT,
+  CONSTRAINT fk_pokemon_species_generation FOREIGN KEY (generation_id) REFERENCES generations(id),
+  CONSTRAINT fk_pokemon_species_evolves_from FOREIGN KEY (evolves_from_species_id) REFERENCES pokemon_species(id),
+  CONSTRAINT fk_pokemon_species_evolution_chain FOREIGN KEY (evolution_chain_id) REFERENCES evolution_chains(id),
+  CONSTRAINT fk_pokemon_species_color FOREIGN KEY (color_id) REFERENCES pokemon_colors(id),
+  CONSTRAINT fk_pokemon_species_shape FOREIGN KEY (shape_id) REFERENCES pokemon_shapes(id),
+  CONSTRAINT fk_pokemon_species_habitat FOREIGN KEY (habitat_id) REFERENCES pokemon_habitats(id),
+  CONSTRAINT fk_pokemon_species_growth_rate FOREIGN KEY (growth_rate_id) REFERENCES growth_rates(id)
+);
+
+CREATE TABLE pokemon (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  species_id INT NOT NULL,
+  height INT NOT NULL,
+  weight INT NOT NULL,
+  base_experience INT NOT NULL,
+  order_index INT,
+  is_default BOOLEAN NOT NULL,
+  CONSTRAINT fk_pokemon_species FOREIGN KEY (species_id) REFERENCES pokemon_species(id)
+);
+
+CREATE TABLE version_groups (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  group_order INT,
+  CONSTRAINT fk_version_groups_generation FOREIGN KEY (generation_id) REFERENCES generations(id)
+);
+
+-- ADDED versions table
+CREATE TABLE versions (
+  id INT PRIMARY KEY,
+  version_group_id INT NOT NULL,
+  identifier VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_versions_version_group FOREIGN KEY (version_group_id) REFERENCES version_groups(id)
+);
+
+CREATE TABLE pokemon_forms (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  form_identifier VARCHAR(255),
+  pokemon_id INT NOT NULL,
+  introduced_in_version_group_id INT,
+  is_default BOOLEAN NOT NULL,
+  is_battle_only BOOLEAN NOT NULL,
+  is_mega BOOLEAN NOT NULL,
+  form_order INT,
+  order_index INT,
+  CONSTRAINT fk_pokemon_forms_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+  CONSTRAINT fk_pokemon_forms_version_group FOREIGN KEY (introduced_in_version_group_id) REFERENCES version_groups(id)
+);
+
+-- Many-to-Many Pokémon Relationships
+CREATE TABLE pokemon_stats (
+  pokemon_id INT NOT NULL,
+  stat_id INT NOT NULL,
+  base_stat INT NOT NULL,
+  effort INT NOT NULL,
+  PRIMARY KEY (pokemon_id, stat_id),
+  CONSTRAINT fk_pokemon_stats_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+  CONSTRAINT fk_pokemon_stats_stat FOREIGN KEY (stat_id) REFERENCES stats(id)
+);
+
+CREATE TABLE pokemon_types (
+  pokemon_id INT NOT NULL,
+  type_id INT NOT NULL,
+  slot INT NOT NULL,
+  PRIMARY KEY (pokemon_id, type_id),
+  CONSTRAINT fk_pokemon_types_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+  CONSTRAINT fk_pokemon_types_type FOREIGN KEY (type_id) REFERENCES types(id)
+);
+
+-- Moved abilities table definition here for correct FK referencing
+CREATE TABLE abilities (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  generation_id INT NOT NULL,
+  is_main_series BOOLEAN,
+  CONSTRAINT fk_abilities_generation FOREIGN KEY (generation_id) REFERENCES generations(id)
+);
+
+CREATE TABLE pokemon_abilities (
+  pokemon_id INT NOT NULL,
+  ability_id INT NOT NULL,
+  PRIMARY KEY (pokemon_id, ability_id),
+  CONSTRAINT fk_pokemon_abilities_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+  CONSTRAINT fk_pokemon_abilities_ability FOREIGN KEY (ability_id) REFERENCES abilities(id)
+);
+
+CREATE TABLE pokemon_egg_groups (
+  pokemon_species_id INT NOT NULL,
+  egg_group_id INT NOT NULL,
+  PRIMARY KEY (pokemon_species_id, egg_group_id),
+  CONSTRAINT fk_pokemon_egg_groups_species FOREIGN KEY (pokemon_species_id) REFERENCES pokemon_species(id),
+  CONSTRAINT fk_pokemon_egg_groups_egg_group FOREIGN KEY (egg_group_id) REFERENCES egg_groups(id)
+);
+
+-- Locations and Areas
+CREATE TABLE locations (
+  id INT PRIMARY KEY,
+  region_id INT NOT NULL,
+  identifier VARCHAR(255) NOT NULL,
+  CONSTRAINT fk_locations_region FOREIGN KEY (region_id) REFERENCES regions(id)
+);
+
+CREATE TABLE pokemon_location_areas (
+  id INT PRIMARY KEY,
+  location_id INT NOT NULL,
+  game_index INT NOT NULL,
+  identifier VARCHAR(255),
+  CONSTRAINT fk_pokemon_location_areas_location FOREIGN KEY (location_id) REFERENCES locations(id)
+);
+
+-- Items and Item Categories (Moved item_categories before items)
+CREATE TABLE item_categories (
+  id INT PRIMARY KEY,
+  pocket_id INT,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE items (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL,
+  category_id INT,
+  cost INT NOT NULL,
+  fling_power INT,
+  fling_effect_id INT,
+  CONSTRAINT fk_items_category FOREIGN KEY (category_id) REFERENCES item_categories(id)
+);
+
+-- Abilities and their Texts
+CREATE TABLE ability_prose (
+  ability_id INT NOT NULL,
+  local_language_id INT NOT NULL,
+  short_effect VARCHAR(255) NOT NULL,
+  PRIMARY KEY (ability_id, local_language_id),
+  CONSTRAINT fk_ability_prose_ability FOREIGN KEY (ability_id) REFERENCES abilities(id),
+  CONSTRAINT fk_ability_prose_language FOREIGN KEY (local_language_id) REFERENCES languages(id)
+);
+
+CREATE TABLE ability_flavor_text (
+  ability_id INT NOT NULL,
+  version_group_id INT NOT NULL,
+  language_id INT NOT NULL,
+  flavor_text VARCHAR(255) NOT NULL,
+  PRIMARY KEY (ability_id, version_group_id, language_id),
+  CONSTRAINT fk_ability_flavor_text_ability FOREIGN KEY (ability_id) REFERENCES abilities(id),
+  CONSTRAINT fk_ability_flavor_text_version_group FOREIGN KEY (version_group_id) REFERENCES version_groups(id),
+  CONSTRAINT fk_ability_flavor_text_language FOREIGN KEY (language_id) REFERENCES languages(id)
+);
+
+-- Moves Learned by Pokémon
+CREATE TABLE pokemon_move_methods (
+  id INT PRIMARY KEY,
+  identifier VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE pokemon_moves (
+  pokemon_id INT NOT NULL,
+  version_group_id INT NOT NULL,
+  move_id INT NOT NULL,
+  pokemon_move_method_id INT NOT NULL,
+  level INT NOT NULL,
+  move_order INT,
+  mastery INT,
+  PRIMARY KEY (pokemon_id, version_group_id, move_id, pokemon_move_method_id),
+  CONSTRAINT fk_pokemon_moves_pokemon FOREIGN KEY (pokemon_id) REFERENCES pokemon(id),
+  CONSTRAINT fk_pokemon_moves_version_group FOREIGN KEY (version_group_id) REFERENCES version_groups(id),
+  CONSTRAINT fk_pokemon_moves_move FOREIGN KEY (move_id) REFERENCES moves(id),
+  CONSTRAINT fk_pokemon_moves_method FOREIGN KEY (pokemon_move_method_id) REFERENCES pokemon_move_methods(id)
+);
+
+-- Berries and their Flavors
+CREATE TABLE berries (
+  id INT PRIMARY KEY,
+  growth_time INT,
+  max_harvest INT,
+  natural_gift_power INT,
+  size INT,
+  smoothness INT,
+  item_id INT,
+  firmness_id INT,
+  natural_gift_type_id INT,
+  soil_dryness INT,
+  CONSTRAINT fk_berries_item FOREIGN KEY (item_id) REFERENCES items(id)
+);
+
+CREATE TABLE berry_flavors (
+  berry_id INT NOT NULL,
+  contest_type_id INT NOT NULL,
+  flavor_id INT NOT NULL,
+  PRIMARY KEY (berry_id, contest_type_id),
+  CONSTRAINT fk_berry_flavors_berry FOREIGN KEY (berry_id) REFERENCES berries(id),
+  CONSTRAINT fk_berry_flavors_contest_type FOREIGN KEY (contest_type_id) REFERENCES contest_types(id),
+  CONSTRAINT fk_berry_flavors_flavor FOREIGN KEY (flavor_id) REFERENCES flavors(id)
+);
+
+-- FK Adjustment for evolution_chains (now that items exist)
+ALTER TABLE evolution_chains
+ADD CONSTRAINT fk_evolution_chains_baby_trigger_item FOREIGN KEY (baby_trigger_item_id) REFERENCES items(id);
