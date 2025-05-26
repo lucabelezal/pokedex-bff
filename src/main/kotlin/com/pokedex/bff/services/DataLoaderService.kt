@@ -31,8 +31,7 @@ class DataLoaderService(
         "evolution_chain_id", "color_id", "shape_id", "habitat_id",
         "gender_rate", "capture_rate", "base_happiness", "hatch_counter",
         "growth_rate_id",
-        "forms_switchable", // <-- AGORA É UM INT
-        "is_legendary", "is_mythical", "order_index",
+        "forms_switchable", "order_index",
         "conquest_order", "species_id", "height", "weight", "base_experience", "stat_id", "base_stat",
         "effort", "type_id", "slot", "ability_id", "pokemon_species_id",
         "egg_group_id", "berry_id", "flavor_id", "version_group_id",
@@ -43,15 +42,14 @@ class DataLoaderService(
         "max_harvest", "natural_gift_power", "size", "smoothness",
         "local_language_id", "display_order", "region_id", "group_order",
         "baby_trigger_item_id", "move_effect_id", "pokemon_id", "introduced_in_version_group_id",
-        "firmness_id", "natural_gift_type_id", "soil_dryness", "order"
+        "firmness_id", "natural_gift_type_id", "soil_dryness", "order_index", "form_order"
     )
 
     // Optimized set of boolean column names
     private val booleanColumns = setOf(
         "is_battle_only", "is_baby", "has_gender_differences",
         "is_legendary", "is_mythical", "is_default", "is_main_series",
-        "is_mega", "official"
-        // 'forms_switchable' foi removido daqui
+        "is_mega", "official", "is_legendary", "is_mythical", "is_hidden"
     )
 
     override fun run(vararg args: String?) {
@@ -116,7 +114,7 @@ class DataLoaderService(
             loadTable("pokemon_location_areas.csv", "pokemon_location_areas", listOf("id", "location_id", "game_index", "identifier"))
             loadTable("pokemon_forms.csv", "pokemon_forms", listOf(
                 "id", "identifier", "form_identifier", "pokemon_id", "introduced_in_version_group_id",
-                "is_default", "is_battle_only", "is_mega", "form_order", "order"
+                "is_default", "is_battle_only", "is_mega", "form_order", "order_index"
             ))
 
             loadTable("pokemon_stats.csv", "pokemon_stats", listOf("pokemon_id", "stat_id", "base_stat", "effort"))
