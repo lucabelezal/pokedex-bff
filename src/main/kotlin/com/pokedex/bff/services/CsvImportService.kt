@@ -6,14 +6,11 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVParser
 import org.apache.commons.csv.CSVRecord
 import org.slf4j.LoggerFactory
-import org.springframework.data.jpa.domain.AbstractPersistable_
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.io.InputStream
 import java.nio.charset.StandardCharsets
-import org.springframework.data.jpa.domain.AbstractPersistable_.id
-
 
 
 @Service
@@ -335,7 +332,7 @@ class CsvImportService(
             )
         }),
         "pokemon_location_areas" to (pokemonLocationAreaRepository to { record ->
-            PokemonLocationArea(
+            LocationArea(
                 id = record.get("id").toInt(),
                 locationId = record.get("location_id").toInt(),
                 gameIndex = record.get("game_index").toInt(),

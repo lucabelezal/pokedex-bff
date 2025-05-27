@@ -42,7 +42,8 @@ class DataLoaderService(
         "max_harvest", "natural_gift_power", "size", "smoothness",
         "local_language_id", "display_order", "region_id", "group_order",
         "baby_trigger_item_id", "move_effect_id", "pokemon_id", "introduced_in_version_group_id",
-        "firmness_id", "natural_gift_type_id", "soil_dryness", "order_index", "form_order"
+        "firmness_id", "natural_gift_type_id", "soil_dryness", "order_index", "form_order",
+        "flavor_id", "move_order", "mastery", "location_id"
     )
 
     // Optimized set of boolean column names
@@ -111,7 +112,7 @@ class DataLoaderService(
                 "conquest_order"
             ))
             loadTable("pokemon.csv", "pokemon", listOf("id", "identifier", "species_id", "height", "weight", "base_experience", "order_index", "is_default"))
-            loadTable("pokemon_location_areas.csv", "pokemon_location_areas", listOf("id", "location_id", "game_index", "identifier"))
+            loadTable("location_areas.csv", "location_areas", listOf("id", "location_id", "game_index", "identifier"))
             loadTable("pokemon_forms.csv", "pokemon_forms", listOf(
                 "id", "identifier", "form_identifier", "pokemon_id", "introduced_in_version_group_id",
                 "is_default", "is_battle_only", "is_mega", "form_order", "order_index"
@@ -120,8 +121,8 @@ class DataLoaderService(
             loadTable("pokemon_stats.csv", "pokemon_stats", listOf("pokemon_id", "stat_id", "base_stat", "effort"))
             loadTable("pokemon_types.csv", "pokemon_types", listOf("pokemon_id", "type_id", "slot"))
             loadTable("pokemon_abilities.csv", "pokemon_abilities", listOf("pokemon_id", "ability_id", "is_hidden", "slot"))
-            loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("species_id", "egg_group_id"))
-            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor"))
+            loadTable("pokemon_egg_groups.csv", "pokemon_egg_groups", listOf("pokemon_species_id", "egg_group_id"))
+            loadTable("berry_flavors.csv", "berry_flavors", listOf("berry_id", "contest_type_id", "flavor_id"))
             loadTable("versions.csv", "versions", listOf("id", "version_group_id", "identifier"))
             loadTable("ability_prose.csv", "ability_prose", listOf("ability_id", "local_language_id", "short_effect", "effect"))
             loadTable("ability_flavor_text.csv", "ability_flavor_text", listOf("ability_id", "version_group_id", "language_id", "flavor_text"))
@@ -261,7 +262,7 @@ class DataLoaderService(
             "pokemon_stats" -> "ON CONFLICT (pokemon_id, stat_id) DO NOTHING"
             "pokemon_types" -> "ON CONFLICT (pokemon_id, type_id) DO NOTHING"
             "pokemon_abilities" -> "ON CONFLICT (pokemon_id, ability_id) DO NOTHING"
-            "pokemon_egg_groups" -> "ON CONFLICT (species_id, egg_group_id) DO NOTHING"
+            "pokemon_egg_groups" -> "ON CONFLICT (pokemon_species_id, egg_group_id) DO NOTHING"
             "berry_flavors" -> "ON CONFLICT (berry_id, contest_type_id) DO NOTHING"
             "ability_prose" -> "ON CONFLICT (ability_id, local_language_id) DO NOTHING"
             "ability_flavor_text" -> "ON CONFLICT (ability_id, version_group_id, language_id) DO NOTHING"
