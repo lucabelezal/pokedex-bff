@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS pokemon_moves CASCADE;
 DROP TABLE IF EXISTS ability_flavor_text CASCADE;
 DROP TABLE IF EXISTS ability_prose CASCADE;
 DROP TABLE IF EXISTS pokemon_forms CASCADE;
-DROP TABLE IF EXISTS pokemon_location_areas CASCADE;
+DROP TABLE IF EXISTS location_areas CASCADE;
 DROP TABLE IF EXISTS pokemon_stats CASCADE;
 DROP TABLE IF EXISTS pokemon_types CASCADE;
 DROP TABLE IF EXISTS pokemon_abilities CASCADE;
@@ -345,12 +345,12 @@ CREATE TABLE locations (
   CONSTRAINT fk_locations_region FOREIGN KEY (region_id) REFERENCES regions(id)
 );
 
-CREATE TABLE pokemon_location_areas (
+CREATE TABLE location_areas (
   id INT PRIMARY KEY,
   location_id INT NOT NULL,
   game_index INT NOT NULL,
   identifier VARCHAR(255),
-  CONSTRAINT fk_pokemon_location_areas_location FOREIGN KEY (location_id) REFERENCES locations(id)
+  CONSTRAINT fk_location_areas_location FOREIGN KEY (location_id) REFERENCES locations(id)
 );
 
 -- Items and Item Categories (Moved item_categories before items)
@@ -374,7 +374,8 @@ CREATE TABLE items (
 CREATE TABLE ability_prose (
   ability_id INT NOT NULL,
   local_language_id INT NOT NULL,
-  short_effect VARCHAR(255) NOT NULL,
+  short_effect TEXT,
+  effect TEXT,
   PRIMARY KEY (ability_id, local_language_id),
   CONSTRAINT fk_ability_prose_ability FOREIGN KEY (ability_id) REFERENCES abilities(id),
   CONSTRAINT fk_ability_prose_language FOREIGN KEY (local_language_id) REFERENCES languages(id)
@@ -384,7 +385,7 @@ CREATE TABLE ability_flavor_text (
   ability_id INT NOT NULL,
   version_group_id INT NOT NULL,
   language_id INT NOT NULL,
-  flavor_text VARCHAR(255) NOT NULL,
+  flavor_text TEXT,
   PRIMARY KEY (ability_id, version_group_id, language_id),
   CONSTRAINT fk_ability_flavor_text_ability FOREIGN KEY (ability_id) REFERENCES abilities(id),
   CONSTRAINT fk_ability_flavor_text_version_group FOREIGN KEY (version_group_id) REFERENCES version_groups(id),

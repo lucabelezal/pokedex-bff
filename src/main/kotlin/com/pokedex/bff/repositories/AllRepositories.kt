@@ -85,7 +85,7 @@ interface PokemonFormRepository : JpaRepository<PokemonForm, Int>
 interface LocationRepository : JpaRepository<Location, Int>
 
 @Repository
-interface PokemonLocationAreaRepository : JpaRepository<PokemonLocationArea, Int>
+interface PokemonLocationAreaRepository : JpaRepository<LocationArea, Int>
 
 @Repository
 interface ContestTypeRepository : JpaRepository<ContestType, Int>

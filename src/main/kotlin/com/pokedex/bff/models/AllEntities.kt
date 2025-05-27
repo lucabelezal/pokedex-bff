@@ -504,8 +504,8 @@ data class Location(
 )
 
 @Entity
-@Table(name = "pokemon_location_areas")
-data class PokemonLocationArea(
+@Table(name = "location_areas")
+data class LocationArea(
     @Id
     @Column(name = "id")
     val id: Int,
@@ -772,10 +772,10 @@ data class AbilityProse(
     @EmbeddedId
     val id: AbilityProseId,
 
-    @Column(name = "short_effect")
+    @Column(name = "short_effect", columnDefinition = "TEXT")
     val shortEffect: String?,
 
-    @Column(name = "effect")
+    @Column(name = "effect", columnDefinition = "TEXT")
     val effect: String?
 )
 
