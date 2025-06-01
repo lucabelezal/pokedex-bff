@@ -1,0 +1,120 @@
+Table region {
+  id int [pk, increment]
+  name varchar(255) [not null, unique]
+}
+
+Table generation {
+  id int [pk, increment]
+  name varchar(50) [not null, unique]
+  region_id int [not null]
+}
+
+Table type {
+  id int [pk, increment]
+  name varchar(255) [not null, unique]
+  color varchar(50) [not null]
+}
+
+Table stats {
+  id int [pk, increment]
+  total int
+  hp int
+  attack int
+  defense int
+  sp_atk int
+  sp_def int
+  speed int
+}
+
+Table pokemon {
+  id int [pk, increment]
+  national_pokedex_number varchar(10) [not null, unique]
+  name varchar(255) [not null]
+  stats_id int [unique]
+  generation_id int [not null]
+  species varchar(255)
+  height_m decimal(5, 2)
+  weight_kg decimal(6, 2)
+  description text
+  sprites jsonb
+  gender_rate_value int
+  egg_cycles int
+}
+
+Table pokemon_type {
+  pokemon_id int [not null]
+  type_id int [not null]
+  
+  indexes {
+    (pokemon_id, type_id) [pk] // Composite Primary Key
+  }
+}
+
+Table evolution {
+  id int [pk, increment]
+  pre_evolution_pokemon_id int [not null]
+  post_evolution_pokemon_id int [not null]
+  condition_description varchar(255) [not null]
+  condition_level int
+
+  indexes {
+    (pre_evolution_pokemon_id, post_evolution_pokemon_id) [unique] // Unique constraint for the pair
+  }
+}
+
+Table ability {
+  id int [pk, increment]
+  name varchar(255) [not null, unique]
+  description text
+  introduced_generation_id int
+}
+
+Table pokemon_ability {
+  pokemon_id int [not null]
+  ability_id int [not null]
+  is_hidden boolean [default: false]
+  
+  indexes {
+    (pokemon_id, ability_id) [pk] // Composite Primary Key
+  }
+}
+
+Table egg_group {
+  id int [pk, increment]
+  name varchar(50) [not null, unique]
+}
+
+Table pokemon_egg_group {
+  pokemon_id int [not null]
+  egg_group_id int [not null]
+  
+  indexes {
+    (pokemon_id, egg_group_id) [pk] // Composite Primary Key
+  }
+}
+
+Table type_matchup {
+  attacking_type_id int [not null]
+  defending_type_id int [not null]
+  damage_factor decimal(3, 2) [not null]
+  
+  indexes {
+    (attacking_type_id, defending_type_id) [pk] // Composite Primary Key
+  }
+}
+
+// Relationships
+Ref: generation.region_id > region.id // ON DELETE RESTRICT
+Ref: pokemon.stats_id - stats.id // ON DELETE CASCADE (1-to-1 relationship due to UNIQUE on stats_id)
+Ref: pokemon.generation_id > generation.id // ON DELETE RESTRICT
+Ref: pokemon_type.pokemon_id > pokemon.id // ON DELETE CASCADE
+Ref: pokemon_type.type_id > type.id // ON DELETE CASCADE
+Ref: evolution.pre_evolution_pokemon_id > pokemon.id // ON DELETE CASCADE
+Ref: evolution.post_evolution_pokemon_id > pokemon.id // ON DELETE CASCADE
+Ref: ability.introduced_generation_id > generation.id // ON DELETE RESTRICT
+Ref: pokemon_ability.pokemon_id > pokemon.id // ON DELETE CASCADE
+Ref: pokemon_ability.ability_id > ability.id // ON DELETE CASCADE
+Ref: pokemon_egg_group.pokemon_id > pokemon.id // ON DELETE CASCADE
+Ref: pokemon_egg_group.egg_group_id > egg_group.id // ON DELETE CASCADE
+Ref: type_matchup.attacking_type_id > type.id // ON DELETE CASCADE
+Ref: type_matchup.defending_type_id > type.id // ON DELETE CASCADE
