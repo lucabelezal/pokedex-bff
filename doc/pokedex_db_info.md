@@ -191,6 +191,7 @@ Armazena as relações de efetividade de dano entre tipos de Pokémon.
 A coluna `sprites` na tabela `pokemon` é do tipo **`JSONB`**.
 
 * **Finalidade:** Armazenar uma coleção rica e semi-estruturada de URLs de imagens (sprites) para cada Pokémon.
+* **Aonde encontrar:** https://pokeapi.co/api/v2/pokemon/1    
 * **Estrutura do JSONB:** Conforme o exemplo fornecido:
     ```json
     {
