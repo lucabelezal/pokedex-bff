@@ -354,135 +354,18 @@ erDiagram
         decimal damage_factor
     }
 
-    region ||--o{ generation : "contém"
-    generation ||--o{ pokemon : "pertence a"
-    generation ||--o{ ability : "introduz"
-    stats ||--|| pokemon : "tem estatísticas"
-    pokemon }o--o{ pokemon_type : "tem tipo"
-    type }o--o{ pokemon_type : "é tipo de"
-    pokemon }o--o{ pokemon_ability : "tem habilidade"
-    ability }o--o{ pokemon_ability : "é habilidade de"
-    pokemon }o--o{ pokemon_egg_group : "tem grupo de ovo"
-    egg_group }o--o{ pokemon_egg_group : "é grupo de"
-    type }o--o{ type_matchup : "tipo atacante"
-    type }o--o{ type_matchup : "tipo defensor"
-    pokemon ||--o{ evolution : "pré-evolução para"
-    pokemon ||--o{ evolution : "pós-evolução de"
-```mermaid
-
-# Documentação do Esquema do Banco de Dados Pokémon
-
-Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos.
-
-## Visão Geral do Esquema
-
-O esquema é composto por 14 tabelas, projetadas para manter os dados normalizados, minimizando redundância e garantindo a integridade referencial. As tabelas se relacionam para permitir consultas complexas e eficientes sobre o universo Pokémon.
-
----
-
-## Diagrama de Entidade-Relacionamento (ERD)
-
-Você pode visualizar a estrutura do banco de dados e suas relações através do seguinte diagrama, gerado usando Mermaid:
-
-```mermaid
-erDiagram
-    region {
-        int id PK
-        varchar name
-    }
-
-    generation {
-        int id PK
-        varchar name
-        int region_id FK
-    }
-
-    type {
-        int id PK
-        varchar name
-        varchar color
-    }
-
-    stats {
-        int id PK
-        int total
-        int hp
-        int attack
-        int defense
-        int sp_atk
-        int sp_def
-        int speed
-    }
-
-    pokemon {
-        int id PK
-        varchar national_pokedex_number
-        varchar name
-        int stats_id FK
-        int generation_id FK
-        varchar species
-        decimal height_m
-        decimal weight_kg
-        text description
-        jsonb sprites
-        int gender_rate_value
-        int egg_cycles
-    }
-
-    pokemon_type {
-        int pokemon_id PK,FK
-        int type_id PK,FK
-    }
-
-    evolution {
-        int id PK
-        int pre_evolution_pokemon_id FK
-        int post_evolution_pokemon_id FK
-        varchar condition_description
-        int condition_level
-    }
-
-    ability {
-        int id PK
-        varchar name
-        text description
-        int introduced_generation_id FK
-    }
-
-    pokemon_ability {
-        int pokemon_id PK,FK
-        int ability_id PK,FK
-        boolean is_hidden
-    }
-
-    egg_group {
-        int id PK
-        varchar name
-    }
-
-    pokemon_egg_group {
-        int pokemon_id PK,FK
-        int egg_group_id PK,FK
-    }
-
-    type_matchup {
-        int attacking_type_id PK,FK
-        int defending_type_id PK,FK
-        decimal damage_factor
-    }
-
-    region ||--|{ generation : "contém"
-    generation ||--|{ pokemon : "pertence a"
-    generation ||--o{ ability : "introduz"  // introduced_generation_id é NULLable no SQL original
-    stats ||--|| pokemon : "tem estatísticas"
-    pokemon }|--|{ pokemon_type : "tem tipo"
-    type }|--|{ pokemon_type : "é tipo de"
-    pokemon }|--|{ pokemon_ability : "tem habilidade"
-    ability }|--|{ pokemon_ability : "é habilidade de"
-    pokemon }|--|{ pokemon_egg_group : "tem grupo de ovo"
-    egg_group }|--|{ pokemon_egg_group : "é grupo de"
-    type }|--|{ type_matchup : "tipo atacante"
-    type }|--|{ type_matchup : "tipo defensor"
-    pokemon ||--|{ evolution : "pré-evolução para"
-    pokemon ||--|{ evolution : "pós-evolução de"
+    region ||--|{ generation : "1:N - contém"
+    generation ||--|{ pokemon : "1:N - pertence a"
+    generation ||--o{ ability : "1:N - introduz"
+    stats ||--|| pokemon : "1:1 - tem estatísticas"
+    pokemon }|--|{ pokemon_type : "N:N - tem tipo"
+    type }|--|{ pokemon_type : "N:N - é tipo de"
+    pokemon }|--|{ pokemon_ability : "N:N - tem habilidade"
+    ability }|--|{ pokemon_ability : "N:N - é habilidade de"
+    pokemon }|--|{ pokemon_egg_group : "N:N - tem grupo de ovo"
+    egg_group }|--|{ pokemon_egg_group : "N:N - é grupo de"
+    type }|--|{ type_matchup : "N:N - tipo atacante"
+    type }|--|{ type_matchup : "N:N - tipo defensor"
+    pokemon ||--o{ evolution : "1:N - pré-evolução para"
+    pokemon ||--o{ evolution : "1:N - pós-evolução de"
 ```
