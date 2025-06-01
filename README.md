@@ -72,6 +72,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 ### Executando Apenas o Servidor (se o DB já estiver configurado)
 
 Se o banco de dados já estiver rodando e populado, você pode iniciar apenas a aplicação BFF:
+
 ```bash
 make run-bff
 ```
