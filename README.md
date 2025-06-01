@@ -38,6 +38,8 @@ Este projeto é construído utilizando uma pilha de tecnologias modernas para ga
 * **Docker / Docker Compose**: Utilizado para criar um ambiente de desenvolvimento isolado e replicável para o banco de dados.
 * **Apache Commons CSV**: Para o processamento de arquivos CSV (para carregamento de dados).
 
+---
+
 ## Como Começar
 
 Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente de desenvolvimento local.
@@ -57,14 +59,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
     cd pokedex-bff
     ```
 
-2.  **Instale as Dependências do Projeto:**
-    ```bash
-    # Para dependências de front-end ou ferramentas (se houver, caso contrário, pule)
-    npm install 
-    # ou yarn install 
-    ```
-
-3.  **Configuração do Ambiente e Início (Recomendado):**
+2.  **Configuração do Ambiente e Início (Recomendado):**
     * Crie um arquivo `.env` na raiz do projeto para suas variáveis de ambiente de banco de dados. Um exemplo básico, que será usado pelo `docker-compose.dev.yml` e pela sua aplicação Spring Boot:
         ```
         DB_HOST=localhost
