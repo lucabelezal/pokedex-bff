@@ -60,14 +60,6 @@ Certifique-se de ter as seguintes ferramentas instaladas:
     ```
 
 2.  **Configuração do Ambiente e Início (Recomendado):**
-    * Crie um arquivo `.env` na raiz do projeto para suas variáveis de ambiente de banco de dados. Um exemplo básico, que será usado pelo `docker-compose.dev.yml` e pela sua aplicação Spring Boot:
-        ```
-        DB_HOST=localhost
-        DB_PORT=5432
-        DB_USER=pokemon_user
-        DB_PASSWORD=pokemon_password
-        DB_NAME=pokedex_db
-        ```
     * Para uma configuração rápida e completa do ambiente de desenvolvimento (iniciar DB e carregar dados):
         ```bash
         make setup-dev
@@ -82,3 +74,36 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 Se o banco de dados já estiver rodando e populado, você pode iniciar apenas a aplicação BFF:
 ```bash
 make run-bff
+```
+
+### Caso precise ver as opções do comando make
+Rode o comando abaixo:
+```bash
+make
+```
+```bach
+===================================================================
+                 Comandos do Makefile para Pokedex BFF             
+===================================================================
+  make help                   - Exibe esta mensagem de ajuda.
+
+  make setup-dev              - Configura e inicia o ambiente de desenvolvimento completo:
+                                  1. Inicia o PostgreSQL via Docker Compose.
+                                  2. Aguarda o DB estar acessível.
+                                  3. Inicia o BFF, que popula o DB com os CSVs.
+
+  make start-db               - Apenas inicia o contêiner do banco de dados PostgreSQL.
+  make stop-db                - Para o contêiner do banco de dados.
+  make clean-db               - Remove o contêiner do DB e seus volumes de dados (CUIDADO: APAGA OS DADOS!).
+
+  make load-data              - Inicia o BFF para carregar os dados CSV no DB.
+                                  (Requer que o DB já esteja rodando e acessível).
+  make clean-bff              - Limpa o projeto BFF (executa './gradlew clean').
+  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo).
+
+  make clean-all              - Limpa o ambiente de desenvolvimento completo:
+                                  1. Para o DB. 2. Remove o DB e seus volumes. 3. Limpa o BFF (incluindo caches do Gradle).
+  make force-remove-db-container - Força a remoção de um contêiner 'pokedex-db' órfão ou travado.
+  make deep-clean-gradle      - Realiza uma limpeza profunda dos caches e artefatos do Gradle.
+===================================================================
+```
