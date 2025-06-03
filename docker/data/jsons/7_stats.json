@@ -1,5 +1,6 @@
 [
     {
+        "id": 1,
         "pokemonNationalPokedexNumber": "0001",
         "pokemonName": "Bulbasaur",
         "total": 318,
@@ -11,6 +12,7 @@
         "speed": 45
     },
     {
+        "id": 2,
         "pokemonNationalPokedexNumber": "0002",
         "pokemonName": "Ivysaur",
         "total": 405,
@@ -22,6 +24,7 @@
         "speed": 60
     },
     {
+        "id": 3,
         "pokemonNationalPokedexNumber": "0003",
         "pokemonName": "Venusaur",
         "total": 525,
@@ -33,6 +36,7 @@
         "speed": 80
     },
     {
+        "id": 4,
         "pokemonNationalPokedexNumber": "0003",
         "pokemonName": "Venusaur Mega Venusaur",
         "total": 625,
@@ -42,5 +46,113 @@
         "spAtk": 122,
         "spDef": 120,
         "speed": 80
+    },
+    {
+        "id": 5,
+        "pokemonNationalPokedexNumber": "0004",
+        "pokemonName": "Charmander",
+        "total": 309,
+        "hp": 39,
+        "attack": 52,
+        "defense": 43,
+        "spAtk": 60,
+        "spDef": 50,
+        "speed": 65
+    },
+    {
+        "id": 6,
+        "pokemonNationalPokedexNumber": "0005",
+        "pokemonName": "Charmeleon",
+        "total": 405,
+        "hp": 58,
+        "attack": 64,
+        "defense": 58,
+        "spAtk": 80,
+        "spDef": 65,
+        "speed": 80
+    },
+    {
+        "id": 7,
+        "pokemonNationalPokedexNumber": "0006",
+        "pokemonName": "Charizard",
+        "total": 534,
+        "hp": 78,
+        "attack": 84,
+        "defense": 78,
+        "spAtk": 109,
+        "spDef": 85,
+        "speed": 100
+    },
+    {
+        "id": 8,
+        "pokemonNationalPokedexNumber": "0006",
+        "pokemonName": "Charizard Mega Charizard X",
+        "total": 634,
+        "hp": 78,
+        "attack": 130,
+        "defense": 111,
+        "spAtk": 130,
+        "spDef": 85,
+        "speed": 100
+    },
+    {
+        "id": 9,
+        "pokemonNationalPokedexNumber": "0006",
+        "pokemonName": "Charizard Mega Charizard Y",
+        "total": 634,
+        "hp": 78,
+        "attack": 104,
+        "defense": 78,
+        "spAtk": 159,
+        "spDef": 115,
+        "speed": 100
+    },
+    {
+        "id": 10,
+        "pokemonNationalPokedexNumber": "0007",
+        "pokemonName": "Squirtle",
+        "total": 314,
+        "hp": 44,
+        "attack": 48,
+        "defense": 65,
+        "spAtk": 50,
+        "spDef": 64,
+        "speed": 43
+    },
+    {
+        "id": 11,
+        "pokemonNationalPokedexNumber": "0008",
+        "pokemonName": "Wartortle",
+        "total": 405,
+        "hp": 59,
+        "attack": 63,
+        "defense": 80,
+        "spAtk": 65,
+        "spDef": 80,
+        "speed": 58
+    },
+    {
+        "id": 12,
+        "pokemonNationalPokedexNumber": "0009",
+        "pokemonName": "Blastoise",
+        "total": 530,
+        "hp": 79,
+        "attack": 83,
+        "defense": 100,
+        "spAtk": 85,
+        "spDef": 105,
+        "speed": 78
+    },
+    {
+        "id": 13,
+        "pokemonNationalPokedexNumber": "0009",
+        "pokemonName": "Blastoise Mega Blastoise",
+        "total": 630,
+        "hp": 79,
+        "attack": 103,
+        "defense": 120,
+        "spAtk": 135,
+        "spDef": 115,
+        "speed": 78
     }
 ]
