@@ -1,10 +1,99 @@
 [
     {
         "pokemonId": 1,
-        "eggGroupId": 1
-    },
+        "eggGroupId": 7
+    }, // Bulbasaur (Grama)
     {
         "pokemonId": 1,
+        "eggGroupId": 10
+    }, // Bulbasaur (Monstro)
+    {
+        "pokemonId": 2,
+        "eggGroupId": 7
+    }, // Ivysaur (Grama)
+    {
+        "pokemonId": 2,
+        "eggGroupId": 10
+    }, // Ivysaur (Monstro)
+    {
+        "pokemonId": 3,
+        "eggGroupId": 7
+    }, // Venusaur (Grama)
+    {
+        "pokemonId": 3,
+        "eggGroupId": 10
+    }, // Venusaur (Monstro)
+    {
+        "pokemonId": 4,
+        "eggGroupId": 3
+    }, // Charmander (Dragão)
+    {
+        "pokemonId": 4,
+        "eggGroupId": 5
+    }, // Charmander (Campo)
+    {
+        "pokemonId": 5,
+        "eggGroupId": 3
+    }, // Charmeleon (Dragão)
+    {
+        "pokemonId": 5,
+        "eggGroupId": 5
+    }, // Charmeleon (Campo)
+    {
+        "pokemonId": 6,
+        "eggGroupId": 3
+    }, // Charizard (Dragão)
+    {
+        "pokemonId": 6,
+        "eggGroupId": 5
+    }, // Charizard (Campo)
+    {
+        "pokemonId": 7,
+        "eggGroupId": 11
+    }, // Squirtle (Água 1)
+    {
+        "pokemonId": 7,
+        "eggGroupId": 5
+    }, // Squirtle (Campo)
+    {
+        "pokemonId": 8,
+        "eggGroupId": 11
+    }, // Wartortle (Água 1)
+    {
+        "pokemonId": 8,
+        "eggGroupId": 5
+    }, // Wartortle (Campo)
+    {
+        "pokemonId": 9,
+        "eggGroupId": 11
+    }, // Blastoise (Água 1)
+    {
+        "pokemonId": 9,
+        "eggGroupId": 5
+    }, // Blastoise (Campo)
+    {
+        "pokemonId": 10,
         "eggGroupId": 2
-    }
+    }, // Caterpie (Inseto)
+    {
+        "pokemonId": 11,
+        "eggGroupId": 2
+    }, // Metapod (Inseto)
+    {
+        "pokemonId": 12,
+        "eggGroupId": 2
+    }, // Butterfree (Inseto)
+    {
+        "pokemonId": 13,
+        "eggGroupId": 2
+    }, // Weedle (Inseto)
+    {
+        "pokemonId": 14,
+        "eggGroupId": 2
+    }, // Kakuna (Inseto)
+    {
+        "pokemonId": 15,
+        "eggGroupId": 2
+    } // Beedrill (Inseto)
+  // Mega Evoluções não têm grupos de ovos separados, pois não podem chocar.
 ]
