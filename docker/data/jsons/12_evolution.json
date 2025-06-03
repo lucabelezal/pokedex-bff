@@ -1,0 +1,26 @@
+[
+    {
+        "preEvolutionPokemonId": 1,
+        "postEvolutionPokemonId": 2,
+        "conditionDescription": "Level up",
+        "conditionLevel": 16
+    },
+    {
+        "preEvolutionPokemonId": 2,
+        "postEvolutionPokemonId": 3,
+        "conditionDescription": "Level up",
+        "conditionLevel": 32
+    },
+    {
+        "preEvolutionPokemonId": 4,
+        "postEvolutionPokemonId": 5,
+        "conditionDescription": "Level up",
+        "conditionLevel": 16
+    },
+    {
+        "preEvolutionPokemonId": 5,
+        "postEvolutionPokemonId": 6,
+        "conditionDescription": "Level up",
+        "conditionLevel": 36
+    }
+]

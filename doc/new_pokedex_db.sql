@@ -15,7 +15,7 @@ CREATE TABLE generation (
 CREATE TABLE type (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
-    color VARCHAR(50) NOT NULL -- Ex: 'red' para Fire, 'blue' para Water
+    color VARCHAR(50) NOT NULL -- Ex: '#EE8130' para Fire, '#6390F0' para Water
 );
 
 -- Tabela para armazenar os atributos de estatísticas de um Pokémon
@@ -51,7 +51,7 @@ CREATE TABLE pokemon (
     weight_kg DECIMAL(6, 2),
     description TEXT,
     sprites JSONB,
-    gender_rate_value INTEGER,
+    gender JSONB, -- ALTERAÇÃO AQUI: de gender_rate_value INTEGER para gender JSONB
     egg_cycles INTEGER
 );
 

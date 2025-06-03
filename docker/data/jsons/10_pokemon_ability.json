@@ -1,0 +1,12 @@
+[
+    {
+        "pokemonId": 1,
+        "abilityId": 1,
+        "isHidden": false
+    },
+    {
+        "pokemonId": 1,
+        "abilityId": 2,
+        "isHidden": true
+    }
+]

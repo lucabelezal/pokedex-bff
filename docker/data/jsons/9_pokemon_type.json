@@ -1,0 +1,10 @@
+[
+    {
+        "pokemonId": 1,
+        "typeId": 1
+    },
+    {
+        "pokemonId": 1,
+        "typeId": 2
+    }
+]
