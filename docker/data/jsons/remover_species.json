@@ -1,0 +1,2138 @@
+[
+    {
+        "name": "Pokémon Abundância"
+    },
+    {
+        "name": "Pokémon Bolota"
+    },
+    {
+        "name": "Pokémon Liga Metálica"
+    },
+    {
+        "name": "Pokémon Alfa"
+    },
+    {
+        "name": "Pokémon Emboscada"
+    },
+    {
+        "name": "Pokémon Peixe-Pescador"
+    },
+    {
+        "name": "Pokémon Formiga-Leão"
+    },
+    {
+        "name": "Pokémon Antena"
+    },
+    {
+        "name": "Pokémon Tamanduá"
+    },
+    {
+        "name": "Pokémon Miolo de Maçã"
+    },
+    {
+        "name": "Pokémon Hidra de Maçã"
+    },
+    {
+        "name": "Pokémon Néctar de Maçã"
+    },
+    {
+        "name": "Pokémon Asa de Maçã"
+    },
+    {
+        "name": "Pokémon Rato Aquático"
+    },
+    {
+        "name": "Pokémon Coelho Aquático"
+    },
+    {
+        "name": "Pokémon Armadura"
+    },
+    {
+        "name": "Pokémon Pássaro de Armadura"
+    },
+    {
+        "name": "Pokémon Artificial"
+    },
+    {
+        "name": "Pokémon Pena de Flecha"
+    },
+    {
+        "name": "Pokémon Corpo Astral"
+    },
+    {
+        "name": "Pokémon Atroz"
+    },
+    {
+        "name": "Pokémon Aderente"
+    },
+    {
+        "name": "Pokémon Autômato"
+    },
+    {
+        "name": "Pokémon Aura"
+    },
+    {
+        "name": "Pokémon Aurora"
+    },
+    {
+        "name": "Pokémon Avianoide"
+    },
+    {
+        "name": "Pokémon Mandíbula de Machado"
+    },
+    {
+        "name": "Pokémon Machado"
+    },
+    {
+        "name": "Pokémon Bebê"
+    },
+    {
+        "name": "Pokémon Bicho-da-Seda"
+    },
+    {
+        "name": "Pokémon Bola"
+    },
+    {
+        "name": "Pokémon Rola-Bola"
+    },
+    {
+        "name": "Pokémon Baleia Bola"
+    },
+    {
+        "name": "Pokémon Balão"
+    },
+    {
+        "name": "Pokémon Craca"
+    },
+    {
+        "name": "Pokémon Barreira"
+    },
+    {
+        "name": "Pokémon Búfalo de Investida"
+    },
+    {
+        "name": "Pokémon Morcego"
+    },
+    {
+        "name": "Pokémon Bateria"
+    },
+    {
+        "name": "Pokémon Grito de Batalha"
+    },
+    {
+        "name": "Pokémon Bico"
+    },
+    {
+        "name": "Pokémon Batida"
+    },
+    {
+        "name": "Pokémon Castor"
+    },
+    {
+        "name": "Pokémon Aceno"
+    },
+    {
+        "name": "Pokémon Mosca-Abelha"
+    },
+    {
+        "name": "Pokémon Colmeia"
+    },
+    {
+        "name": "Pokémon Sino"
+    },
+    {
+        "name": "Pokémon Bagre Grande"
+    },
+    {
+        "name": "Pokémon Comilão"
+    },
+    {
+        "name": "Pokémon Peixe Grande"
+    },
+    {
+        "name": "Pokémon Chifre Grande"
+    },
+    {
+        "name": "Pokémon Mandíbula Grande"
+    },
+    {
+        "name": "Pokémon Chefão"
+    },
+    {
+        "name": "Pokémon Rocha Grande"
+    },
+    {
+        "name": "Pokémon Voz Alta"
+    },
+    {
+        "name": "Pokémon Coração Grande"
+    },
+    {
+        "name": "Pokémon Pássaro"
+    },
+    {
+        "name": "Pokémon Mordida"
+    },
+    {
+        "name": "Pokémon Bivalve"
+    },
+    {
+        "name": "Pokémon Chá Preto"
+    },
+    {
+        "name": "Pokémon Lâmina"
+    },
+    {
+        "name": "Pokémon Pena Laminada"
+    },
+    {
+        "name": "Pokémon Explosão"
+    },
+    {
+        "name": "Pokémon Tartaruga Explosiva"
+    },
+    {
+        "name": "Pokémon Chama Viva"
+    },
+    {
+        "name": "Pokémon Flamejante"
+    },
+    {
+        "name": "Pokémon Dirigível"
+    },
+    {
+        "name": "Pokémon Bloqueador"
+    },
+    {
+        "name": "Pokémon Foice Florida"
+    },
+    {
+        "name": "Pokémon Florada"
+    },
+    {
+        "name": "Pokémon Golpe de Raio"
+    },
+    {
+        "name": "Pokémon Guardião de Ossos"
+    },
+    {
+        "name": "Pokémon Abutre de Ossos"
+    },
+    {
+        "name": "Pokémon Bonsai"
+    },
+    {
+        "name": "Pokémon Chefe"
+    },
+    {
+        "name": "Pokémon Buquê"
+    },
+    {
+        "name": "Pokémon Saltitante"
+    },
+    {
+        "name": "Pokémon Limite"
+    },
+    {
+        "name": "Pokémon Boxeador"
+    },
+    {
+        "name": "Pokémon Brilhante"
+    },
+    {
+        "name": "Pokémon Bronze"
+    },
+    {
+        "name": "Pokémon Sino de Bronze"
+    },
+    {
+        "name": "Pokémon Brutal"
+    },
+    {
+        "name": "Pokémon Estrela Brutal"
+    },
+    {
+        "name": "Pokémon Sapo de Bolhas"
+    },
+    {
+        "name": "Pokémon Jato de Bolhas"
+    },
+    {
+        "name": "Pokémon Broto"
+    },
+    {
+        "name": "Pokémon Caçador de Insetos"
+    },
+    {
+        "name": "Pokémon Bico de Corneta"
+    },
+    {
+        "name": "Pokémon Bulbo"
+    },
+    {
+        "name": "Pokémon Fortalecido"
+    },
+    {
+        "name": "Pokémon Borboleta"
+    },
+    {
+        "name": "Pokémon Cacto"
+    },
+    {
+        "name": "Pokémon Calmo"
+    },
+    {
+        "name": "Pokémon Vela"
+    },
+    {
+        "name": "Pokémon Maçã do Amor"
+    },
+    {
+        "name": "Pokémon Canhão"
+    },
+    {
+        "name": "Pokémon Despreocupado"
+    },
+    {
+        "name": "Pokémon Zelador"
+    },
+    {
+        "name": "Pokémon Acolhedor"
+    },
+    {
+        "name": "Pokémon Furão-Gato"
+    },
+    {
+        "name": "Pokémon Dengoso"
+    },
+    {
+        "name": "Pokémon Cavalaria"
+    },
+    {
+        "name": "Pokémon Caverna"
+    },
+    {
+        "name": "Pokémon Célula"
+    },
+    {
+        "name": "Pokémon Centopeia"
+    },
+    {
+        "name": "Pokémon Cerebral"
+    },
+    {
+        "name": "Pokémon Bochechudo"
+    },
+    {
+        "name": "Pokémon Torcedor"
+    },
+    {
+        "name": "Pokémon Cereja"
+    },
+    {
+        "name": "Pokémon Pintinho"
+    },
+    {
+        "name": "Pokémon Arrepio"
+    },
+    {
+        "name": "Pokémon Chimpanzé"
+    },
+    {
+        "name": "Pokémon Chinchila"
+    },
+    {
+        "name": "Pokémon Bate-Palmas"
+    },
+    {
+        "name": "Pokémon Prendedor"
+    },
+    {
+        "name": "Pokémon Gato Elegante"
+    },
+    {
+        "name": "Pokémon Boneco de Argila"
+    },
+    {
+        "name": "Pokémon Asa Transparente"
+    },
+    {
+        "name": "Pokémon Carvão"
+    },
+    {
+        "name": "Pokémon Naja"
+    },
+    {
+        "name": "Pokémon Casulo"
+    },
+    {
+        "name": "Pokémon Coco"
+    },
+    {
+        "name": "Pokémon Caixão"
+    },
+    {
+        "name": "Pokémon Baú de Moedas"
+    },
+    {
+        "name": "Pokémon Entidade de Moedas"
+    },
+    {
+        "name": "Pokémon Caçador de Moedas"
+    },
+    {
+        "name": "Pokémon Coletivo"
+    },
+    {
+        "name": "Pokémon Colossal"
+    },
+    {
+        "name": "Pokémon Potro"
+    },
+    {
+        "name": "Pokémon Troca-Cor"
+    },
+    {
+        "name": "Pokémon Comediante"
+    },
+    {
+        "name": "Pokémon Bússola"
+    },
+    {
+        "name": "Pokémon Comprimido"
+    },
+    {
+        "name": "Pokémon Restrição"
+    },
+    {
+        "name": "Pokémon Continente"
+    },
+    {
+        "name": "Pokémon Pele de Cobre"
+    },
+    {
+        "name": "Pokémon Coral"
+    },
+    {
+        "name": "Pokémon Pássaro de Algodão"
+    },
+    {
+        "name": "Pokémon Flor de Algodão"
+    },
+    {
+        "name": "Pokémon Algodão Doce"
+    },
+    {
+        "name": "Pokémon Pompom de Algodão"
+    },
+    {
+        "name": "Pokémon Algodoeiro Selvagem"
+    },
+    {
+        "name": "Pokémon Casal"
+    },
+    {
+        "name": "Pokémon Cortejador"
+    },
+    {
+        "name": "Pokémon Creme"
+    },
+    {
+        "name": "Pokémon Grilo"
+    },
+    {
+        "name": "Pokémon Cruel"
+    },
+    {
+        "name": "Pokémon Cristalizador"
+    },
+    {
+        "name": "Pokémon Centopeia Enrolada"
+    },
+    {
+        "name": "Pokémon Ciclone"
+    },
+    {
+        "name": "Pokémon DNA"
+    },
+    {
+        "name": "Pokémon Dançarino"
+    },
+    {
+        "name": "Pokémon Sombrio"
+    },
+    {
+        "name": "Pokémon Escuridão"
+    },
+    {
+        "name": "Pokémon Amedrontador"
+    },
+    {
+        "name": "Pokémon Enganador"
+    },
+    {
+        "name": "Pokémon Mar Profundo"
+    },
+    {
+        "name": "Pokémon Entregador"
+    },
+    {
+        "name": "Pokémon Crocodilo do Deserto"
+    },
+    {
+        "name": "Pokémon Déspota"
+    },
+    {
+        "name": "Pokémon Destruição"
+    },
+    {
+        "name": "Pokémon Ardilós"
+    },
+    {
+        "name": "Pokémon Fralda"
+    },
+    {
+        "name": "Pokémon Cavador"
+    },
+    {
+        "name": "Pokémon Desastre"
+    },
+    {
+        "name": "Pokémon Descarga"
+    },
+    {
+        "name": "Pokémon Disciplina"
+    },
+    {
+        "name": "Pokémon Disfarce"
+    },
+    {
+        "name": "Pokémon Mergulhador"
+    },
+    {
+        "name": "Pokémon Gênio"
+    },
+    {
+        "name": "Pokémon Cão"
+    },
+    {
+        "name": "Pokémon Golfinho"
+    },
+    {
+        "name": "Pokémon Burro"
+    },
+    {
+        "name": "Pokémon Pateta"
+    },
+    {
+        "name": "Pokémon Cavalo de Tração"
+    },
+    {
+        "name": "Pokémon Dragão"
+    },
+    {
+        "name": "Pokémon Orbe do Dragão"
+    },
+    {
+        "name": "Pokémon Espada Desembainhada"
+    },
+    {
+        "name": "Pokémon Comedor de Sonhos"
+    },
+    {
+        "name": "Pokémon Broca"
+    },
+    {
+        "name": "Pokémon Sonolento"
+    },
+    {
+        "name": "Pokémon Baterista"
+    },
+    {
+        "name": "Pokémon Pato"
+    },
+    {
+        "name": "Pokémon Patinho"
+    },
+    {
+        "name": "Pokémon Aguiote"
+    },
+    {
+        "name": "Pokémon Minhoca"
+    },
+    {
+        "name": "Pokémon Ovo"
+    },
+    {
+        "name": "Pokémon Peixe Elétrico"
+    },
+    {
+        "name": "Pokémon Sapo Elétrico"
+    },
+    {
+        "name": "Pokémon Esquilo Elétrico"
+    },
+    {
+        "name": "Pokémon Aranha Elétrica"
+    },
+    {
+        "name": "Pokémon Girino Elétrico"
+    },
+    {
+        "name": "Pokémon Elétrico"
+    },
+    {
+        "name": "Pokémon Eletrificado"
+    },
+    {
+        "name": "Pokémon Elétron"
+    },
+    {
+        "name": "Pokémon Árvore Anciã"
+    },
+    {
+        "name": "Pokémon Emanação"
+    },
+    {
+        "name": "Pokémon Brasa"
+    },
+    {
+        "name": "Pokémon Abraço"
+    },
+    {
+        "name": "Pokémon Emoção"
+    },
+    {
+        "name": "Pokémon Imperador"
+    },
+    {
+        "name": "Pokémon Resistência"
+    },
+    {
+        "name": "Pokémon Eon"
+    },
+    {
+        "name": "Pokémon Erupção"
+    },
+    {
+        "name": "Pokémon Evolução"
+    },
+    {
+        "name": "Pokémon Globo Ocular"
+    },
+    {
+        "name": "Pokémon Rosto"
+    },
+    {
+        "name": "Pokémon Fada"
+    },
+    {
+        "name": "Pokémon Família"
+    },
+    {
+        "name": "Pokémon Cobra com Presas"
+    },
+    {
+        "name": "Pokémon Escorpião com Presas"
+    },
+    {
+        "name": "Pokémon Sentimento"
+    },
+    {
+        "name": "Pokémon Cavalo de Fogo"
+    },
+    {
+        "name": "Pokémon Lâminas de Fogo"
+    },
+    {
+        "name": "Pokémon Gato de Fogo"
+    },
+    {
+        "name": "Pokémon Criança de Fogo"
+    },
+    {
+        "name": "Pokémon Crocodilo de Fogo"
+    },
+    {
+        "name": "Pokémon Rato de Fogo"
+    },
+    {
+        "name": "Pokémon Porco de Fogo"
+    },
+    {
+        "name": "Pokémon Guerreiro de Fogo"
+    },
+    {
+        "name": "Pokémon Vaga-lume"
+    },
+    {
+        "name": "Pokémon Fogos de Artifício"
+    },
+    {
+        "name": "Pokémon Primeiro Pássaro"
+    },
+    {
+        "name": "Pokémon Peixe"
+    },
+    {
+        "name": "Pokémon Cinco Estrelas"
+    },
+    {
+        "name": "Pokémon Fixação"
+    },
+    {
+        "name": "Pokémon Debatedor"
+    },
+    {
+        "name": "Pokémon Chama"
+    },
+    {
+        "name": "Pokémon Clarão"
+    },
+    {
+        "name": "Pokémon Baleia Flutuante"
+    },
+    {
+        "name": "Pokémon Flutuante"
+    },
+    {
+        "name": "Pokémon Flor"
+    },
+    {
+        "name": "Pokémon Florescente"
+    },
+    {
+        "name": "Pokémon Escorpião Voador"
+    },
+    {
+        "name": "Pokémon Papa-Moscas"
+    },
+    {
+        "name": "Pokémon Proibido"
+    },
+    {
+        "name": "Pokémon Floresta"
+    },
+    {
+        "name": "Pokémon Formação"
+    },
+    {
+        "name": "Pokémon Formidável"
+    },
+    {
+        "name": "Pokémon Fóssil"
+    },
+    {
+        "name": "Pokémon Raposa"
+    },
+    {
+        "name": "Pokémon Fragrância"
+    },
+    {
+        "name": "Pokémon Escalador Livre"
+    },
+    {
+        "name": "Pokémon Congelante"
+    },
+    {
+        "name": "Pokémon Congelador"
+    },
+    {
+        "name": "Pokémon Neve Fresca"
+    },
+    {
+        "name": "Pokémon Fragata"
+    },
+    {
+        "name": "Pokémon Babado"
+    },
+    {
+        "name": "Pokémon Sapo"
+    },
+    {
+        "name": "Pokémon Mariposa de Gelo"
+    },
+    {
+        "name": "Pokémon Árvore Congelada"
+    },
+    {
+        "name": "Pokémon Fruta"
+    },
+    {
+        "name": "Pokémon Gás"
+    },
+    {
+        "name": "Pokémon Enguia de Jardim"
+    },
+    {
+        "name": "Pokémon Jardim"
+    },
+    {
+        "name": "Pokémon Engrenagem"
+    },
+    {
+        "name": "Pokémon Gerador"
+    },
+    {
+        "name": "Pokémon Genético"
+    },
+    {
+        "name": "Pokémon Gêiser"
+    },
+    {
+        "name": "Pokémon Cão Fantasma"
+    },
+    {
+        "name": "Pokémon Chama Fantasma"
+    },
+    {
+        "name": "Pokémon Gigante"
+    },
+    {
+        "name": "Pokémon Olhos Brilhantes"
+    },
+    {
+        "name": "Pokémon Habitante das Sombras"
+    },
+    {
+        "name": "Pokémon Iluminador"
+    },
+    {
+        "name": "Pokémon Range Dentes"
+    },
+    {
+        "name": "Pokémon Peixe Dourado"
+    },
+    {
+        "name": "Pokémon Gato de Grama"
+    },
+    {
+        "name": "Pokémon Pena de Grama"
+    },
+    {
+        "name": "Pokémon Cobra de Grama"
+    },
+    {
+        "name": "Pokémon Gafanhoto"
+    },
+    {
+        "name": "Pokémon Pastagem"
+    },
+    {
+        "name": "Pokémon Gratidão"
+    },
+    {
+        "name": "Pokémon Ganancioso"
+    },
+    {
+        "name": "Pokémon Agarrador"
+    },
+    {
+        "name": "Pokémon Bosque"
+    },
+    {
+        "name": "Pokémon Grito de Batalha"
+    },
+    {
+        "name": "Pokémon Martelo"
+    },
+    {
+        "name": "Pokémon Pulo de Mão"
+    },
+    {
+        "name": "Pokémon Mão na Massa"
+    },
+    {
+        "name": "Pokémon Felicidade"
+    },
+    {
+        "name": "Pokémon Escama Dura"
+    },
+    {
+        "name": "Pokémon Casca Dura"
+    },
+    {
+        "name": "Pokémon Cabeçada"
+    },
+    {
+        "name": "Pokémon Audição"
+    },
+    {
+        "name": "Pokémon Peso Pesado"
+    },
+    {
+        "name": "Pokémon Vilão"
+    },
+    {
+        "name": "Pokémon Erva"
+    },
+    {
+        "name": "Pokémon Caranguejo Eremita"
+    },
+    {
+        "name": "Pokémon Herói"
+    },
+    {
+        "name": "Pokémon Porca Sextavada"
+    },
+    {
+        "name": "Pokémon Feiticeiro"
+    },
+    {
+        "name": "Pokémon Hibernador"
+    },
+    {
+        "name": "Pokémon Grande Rei"
+    },
+    {
+        "name": "Pokémon Alta Temperatura"
+    },
+    {
+        "name": "Pokémon Hipopótamo"
+    },
+    {
+        "name": "Pokémon Javali"
+    },
+    {
+        "name": "Pokémon Bandido"
+    },
+    {
+        "name": "Pokémon Hostil"
+    },
+    {
+        "name": "Pokémon Obuseiro"
+    },
+    {
+        "name": "Pokémon Forma Humana"
+    },
+    {
+        "name": "Pokémon Beija-Flor"
+    },
+    {
+        "name": "Pokémon Hipnose"
+    },
+    {
+        "name": "Pokémon Quebra-Gelo"
+    },
+    {
+        "name": "Pokémon Pedaço de Gelo"
+    },
+    {
+        "name": "Pokémon Dragão de Gelo"
+    },
+    {
+        "name": "Pokémon Barbatana de Gelo"
+    },
+    {
+        "name": "Pokémon Iceberg"
+    },
+    {
+        "name": "Pokémon Neve Gelada"
+    },
+    {
+        "name": "Pokémon Raposa Ilusória"
+    },
+    {
+        "name": "Pokémon Imitação"
+    },
+    {
+        "name": "Pokémon Inseto"
+    },
+    {
+        "name": "Pokémon Entrelaçador"
+    },
+    {
+        "name": "Pokémon Intimidação"
+    },
+    {
+        "name": "Pokémon Irado"
+    },
+    {
+        "name": "Pokémon Formiga de Ferro"
+    },
+    {
+        "name": "Pokémon Armadura de Ferro"
+    },
+    {
+        "name": "Pokémon Bola de Ferro"
+    },
+    {
+        "name": "Pokémon Garra de Ferro"
+    },
+    {
+        "name": "Pokémon Perna de Ferro"
+    },
+    {
+        "name": "Pokémon Ferro"
+    },
+    {
+        "name": "Pokémon Cobra de Ferro"
+    },
+    {
+        "name": "Pokémon Vontade de Ferro"
+    },
+    {
+        "name": "Pokémon Larga Item"
+    },
+    {
+        "name": "Pokémon Água-Viva"
+    },
+    {
+        "name": "Pokémon Jato"
+    },
+    {
+        "name": "Pokémon Alijamento"
+    },
+    {
+        "name": "Pokémon Joia"
+    },
+    {
+        "name": "Pokémon Alegre"
+    },
+    {
+        "name": "Pokémon Jubileu"
+    },
+    {
+        "name": "Pokémon Judô"
+    },
+    {
+        "name": "Pokémon Jiu-Jitsu"
+    },
+    {
+        "name": "Pokémon Comedor de Lixo"
+    },
+    {
+        "name": "Pokémon Caratê"
+    },
+    {
+        "name": "Pokémon Chaveiro"
+    },
+    {
+        "name": "Pokémon Chutador"
+    },
+    {
+        "name": "Pokémon Rei"
+    },
+    {
+        "name": "Pokémon Beijo"
+    },
+    {
+        "name": "Pokémon Pipa"
+    },
+    {
+        "name": "Pokémon Gatinho"
+    },
+    {
+        "name": "Pokémon Conhecimento"
+    },
+    {
+        "name": "Pokémon Lamparina"
+    },
+    {
+        "name": "Pokémon Tubarão Terrestre"
+    },
+    {
+        "name": "Pokémon Cobra Terrestre"
+    },
+    {
+        "name": "Pokémon Espírito da Terra"
+    },
+    {
+        "name": "Pokémon Larva"
+    },
+    {
+        "name": "Pokémon Lava"
+    },
+    {
+        "name": "Pokémon Domo de Lava"
+    },
+    {
+        "name": "Pokémon Lançamento"
+    },
+    {
+        "name": "Pokémon Vadio"
+    },
+    {
+        "name": "Pokémon Folha"
+    },
+    {
+        "name": "Pokémon Enrolado em Folha"
+    },
+    {
+        "name": "Pokémon Lendário"
+    },
+    {
+        "name": "Pokémon Lambedor"
+    },
+    {
+        "name": "Pokémon Vida"
+    },
+    {
+        "name": "Pokémon Luz"
+    },
+    {
+        "name": "Pokémon Relâmpago"
+    },
+    {
+        "name": "Pokémon Persistente"
+    },
+    {
+        "name": "Pokémon Leãozinho"
+    },
+    {
+        "name": "Pokémon Gracioso"
+    },
+    {
+        "name": "Pokémon Carvão Vivo"
+    },
+    {
+        "name": "Pokémon Lagarto"
+    },
+    {
+        "name": "Pokémon Vagabundo"
+    },
+    {
+        "name": "Pokémon Solitário"
+    },
+    {
+        "name": "Pokémon Corpo Longo"
+    },
+    {
+        "name": "Pokémon Perna Longa"
+    },
+    {
+        "name": "Pokémon Pescoço Longo"
+    },
+    {
+        "name": "Pokémon Nariz Longo"
+    },
+    {
+        "name": "Pokémon Cauda Longa"
+    },
+    {
+        "name": "Pokémon Longevidade"
+    },
+    {
+        "name": "Pokémon Vigia"
+    },
+    {
+        "name": "Pokémon Barulhento"
+    },
+    {
+        "name": "Pokémon Amor-Ódio"
+    },
+    {
+        "name": "Pokémon Cão Leal"
+    },
+    {
+        "name": "Pokémon Lunar"
+    },
+    {
+        "name": "Pokémon Atraente"
+    },
+    {
+        "name": "Pokémon Mach"
+    },
+    {
+        "name": "Pokémon Mágico"
+    },
+    {
+        "name": "Pokémon Ímã"
+    },
+    {
+        "name": "Pokémon Campo Magnético"
+    },
+    {
+        "name": "Pokémon Malévolo"
+    },
+    {
+        "name": "Pokémon Manipulador"
+    },
+    {
+        "name": "Pokémon Louva-a-Deus"
+    },
+    {
+        "name": "Pokémon Manto"
+    },
+    {
+        "name": "Pokémon Marionete"
+    },
+    {
+        "name": "Pokémon Artes Marciais"
+    },
+    {
+        "name": "Pokémon Máscara"
+    },
+    {
+        "name": "Pokémon Matcha"
+    },
+    {
+        "name": "Pokémon Megacentopeia"
+    },
+    {
+        "name": "Pokémon Megatonelada"
+    },
+    {
+        "name": "Pokémon Suave"
+    },
+    {
+        "name": "Pokémon Melodia"
+    },
+    {
+        "name": "Pokémon Merengue"
+    },
+    {
+        "name": "Pokémon Ferreiro"
+    },
+    {
+        "name": "Pokémon Meteoro"
+    },
+    {
+        "name": "Pokémon Meteorito"
+    },
+    {
+        "name": "Pokémon Vaca Leiteira"
+    },
+    {
+        "name": "Pokémon Mimetismo"
+    },
+    {
+        "name": "Pokémon Mímico"
+    },
+    {
+        "name": "Pokémon Travessura"
+    },
+    {
+        "name": "Pokémon Mitose"
+    },
+    {
+        "name": "Pokémon Alga Falsa"
+    },
+    {
+        "name": "Pokémon Bolor"
+    },
+    {
+        "name": "Pokémon Toupeira"
+    },
+    {
+        "name": "Pokémon Lunar (Específico)"
+    },
+    {
+        "name": "Pokémon Luz Lunar"
+    },
+    {
+        "name": "Pokémon Montaria"
+    },
+    {
+        "name": "Pokémon Rato"
+    },
+    {
+        "name": "Pokémon Peixe de Lama"
+    },
+    {
+        "name": "Pokémon Multicilíndrico"
+    },
+    {
+        "name": "Pokémon Multiplicador"
+    },
+    {
+        "name": "Pokémon Musculoso"
+    },
+    {
+        "name": "Pokémon Cogumelo"
+    },
+    {
+        "name": "Pokémon Nota Musical"
+    },
+    {
+        "name": "Pokémon Misterioso"
+    },
+    {
+        "name": "Pokémon Místico"
+    },
+    {
+        "name": "Pokémon Nebulosa"
+    },
+    {
+        "name": "Pokémon Neon"
+    },
+    {
+        "name": "Pokémon Nova Espécie"
+    },
+    {
+        "name": "Pokémon Dormente"
+    },
+    {
+        "name": "Pokémon Acolhedor"
+    },
+    {
+        "name": "Pokémon Libélula Ogro"
+    },
+    {
+        "name": "Pokémon Escorpião Ogro"
+    },
+    {
+        "name": "Pokémon Camarão Antigo"
+    },
+    {
+        "name": "Pokémon Azeitona"
+    },
+    {
+        "name": "Pokémon Ordem"
+    },
+    {
+        "name": "Pokémon Minério"
+    },
+    {
+        "name": "Pokémon Avestruz"
+    },
+    {
+        "name": "Pokémon Coruja"
+    },
+    {
+        "name": "Pokémon Pintor"
+    },
+    {
+        "name": "Pokémon Paleozoico"
+    },
+    {
+        "name": "Pokémon Paradoxo"
+    },
+    {
+        "name": "Pokémon Parasita"
+    },
+    {
+        "name": "Pokémon Parental"
+    },
+    {
+        "name": "Pokémon Papagaio"
+    },
+    {
+        "name": "Pokémon Paciente"
+    },
+    {
+        "name": "Pokémon Turfa"
+    },
+    {
+        "name": "Pokémon Pinguim"
+    },
+    {
+        "name": "Pokémon Perfume"
+    },
+    {
+        "name": "Pokémon Macaco-Porco"
+    },
+    {
+        "name": "Pokémon Porco"
+    },
+    {
+        "name": "Pokémon Aglomerado de Espinhos"
+    },
+    {
+        "name": "Pokémon Pinça"
+    },
+    {
+        "name": "Pokémon Breu Total"
+    },
+    {
+        "name": "Pokémon Plácido"
+    },
+    {
+        "name": "Pokémon Plasma"
+    },
+    {
+        "name": "Pokémon Placa"
+    },
+    {
+        "name": "Pokémon Brincalhão"
+    },
+    {
+        "name": "Pokémon Casinha de Brincar"
+    },
+    {
+        "name": "Pokémon Rato Gordo"
+    },
+    {
+        "name": "Pokémon Saco de Veneno"
+    },
+    {
+        "name": "Pokémon Abelha Venenosa"
+    },
+    {
+        "name": "Pokémon Peixe Venenoso"
+    },
+    {
+        "name": "Pokémon Gás Venenoso"
+    },
+    {
+        "name": "Pokémon Mariposa Venenosa"
+    },
+    {
+        "name": "Pokémon Espinho Venenoso"
+    },
+    {
+        "name": "Pokémon Bolinhas"
+    },
+    {
+        "name": "Pokémon Patinador de Lagoa"
+    },
+    {
+        "name": "Pokémon Poodle"
+    },
+    {
+        "name": "Pokémon Estrela Pop"
+    },
+    {
+        "name": "Pokémon Apanhador de Flores"
+    },
+    {
+        "name": "Pokémon Praticante"
+    },
+    {
+        "name": "Pokémon Predador"
+    },
+    {
+        "name": "Pokémon Certinho"
+    },
+    {
+        "name": "Pokémon Prisma"
+    },
+    {
+        "name": "Pokémon Protótartaruga"
+    },
+    {
+        "name": "Pokémon Protoestrela"
+    },
+    {
+        "name": "Pokémon Orgulhoso"
+    },
+    {
+        "name": "Pokémon Psi"
+    },
+    {
+        "name": "Pokémon Punk"
+    },
+    {
+        "name": "Pokémon Fantoche"
+    },
+    {
+        "name": "Pokémon Filhote"
+    },
+    {
+        "name": "Pokémon Abóbora"
+    },
+    {
+        "name": "Pokémon Socador"
+    },
+    {
+        "name": "Pokémon Coelho"
+    },
+    {
+        "name": "Pokémon Radiador"
+    },
+    {
+        "name": "Pokémon Radome"
+    },
+    {
+        "name": "Pokémon Macaco Furioso"
+    },
+    {
+        "name": "Pokémon Arco-Íris"
+    },
+    {
+        "name": "Pokémon Muralha"
+    },
+    {
+        "name": "Pokémon Malandro"
+    },
+    {
+        "name": "Pokémon Corvo"
+    },
+    {
+        "name": "Pokémon Régio"
+    },
+    {
+        "name": "Pokémon Encontro"
+    },
+    {
+        "name": "Pokémon Renegado"
+    },
+    {
+        "name": "Pokémon Réquiem"
+    },
+    {
+        "name": "Pokémon Contenção"
+    },
+    {
+        "name": "Pokémon Vassalo"
+    },
+    {
+        "name": "Pokémon Giratório"
+    },
+    {
+        "name": "Pokémon Caranguejo de Rio"
+    },
+    {
+        "name": "Pokémon Rocha"
+    },
+    {
+        "name": "Pokémon Cabeça de Pedra"
+    },
+    {
+        "name": "Pokémon Estalagem de Pedra"
+    },
+    {
+        "name": "Pokémon Pico Rochoso"
+    },
+    {
+        "name": "Pokémon Sal de Rocha"
+    },
+    {
+        "name": "Pokémon Pele de Rocha"
+    },
+    {
+        "name": "Pokémon Cobra de Pedra"
+    },
+    {
+        "name": "Pokémon Macaco Trapaceiro"
+    },
+    {
+        "name": "Pokémon Patife"
+    },
+    {
+        "name": "Pokémon Rolador"
+    },
+    {
+        "name": "Pokémon Bola de Estrume"
+    },
+    {
+        "name": "Pokémon Real"
+    },
+    {
+        "name": "Pokémon Herdeiro Real"
+    },
+    {
+        "name": "Pokémon Espada Real"
+    },
+    {
+        "name": "Pokémon Rufião"
+    },
+    {
+        "name": "Pokémon Ruinoso"
+    },
+    {
+        "name": "Pokémon Investida"
+    },
+    {
+        "name": "Pokémon Impetuoso"
+    },
+    {
+        "name": "Pokémon Sábio"
+    },
+    {
+        "name": "Pokémon Castelo de Areia"
+    },
+    {
+        "name": "Pokémon Monte de Areia"
+    },
+    {
+        "name": "Pokémon Cobra de Areia"
+    },
+    {
+        "name": "Pokémon Selvagem"
+    },
+    {
+        "name": "Pokémon Escama"
+    },
+    {
+        "name": "Pokémon Escamoso"
+    },
+    {
+        "name": "Pokémon Cachecol"
+    },
+    {
+        "name": "Pokémon Espantalho"
+    },
+    {
+        "name": "Pokémon Poeira Dispersa"
+    },
+    {
+        "name": "Pokémon Abrasador"
+    },
+    {
+        "name": "Pokémon Escorpião"
+    },
+    {
+        "name": "Pokémon Batedor"
+    },
+    {
+        "name": "Pokémon Gato Arranhador"
+    },
+    {
+        "name": "Pokémon Guincho"
+    },
+    {
+        "name": "Pokémon Briguento"
+    },
+    {
+        "name": "Pokémon Bacia Marinha"
+    },
+    {
+        "name": "Pokémon Rastejador Marinho"
+    },
+    {
+        "name": "Pokémon Pepino do Mar"
+    },
+    {
+        "name": "Pokémon Viajante Marinho"
+    },
+    {
+        "name": "Pokémon Lírio do Mar"
+    },
+    {
+        "name": "Pokémon Leão Marinho"
+    },
+    {
+        "name": "Pokémon Lontra Marinha"
+    },
+    {
+        "name": "Pokémon Lesma do Mar"
+    },
+    {
+        "name": "Pokémon Ouriço do Mar"
+    },
+    {
+        "name": "Pokémon Doninha Marinha"
+    },
+    {
+        "name": "Pokémon Navegador"
+    },
+    {
+        "name": "Pokémon Gaivota"
+    },
+    {
+        "name": "Pokémon Estação"
+    },
+    {
+        "name": "Pokémon Agente Secreto"
+    },
+    {
+        "name": "Pokémon Semente"
+    },
+    {
+        "name": "Pokémon Sereno"
+    },
+    {
+        "name": "Pokémon Sete Pintas"
+    },
+    {
+        "name": "Pokémon Costura"
+    },
+    {
+        "name": "Pokémon Sombra"
+    },
+    {
+        "name": "Pokémon Lâmina Afiada"
+    },
+    {
+        "name": "Pokémon Garra Afiada"
+    },
+    {
+        "name": "Pokémon Carcaça"
+    },
+    {
+        "name": "Pokémon Muda de Pele"
+    },
+    {
+        "name": "Pokémon Ovelha"
+    },
+    {
+        "name": "Pokémon Casco-Bunker"
+    },
+    {
+        "name": "Pokémon Sem Casca"
+    },
+    {
+        "name": "Pokémon Marisco"
+    },
+    {
+        "name": "Pokémon Escudo"
+    },
+    {
+        "name": "Pokémon Grama Foice"
+    },
+    {
+        "name": "Pokémon Silencioso"
+    },
+    {
+        "name": "Pokémon Flor Única"
+    },
+    {
+        "name": "Pokémon Chifre Único"
+    },
+    {
+        "name": "Pokémon Monocilíndrico"
+    },
+    {
+        "name": "Pokémon Cantor"
+    },
+    {
+        "name": "Pokémon Espetador"
+    },
+    {
+        "name": "Pokémon Gambá"
+    },
+    {
+        "name": "Pokémon Céu Alto"
+    },
+    {
+        "name": "Pokémon Esquilo Voador"
+    },
+    {
+        "name": "Pokémon Preguiçoso"
+    },
+    {
+        "name": "Pokémon Adormecido"
+    },
+    {
+        "name": "Pokémon Lodo"
+    },
+    {
+        "name": "Pokémon Peixe Pequeno"
+    },
+    {
+        "name": "Pokémon Caracol"
+    },
+    {
+        "name": "Pokémon Cobra"
+    },
+    {
+        "name": "Pokémon Mordedor"
+    },
+    {
+        "name": "Pokémon Chapéu de Neve"
+    },
+    {
+        "name": "Pokémon Terra da Neve"
+    },
+    {
+        "name": "Pokémon Nevasca"
+    },
+    {
+        "name": "Pokémon Tecido Mole"
+    },
+    {
+        "name": "Pokémon Solista"
+    },
+    {
+        "name": "Pokémon Onda Sonora"
+    },
+    {
+        "name": "Pokémon Mar do Sul"
+    },
+    {
+        "name": "Pokémon Faísca"
+    },
+    {
+        "name": "Pokémon Espacial"
+    },
+    {
+        "name": "Pokémon Esfera"
+    },
+    {
+        "name": "Pokémon Pimenta Picante"
+    },
+    {
+        "name": "Pokémon Bola de Espinhos"
+    },
+    {
+        "name": "Pokémon Espinhos"
+    },
+    {
+        "name": "Pokémon Giratório"
+    },
+    {
+        "name": "Pokémon Armadura Espinhosa"
+    },
+    {
+        "name": "Pokémon Peixe Espinhoso"
+    },
+    {
+        "name": "Pokémon Noz Espinhosa"
+    },
+    {
+        "name": "Pokémon Espiral"
+    },
+    {
+        "name": "Pokémon Espírito"
+    },
+    {
+        "name": "Pokémon Cospe-Fogo"
+    },
+    {
+        "name": "Pokémon Panda Manchado"
+    },
+    {
+        "name": "Pokémon Borrifo"
+    },
+    {
+        "name": "Pokémon Besouro-Cervo"
+    },
+    {
+        "name": "Pokémon Tocaia"
+    },
+    {
+        "name": "Pokémon Forma de Estrela"
+    },
+    {
+        "name": "Pokémon Estorninho"
+    },
+    {
+        "name": "Pokémon Vapor"
+    },
+    {
+        "name": "Pokémon Furtivo"
+    },
+    {
+        "name": "Pokémon Estômago"
+    },
+    {
+        "name": "Pokémon Casa de Pedra"
+    },
+    {
+        "name": "Pokémon Painho"
+    },
+    {
+        "name": "Pokémon Atacante"
+    },
+    {
+        "name": "Pokémon Bola de Fio"
+    },
+    {
+        "name": "Pokémon Cospe Fio"
+    },
+    {
+        "name": "Pokémon Braço Forte"
+    },
+    {
+        "name": "Pokémon Pernas Fortes"
+    },
+    {
+        "name": "Pokémon Toco"
+    },
+    {
+        "name": "Pokémon Subjugação"
+    },
+    {
+        "name": "Pokémon Subterrâneo"
+    },
+    {
+        "name": "Pokémon Sol"
+    },
+    {
+        "name": "Pokémon Solar (Específico)"
+    },
+    {
+        "name": "Pokémon Superforça"
+    },
+    {
+        "name": "Pokémon Andorinha"
+    },
+    {
+        "name": "Pokémon Inchado"
+    },
+    {
+        "name": "Pokémon Lâmina de Espada"
+    },
+    {
+        "name": "Pokémon Espada"
+    },
+    {
+        "name": "Pokémon Símbolo"
+    },
+    {
+        "name": "Pokémon Sincronia"
+    },
+    {
+        "name": "Pokémon Sintético"
+    },
+    {
+        "name": "Pokémon Girino"
+    },
+    {
+        "name": "Pokémon Birrento"
+    },
+    {
+        "name": "Pokémon Trabalho em Equipe"
+    },
+    {
+        "name": "Pokémon Temporal"
+    },
+    {
+        "name": "Pokémon Terno"
+    },
+    {
+        "name": "Pokémon Tera"
+    },
+    {
+        "name": "Pokémon Baleia Terrestre"
+    },
+    {
+        "name": "Pokémon Macaco de Espinhos"
+    },
+    {
+        "name": "Pokémon Vagem de Espinho"
+    },
+    {
+        "name": "Pokémon Espinho"
+    },
+    {
+        "name": "Pokémon Semente de Espinho"
+    },
+    {
+        "name": "Pokémon Trovão"
+    },
+    {
+        "name": "Pokémon Choque do Trovão"
+    },
+    {
+        "name": "Pokémon Estrondo do Trovão"
+    },
+    {
+        "name": "Pokémon Gato Tigrado"
+    },
+    {
+        "name": "Pokémon Viajante do Tempo"
+    },
+    {
+        "name": "Pokémon Abelhinha"
+    },
+    {
+        "name": "Pokémon Passarinho"
+    },
+    {
+        "name": "Pokémon Folhinha"
+    },
+    {
+        "name": "Pokémon Ratinho"
+    },
+    {
+        "name": "Pokémon Pombo Pequeno"
+    },
+    {
+        "name": "Pokémon Guaxinim Pequeno"
+    },
+    {
+        "name": "Pokémon Pisco Pequeno"
+    },
+    {
+        "name": "Pokémon Andorinha Pequena"
+    },
+    {
+        "name": "Pokémon Tartaruguinha"
+    },
+    {
+        "name": "Pokémon Tocha"
+    },
+    {
+        "name": "Pokémon Lagarto Tóxico"
+    },
+    {
+        "name": "Pokémon Macaco Tóxico"
+    },
+    {
+        "name": "Pokémon Boca Tóxica"
+    },
+    {
+        "name": "Pokémon Rato Tóxico"
+    },
+    {
+        "name": "Pokémon Aprendiz"
+    },
+    {
+        "name": "Pokémon Transformação"
+    },
+    {
+        "name": "Pokémon Transporte"
+    },
+    {
+        "name": "Pokémon Armadilha"
+    },
+    {
+        "name": "Pokémon Saco de Lixo"
+    },
+    {
+        "name": "Pokémon Pilha de Lixo"
+    },
+    {
+        "name": "Pokémon Raposa Astuta"
+    },
+    {
+        "name": "Pokémon Raposa Rancorosa"
+    },
+    {
+        "name": "Pokémon Pássaro Trigêmeo"
+    },
+    {
+        "name": "Pokémon Bola de Feno"
+    },
+    {
+        "name": "Pokémon Tundra"
+    },
+    {
+        "name": "Pokémon Foge-Rabo"
+    },
+    {
+        "name": "Pokémon Tartaruga"
+    },
+    {
+        "name": "Pokémon Presa"
+    },
+    {
+        "name": "Pokémon Pássaro Gêmeo"
+    },
+    {
+        "name": "Pokémon Presas Gêmeas"
+    },
+    {
+        "name": "Pokémon Duas Mãos"
+    },
+    {
+        "name": "Pokémon Duas Caras"
+    },
+    {
+        "name": "Pokémon Chifre Único"
+    },
+    {
+        "name": "Pokémon Valente"
+    },
+    {
+        "name": "Pokémon Branco Vasto"
+    },
+    {
+        "name": "Pokémon Verdejante"
+    },
+    {
+        "name": "Pokémon Vibração"
+    },
+    {
+        "name": "Pokémon Vitória"
+    },
+    {
+        "name": "Pokémon Viking"
+    },
+    {
+        "name": "Pokémon Cipó"
+    },
+    {
+        "name": "Pokémon Virtual"
+    },
+    {
+        "name": "Pokémon Vulcão"
+    },
+    {
+        "name": "Pokémon Guerreiro"
+    },
+    {
+        "name": "Pokémon Ave Aquática"
+    },
+    {
+        "name": "Pokémon Bolha de Água"
+    },
+    {
+        "name": "Pokémon Peixe de Água"
+    },
+    {
+        "name": "Pokémon Pistola d'Água"
+    },
+    {
+        "name": "Pokémon Lagarto de Água"
+    },
+    {
+        "name": "Pokémon Erva Aquática"
+    },
+    {
+        "name": "Pokémon Clima"
+    },
+    {
+        "name": "Pokémon Erva Daninha"
+    },
+    {
+        "name": "Pokémon Bigodes"
+    },
+    {
+        "name": "Pokémon Sussurro"
+    },
+    {
+        "name": "Pokémon Pássaro Branco"
+    },
+    {
+        "name": "Pokémon Perverso"
+    },
+    {
+        "name": "Pokémon Touro Selvagem"
+    },
+    {
+        "name": "Pokémon Pato Selvagem"
+    },
+    {
+        "name": "Pokémon Cavalo Selvagem"
+    },
+    {
+        "name": "Pokémon Macaco Selvagem"
+    },
+    {
+        "name": "Pokémon Pombo Selvagem"
+    },
+    {
+        "name": "Pokémon Força de Vontade"
+    },
+    {
+        "name": "Pokémon Astuto"
+    },
+    {
+        "name": "Pokémon Sino de Vento"
+    },
+    {
+        "name": "Pokémon Véu de Vento"
+    },
+    {
+        "name": "Pokémon Peixe Alado"
+    },
+    {
+        "name": "Pokémon Desejo"
+    },
+    {
+        "name": "Pokémon Lobo"
+    },
+    {
+        "name": "Pokémon Lagarto de Madeira"
+    },
+    {
+        "name": "Pokémon Orelha de Pau"
+    },
+    {
+        "name": "Pokémon Pica-Pau"
+    },
+    {
+        "name": "Pokémon Lã"
+    },
+    {
+        "name": "Pokémon Caranguejo Lanoso"
+    },
+    {
+        "name": "Pokémon Verme"
+    },
+    {
+        "name": "Pokémon Luta Livre"
+    },
+    {
+        "name": "Pokémon Wushu"
+    },
+    {
+        "name": "Pokémon Ave Jovem"
+    },
+    {
+        "name": "Pokémon Amuleto Zen"
+    }
+]

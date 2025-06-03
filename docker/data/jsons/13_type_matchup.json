@@ -1,0 +1,12 @@
+[
+    {
+        "attackingTypeId": 2,
+        "defendingTypeId": 1,
+        "damageFactor": 2.0
+    },
+    {
+        "attackingTypeId": 2,
+        "defendingTypeId": 2,
+        "damageFactor": 0.5
+    }
+]

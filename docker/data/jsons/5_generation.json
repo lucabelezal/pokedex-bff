@@ -1,0 +1,42 @@
+[
+    {
+        "nome": "Geração I",
+        "regiaoId": 1
+    },
+    {
+        "nome": "Geração II",
+        "regiaoId": 2
+    },
+    {
+        "nome": "Geração III",
+        "regiaoId": 3
+    },
+    {
+        "nome": "Geração IV",
+        "regiaoId": 4
+    },
+    {
+        "nome": "Geração V",
+        "regiaoId": 5
+    },
+    {
+        "nome": "Geração VI",
+        "regiaoId": 6
+    },
+    {
+        "nome": "Geração VII",
+        "regiaoId": 7
+    },
+    {
+        "nome": "Geração VIII",
+        "regiaoId": 8
+    },
+    {
+        "nome": "Geração IX",
+        "regiaoId": 9
+    },
+    {
+        "nome": "Geração VIII",
+        "regiaoId": 10
+    }
+]
