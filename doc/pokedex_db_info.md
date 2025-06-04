@@ -228,7 +228,7 @@ erDiagram
         string color
     }
 
-    Egg_Group {
+    EggGroup {
         int id PK
         string name
     }
@@ -280,27 +280,27 @@ erDiagram
         int speed
     }
 
-    Pokemon_Type {
+    PokemonType {
         int pokemon_id PK
         int type_id PK
     }
 
-    Pokemon_Ability {
+    PokemonAbility {
         int pokemon_id PK
         string ability_name PK
         boolean is_hidden
     }
 
-    Pokemon_Egg_Group {
+    PokemonEggGroup {
         int pokemon_id PK
         int egg_group_id PK
     }
 
-    Evolution_Chain {
+    EvolutionChain {
         int id PK
     }
 
-    Evolution_Link {
+    EvolutionLink {
         int evolution_chain_id PK
         int pokemon_id PK
         int target_pokemon_id
@@ -308,24 +308,29 @@ erDiagram
         string condition_value
     }
 
-    Pokemon_Weakness {
+    PokemonWeakness {
         int pokemon_id PK
         int weakness_type_id PK
     }
 
-    Region ||--o{ Generation : "possui"
-    Generation ||--o{ Pokemon : "introduz"
-    Generation ||--o{ Ability : "introduz"
-    Species ||--o{ Pokemon : "classifica"
-    Pokemon ||--|| Stats : "tem"
-    Pokemon }o--o{ Pokemon_Type : "tipo"
-    Type }o--o{ Pokemon_Type : "tipo de"
-    Pokemon }o--o{ Pokemon_Ability : "habilidade"
-    Ability }o--o{ Pokemon_Ability : "habilidade de"
-    Pokemon }o--o{ Pokemon_Egg_Group : "grupo"
-    Egg_Group }o--o{ Pokemon_Egg_Group : "grupo de"
-    Evolution_Chain ||--o{ Evolution_Link : "links"
-    Pokemon ||--o{ Evolution_Link : "está em"
-    Pokemon_Weakness }o--|| Pokemon : "é fraqueza de"
-    Pokemon_Weakness }o--|| Type : "é tipo de"
+    %% -------------------------
+    %% RELACIONAMENTOS
+    %% -------------------------
+
+    Region ||--o{ Generation : "possui gerações"
+    Generation ||--o{ Pokemon : "introduz Pokémon"
+    Generation ||--o{ Ability : "introduz habilidades"
+    Species ||--o{ Pokemon : "define a espécie de"
+    Pokemon ||--|| Stats : "possui estatísticas"
+    Pokemon ||--o{ PokemonType : "está associado a tipo(s)"
+    Type ||--o{ PokemonType : "é tipo de Pokémon"
+    Pokemon ||--o{ PokemonAbility : "possui habilidades"
+    Ability ||--o{ PokemonAbility : "é usada por Pokémon"
+    Pokemon ||--o{ PokemonEggGroup : "pertence a grupo(s) de ovo"
+    EggGroup ||--o{ PokemonEggGroup : "tem Pokémon associados"
+    EvolutionChain ||--o{ EvolutionLink : "contém etapas"
+    Pokemon ||--o{ EvolutionLink : "participa da evolução"
+    PokemonWeakness ||--|| Pokemon : "sofre fraqueza"
+    PokemonWeakness ||--|| Type : "tipo da fraqueza"
+
 ```
