@@ -219,58 +219,58 @@ Tabela de junção para o relacionamento N:N entre `Pokemon` e `Type`, especific
 erDiagram
     Region {
         int id PK
-        varchar(255) name UNIQUE
+        string name
     }
 
     Type {
         int id PK
-        varchar(255) name UNIQUE
-        varchar(7) color
+        string name
+        string color
     }
 
     Egg_Group {
         int id PK
-        varchar(255) name UNIQUE
+        string name
     }
 
     Species {
         int id PK
-        varchar(4) national_pokedex_number UNIQUE
-        varchar(255) name
-        varchar(255) species_en
-        varchar(255) species_pt
+        string national_pokedex_number
+        string name
+        string species_en
+        string species_pt
     }
 
     Generation {
         int id PK
-        varchar(255) name UNIQUE
+        string name
         int region_id FK
     }
 
     Ability {
-        varchar(255) name PK
-        text description
+        string name PK
+        string description
         int introduced_generation_id FK
     }
 
     Pokemon {
         int id PK
-        varchar(4) national_pokedex_number UNIQUE
-        varchar(255) name
+        string national_pokedex_number
+        string name
         int stats_id FK
         int generation_id FK
         int species_id FK
-        numeric(4, 2) height_m
-        numeric(6, 2) weight_kg
-        text description
-        jsonb sprites
+        float height_m
+        float weight_kg
+        string description
+        string sprites
         int gender_rate_value
         int egg_cycles
     }
 
     Stats {
         int id PK
-        varchar(4) pokemon_national_pokedex_number UNIQUE FK
+        string pokemon_national_pokedex_number
         int total
         int hp
         int attack
@@ -287,7 +287,7 @@ erDiagram
 
     Pokemon_Ability {
         int pokemon_id PK
-        varchar(255) ability_name PK
+        string ability_name PK
         boolean is_hidden
     }
 
@@ -304,8 +304,8 @@ erDiagram
         int evolution_chain_id PK
         int pokemon_id PK
         int target_pokemon_id
-        varchar(255) condition_type
-        varchar(255) condition_value
+        string condition_type
+        string condition_value
     }
 
     Pokemon_Weakness {
@@ -313,19 +313,19 @@ erDiagram
         int weakness_type_id PK
     }
 
-    Region ||--o{ Generation : "1:N possui muitas"
-    Generation ||--o{ Pokemon : "1:N introduz muitos"
-    Generation ||--o{ Ability : "1:N introduz muitas"
-    Species ||--o{ Pokemon : "1:N classifica muitos"
-    Pokemon ||--|| Stats : "1:1 tem um"
-    Pokemon }o--o{ Pokemon_Type : "N:N possui vários tipos"
-    Type }o--o{ Pokemon_Type : "N:N é tipo de vários Pokémon"
-    Pokemon }o--o{ Pokemon_Ability : "N:N possui muitas habilidades"
-    Ability }o--o{ Pokemon_Ability : "N:N é habilidade de muitos Pokémon"
-    Pokemon }o--o{ Pokemon_Egg_Group : "N:N pertence a muitos grupos de ovos"
-    Egg_Group }o--o{ Pokemon_Egg_Group : "N:N contém muitos Pokémon"
-    Evolution_Chain ||--o{ Evolution_Link : "1:N compõe vários links"
-    Pokemon }o--o{ Evolution_Link : "N:N está em links de evolução"
-    Pokemon_Weakness }o--o{ Pokemon : "N:N é fraqueza para muitos Pokémon"
-    Pokemon_Weakness }o--o{ Type : "N:N é um tipo de fraqueza para"
+    Region ||--o{ Generation : "possui"
+    Generation ||--o{ Pokemon : "introduz"
+    Generation ||--o{ Ability : "introduz"
+    Species ||--o{ Pokemon : "classifica"
+    Pokemon ||--|| Stats : "tem"
+    Pokemon }o--o{ Pokemon_Type : "tipo"
+    Type }o--o{ Pokemon_Type : "tipo de"
+    Pokemon }o--o{ Pokemon_Ability : "habilidade"
+    Ability }o--o{ Pokemon_Ability : "habilidade de"
+    Pokemon }o--o{ Pokemon_Egg_Group : "grupo"
+    Egg_Group }o--o{ Pokemon_Egg_Group : "grupo de"
+    Evolution_Chain ||--o{ Evolution_Link : "links"
+    Pokemon ||--o{ Evolution_Link : "está em"
+    Pokemon_Weakness }o--|| Pokemon : "é fraqueza de"
+    Pokemon_Weakness }o--|| Type : "é tipo de"
 ```
