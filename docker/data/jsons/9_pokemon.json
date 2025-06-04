@@ -46,7 +46,48 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            5,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 65,
+                "isHidden": false
+            },
+            {
+                "abilityId": 66,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            7,
+            10
+        ],
+        "type_matchup": {
+            "Grama": {
+                "Água": 2.0,
+                "Terrestre": 2.0,
+                "Pedra": 2.0,
+                "Fogo": 0.5,
+                "Planta": 0.5,
+                "Voador": 0.5,
+                "Inseto": 0.5,
+                "Venenoso": 0.5,
+                "Dragão": 0.5
+            },
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 1
     },
     {
         "id": 2,
@@ -95,7 +136,48 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            5,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 65,
+                "isHidden": false
+            },
+            {
+                "abilityId": 66,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            7,
+            10
+        ],
+        "type_matchup": {
+            "Grama": {
+                "Água": 2.0,
+                "Terrestre": 2.0,
+                "Pedra": 2.0,
+                "Fogo": 0.5,
+                "Planta": 0.5,
+                "Voador": 0.5,
+                "Inseto": 0.5,
+                "Venenoso": 0.5,
+                "Dragão": 0.5
+            },
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 1
     },
     {
         "id": 3,
@@ -144,7 +226,48 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            5,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 65,
+                "isHidden": false
+            },
+            {
+                "abilityId": 66,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            7,
+            10
+        ],
+        "type_matchup": {
+            "Grama": {
+                "Água": 2.0,
+                "Terrestre": 2.0,
+                "Pedra": 2.0,
+                "Fogo": 0.5,
+                "Planta": 0.5,
+                "Voador": 0.5,
+                "Inseto": 0.5,
+                "Venenoso": 0.5,
+                "Dragão": 0.5
+            },
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 1
     },
     {
         "id": 4,
@@ -164,36 +287,47 @@
             "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png",
             "front_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/female/3.png",
             "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3.png",
-            "front_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/3.png",
-            "other": {
-                "dream_world": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/3.svg",
-                    "front_female": null
-                },
-                "home": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png",
-                    "front_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/female/3.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/3.png",
-                    "front_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/female/3.png"
-                },
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/3.png"
-                },
-                "showdown": {
-                    "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/3.gif",
-                    "back_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/female/3.gif",
-                    "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/3.gif",
-                    "back_shiny_female": null,
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/3.gif",
-                    "front_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/female/3.gif",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/3.gif",
-                    "front_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/female/3.gif"
-                }
-            }
+            "front_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/3.png"
         },
         "gender_rate_value": 1,
-        "eggCycles": null
+        "eggCycles": null,
+        "typeId": [
+            5,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 80,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            7,
+            10
+        ],
+        "type_matchup": {
+            "Grama": {
+                "Água": 2.0,
+                "Terrestre": 2.0,
+                "Pedra": 2.0,
+                "Fogo": 0.5,
+                "Planta": 0.5,
+                "Voador": 0.5,
+                "Inseto": 0.5,
+                "Venenoso": 0.5,
+                "Dragão": 0.5
+            },
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 1
     },
     {
         "id": 5,
@@ -242,7 +376,37 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            2
+        ],
+        "abilities": [
+            {
+                "abilityId": 67,
+                "isHidden": false
+            },
+            {
+                "abilityId": 68,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            3,
+            5
+        ],
+        "type_matchup": {
+            "Fogo": {
+                "Planta": 2.0,
+                "Gelo": 2.0,
+                "Inseto": 2.0,
+                "Aço": 2.0,
+                "Fogo": 0.5,
+                "Água": 0.5,
+                "Pedra": 0.5,
+                "Dragão": 0.5
+            }
+        },
+        "evolutionChainId": 2
     },
     {
         "id": 6,
@@ -291,7 +455,37 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            2
+        ],
+        "abilities": [
+            {
+                "abilityId": 67,
+                "isHidden": false
+            },
+            {
+                "abilityId": 68,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            3,
+            5
+        ],
+        "type_matchup": {
+            "Fogo": {
+                "Planta": 2.0,
+                "Gelo": 2.0,
+                "Inseto": 2.0,
+                "Aço": 2.0,
+                "Fogo": 0.5,
+                "Água": 0.5,
+                "Pedra": 0.5,
+                "Dragão": 0.5
+            }
+        },
+        "evolutionChainId": 2
     },
     {
         "id": 7,
@@ -340,7 +534,39 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            2,
+            10
+        ],
+        "abilities": [
+            {
+                "abilityId": 67,
+                "isHidden": false
+            },
+            {
+                "abilityId": 68,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            3,
+            5
+        ],
+        "type_matchup": {
+            "Fogo": {
+                "Planta": 2.0,
+                "Gelo": 2.0,
+                "Inseto": 2.0,
+                "Aço": 2.0,
+                "Fogo": 0.5,
+                "Água": 0.5,
+                "Pedra": 0.5,
+                "Dragão": 0.5
+            },
+            "Voador": {}
+        },
+        "evolutionChainId": 2
     },
     {
         "id": 8,
@@ -360,36 +586,38 @@
             "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
             "front_female": null,
             "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png",
-            "front_shiny_female": null,
-            "other": {
-                "dream_world": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg",
-                    "front_female": null
-                },
-                "home": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png",
-                    "front_shiny_female": null
-                },
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png"
-                },
-                "showdown": {
-                    "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif",
-                    "back_female": null,
-                    "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif",
-                    "back_shiny_female": null,
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif",
-                    "front_shiny_female": null
-                }
-            }
+            "front_shiny_female": null
         },
         "gender_rate_value": 1,
-        "eggCycles": null
+        "eggCycles": null,
+        "typeId": [
+            2,
+            15
+        ],
+        "abilities": [
+            {
+                "abilityId": 81,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            3,
+            5
+        ],
+        "type_matchup": {
+            "Fogo": {
+                "Planta": 2.0,
+                "Gelo": 2.0,
+                "Inseto": 2.0,
+                "Aço": 2.0,
+                "Fogo": 0.5,
+                "Água": 0.5,
+                "Pedra": 0.5,
+                "Dragão": 0.5
+            },
+            "Dragão": {}
+        },
+        "evolutionChainId": 2
     },
     {
         "id": 9,
@@ -409,36 +637,38 @@
             "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png",
             "front_female": null,
             "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png",
-            "front_shiny_female": null,
-            "other": {
-                "dream_world": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg",
-                    "front_female": null
-                },
-                "home": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png",
-                    "front_shiny_female": null
-                },
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png"
-                },
-                "showdown": {
-                    "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif",
-                    "back_female": null,
-                    "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif",
-                    "back_shiny_female": null,
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif",
-                    "front_shiny_female": null
-                }
-            }
+            "front_shiny_female": null
         },
         "gender_rate_value": 1,
-        "eggCycles": null
+        "eggCycles": null,
+        "typeId": [
+            2,
+            10
+        ],
+        "abilities": [
+            {
+                "abilityId": 82,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            3,
+            5
+        ],
+        "type_matchup": {
+            "Fogo": {
+                "Planta": 2.0,
+                "Gelo": 2.0,
+                "Inseto": 2.0,
+                "Aço": 2.0,
+                "Fogo": 0.5,
+                "Água": 0.5,
+                "Pedra": 0.5,
+                "Dragão": 0.5
+            },
+            "Voador": {}
+        },
+        "evolutionChainId": 2
     },
     {
         "id": 10,
@@ -487,7 +717,28 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            3
+        ],
+        "abilities": [
+            {
+                "abilityId": 69,
+                "isHidden": false
+            },
+            {
+                "abilityId": 70,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            11,
+            5
+        ],
+        "type_matchup": {
+            "Água": {}
+        },
+        "evolutionChainId": 3
     },
     {
         "id": 11,
@@ -536,7 +787,28 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            3
+        ],
+        "abilities": [
+            {
+                "abilityId": 69,
+                "isHidden": false
+            },
+            {
+                "abilityId": 70,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            11,
+            5
+        ],
+        "type_matchup": {
+            "Água": {}
+        },
+        "evolutionChainId": 3
     },
     {
         "id": 12,
@@ -585,7 +857,28 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20
+        "eggCycles": 20,
+        "typeId": [
+            3
+        ],
+        "abilities": [
+            {
+                "abilityId": 69,
+                "isHidden": false
+            },
+            {
+                "abilityId": 70,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            11,
+            5
+        ],
+        "type_matchup": {
+            "Água": {}
+        },
+        "evolutionChainId": 3
     },
     {
         "id": 13,
@@ -605,36 +898,27 @@
             "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png",
             "front_female": null,
             "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/9.png",
-            "front_shiny_female": null,
-            "other": {
-                "dream_world": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/9.svg",
-                    "front_female": null
-                },
-                "home": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/9.png",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/9.png",
-                    "front_shiny_female": null
-                },
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/9.png"
-                },
-                "showdown": {
-                    "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/9.gif",
-                    "back_female": null,
-                    "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/9.gif",
-                    "back_shiny_female": null,
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/9.gif",
-                    "front_shiny_female": null
-                }
-            }
+            "front_shiny_female": null
         },
         "gender_rate_value": 1,
-        "eggCycles": null
+        "eggCycles": null,
+        "typeId": [
+            3
+        ],
+        "abilities": [
+            {
+                "abilityId": 83,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            11,
+            5
+        ],
+        "type_matchup": {
+            "Água": {}
+        },
+        "evolutionChainId": 3
     },
     {
         "id": 14,
@@ -683,7 +967,27 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12
+        ],
+        "abilities": [
+            {
+                "abilityId": 75,
+                "isHidden": false
+            },
+            {
+                "abilityId": 76,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {}
+        },
+        "evolutionChainId": 4
     },
     {
         "id": 15,
@@ -732,7 +1036,23 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12
+        ],
+        "abilities": [
+            {
+                "abilityId": 77,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {}
+        },
+        "evolutionChainId": 4
     },
     {
         "id": 16,
@@ -781,7 +1101,25 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12,
+            10
+        ],
+        "abilities": [
+            {
+                "abilityId": 74,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {},
+            "Voador": {}
+        },
+        "evolutionChainId": 4
     },
     {
         "id": 17,
@@ -830,7 +1168,37 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 75,
+                "isHidden": false
+            },
+            {
+                "abilityId": 76,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {},
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 5
     },
     {
         "id": 18,
@@ -879,7 +1247,33 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 77,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {},
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 5
     },
     {
         "id": 19,
@@ -928,7 +1322,37 @@
             }
         },
         "gender_rate_value": 4,
-        "eggCycles": 15
+        "eggCycles": 15,
+        "typeId": [
+            12,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 78,
+                "isHidden": false
+            },
+            {
+                "abilityId": 79,
+                "isHidden": true
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {},
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 5
     },
     {
         "id": 20,
@@ -948,35 +1372,35 @@
             "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/15.png",
             "front_female": null,
             "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/15.png",
-            "front_shiny_female": null,
-            "other": {
-                "dream_world": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/15.svg",
-                    "front_female": null
-                },
-                "home": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/15.png",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/15.png",
-                    "front_shiny_female": null
-                },
-                "official-artwork": {
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/15.png",
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/15.png"
-                },
-                "showdown": {
-                    "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/15.gif",
-                    "back_female": null,
-                    "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/15.gif",
-                    "back_shiny_female": null,
-                    "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/15.gif",
-                    "front_female": null,
-                    "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/15.gif",
-                    "front_shiny_female": null
-                }
-            }
+            "front_shiny_female": null
         },
         "gender_rate_value": 4,
-        "eggCycles": null
+        "eggCycles": null,
+        "typeId": [
+            12,
+            8
+        ],
+        "abilities": [
+            {
+                "abilityId": 84,
+                "isHidden": false
+            }
+        ],
+        "eggGroupIds": [
+            2
+        ],
+        "type_matchup": {
+            "Inseto": {},
+            "Venenoso": {
+                "Planta": 2.0,
+                "Fada": 2.0,
+                "Venenoso": 0.5,
+                "Terrestre": 0.5,
+                "Pedra": 0.5,
+                "Fantasma": 0.5,
+                "Aço": 0.5
+            }
+        },
+        "evolutionChainId": 5
     }
 ]
