@@ -2,292 +2,275 @@
 
 Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL.
 
+---
+
 ## Visão Geral do Esquema
 
-O esquema é composto por **13 tabelas** principais e de junção, projetadas para manter os dados normalizados, minimizando redundância e garantindo a integridade referencial. As tabelas se relacionam para permitir consultas complexas e eficientes sobre o universo Pokémon.
+O esquema é composto por **15 tabelas** principais e de junção, projetadas para manter os dados normalizados, minimizando redundância e garantindo a integridade referencial. As tabelas se relacionam para permitir consultas complexas e eficientes sobre o universo Pokémon.
 
 ---
 
 ## Entidades (Tabelas) e Seus Relacionamentos
 
-### 1. `region`
+### 1. `Region`
 
 Armazena informações sobre as diferentes regiões do mundo Pokémon.
 
-*   **Finalidade:** Categorizar gerações.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único da região. Gerado automaticamente.
-  *   `name` (VARCHAR(255) NOT NULL UNIQUE): Nome da região (ex: 'Kanto', 'Johto').
-*   **Relacionamentos:**
-  *   `generation`: Uma região é referenciada por uma ou mais gerações (`generation.region_id`).
+* **Finalidade:** Categorizar gerações.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único da região.
+    * `name` (VARCHAR(255) NOT NULL UNIQUE): Nome da região (ex: 'Kanto', 'Johto').
+* **Relacionamentos:**
+    * `Generation`: Uma região é referenciada por uma ou mais gerações (`Generation.region_id`).
 
-### 2. `generation`
+### 2. `Type`
+
+Armazena informações sobre os tipos elementais dos Pokémon.
+
+* **Finalidade:** Definir os tipos dos Pokémon e suas fraquezas/resistências.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único do tipo.
+    * `name` (VARCHAR(255) NOT NULL UNIQUE): Nome do tipo (ex: 'Fogo', 'Água').
+    * `color` (VARCHAR(7)): Código de cor hexadecimal associado ao tipo (ex: '#EE8130').
+* **Relacionamentos:**
+    * `Pokemon_Type`: Um tipo pode ser associado a vários Pokémon.
+    * `Pokemon_Weakness`: Um tipo pode ser uma fraqueza para vários Pokémon.
+
+### 3. `Egg_Group`
+
+Armazena informações sobre os grupos de ovos aos quais os Pokémon pertencem para fins de reprodução.
+
+* **Finalidade:** Agrupar Pokémon com características reprodutivas compatíveis.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único do grupo de ovos.
+    * `name` (VARCHAR(255) NOT NULL UNIQUE): Nome do grupo de ovos (ex: 'Amorfo', 'Dragão').
+* **Relacionamentos:**
+    * `Pokemon_Egg_Group`: Um grupo de ovos pode ser associado a vários Pokémon.
+
+### 4. `Species`
+
+Armazena informações sobre as espécies gerais de Pokémon, que podem ter várias formas ou evoluções.
+
+* **Finalidade:** Categorizar Pokémon por sua espécie base e informações de Pokédex.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único da espécie.
+    * `national_pokedex_number` (VARCHAR(4) NOT NULL UNIQUE): Número da Pokédex nacional da espécie (ex: '0001').
+    * `name` (VARCHAR(255) NOT NULL): Nome da espécie (ex: 'Bulbasaur').
+    * `species_en` (VARCHAR(255)): Descrição da espécie em inglês (ex: 'Seed Pokémon').
+    * `species_pt` (VARCHAR(255)): Descrição da espécie em português (ex: 'Pokémon Semente').
+* **Relacionamentos:**
+    * `Pokemon`: Uma espécie pode ser associada a vários Pokémon (e.g., formas diferentes do mesmo número da Pokédex).
+
+### 5. `Generation`
 
 Armazena informações sobre as diferentes gerações de Pokémon.
 
-*   **Finalidade:** Agrupar Pokémon, habilidades e outras características por sua geração de introdução.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único da geração. Gerado automaticamente.
-  *   `name` (VARCHAR(50) NOT NULL UNIQUE): Nome da geração (ex: 'Geração I', 'Geração II').
-  *   `region_id` (INTEGER NOT NULL REFERENCES `region(id)` ON DELETE RESTRICT): Chave estrangeira para a região principal associada a esta geração.
-*   **Relacionamentos:**
-  *   `region`: Uma geração pertence a uma única região (`generation.region_id`).
-  *   `pokemon`: Uma geração introduz múltiplos Pokémon (`pokemon.generation_id`).
-  *   `ability`: Uma geração introduz múltiplas habilidades (`ability.introduced_generation_id`).
+* **Finalidade:** Agrupar Pokémon, habilidades e outras características por sua geração de introdução.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único da geração.
+    * `name` (VARCHAR(255) NOT NULL UNIQUE): Nome da geração (ex: 'Geração I').
+    * `region_id` (INT NOT NULL): Chave estrangeira referenciando a tabela `Region`.
+* **Relacionamentos:**
+    * `Region`: Uma geração pertence a uma região.
+    * `Pokemon`: Uma geração introduz vários Pokémon.
+    * `Ability`: Uma geração introduz várias habilidades.
 
-### 3. `type`
+### 6. `Ability`
 
-Armazena os diferentes tipos elementais de Pokémon.
+Armazena informações sobre as habilidades especiais dos Pokémon.
 
-*   **Finalidade:** Classificar Pokémon por seus tipos e definir as relações de efetividade entre eles.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único do tipo. Gerado automaticamente.
-  *   `name` (VARCHAR(255) NOT NULL UNIQUE): Nome do tipo (ex: 'Planta', 'Fogo', 'Água').
-  *   `color` (VARCHAR(50) NOT NULL): Cor associada ao tipo (ex: '#7AC74C' para Planta).
-*   **Relacionamentos:**
-  *   `pokemon_type`: Um tipo pode ser associado a múltiplos Pokémon (`pokemon_type.type_id`).
-  *   `type_matchup`: Um tipo pode atuar como tipo atacante ou defensor em matchups de dano (`type_matchup.attacking_type_id`, `type_matchup.defending_type_id`).
+* **Finalidade:** Detalhar as habilidades que os Pokémon podem possuir.
+* **Colunas:**
+    * `name` (VARCHAR(255) PRIMARY KEY): Nome da habilidade (usado como chave primária, pois é único).
+    * `description` (TEXT): Descrição detalhada da habilidade.
+    * `introduced_generation_id` (INT): Chave estrangeira referenciando a tabela `Generation`, indicando em qual geração a habilidade foi introduzida.
+* **Relacionamentos:**
+    * `Generation`: Uma habilidade é introduzida em uma geração.
+    * `Pokemon_Ability`: Uma habilidade pode ser possuída por vários Pokémon.
 
-### 4. `stats`
+### 7. `Pokemon`
 
-Armazena os valores base de estatísticas para um Pokémon.
+Armazena as informações principais de cada Pokémon individual (incluindo suas formas).
 
-*   **Finalidade:** Manter as estatísticas (HP, Attack, Defense, etc.) de forma separada e referenciável.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único do conjunto de estatísticas. Gerado automaticamente.
-  *   `total` (INTEGER): Soma de todas as estatísticas.
-  *   `hp` (INTEGER): Pontos de vida.
-  *   `attack` (INTEGER): Estatística de Ataque.
-  *   `defense` (INTEGER): Estatística de Defesa.
-  *   `sp_atk` (INTEGER): Estatística de Ataque Especial.
-  *   `sp_def` (INTEGER): Estatística de Defesa Especial.
-  *   `speed` (INTEGER): Estatística de Velocidade.
-*   **Relacionamentos:**
-  *   `pokemon`: Um conjunto de estatísticas pertence a um único Pokémon (`pokemon.stats_id`). É uma relação 1-para-1, garantida por `UNIQUE` na chave estrangeira.
+* **Finalidade:** Entidade central para todas as informações detalhadas sobre os Pokémon.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único do Pokémon (incluindo formas alternativas).
+    * `national_pokedex_number` (VARCHAR(4) NOT NULL UNIQUE): Número da Pokédex nacional (identificador principal para muitos relacionamentos).
+    * `name` (VARCHAR(255) NOT NULL): Nome do Pokémon (ex: 'Bulbasaur', 'Charizard Mega Charizard Y').
+    * `stats_id` (INT): Chave estrangeira referenciando a tabela `Stats` (relacionamento 1:1).
+    * `generation_id` (INT NOT NULL): Chave estrangeira referenciando a tabela `Generation`.
+    * `species_id` (INT NOT NULL): Chave estrangeira referenciando a tabela `Species`.
+    * `height_m` (NUMERIC(4, 2)): Altura do Pokémon em metros.
+    * `weight_kg` (NUMERIC(6, 2)): Peso do Pokémon em quilogramas.
+    * `description` (TEXT): Descrição de Pokédex do Pokémon.
+    * `sprites` (JSONB): Objeto JSON que armazena URLs para diferentes sprites do Pokémon.
+    * `gender_rate_value` (INT): Taxa de gênero (informações sobre proporção de gênero).
+    * `egg_cycles` (INT): Número de ciclos de ovos para chocar.
+* **Relacionamentos:**
+    * `Stats`: Um Pokémon possui um conjunto de atributos.
+    * `Generation`: Um Pokémon pertence a uma geração.
+    * `Species`: Um Pokémon é de uma determinada espécie.
+    * `Pokemon_Type`: Um Pokémon pode ter um ou dois tipos.
+    * `Pokemon_Ability`: Um Pokémon pode ter uma ou mais habilidades.
+    * `Pokemon_Egg_Group`: Um Pokémon pode pertencer a um ou mais grupos de ovos.
+    * `Evolution_Link`: Um Pokémon pode fazer parte de uma cadeia de evolução.
+    * `Pokemon_Weakness`: Um Pokémon possui fraquezas a certos tipos.
 
-### 5. `species`
+### 8. `Stats`
 
-Armazena informações sobre as "espécies" ou categorias dos Pokémon.
+Armazena os atributos de batalha (HP, Attack, Defense, etc.) de cada Pokémon.
 
-*   **Finalidade:** Categorizar Pokémon (ex: "Pokémon Semente", "Pokémon Lagarto").
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único da espécie. Gerado automaticamente.
-  *   `name_en` (VARCHAR(255) NOT NULL UNIQUE): Nome da categoria em inglês (ex: 'Seed Pokémon').
-  *   `name_pt` (VARCHAR(255) NOT NULL UNIQUE): Nome da categoria em português (ex: 'Pokémon Semente').
-  *   `description_en` (TEXT): Descrição da categoria em inglês (opcional).
-  *   `description_pt` (TEXT): Descrição da categoria em português (opcional).
-*   **Relacionamentos:**
-  *   `pokemon`: Uma espécie pode ser atribuída a múltiplos Pokémon (`pokemon.species_id`).
+* **Finalidade:** Fornecer os valores dos atributos para cada forma de Pokémon.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único do conjunto de atributos.
+    * `pokemon_national_pokedex_number` (VARCHAR(4) NOT NULL UNIQUE): Chave estrangeira referenciando o `national_pokedex_number` da tabela `Pokemon`, garantindo uma relação 1:1.
+    * `total` (INT): Soma total dos atributos.
+    * `hp` (INT): Pontos de vida.
+    * `attack` (INT): Atributo de ataque físico.
+    * `defense` (INT): Atributo de defesa física.
+    * `sp_atk` (INT): Atributo de ataque especial.
+    * `sp_def` (INT): Atributo de defesa especial.
+    * `speed` (INT): Atributo de velocidade.
+* **Relacionamentos:**
+    * `Pokemon`: Um conjunto de atributos pertence a um Pokémon.
 
-### 6. `pokemon`
+### 9. `Pokemon_Type`
 
-A entidade central, que armazena as informações principais de cada Pokémon.
+Tabela de junção para o relacionamento N:N entre `Pokemon` e `Type`.
 
-*   **Finalidade:** Armazenar dados fundamentais sobre cada criatura e suas formas (se aplicável, considerando o `national_pokedex_number` único).
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador interno único do Pokémon. Gerado automaticamente.
-  *   `national_pokedex_number` (VARCHAR(10) NOT NULL UNIQUE): O número oficial da Pokédex Nacional (ex: '0001' para Bulbasaur). Se formas diferentes usarem o mesmo número, esta coluna precisaria de ajuste ou uma coluna adicional para `form_identifier`.
-  *   `name` (VARCHAR(255) NOT NULL): Nome do Pokémon (ex: 'Bulbasaur').
-  *   `stats_id` (INTEGER UNIQUE REFERENCES `stats(id)` ON DELETE CASCADE): Chave estrangeira para o conjunto de estatísticas do Pokémon.
-  *   `generation_id` (INTEGER NOT NULL REFERENCES `generation(id)` ON DELETE RESTRICT): Chave estrangeira para a geração em que o Pokémon foi introduzido.
-  *   `species_id` (INTEGER REFERENCES `species(id)` ON DELETE RESTRICT): Chave estrangeira para a espécie/categoria do Pokémon.
-  *   `height_m` (DECIMAL(5, 2)): Altura do Pokémon em metros.
-  *   `weight_kg` (DECIMAL(6, 2)): Peso do Pokémon em quilogramas.
-  *   `description` (TEXT): Uma descrição textual do Pokémon (geralmente da Pokédex).
-  *   `sprites` (JSONB): Objeto JSON contendo URLs para os sprites do Pokémon. **Detalhes abaixo.**
-  *   `gender_rate_value` (INTEGER): Valor numérico que representa a taxa de gênero.
-    *   `-1`: Sem gênero
-    *   `0`: 100% Macho
-    *   `1`: 87.5% Macho, 12.5% Fêmea
-    *   `2`: 75% Macho, 25% Fêmea
-    *   `4`: 50% Macho, 50% Fêmea
-    *   `6`: 25% Macho, 75% Fêmea
-    *   `8`: 100% Fêmea
-  *   `egg_cycles` (INTEGER): Número de ciclos de ovo necessários para chocar o Pokémon.
-*   **Relacionamentos:**
-  *   `stats`: Cada Pokémon tem um único conjunto de estatísticas (`pokemon.stats_id`).
-  *   `generation`: Cada Pokémon pertence a uma única geração (`pokemon.generation_id`).
-  *   `species`: Cada Pokémon pertence a uma única espécie/categoria (`pokemon.species_id`).
-  *   `pokemon_type`: Um Pokémon pode ter um ou dois tipos (`pokemon_type.pokemon_id`).
-  *   `pokemon_ability`: Um Pokémon pode ter múltiplas habilidades (`pokemon_ability.pokemon_id`).
-  *   `pokemon_egg_group`: Um Pokémon pode pertencer a um ou mais grupos de ovos (`pokemon_egg_group.pokemon_id`).
-  *   `evolution`: Um Pokémon pode ser uma pré-evolução ou pós-evolução (`evolution.pre_evolution_pokemon_id`, `evolution.post_evolution_pokemon_id`).
+* **Finalidade:** Registrar quais tipos um Pokémon possui.
+* **Colunas:**
+    * `pokemon_id` (INT NOT NULL): Chave estrangeira referenciando `Pokemon.id`.
+    * `type_id` (INT NOT NULL): Chave estrangeira referenciando `Type.id`.
+    * `PRIMARY KEY (pokemon_id, type_id)`: Chave primária composta.
+* **Relacionamentos:**
+    * `Pokemon`: Um Pokémon pode ter vários tipos.
+    * `Type`: Um tipo pode ser atribuído a vários Pokémon.
 
-### 7. `pokemon_type`
+### 10. `Pokemon_Ability`
 
-Tabela de junção para a relação muitos-para-muitos entre Pokémon e Tipos.
+Tabela de junção para o relacionamento N:N entre `Pokemon` e `Ability`.
 
-*   **Finalidade:** Registrar quais tipos cada Pokémon possui.
-*   **Colunas:**
-  *   `pokemon_id` (INTEGER REFERENCES `pokemon(id)` ON DELETE CASCADE): Chave estrangeira para o Pokémon.
-  *   `type_id` (INTEGER REFERENCES `type(id)` ON DELETE CASCADE): Chave estrangeira para o Tipo.
-  *   `PRIMARY KEY (pokemon_id, type_id)`: Chave primária composta.
-*   **Relacionamentos:**
-  *   `pokemon`: Muitos `pokemon_type` podem pertencer a um `pokemon`.
-  *   `type`: Muitos `pokemon_type` podem pertencer a um `type`.
+* **Finalidade:** Registrar quais habilidades um Pokémon pode ter.
+* **Colunas:**
+    * `pokemon_id` (INT NOT NULL): Chave estrangeira referenciando `Pokemon.id`.
+    * `ability_name` (VARCHAR(255) NOT NULL): Chave estrangeira referenciando `Ability.name`.
+    * `is_hidden` (BOOLEAN): Indica se a habilidade é uma habilidade oculta.
+    * `PRIMARY KEY (pokemon_id, ability_name)`: Chave primária composta.
+* **Relacionamentos:**
+    * `Pokemon`: Um Pokémon pode ter várias habilidades.
+    * `Ability`: Uma habilidade pode ser possuída por vários Pokémon.
 
-### 8. `evolution`
+### 11. `Pokemon_Egg_Group`
 
-Armazena as relações de evolução entre Pokémon.
+Tabela de junção para o relacionamento N:N entre `Pokemon` e `Egg_Group`.
 
-*   **Finalidade:** Registrar como os Pokémon evoluem uns dos outros e sob quais condições.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único da relação de evolução.
-  *   `pre_evolution_pokemon_id` (INTEGER NOT NULL REFERENCES `pokemon(id)` ON DELETE CASCADE): O Pokémon que evolui.
-  *   `post_evolution_pokemon_id` (INTEGER NOT NULL REFERENCES `pokemon(id)` ON DELETE CASCADE): O Pokémon para o qual evolui.
-  *   `condition_description` (VARCHAR(255) NOT NULL): Descrição textual da condição de evolução (ex: 'Level 16', 'Use Water Stone', 'Trade').
-  *   `condition_level` (INTEGER): O nível específico para evolução, se aplicável.
-  *   `UNIQUE (pre_evolution_pokemon_id, post_evolution_pokemon_id)`: Garante que uma rota de evolução específica seja única.
-*   **Relacionamentos:**
-  *   `pokemon` (como pré-evolução): Um `pokemon` pode ser `pre_evolution_pokemon_id` em múltiplas entradas (ex: Eevee).
-  *   `pokemon` (como pós-evolução): Um `pokemon` pode ser `post_evolution_pokemon_id` em uma ou mais entradas (menos comum, mas possível se diferentes Pokémon evoluírem para o mesmo).
+* **Finalidade:** Registrar a quais grupos de ovos um Pokémon pertence.
+* **Colunas:**
+    * `pokemon_id` (INT NOT NULL): Chave estrangeira referenciando `Pokemon.id`.
+    * `egg_group_id` (INT NOT NULL): Chave estrangeira referenciando `Egg_Group.id`.
+    * `PRIMARY KEY (pokemon_id, egg_group_id)`: Chave primária composta.
+* **Relacionamentos:**
+    * `Pokemon`: Um Pokémon pode pertencer a vários grupos de ovos.
+    * `Egg_Group`: Um grupo de ovos pode conter vários Pokémon.
 
-### 9. `ability`
+### 12. `Evolution_Chain`
 
-Armazena informações sobre as habilidades dos Pokémon.
+Armazena a identificação de uma cadeia de evolução.
 
-*   **Finalidade:** Registrar as habilidades que os Pokémon podem ter.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único da habilidade.
-  *   `name` (VARCHAR(255) NOT NULL UNIQUE): Nome da habilidade (ex: 'Overgrow', 'Clorofila').
-  *   `description` (TEXT): Descrição detalhada do efeito da habilidade.
-  *   `introduced_generation_id` (INTEGER REFERENCES `generation(id)` ON DELETE RESTRICT): A geração em que a habilidade foi introduzida.
-*   **Relacionamentos:**
-  *   `generation`: Uma habilidade é introduzida em uma geração.
-  *   `pokemon_ability`: Uma habilidade pode ser possuída por múltiplos Pokémon (`pokemon_ability.ability_id`).
+* **Finalidade:** Agrupar os passos de evolução que fazem parte de uma mesma linha evolutiva.
+* **Colunas:**
+    * `id` (INT PRIMARY KEY): Identificador único da cadeia de evolução.
+* **Relacionamentos:**
+    * `Evolution_Link`: Uma cadeia de evolução é composta por vários links de evolução.
 
-### 10. `pokemon_ability`
+### 13. `Evolution_Link`
 
-Tabela de junção para a relação muitos-para-muitos entre Pokémon e Habilidades.
+Armazena os links individuais dentro de uma cadeia de evolução.
 
-*   **Finalidade:** Registrar quais habilidades cada Pokémon pode ter, indicando se é uma habilidade oculta.
-*   **Colunas:**
-  *   `pokemon_id` (INTEGER REFERENCES `pokemon(id)` ON DELETE CASCADE): Chave estrangeira para o Pokémon.
-  *   `ability_id` (INTEGER REFERENCES `ability(id)` ON DELETE CASCADE): Chave estrangeira para a Habilidade.
-  *   `is_hidden` (BOOLEAN DEFAULT FALSE): Verdadeiro se for a habilidade oculta do Pokémon.
-  *   `PRIMARY KEY (pokemon_id, ability_id)`: Chave primária composta.
-*   **Relacionamentos:**
-  *   `pokemon`: Muitos `pokemon_ability` podem pertencer a um `pokemon`.
-  *   `ability`: Muitos `pokemon_ability` podem pertencer a uma `ability`.
+* **Finalidade:** Detalhar como um Pokémon evolui para outro dentro de uma cadeia.
+* **Colunas:**
+    * `evolution_chain_id` (INT NOT NULL): Chave estrangeira referenciando `Evolution_Chain.id`.
+    * `pokemon_id` (INT NOT NULL): Chave estrangeira referenciando `Pokemon.id` (o Pokémon que evolui).
+    * `target_pokemon_id` (INT): Chave estrangeira referenciando `Pokemon.id` (o Pokémon para o qual evolui). Pode ser NULL se for o último Pokémon na cadeia.
+    * `condition_type` (VARCHAR(255)): Tipo de condição para a evolução (ex: 'level_up', 'trade', 'item_use').
+    * `condition_value` (VARCHAR(255)): Valor da condição (ex: '16' para level_up, nome do item).
+    * `PRIMARY KEY (evolution_chain_id, pokemon_id)`: Chave primária composta para identificar um link único na cadeia.
+* **Relacionamentos:**
+    * `Evolution_Chain`: Um link de evolução pertence a uma cadeia.
+    * `Pokemon`: Referencia o Pokémon que evolui e o Pokémon resultante da evolução.
 
-### 11. `egg_group`
+### 14. `Pokemon_Weakness`
 
-Armazena as categorias de grupos de ovos.
+Tabela de junção para o relacionamento N:N entre `Pokemon` e `Type`, especificando as fraquezas.
 
-*   **Finalidade:** Classificar Pokémon para fins de breeding.
-*   **Colunas:**
-  *   `id` (SERIAL PRIMARY KEY): Identificador único do grupo de ovos.
-  *   `name` (VARCHAR(50) NOT NULL UNIQUE): Nome do grupo de ovos (ex: 'Monstro', 'Planta', 'Ditto').
-*   **Relacionamentos:**
-  *   `pokemon_egg_group`: Um grupo de ovos pode conter múltiplos Pokémon (`pokemon_egg_group.egg_group_id`).
-
-### 12. `pokemon_egg_group`
-
-Tabela de junção para a relação muitos-para-muitos entre Pokémon e Grupos de Ovos.
-
-*   **Finalidade:** Registrar a quais grupos de ovos cada Pokémon pertence.
-*   **Colunas:**
-  *   `pokemon_id` (INTEGER REFERENCES `pokemon(id)` ON DELETE CASCADE): Chave estrangeira para o Pokémon.
-  *   `egg_group_id` (INTEGER REFERENCES `egg_group(id)` ON DELETE CASCADE): Chave estrangeira para o Grupo de Ovos.
-  *   `PRIMARY KEY (pokemon_id, egg_group_id)`: Chave primária composta.
-*   **Relacionamentos:**
-  *   `pokemon`: Muitos `pokemon_egg_group` podem pertencer a um `pokemon`.
-  *   `egg_group`: Muitos `pokemon_egg_group` podem pertencer a um `egg_group`.
-
-### 13. `type_matchup`
-
-Armazena as relações de efetividade de dano entre tipos de Pokémon.
-
-*   **Finalidade:** Definir fraquezas, resistências e imunidades com base na interação de tipos.
-*   **Colunas:**
-  *   `attacking_type_id` (INTEGER NOT NULL REFERENCES `type(id)` ON DELETE CASCADE): O ID do tipo que está causando o dano.
-  *   `defending_type_id` (INTEGER NOT NULL REFERENCES `type(id)` ON DELETE CASCADE): O ID do tipo que está recebendo o dano.
-  *   `damage_factor` (DECIMAL(3,2) NOT NULL): O multiplicador de dano (ex: `2.00` para super efetivo, `0.50` para não muito efetivo, `0.00` para imune).
-  *   `PRIMARY KEY (attacking_type_id, defending_type_id)`: Chave primária composta.
-*   **Relacionamentos:**
-  *   `type` (como tipo atacante): Um `type` pode ser `attacking_type_id` em múltiplos matchups.
-  *   `type` (como tipo defensor): Um `type` pode ser `defending_type_id` em múltiplos matchups.
+* **Finalidade:** Registrar quais tipos um Pokémon é fraco contra.
+* **Colunas:**
+    * `pokemon_id` (INT NOT NULL): Chave estrangeira referenciando `Pokemon.id`.
+    * `weakness_type_id` (INT NOT NULL): Chave estrangeira referenciando `Type.id` (o tipo que é uma fraqueza).
+    * `PRIMARY KEY (pokemon_id, weakness_type_id)`: Chave primária composta.
+* **Relacionamentos:**
+    * `Pokemon`: Um Pokémon pode ter várias fraquezas.
+    * `Type`: Um tipo pode ser uma fraqueza para vários Pokémon.
 
 ---
-
-## Detalhes da Coluna `sprites` (JSONB) na Tabela `pokemon`
-
-A coluna `sprites` na tabela `pokemon` é do tipo **`JSONB`**.
-
-*   **Finalidade:** Armazenar uma coleção rica e semi-estruturada de URLs de imagens (sprites) para cada Pokémon.
-*   **Fonte Exemplo:** A estrutura é baseada na resposta da [PokéAPI (ex: /api/v2/pokemon/1)](https://pokeapi.co/api/v2/pokemon/1).
-*   **Estrutura do JSONB (Exemplo para Bulbasaur - ID 1):**
-    ```json
-    {
-      "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png",
-      "back_female": null,
-      "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png",
-      "back_shiny_female": null,
-      "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-      "front_female": null,
-      "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png",
-      "front_shiny_female": null,
-      "other": {
-        "dream_world": {
-          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg",
-          "front_female": null
-        },
-        "home": {
-          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png",
-          "front_female": null,
-          "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/1.png",
-          "front_shiny_female": null
-        },
-        "official-artwork": {
-          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png",
-          "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/1.png"
-        },
-        "showdown": {
-          "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/1.gif",
-          "back_female": null,
-          "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/1.gif",
-          "back_shiny_female": null,
-          "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif",
-          "front_female": null,
-          "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/1.gif",
-          "front_shiny_female": null
-        }
-      }
-    }
-    ```
-*   **Relacionamento:** É uma relação **1-para-1** direta com a entidade `pokemon`. Cada linha na tabela `pokemon` possui um único campo `sprites` que armazena este objeto JSON.
-*   **Vantagens do JSONB:**
-  *   **Flexibilidade:** Permite que a estrutura interna dos sprites evolua sem alterar o esquema SQL da tabela `pokemon`.
-  *   **Eficiência:** O tipo `JSONB` no PostgreSQL é otimizado para armazenamento e consulta, incluindo indexação de campos dentro do JSON.
-  *   **Atomicidade:** Todas as URLs de sprite para um Pokémon são armazenadas e recuperadas juntas.
-
----
-
-## Diagrama de Entidade-Relacionamento (ERD)
-
-A seguir, um diagrama ERD simplificado representando as tabelas e suas principais relações, utilizando a sintaxe Mermaid.
 
 ```mermaid
 erDiagram
-    region {
+    Region {
         int id PK
-        varchar name
+        varchar(255) name UNIQUE
     }
 
-    generation {
+    Type {
         int id PK
-        varchar name
+        varchar(255) name UNIQUE
+        varchar(7) color
+    }
+
+    Egg_Group {
+        int id PK
+        varchar(255) name UNIQUE
+    }
+
+    Species {
+        int id PK
+        varchar(4) national_pokedex_number UNIQUE
+        varchar(255) name
+        varchar(255) species_en
+        varchar(255) species_pt
+    }
+
+    Generation {
+        int id PK
+        varchar(255) name UNIQUE
         int region_id FK
     }
 
-    type {
-        int id PK
-        varchar name
-        varchar color
+    Ability {
+        varchar(255) name PK
+        text description
+        int introduced_generation_id FK
     }
 
-    stats {
+    Pokemon {
         int id PK
+        varchar(4) national_pokedex_number UNIQUE
+        varchar(255) name
+        int stats_id FK
+        int generation_id FK
+        int species_id FK
+        numeric(4, 2) height_m
+        numeric(6, 2) weight_kg
+        text description
+        jsonb sprites
+        int gender_rate_value
+        int egg_cycles
+    }
+
+    Stats {
+        int id PK
+        varchar(4) pokemon_national_pokedex_number UNIQUE FK
         int total
         int hp
         int attack
@@ -297,83 +280,52 @@ erDiagram
         int speed
     }
 
-    species {
-        int id PK
-        varchar name_en
-        varchar name_pt
-        text description_en
-        text description_pt
+    Pokemon_Type {
+        int pokemon_id PK
+        int type_id PK
     }
 
-    pokemon {
-        int id PK
-        varchar national_pokedex_number
-        varchar name
-        int stats_id FK
-        int generation_id FK
-        int species_id FK
-        decimal height_m
-        decimal weight_kg
-        text description
-        jsonb sprites
-        int gender_rate_value
-        int egg_cycles
-    }
-
-    pokemon_type {
-        int pokemon_id PK,FK
-        int type_id PK,FK
-    }
-
-    evolution {
-        int id PK
-        int pre_evolution_pokemon_id FK
-        int post_evolution_pokemon_id FK
-        varchar condition_description
-        int condition_level
-    }
-
-    ability {
-        int id PK
-        varchar name
-        text description
-        int introduced_generation_id FK
-    }
-
-    pokemon_ability {
-        int pokemon_id PK,FK
-        int ability_id PK,FK
+    Pokemon_Ability {
+        int pokemon_id PK
+        varchar(255) ability_name PK
         boolean is_hidden
     }
 
-    egg_group {
+    Pokemon_Egg_Group {
+        int pokemon_id PK
+        int egg_group_id PK
+    }
+
+    Evolution_Chain {
         int id PK
-        varchar name
     }
 
-    pokemon_egg_group {
-        int pokemon_id PK,FK
-        int egg_group_id PK,FK
+    Evolution_Link {
+        int evolution_chain_id PK
+        int pokemon_id PK
+        int target_pokemon_id
+        varchar(255) condition_type
+        varchar(255) condition_value
     }
 
-    type_matchup {
-        int attacking_type_id PK,FK
-        int defending_type_id PK,FK
-        decimal damage_factor
+    Pokemon_Weakness {
+        int pokemon_id PK
+        int weakness_type_id PK
     }
 
-    region ||--|{ generation : "associada_a"
-    generation ||--|{ pokemon : "introduz"
-    generation ||--o{ ability : "introduz"
-    stats ||--|| pokemon : "descreve"
-    species ||--|{ pokemon : "classifica"
-    pokemon }|--|{ pokemon_type : "possui"
-    type }|--|{ pokemon_type : "é_tipo_de"
-    pokemon }|--|{ pokemon_ability : "possui"
-    ability }|--|{ pokemon_ability : "é_habilidade_de"
-    pokemon }|--|{ pokemon_egg_group : "pertence_a"
-    egg_group }|--|{ pokemon_egg_group : "contém"
-    type }|--|{ type_matchup : "atacante_em"
-    type }|--|{ type_matchup : "defensor_em"
-    pokemon ||--o{ evolution : "evolui_de"
-    pokemon ||--o{ evolution : "evolui_para"
+    Region ||--o{ Generation : "1:N possui muitas"
+    Generation ||--o{ Pokemon : "1:N introduz muitos"
+    Generation ||--o{ Ability : "1:N introduz muitas"
+    Species ||--o{ Pokemon : "1:N classifica muitos"
+    Pokemon ||--|| Stats : "1:1 tem um"
+    Pokemon }o--o{ Pokemon_Type : "N:N possui vários tipos"
+    Type }o--o{ Pokemon_Type : "N:N é tipo de vários Pokémon"
+    Pokemon }o--o{ Pokemon_Ability : "N:N possui muitas habilidades"
+    Ability }o--o{ Pokemon_Ability : "N:N é habilidade de muitos Pokémon"
+    Pokemon }o--o{ Pokemon_Egg_Group : "N:N pertence a muitos grupos de ovos"
+    Egg_Group }o--o{ Pokemon_Egg_Group : "N:N contém muitos Pokémon"
+    Evolution_Chain ||--o{ Evolution_Link : "1:N compõe vários links"
+    Pokemon }o--o{ Evolution_Link : "N:N está em links de evolução"
+    Pokemon_Weakness }o--o{ Pokemon : "N:N é fraqueza para muitos Pokémon"
+    Pokemon_Weakness }o--o{ Type : "N:N é um tipo de fraqueza para"
+```
