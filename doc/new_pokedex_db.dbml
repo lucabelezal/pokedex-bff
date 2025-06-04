@@ -1,132 +1,164 @@
-Project pokemon_database {
+Project PokemonDB {
   database_type: 'PostgreSQL'
-  Note: 'Esquema de banco de dados para informações de Pokémon.'
+  Note: 'Schema do banco de dados para informações de Pokémon'
 }
 
-Table region {
-  id integer [pk, increment]
+Table Region {
+  id int [pk]
   name varchar(255) [not null, unique]
-  Note: 'Tabela para armazenar informações sobre regiões do mundo Pokémon.'
 }
 
-Table generation {
-  id integer [pk, increment]
-  name varchar(50) [not null, unique]
-  region_id integer [not null]
-  Note: 'Tabela para armazenar informações sobre gerações de Pokémon.'
-}
-
-Table type {
-  id integer [pk, increment]
+Table Type {
+  id int [pk]
   name varchar(255) [not null, unique]
-  color varchar(50) [not null]
-  Note: 'Tabela para armazenar os tipos de Pokémon (e.g., Fire, Water, Grass).'
+  color varchar(7)
 }
 
-Table stats {
-  id integer [pk, increment]
-  total integer
-  hp integer
-  attack integer
-  defense integer
-  sp_atk integer
-  sp_def integer
-  speed integer
-  Note: 'Tabela para armazenar os atributos de estatísticas de um Pokémon.'
+Table Egg_Group {
+  id int [pk]
+  name varchar(255) [not null, unique]
 }
 
-Table species {
-  id integer [pk, increment]
-  name_en varchar(255) [not null, unique]
-  name_pt varchar(255) [not null, unique]
-  description_en text
-  description_pt text
-  Note: 'Nova tabela para armazenar informações sobre as espécies de Pokémon, incluindo nomes e descrições em diferentes idiomas.'
-}
-
-Table pokemon {
-  id integer [pk, increment]
-  national_pokedex_number varchar(10) [not null, unique]
+Table Species {
+  id int [pk]
+  national_pokedex_number varchar(4) [not null, unique]
   name varchar(255) [not null]
-  stats_id integer [unique]
-  generation_id integer [not null]
-  species_id integer -- Chave estrangeira para a tabela 'species'
-  height_m decimal(5, 2)
-  weight_kg decimal(6, 2)
-  description text
-  sprites jsonb
-  gender_rate_value integer
-  egg_cycles integer
-  Note: 'Tabela principal para armazenar informações sobre cada Pokémon individual.'
+  species_en varchar(255)
+  species_pt varchar(255)
 }
 
-Table pokemon_type {
-  pokemon_id integer
-  type_id integer
-  PRIMARY KEY (pokemon_id, type_id)
-  Note: 'Tabela de ligação para associar Pokémon a seus tipos (um Pokémon pode ter um ou dois tipos).'
-}
-
-Table evolution {
-  id integer [pk, increment]
-  pre_evolution_pokemon_id integer [not null]
-  post_evolution_pokemon_id integer [not null]
-  condition_description varchar(255) [not null]
-  condition_level integer
-  UNIQUE (pre_evolution_pokemon_id, post_evolution_pokemon_id)
-  Note: 'Tabela para armazenar as cadeias de evolução dos Pokémon.'
-}
-
-Table ability {
-  id integer [pk, increment]
+Table Generation {
+  id int [pk]
   name varchar(255) [not null, unique]
+  region_id int [not null]
+
+  indexes {
+    (region_id)
+  }
+}
+
+Table Ability {
+  name varchar(255) [pk] // Using name as PK as there's no explicit ID and it seems unique
   description text
-  introduced_generation_id integer
-  Note: 'Tabela para armazenar as habilidades dos Pokémon.'
+  introduced_generation_id int
+
+  indexes {
+    (introduced_generation_id)
+  }
 }
 
-Table pokemon_ability {
-  pokemon_id integer
-  ability_id integer
-  is_hidden boolean [default: false]
-  PRIMARY KEY (pokemon_id, ability_id)
-  Note: 'Tabela de ligação para associar Pokémon a suas habilidades (um Pokémon pode ter múltiplas habilidades).'
+Table Pokemon {
+  id int [pk]
+  national_pokedex_number varchar(4) [not null, unique] // Main identifier for many relationships
+  name varchar(255) [not null]
+  stats_id int // Will be linked after Stats table
+  generation_id int [not null]
+  species_id int [not null]
+  height_m numeric(4, 2)
+  weight_kg numeric(6, 2)
+  description text
+  sprites jsonb // Store sprite URLs as JSONB
+  gender_rate_value int
+  egg_cycles int
+
+  indexes {
+    (stats_id)
+    (generation_id)
+    (species_id)
+  }
 }
 
-Table egg_group {
-  id integer [pk, increment]
-  name varchar(50) [not null, unique]
-  Note: 'Tabela para armazenar os grupos de ovos dos Pokémon.'
+Table Stats {
+  id int [pk]
+  pokemon_national_pokedex_number varchar(4) [not null, unique] // Links directly to Pokemon's unique national_pokedex_number
+  total int
+  hp int
+  attack int
+  defense int
+  sp_atk int
+  sp_def int
+  speed int
+
+  indexes {
+    (pokemon_national_pokedex_number)
+  }
 }
 
-Table pokemon_egg_group {
-  pokemon_id integer
-  egg_group_id integer
-  PRIMARY KEY (pokemon_id, egg_group_id)
-  Note: 'Tabela de ligação para associar Pokémon a seus grupos de ovos (um Pokémon pode pertencer a múltiplos grupos de ovos).'
+Table Pokemon_Type {
+  pokemon_id int [pk, not null]
+  type_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, type_id) [pk]
+  }
 }
 
-Table type_matchup {
-  attacking_type_id integer [not null]
-  defending_type_id integer [not null]
-  damage_factor decimal(3,2) [not null]
-  PRIMARY KEY (attacking_type_id, defending_type_id)
-  Note: 'Tabela para armazenar as relações de dano entre tipos de Pokémon (tabela de efetividade de tipos).'
+Table Pokemon_Ability {
+  pokemon_id int [pk, not null]
+  ability_name varchar(255) [pk, not null]
+  is_hidden boolean
+
+  indexes {
+    (pokemon_id, ability_name) [pk]
+  }
 }
 
-// Relações entre as tabelas
-Ref: generation.region_id > region.id [delete: restrict]
-Ref: pokemon.stats_id - stats.id [delete: cascade]
-Ref: pokemon.generation_id > generation.id [delete: restrict]
-Ref: pokemon.species_id > species.id [delete: restrict] // Nova relação para a tabela 'species'
-Ref: pokemon_type.pokemon_id > pokemon.id [delete: cascade]
-Ref: pokemon_type.type_id > type.id [delete: cascade]
-Ref: evolution.pre_evolution_pokemon_id > pokemon.id [delete: cascade]
-Ref: evolution.post_evolution_pokemon_id > pokemon.id [delete: cascade]
-Ref: ability.introduced_generation_id > generation.id [delete: restrict]
-Ref: pokemon_ability.pokemon_id > pokemon.id [delete: cascade]
-Ref: pokemon_ability.ability_id > ability.id [delete: cascade]
-Ref: pokemon_egg_group.pokemon_id > pokemon.id [delete: cascade]
-Ref: pokemon_egg_group.egg_group_id > egg_group.id [delete: cascade]
-Ref: type_matchup.attacking_type_id > type.id [delete: cascade]
-Ref: type_matchup.defending_type_id > type.id [delete: cascade]
+Table Pokemon_Egg_Group {
+  pokemon_id int [pk, not null]
+  egg_group_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, egg_group_id) [pk]
+  }
+}
+
+Table Evolution_Chain {
+  id int [pk]
+}
+
+Table Evolution_Link {
+  evolution_chain_id int [pk, not null]
+  pokemon_id int [pk, not null]
+  target_pokemon_id int // Can be NULL if it's the last in the chain
+  condition_type varchar(255)
+  condition_value varchar(255)
+
+  indexes {
+    (evolution_chain_id, pokemon_id) [pk]
+    (pokemon_id)
+    (target_pokemon_id)
+  }
+}
+
+Table Pokemon_Weakness {
+  pokemon_id int [pk, not null]
+  weakness_type_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, weakness_type_id) [pk]
+  }
+}
+
+Ref: Generation.region_id > Region.id
+Ref: Ability.introduced_generation_id > Generation.id
+Ref: Pokemon.generation_id > Generation.id
+Ref: Pokemon.species_id > Species.id
+Ref: Pokemon.stats_id > Stats.id
+
+Ref: Stats.pokemon_national_pokedex_number > Pokemon.national_pokedex_number
+
+Ref: Pokemon_Type.pokemon_id > Pokemon.id
+Ref: Pokemon_Type.type_id > Type.id
+
+Ref: Pokemon_Ability.pokemon_id > Pokemon.id
+Ref: Pokemon_Ability.ability_name > Ability.name
+
+Ref: Pokemon_Egg_Group.pokemon_id > Pokemon.id
+Ref: Pokemon_Egg_Group.egg_group_id > Egg_Group.id
+
+Ref: Evolution_Link.evolution_chain_id > Evolution_Chain.id
+Ref: Evolution_Link.pokemon_id > Pokemon.id
+Ref: Evolution_Link.target_pokemon_id > Pokemon.id
+
+Ref: Pokemon_Weakness.pokemon_id > Pokemon.id
+Ref: Pokemon_Weakness.weakness_type_id > Type.id

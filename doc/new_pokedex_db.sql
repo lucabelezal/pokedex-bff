@@ -1,110 +1,136 @@
--- Tabela para armazenar informações sobre regiões do mundo Pokémon
-CREATE TABLE region (
-    id SERIAL PRIMARY KEY,
+-- Create the Region table
+CREATE TABLE Region (
+    id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Tabela para armazenar informações sobre gerações de Pokémon
-CREATE TABLE generation (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE,
-    region_id INTEGER NOT NULL REFERENCES region(id) ON DELETE RESTRICT
-);
-
--- Tabela para armazenar os tipos de Pokémon (e.g., Fire, Water, Grass)
-CREATE TABLE type (
-    id SERIAL PRIMARY KEY,
+-- Create the Type table
+CREATE TABLE Type (
+    id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
-    color VARCHAR(50) NOT NULL -- Ex: '#EE8130' para Fire, '#6390F0' para Water
+    color VARCHAR(7) -- e.g., #RRGGBB
 );
 
--- Tabela para armazenar os atributos de estatísticas de um Pokémon
-CREATE TABLE stats (
-    id SERIAL PRIMARY KEY,
-    total INTEGER,
-    hp INTEGER,
-    attack INTEGER,
-    defense INTEGER,
-    sp_atk INTEGER,
-    sp_def INTEGER,
-    speed INTEGER
+-- Create the Egg_Group table
+CREATE TABLE Egg_Group (
+    id INT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Tabela para armazenar informações sobre as espécies de Pokémon
-CREATE TABLE species (
-    id SERIAL PRIMARY KEY,
-    name_en VARCHAR(255) NOT NULL UNIQUE,
-    name_pt VARCHAR(255) NOT NULL UNIQUE,
-    description_en TEXT,
-    description_pt TEXT
-);
-
--- Tabela principal para armazenar informações sobre cada Pokémon individual
-CREATE TABLE pokemon (
-    id SERIAL PRIMARY KEY,
-    national_pokedex_number VARCHAR(10) NOT NULL UNIQUE,
+-- Create the Species table
+CREATE TABLE Species (
+    id INT PRIMARY KEY,
+    national_pokedex_number VARCHAR(4) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
-    stats_id INTEGER UNIQUE REFERENCES stats(id) ON DELETE CASCADE,
-    generation_id INTEGER NOT NULL REFERENCES generation(id) ON DELETE RESTRICT,
-    species_id INTEGER REFERENCES species(id) ON DELETE RESTRICT,
-    height_m DECIMAL(5, 2),
-    weight_kg DECIMAL(6, 2),
-    description TEXT,
-    sprites JSONB,
-    gender JSONB, -- ALTERAÇÃO AQUI: de gender_rate_value INTEGER para gender JSONB
-    egg_cycles INTEGER
+    species_en VARCHAR(255),
+    species_pt VARCHAR(255)
 );
 
--- Tabela de ligação para associar Pokémon a seus tipos (um Pokémon pode ter um ou dois tipos)
-CREATE TABLE pokemon_type (
-    pokemon_id INTEGER REFERENCES pokemon(id) ON DELETE CASCADE,
-    type_id INTEGER REFERENCES type(id) ON DELETE CASCADE,
-    PRIMARY KEY (pokemon_id, type_id)
-);
-
--- Tabela para armazenar as cadeias de evolução dos Pokémon
-CREATE TABLE evolution (
-    id SERIAL PRIMARY KEY,
-    pre_evolution_pokemon_id INTEGER NOT NULL REFERENCES pokemon(id) ON DELETE CASCADE,
-    post_evolution_pokemon_id INTEGER NOT NULL REFERENCES pokemon(id) ON DELETE CASCADE,
-    condition_description VARCHAR(255) NOT NULL,
-    condition_level INTEGER,
-    UNIQUE (pre_evolution_pokemon_id, post_evolution_pokemon_id)
-);
-
--- Tabela para armazenar as habilidades dos Pokémon
-CREATE TABLE ability (
-    id SERIAL PRIMARY KEY,
+-- Create the Generation table
+CREATE TABLE Generation (
+    id INT PRIMARY KEY,
     name VARCHAR(255) NOT NULL UNIQUE,
+    region_id INT NOT NULL,
+    FOREIGN KEY (region_id) REFERENCES Region(id)
+);
+
+-- Create the Ability table
+CREATE TABLE Ability (
+    name VARCHAR(255) PRIMARY KEY, -- Using name as PK as there's no explicit ID and it seems unique
     description TEXT,
-    introduced_generation_id INTEGER REFERENCES generation(id) ON DELETE RESTRICT
+    introduced_generation_id INT,
+    FOREIGN KEY (introduced_generation_id) REFERENCES Generation(id)
 );
 
--- Tabela de ligação para associar Pokémon a suas habilidades (um Pokémon pode ter múltiplas habilidades)
-CREATE TABLE pokemon_ability (
-    pokemon_id INTEGER REFERENCES pokemon(id) ON DELETE CASCADE,
-    ability_id INTEGER REFERENCES ability(id) ON DELETE CASCADE,
-    is_hidden BOOLEAN DEFAULT FALSE,
-    PRIMARY KEY (pokemon_id, ability_id)
+-- Create the Pokemon table (Pokemon details without stats and relationships initially)
+CREATE TABLE Pokemon (
+    id INT PRIMARY KEY,
+    national_pokedex_number VARCHAR(4) NOT NULL UNIQUE,
+    name VARCHAR(255) NOT NULL,
+    generation_id INT NOT NULL,
+    species_id INT NOT NULL,
+    height_m NUMERIC(4, 2),
+    weight_kg NUMERIC(6, 2),
+    description TEXT,
+    sprites JSONB, -- Store sprite URLs as JSONB
+    gender_rate_value INT,
+    egg_cycles INT,
+    FOREIGN KEY (generation_id) REFERENCES Generation(id),
+    FOREIGN KEY (species_id) REFERENCES Species(id)
 );
 
--- Tabela para armazenar os grupos de ovos dos Pokémon
-CREATE TABLE egg_group (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(50) NOT NULL UNIQUE
+-- Create the Stats table (depends on Pokemon table's national_pokedex_number)
+CREATE TABLE Stats (
+    id INT PRIMARY KEY,
+    pokemon_national_pokedex_number VARCHAR(4) NOT NULL UNIQUE,
+    total INT,
+    hp INT,
+    attack INT,
+    defense INT,
+    sp_atk INT,
+    sp_def INT,
+    speed INT,
+    FOREIGN KEY (pokemon_national_pokedex_number) REFERENCES Pokemon(national_pokedex_number)
 );
 
--- Tabela de ligação para associar Pokémon a seus grupos de ovos (um Pokémon pode pertencer a múltiplos grupos de ovos)
-CREATE TABLE pokemon_egg_group (
-    pokemon_id INTEGER REFERENCES pokemon(id) ON DELETE CASCADE,
-    egg_group_id INTEGER REFERENCES egg_group(id) ON DELETE CASCADE,
-    PRIMARY KEY (pokemon_id, egg_group_id)
+-- Add the foreign key to Pokemon for stats_id after Stats table is created
+ALTER TABLE Pokemon
+ADD COLUMN stats_id INT,
+ADD CONSTRAINT fk_stats
+FOREIGN KEY (stats_id) REFERENCES Stats(id);
+
+
+-- Create the Pokemon_Type junction table for N:N relationship
+CREATE TABLE Pokemon_Type (
+    pokemon_id INT NOT NULL,
+    type_id INT NOT NULL,
+    PRIMARY KEY (pokemon_id, type_id),
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
+    FOREIGN KEY (type_id) REFERENCES Type(id)
 );
 
--- Tabela para armazenar as relações de dano entre tipos de Pokémon (tabela de efetividade de tipos)
-CREATE TABLE type_matchup (
-    attacking_type_id INTEGER NOT NULL REFERENCES type(id) ON DELETE CASCADE,
-    defending_type_id INTEGER NOT NULL REFERENCES type(id) ON DELETE CASCADE,
-    damage_factor DECIMAL(3,2) NOT NULL,
-    PRIMARY KEY (attacking_type_id, defending_type_id)
+-- Create the Pokemon_Ability junction table for N:N relationship
+CREATE TABLE Pokemon_Ability (
+    pokemon_id INT NOT NULL,
+    ability_name VARCHAR(255) NOT NULL,
+    is_hidden BOOLEAN,
+    PRIMARY KEY (pokemon_id, ability_name),
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
+    FOREIGN KEY (ability_name) REFERENCES Ability(name)
+);
+
+-- Create the Pokemon_Egg_Group junction table for N:N relationship
+CREATE TABLE Pokemon_Egg_Group (
+    pokemon_id INT NOT NULL,
+    egg_group_id INT NOT NULL,
+    PRIMARY KEY (pokemon_id, egg_group_id),
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
+    FOREIGN KEY (egg_group_id) REFERENCES Egg_Group(id)
+);
+
+-- Create the Evolution_Chain table
+CREATE TABLE Evolution_Chain (
+    id INT PRIMARY KEY
+);
+
+-- Create the Evolution_Link table to store individual evolution steps
+CREATE TABLE Evolution_Link (
+    evolution_chain_id INT NOT NULL,
+    pokemon_id INT NOT NULL,
+    target_pokemon_id INT, -- Can be NULL if it's the last in the chain
+    condition_type VARCHAR(255),
+    condition_value VARCHAR(255), -- Store as VARCHAR to accommodate different value types (level, item, etc.)
+    PRIMARY KEY (evolution_chain_id, pokemon_id), -- Composite PK for unique links within a chain
+    FOREIGN KEY (evolution_chain_id) REFERENCES Evolution_Chain(id),
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
+    FOREIGN KEY (target_pokemon_id) REFERENCES Pokemon(id)
+);
+
+-- Create the Pokemon_Weakness junction table for N:N relationship
+CREATE TABLE Pokemon_Weakness (
+    pokemon_id INT NOT NULL,
+    weakness_type_id INT NOT NULL,
+    PRIMARY KEY (pokemon_id, weakness_type_id),
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
+    FOREIGN KEY (weakness_type_id) REFERENCES Type(id)
 );
