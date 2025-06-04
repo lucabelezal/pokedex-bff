@@ -1,0 +1,256 @@
+[
+    {
+        "id": 1,
+        "chain": [
+            {
+                "pokemonId": 1,
+                "pokemonName": "Bulbasaur",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 2,
+                        "targetPokemonName": "Ivysaur",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 16
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 2,
+                "pokemonName": "Ivysaur",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 3,
+                        "targetPokemonName": "Venusaur",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 32
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 3,
+                "pokemonName": "Venusaur",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 4,
+                        "targetPokemonName": "Mega Venusaur",
+                        "condition": {
+                            "type": "mega_evolution"
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 4,
+                "pokemonName": "Mega Venusaur",
+                "evolutionDetails": []
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "chain": [
+            {
+                "pokemonId": 5,
+                "pokemonName": "Charmander",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 6,
+                        "targetPokemonName": "Charmeleon",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 16
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 6,
+                "pokemonName": "Charmeleon",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 7,
+                        "targetPokemonName": "Charizard",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 36
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 7,
+                "pokemonName": "Charizard",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 8,
+                        "targetPokemonName": "Mega Charizard X",
+                        "condition": {
+                            "type": "mega_evolution"
+                        }
+                    },
+                    {
+                        "targetPokemonId": 9,
+                        "targetPokemonName": "Mega Charizard Y",
+                        "condition": {
+                            "type": "mega_evolution"
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 8,
+                "pokemonName": "Mega Charizard X",
+                "evolutionDetails": []
+            },
+            {
+                "pokemonId": 9,
+                "pokemonName": "Mega Charizard Y",
+                "evolutionDetails": []
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "chain": [
+            {
+                "pokemonId": 10,
+                "pokemonName": "Squirtle",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 11,
+                        "targetPokemonName": "Wartortle",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 16
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 11,
+                "pokemonName": "Wartortle",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 12,
+                        "targetPokemonName": "Blastoise",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 36
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 12,
+                "pokemonName": "Blastoise",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 13,
+                        "targetPokemonName": "Mega Blastoise",
+                        "condition": {
+                            "type": "mega_evolution"
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 13,
+                "pokemonName": "Mega Blastoise",
+                "evolutionDetails": []
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "chain": [
+            {
+                "pokemonId": 14,
+                "pokemonName": "Caterpie",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 15,
+                        "targetPokemonName": "Metapod",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 7
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 15,
+                "pokemonName": "Metapod",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 16,
+                        "targetPokemonName": "Butterfree",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 10
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 16,
+                "pokemonName": "Butterfree",
+                "evolutionDetails": []
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "chain": [
+            {
+                "pokemonId": 17,
+                "pokemonName": "Weedle",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 18,
+                        "targetPokemonName": "Kakuna",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 7
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 18,
+                "pokemonName": "Kakuna",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 19,
+                        "targetPokemonName": "Beedrill",
+                        "condition": {
+                            "type": "level_up",
+                            "value": 10
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 19,
+                "pokemonName": "Beedrill",
+                "evolutionDetails": [
+                    {
+                        "targetPokemonId": 20,
+                        "targetPokemonName": "Mega Beedrill",
+                        "condition": {
+                            "type": "mega_evolution"
+                        }
+                    }
+                ]
+            },
+            {
+                "pokemonId": 20,
+                "pokemonName": "Mega Beedrill",
+                "evolutionDetails": []
+            }
+        ]
+    }
+]
