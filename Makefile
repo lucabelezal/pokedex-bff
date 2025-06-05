@@ -23,13 +23,13 @@ help:
 	@echo "  make setup-dev              - Configura e inicia o ambiente de desenvolvimento completo:"
 	@echo "                                  1. Inicia o PostgreSQL via Docker Compose."
 	@echo "                                  2. Aguarda o DB estar acessível."
-	@echo "                                  3. Inicia o BFF, que popula o DB com os CSVs."
+	@echo "                                  3. Inicia o BFF, que popula o DB com os JSONs." # <-- Corrigido
 	@echo ""
 	@echo "  make start-db               - Apenas inicia o contêiner do banco de dados PostgreSQL."
 	@echo "  make stop-db                - Para o contêiner do banco de dados."
 	@echo "  make clean-db               - Remove o contêiner do DB e seus volumes de dados (CUIDADO: APAGA OS DADOS!)."
 	@echo ""
-	@echo "  make load-data              - Inicia o BFF para carregar os dados CSV no DB."
+	@echo "  make load-data              - Inicia o BFF para carregar os dados JSON no DB." # <-- Corrigido
 	@echo "                                  (Requer que o DB já esteja rodando e acessível)."
 	@echo "  make clean-bff              - Limpa o projeto BFF (executa './gradlew clean')."
 	@echo "  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo)."
@@ -68,7 +68,7 @@ clean-bff:
 	./gradlew clean
 
 load-data: start-db
-	@echo "--- Iniciando o BFF e carregando dados CSV no DB ---"
+	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---" # <-- Corrigido
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 run-bff:
@@ -85,7 +85,7 @@ setup-dev:
 	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
 	sleep 5 # Ajuste conforme necessário
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db' para status detalhado."
-	@echo "--- Iniciando o BFF e carregando dados CSV no DB ---"
+	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---" # <-- Corrigido
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 clean-all: deep-clean-gradle stop-db clean-db
