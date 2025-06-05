@@ -1,19 +1,17 @@
 package com.pokedex.bff.services
 
-import com.fasterxml.jackson.annotation.JsonProperty
-import com.pokedex.bff.controllers.dtos.* // Ensure your DTOs are correctly imported
-import com.pokedex.bff.models.*
-import com.pokedex.bff.repositories.*
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.pokedex.bff.controllers.dtos.* // Importa todos os DTOs do seu pacote de DTOs
+import com.pokedex.bff.models.*
+import com.pokedex.bff.repositories.*
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.beans.factory.annotation.Value
-import java.math.BigDecimal
-import java.util.* // Import for Optional
+import java.util.*
 
 // Data class to store the result of each loading operation
 data class LoadResult(
@@ -22,35 +20,6 @@ data class LoadResult(
     val count: Int = 0,
     val errorMessage: String? = null
 )
-
-// Assuming source JSONs have DTOs matching their structure
-// Using the DTOs you provided previously.
-// Import these from their package (e.g., com.pokedex.bff.controllers.dtos.*)
-// Make sure these Source DTOs match the EXACT structure of your JSON files.
-
-// Example Source DTOs (Adjust these based on your actual JSON file structures)
-data class RegionSourceDto(val id: Int, val name: String)
-data class TypeSourceDto(val id: Int, val name: String, val color: String?)
-data class EggGroupSourceDto(val id: Int, val name: String)
-data class SpeciesSourceDto(val id: Int, val national_pokedex_number: String, val name: String, val species_en: String?, val species_pt: String?)
-data class GenerationSourceDto(val id: Int, val name: String, @JsonProperty("regiaoId") val regionId: Int) // Assuming "regiaoId" in 05_generation.json
-data class AbilitySourceDto(@JsonProperty("id") val id: Int, val name: String, val description: String?, @JsonProperty("introducedGenerationId") val introducedGenerationId: Int?) // Assuming id and introducedGenerationId in 06_ability.json
-data class StatsSourceDto(val id: Int, @JsonProperty("pokemon_national_pokedex_number") val pokemon_national_pokedex_number: String, val total: Int?, val hp: Int?, val attack: Int?, val defense: Int?, @JsonProperty("sp_atk") val sp_atk: Int?, @JsonProperty("sp_def") val sp_def: Int?, val speed: Int?) // Assuming this structure for 07_stats.json (snake_case fields)
-
-// Re-import/re-define DTOs from controllers.dtos needed for parsing other JSONs
-// These should match the structures defined previously for 09, 10, 08 json
-// Assuming these are the same as in your controllers.dtos file
-// data class PokemonJsonDto(...)
-// data class PokemonAbilityJsonDto(...)
-// data class SpritesJsonDto(...)
-// data class OtherSpritesJsonDto(...)
-// ... other sprites DTOs ...
-// data class WeaknessJsonDto(...)
-// data class EvolutionChainJsonDto(...)
-// data class EvolutionLinkJsonDto(...)
-// data class EvolutionDetailJsonDto(...)
-// data class EvolutionConditionJsonDto(...)
-
 
 @Component
 class DataLoader(
@@ -65,9 +34,9 @@ class DataLoader(
     private val pokemonTypeRepository: PokemonTypeRepository,
     private val pokemonAbilityRepository: PokemonAbilityRepository,
     private val pokemonEggGroupRepository: PokemonEggGroupRepository,
-    private val pokemonWeaknessRepository: PokemonWeaknessRepository,
+    private val weaknessRepository: WeaknessRepository,
     private val evolutionChainRepository: EvolutionChainRepository,
-    private val evolutionLinkRepository: EvolutionLinkRepository,
+    private val evolutionDetailRepository: EvolutionDetailRepository,
     @Value("\${app.data.location}") private val jsonDataLocation: String
 ) : CommandLineRunner {
 
@@ -83,9 +52,10 @@ class DataLoader(
     private lateinit var evolutionChainMap: Map<Int, EvolutionChain> // For EvolutionChain by ID
 
     // Maps/Lists for data from JSONs that need processing after Pokemon load
-    private lateinit var statsSourceMap: Map<String, StatsSourceDto> // Map Stats by national_pokedex_number (assuming StatsSourceDto exists)
-    private lateinit var weaknessesSourceMap: Map<Int, WeaknessJsonDto> // Map Weaknesses by pokemon_id
-    private lateinit var evolutionChainsSourceList: List<EvolutionChainJsonDto> // Store the whole evolution chain structure for creating links
+    // Using Input DTOs from AllJsonDto.kt
+    private lateinit var statsSourceMap: Map<String, StatsInputDTO> // Map Stats by pokemonNationalPokedexNumber
+    private lateinit var weaknessesSourceMap: Map<String, WeaknessInputDTO> // <--- ALTERADO AQUI: Map Weaknesses by pokemonName (String)
+    private lateinit var evolutionChainsSourceList: List<EvolutionChainInputDTO> // Store the whole evolution chain structure
 
     override fun run(vararg args: String?) {
         if (pokemonRepository.count() == 0L) { // Check based on Pokemon table being empty
@@ -115,17 +85,15 @@ class DataLoader(
         results.add(wrapLoadFunction("06_ability.json (Habilidades)") { loadAbilities() })
 
         // Load preliminary data into memory (needed for relations later)
-        results.add(wrapLoadFunction("07_stats.json (Stats Source)") { loadStatsPrelim() }) // Now reports number of stats read
-        results.add(wrapLoadFunction("10_weaknesses.json (Weaknesses Source)") { loadWeaknessesPrelim() }) // Now reports number of weaknesses read
-        results.add(wrapLoadFunction("08_evolution_chains.json (Evolution Chains Source)") { loadEvolutionLinksPrelim() }) // Now reports total number of evolution links read
+        results.add(wrapLoadFunction("07_stats.json (Stats Source)") { loadStatsPrelim() })
+        results.add(wrapLoadFunction("10_weaknesses.json (Weaknesses Source)") { loadWeaknessesPrelim() })
+        results.add(wrapLoadFunction("08_evolution_chains.json (Evolution Chains Source)") { loadEvolutionLinksPrelim() })
 
-        // Load Evolution Chains Entities (needed before loading Pokemon to link EvolutionLink)
+        // Load Evolution Chains Entities (needed before loading Pokemon to link EvolutionDetail)
         results.add(wrapLoadFunction("08_evolution_chains.json (Evolution Chains Entities)") { loadEvolutionChainsEntities() })
-
 
         // Load main Pokemon data and create all related entities (Stats, Junctions, Links)
         results.add(wrapLoadFunction("09_pokemon.json (Pokémon and Relations)") { loadPokemonAndRelations() })
-
 
         // Resumo final
         val successfulLoads = results.filter { it.success }
@@ -134,7 +102,7 @@ class DataLoader(
         println("\n--- Sumário Final do Carregamento ---")
         println("Operações de Carregamento Concluídas: ${results.size}")
         println("Sucessos: ${successfulLoads.size}")
-        successfulLoads.forEach { println("  ✅ ${it.operationName}: Processados ${it.count} registros/relações.") } // Updated log message
+        successfulLoads.forEach { println("  ✅ ${it.operationName}: Processados ${it.count} registros/relações.") }
 
         println("Falhas: ${failedLoads.size}")
         if (failedLoads.isNotEmpty()) {
@@ -177,8 +145,7 @@ class DataLoader(
     // These functions now return the count of entities SAVED
 
     private fun loadRegions(): Int {
-        // Assuming 01_region.json structure matches RegionSourceDto {id, name}
-        val regions = loadJsonFile("01_region.json", RegionSourceDto::class.java).map {
+        val regions = loadJsonFile("01_region.json", RegionInputDTO::class.java).map {
             Region(id = it.id, name = it.name)
         }
         regionRepository.saveAll(regions)
@@ -186,8 +153,7 @@ class DataLoader(
     }
 
     private fun loadTypes(): Int {
-        // Assuming 02_type.json structure matches TypeSourceDto {id, name, color}
-        val types = loadJsonFile("02_type.json", TypeSourceDto::class.java).map {
+        val types = loadJsonFile("02_type.json", TypeInputDTO::class.java).map {
             Type(id = it.id, name = it.name, color = it.color)
         }
         typeRepository.saveAll(types)
@@ -197,8 +163,7 @@ class DataLoader(
     }
 
     private fun loadEggGroups(): Int {
-        // Assuming 03_egg_group.json structure matches EggGroupSourceDto {id, name}
-        val eggGroups = loadJsonFile("03_egg_group.json", EggGroupSourceDto::class.java).map {
+        val eggGroups = loadJsonFile("03_egg_group.json", EggGroupInputDTO::class.java).map {
             EggGroup(id = it.id, name = it.name)
         }
         eggGroupRepository.saveAll(eggGroups)
@@ -207,9 +172,8 @@ class DataLoader(
     }
 
     private fun loadSpecies(): Int {
-        // Assuming 04_species.json structure matches SpeciesSourceDto {id, national_pokedex_number, name, species_en, species_pt}
-        val speciesList = loadJsonFile("04_species.json", SpeciesSourceDto::class.java).map {
-            Species(id = it.id, nationalPokedexNumber = it.national_pokedex_number, name = it.name, speciesEn = it.species_en, speciesPt = it.species_pt)
+        val speciesList = loadJsonFile("04_species.json", SpeciesInputDTO::class.java).map {
+            Species(id = it.id, nationalPokedexNumber = it.nationalPokedexNumber, name = it.name, species_en = it.species_en, species_pt = it.species_pt)
         }
         speciesRepository.saveAll(speciesList)
         speciesMap = speciesList.associateBy { it.id!! } // Populate map
@@ -217,16 +181,16 @@ class DataLoader(
     }
 
     private fun loadGenerations(): Int {
-        // Assuming 05_generation.json structure matches GenerationSourceDto {id, name, regionId}
-        val generations = loadJsonFile("05_generation.json", GenerationSourceDto::class.java)
+        val generations = loadJsonFile("05_generation.json", GenerationInputDTO::class.java)
         val regionMap = regionRepository.findAll().associateBy { it.id!! } // Load regions into a temporary map
 
         val generationsToSave = generations.mapNotNull { genDto ->
-            val region = regionMap[genDto.regionId]
+            // Assume que GenerationInputDTO tem um campo 'regionId' para o ID da região
+            val region = genDto.regionId?.let { regionMap[it] }
             if (region != null) {
                 Generation(id = genDto.id, name = genDto.name, region = region)
             } else {
-                println("WARNING: Region with ID ${genDto.regionId} not found for Generation ${genDto.name}. Skipping generation.")
+                println("WARNING: Região com ID ${genDto.regionId} não encontrada para a Geração ${genDto.name}. Pulando esta geração.")
                 null // Skip this generation if region not found
             }
         }
@@ -236,16 +200,13 @@ class DataLoader(
         return generationsToSave.size // Return count of entities saved
     }
 
-    // Assuming 06_ability.json has { "id": ..., "name": ..., "description": ..., "introducedGenerationId": ... }
-    // Assuming you have AbilitySourceDto { id, name, description, introducedGenerationId }
     private fun loadAbilities(): Int {
-        val abilities = loadJsonFile("06_ability.json", AbilitySourceDto::class.java)
+        val abilities = loadJsonFile("06_ability.json", AbilityInputDTO::class.java)
         val generationMap = this.generationMap // Use the previously populated generation map
 
-        val abilitiesToSave = abilities.mapNotNull { abilityDto ->
+        val abilitiesToSave = abilities.map { abilityDto ->
+            // introducedGenerationId is nullable, so generation can be null
             val generation = abilityDto.introducedGenerationId?.let { generationMap[it] }
-            // It's okay if generation is null if introducedGenerationId is nullable in JSON/DTO/Entity
-
             Ability(id = abilityDto.id, name = abilityDto.name, description = abilityDto.description, introducedGeneration = generation)
         }
 
@@ -254,11 +215,8 @@ class DataLoader(
         return abilitiesToSave.size // Return count of entities saved
     }
 
-    // New function to load and save Evolution Chains entities
     private fun loadEvolutionChainsEntities(): Int {
-        // Assuming 08_evolution_chains.json structure matches EvolutionChainJsonDto { id, chain: [...] }
-        // We only need the top-level ID for the Chain entity
-        val evolutionChainsJson = loadJsonFile("08_evolution_chains.json", EvolutionChainJsonDto::class.java)
+        val evolutionChainsJson = loadJsonFile("08_evolution_chains.json", EvolutionChainInputDTO::class.java)
 
         val evolutionChainsToSave = evolutionChainsJson.map { chainDto ->
             EvolutionChain(id = chainDto.id)
@@ -269,28 +227,27 @@ class DataLoader(
         return evolutionChainsToSave.size // Return count of entities saved
     }
 
-
     // --- Preliminary Load Functions (load JSON into maps/lists for later use) ---
     // These functions return the count of items READ from JSON
 
-    // Assuming 07_stats.json structure matches StatsSourceDto {id, pokemon_national_pokedex_number, ...}
     private fun loadStatsPrelim(): Int {
-        val statsList = loadJsonFile("07_stats.json", StatsSourceDto::class.java)
-        statsSourceMap = statsList.associateBy { it.pokemon_national_pokedex_number }
+        // Using StatsInputDTO as the source DTO
+        val statsList = loadJsonFile("07_stats.json", StatsInputDTO::class.java)
+        statsSourceMap = statsList.associateBy { it.pokemonNationalPokedexNumber }
         return statsList.size // Return count of items READ from JSON
     }
 
-    // Assuming 10_weaknesses.json structure matches WeaknessJsonDto {id, pokemon_id, pokemon_name, weaknesses}
     private fun loadWeaknessesPrelim(): Int {
-        val weaknessesList = loadJsonFile("10_weaknesses.json", WeaknessJsonDto::class.java)
-        weaknessesSourceMap = weaknessesList.associateBy { it.pokemonId }
+        // Using WeaknessInputDTO for the source JSON
+        val weaknessesList = loadJsonFile("10_weaknesses.json", WeaknessInputDTO::class.java)
+        // <--- ALTERADO AQUI: Mapeando por pokemonName (que é String e parece sempre presente)
+        weaknessesSourceMap = weaknessesList.associateBy { it.pokemonName!! } // Assegura que pokemonName não é nulo para ser chave
         return weaknessesList.size // Return count of items READ from JSON
     }
 
-    // Assuming 08_evolution_chains.json structure matches EvolutionChainJsonDto { id, chain: [...] }
-    // This loads the full structure for later processing of links
     private fun loadEvolutionLinksPrelim(): Int {
-        evolutionChainsSourceList = loadJsonFile("08_evolution_chains.json", EvolutionChainJsonDto::class.java)
+        // Using EvolutionChainInputDTO for the source JSON
+        evolutionChainsSourceList = loadJsonFile("08_evolution_chains.json", EvolutionChainInputDTO::class.java)
         // Return the total number of evolution details (links) found across all chains in the source data
         return evolutionChainsSourceList.sumOf { chainDto ->
             chainDto.chain.sumOf { linkDto ->
@@ -303,66 +260,94 @@ class DataLoader(
     // This function returns the total count of ALL entities SAVED within THIS function
 
     private fun loadPokemonAndRelations(): Int {
-        // Assuming 09_pokemon.json structure matches PokemonJsonDto {id, nationalPokedexNumber, name, ... typeId, abilities, eggGroupIds, typeMatchup }
-        val pokemonJsonList = loadJsonFile("09_pokemon.json", PokemonJsonDto::class.java)
+        val pokemonJsonList = loadJsonFile("09_pokemon.json", PokemonInputDTO::class.java)
 
         val pokemonToSave = mutableListOf<Pokemon>()
         val statsToSave = mutableListOf<Stats>()
         val pokemonTypesToSave = mutableListOf<PokemonType>()
         val pokemonAbilitiesToSave = mutableListOf<PokemonAbility>()
         val pokemonEggGroupsToSave = mutableListOf<PokemonEggGroup>()
-        val pokemonWeaknessesToSave = mutableListOf<PokemonWeakness>()
-        val evolutionLinksToSave = mutableListOf<EvolutionLink>()
+        val weaknessesToSave = mutableListOf<Weakness>()
+        val evolutionDetailsToSave = mutableListOf<EvolutionDetail>()
 
-
-        // 1. Create and collect main Pokemon entities
-        pokemonToSave.addAll(pokemonJsonList.mapNotNull { pokemonDto ->
+        // 1. Create and collect main Pokemon entities and their Stats
+        pokemonJsonList.forEach { pokemonDto ->
             val generation = generationMap[pokemonDto.generationId]
             val species = speciesMap[pokemonDto.speciesId]
 
             if (generation == null) {
                 println("WARNING: Generation with ID ${pokemonDto.generationId} not found for Pokemon ${pokemonDto.name}. Skipping this Pokemon.")
-                null // Skip this pokemonDto
+                return@forEach // Skip this pokemonDto
             } else if (species == null) {
                 println("WARNING: Species with ID ${pokemonDto.speciesId} not found for Pokemon ${pokemonDto.name}. Skipping this Pokemon.")
-                null // Skip to next pokemonDto
-            } else {
-                try {
-                    Pokemon(
-                        id = pokemonDto.id, // Assuming IDs from JSON are used, not generated by DB for Pokemon
-                        nationalPokedexNumber = pokemonDto.nationalPokedexNumber, // No longer unique in DB
-                        name = pokemonDto.name,
-                        generation = generation,
-                        species = species,
-                        heightM = pokemonDto.heightM,
-                        weightKg = pokemonDto.weightKg,
-                        description = pokemonDto.description,
-                        sprites = pokemonDto.sprites?.let { objectMapper.writeValueAsString(it) }, // Serialize sprites DTO to JSON string
-                        genderRateValue = pokemonDto.genderRateValue,
-                        eggCycles = pokemonDto.eggCycles
-                        // stats relation is now handled from Stats side
-                    )
-                } catch (e: Exception) {
-                    println("ERROR: Error creating Pokemon entity for ${pokemonDto.name}: ${e.message}")
-                    e.printStackTrace()
-                    null // Skip on error
-                }
+                return@forEach // Skip to next pokemonDto
             }
-        })
 
+            try {
+                // Create Stats entity *before* Pokemon, if it exists
+                val statsDto = statsSourceMap[pokemonDto.nationalPokedexNumber]
+                val newStats = statsDto?.let {
+                    Stats(
+                        // id não é passado, pois é auto-gerado pelo banco de dados
+                        pokemonNationalPokedexNumber = it.pokemonNationalPokedexNumber,
+                        pokemonName = it.pokemonName.toString(), // toString() for nullable String?
+                        total = it.total,
+                        hp = it.hp,
+                        attack = it.attack,
+                        defense = it.defense,
+                        spAtk = it.spAtk,
+                        spDef = it.spDef,
+                        speed = it.speed
+                    )
+                } ?: run {
+                    println("WARNING: Stats data for Pokemon ${pokemonDto.name} (National Pokedex Number: ${pokemonDto.nationalPokedexNumber}) not found. Stats will be null.")
+                    null
+                }
+                if (newStats != null) {
+                    statsToSave.add(newStats)
+                }
 
-        // Save the batch of Pokemon first to ensure they are in the database and managed
-        // This is crucial for creating relations that point *to* these Pokemon.
+                // Create Pokemon entity
+                val pokemon = Pokemon(
+                    id = pokemonDto.id,
+                    nationalPokedexNumber = pokemonDto.nationalPokedexNumber,
+                    name = pokemonDto.name,
+                    generation = generation,
+                    species = species,
+                    heightM = pokemonDto.heightM,
+                    weightKg = pokemonDto.weightKg,
+                    description = pokemonDto.description,
+                    // Sprites are serialized as JSON string
+                    sprites = pokemonDto.sprites?.let { objectMapper.writeValueAsString(it) },
+                    gender_rate_value = pokemonDto.genderRateValue,
+                    eggCycles = pokemonDto.eggCycles,
+                    stats = newStats, // Link the Stats entity created above
+                    evolutionChain = null // Will be set later when creating evolution details
+                )
+                pokemonToSave.add(pokemon)
+
+            } catch (e: Exception) {
+                println("ERROR: Error creating Pokemon entity for ${pokemonDto.name}: ${e.message}")
+                e.printStackTrace()
+            }
+        }
+
+        // Save Stats first if they are independent or have a one-to-one relationship
+        statsRepository.saveAll(statsToSave)
+
+        // Save the batch of Pokemon after Stats, so they can reference managed Stats entities.
         pokemonRepository.saveAll(pokemonToSave)
 
-        // Create a map from the saved list for efficient lookup by ID
+        // Create a map from the saved Pokemon list for efficient lookup by ID
         // This map holds the *managed* entities from the database
-        val savedPokemonsLookupMap = pokemonRepository.findAllById(pokemonToSave.mapNotNull { it.id }).associateBy { it.id!! }
+        val savedPokemonsLookupMap = pokemonRepository.findAllById(pokemonToSave.map { it.id }).associateBy { it.id }
+        // Também um lookup por nome para fraquezas, já que o WeaknessSourceMap usa o nome
+        val savedPokemonsNameLookupMap = pokemonRepository.findAllById(pokemonToSave.map { it.id }).associateBy { it.name }
 
 
-        // 2. Process relations based on the saved Pokemon entities and preliminary data
+        // 2. Process relations for saved Pokemon
         pokemonJsonList.forEach { pokemonDto ->
-            val pokemon = savedPokemonsLookupMap[pokemonDto.id] // Get the managed entity
+            val pokemon = savedPokemonsLookupMap[pokemonDto.id]
 
             if (pokemon == null) {
                 println("WARNING: Saved Pokemon with ID ${pokemonDto.id} not found in lookup map after save. Skipping relations for this Pokemon.")
@@ -370,56 +355,42 @@ class DataLoader(
             }
 
             try {
-                // Create Stats (depends on Pokemon ID)
-                statsSourceMap[pokemonDto.nationalPokedexNumber]?.let { statsDto ->
-                    statsToSave.add(
-                        Stats(
-                            pokemonId = pokemon.id!!, // Use the Pokemon's ID as PK/FK
-                            pokemon = pokemon, // Link the managed Pokemon entity
-                            total = statsDto.total,
-                            hp = statsDto.hp,
-                            attack = statsDto.attack,
-                            defense = statsDto.defense,
-                            spAtk = statsDto.sp_atk,
-                            spDef = statsDto.sp_def,
-                            speed = statsDto.speed
-                        )
-                    )
-                } // Warning for missing stats logged in prelim load if needed, or add one here
-
-
-                // Create Pokemon_Type entries (depends on Pokemon and Type)
-                pokemonDto.typeId?.forEach { typeId ->
+                // Create Pokemon_Type entries
+                pokemonDto.typeIds?.forEach { typeId ->
                     typeMap[typeId]?.let { type ->
-                        pokemonTypesToSave.add(PokemonType(pokemon = pokemon, type = type)) // JPA handles composite PK
+                        pokemonTypesToSave.add(PokemonType(pokemon = pokemon, type = type))
                     } ?: println("WARNING: Type with ID $typeId not found for Pokemon ${pokemon.name}. Skipping PokemonType association.")
                 }
 
-
-                // Create Pokemon_Ability entries (depends on Pokemon and Ability by ID)
+                // Create Pokemon_Ability entries
                 pokemonDto.abilities?.forEach { abilityDto ->
-                    // Find Ability by ID using the abilityMap populated by loadAbilities
                     abilityMap[abilityDto.abilityId]?.let { ability ->
-                        pokemonAbilitiesToSave.add(PokemonAbility(pokemon = pokemon, ability = ability, isHidden = abilityDto.isHidden)) // JPA handles composite PK
+                        pokemonAbilitiesToSave.add(PokemonAbility(pokemon = pokemon, ability = ability, isHidden = abilityDto.isHidden))
                     } ?: println("WARNING: Ability with ID ${abilityDto.abilityId} not found for Pokemon ${pokemon.name}. Skipping PokemonAbility association.")
                 }
 
-
-                // Create Pokemon_Egg_Group entries (depends on Pokemon and EggGroup)
+                // Create Pokemon_Egg_Group entries
                 pokemonDto.eggGroupIds?.forEach { eggGroupId ->
                     eggGroupMap[eggGroupId]?.let { eggGroup ->
-                        pokemonEggGroupsToSave.add(PokemonEggGroup(pokemon = pokemon, eggGroup = eggGroup)) // JPA handles composite PK
+                        pokemonEggGroupsToSave.add(PokemonEggGroup(pokemon = pokemon, eggGroup = eggGroup))
                     } ?: println("WARNING: Egg Group with ID $eggGroupId not found for Pokemon ${pokemon.name}. Skipping PokemonEggGroup association.")
                 }
 
-                // Create Pokemon_Weakness entries (depends on Pokemon and Type by Name)
-                weaknessesSourceMap[pokemonDto.id]?.let { weaknessDto -> // Lookup weaknesses by pokemon_id from weakness file
-                    weaknessDto.weaknesses.forEach { weaknessTypeName ->
-                        typeNameMap[weaknessTypeName]?.let { weaknessType ->
-                            pokemonWeaknessesToSave.add(PokemonWeakness(pokemon = pokemon, weaknessType = weaknessType)) // JPA handles composite PK
-                        } ?: println("WARNING: Weakness Type '$weaknessTypeName' not found for Pokemon ${pokemon.name}. Skipping PokemonWeakness association.")
-                    }
-                } // Warning for missing weakness data logged in prelim load or add one here
+                // Create Weakness entries
+                // <--- ALTERADO AQUI: Usando savedPokemonsNameLookupMap para buscar o Pokemon pelo nome
+                // e weaknessesSourceMap que agora é mapeado por nome
+                val pokemonForWeakness = savedPokemonsNameLookupMap[pokemonDto.name]
+                if (pokemonForWeakness != null) {
+                    weaknessesSourceMap[pokemonForWeakness.name]?.let { weaknessSourceDto ->
+                        weaknessSourceDto.weaknesses.forEach { weaknessTypeName ->
+                            typeNameMap[weaknessTypeName]?.let { type -> // Ensure the type actually exists in the DB
+                                weaknessesToSave.add(Weakness(pokemon = pokemonForWeakness, pokemon_name = pokemonForWeakness.name, weakness_type = type.name))
+                            } ?: println("WARNING: Weakness Type '$weaknessTypeName' not found for Pokemon ${pokemonForWeakness.name}. Skipping Weakness association.")
+                        }
+                    } ?: println("WARNING: No weakness data found for Pokemon ${pokemonForWeakness.name}.")
+                } else {
+                    println("WARNING: Saved Pokemon with name ${pokemonDto.name} not found in name lookup map after save. Skipping weakness relations for this Pokemon.")
+                }
 
 
             } catch (e: Exception) {
@@ -429,74 +400,60 @@ class DataLoader(
         }
 
         // Save relation batches
-        statsRepository.saveAll(statsToSave)
         pokemonTypeRepository.saveAll(pokemonTypesToSave)
         pokemonAbilityRepository.saveAll(pokemonAbilitiesToSave)
         pokemonEggGroupRepository.saveAll(pokemonEggGroupsToSave)
-        pokemonWeaknessRepository.saveAll(pokemonWeaknessesToSave)
+        weaknessRepository.saveAll(weaknessesToSave)
 
-        // 3. Create Evolution_Link entries (depends on Pokemon, target Pokemon, EvolutionChain)
-        // Process the loaded evolution chain structure (evolutionChainsSourceList)
+
+        // 3. Create Evolution_Detail entries
         evolutionChainsSourceList.forEach { chainDto ->
-            try {
-                // Find the managed EvolutionChain entity using the map populated by loadEvolutionChainsEntities()
-                val evolutionChain = evolutionChainMap[chainDto.id]
-                if (evolutionChain == null) {
-                    println("WARNING: Evolution Chain with ID ${chainDto.id} not found in map. Skipping links for this chain.")
-                    return@forEach // Skip this chainDto
+            val evolutionChain = evolutionChainMap[chainDto.id]
+            if (evolutionChain == null) {
+                println("WARNING: Evolution Chain with ID ${chainDto.id} not found. Skipping evolution details for this chain.")
+                return@forEach // Skip this chainDto
+            }
+
+            chainDto.chain.forEach { linkDto ->
+                val sourcePokemon = savedPokemonsLookupMap[linkDto.pokemonId]
+                if (sourcePokemon == null) {
+                    println("WARNING: Source Pokemon with ID ${linkDto.pokemonId} not found for evolution chain ${chainDto.id}. Skipping link.")
+                    return@forEach // Skip this linkDto
                 }
 
-                chainDto.chain.forEach { linkDto ->
-                    // Find the managed source Pokemon entity from the lookup map of saved Pokemon
-                    val sourcePokemon = savedPokemonsLookupMap[linkDto.pokemonId]
+                linkDto.evolutionDetails.forEach { detailDto ->
+                    val targetPokemon = detailDto.targetPokemonId?.let { savedPokemonsLookupMap[it] }
 
-                    if (sourcePokemon == null) {
-                        println("WARNING: Source Pokemon with ID ${linkDto.pokemonId} not found (source of evolution link) in chain ${chainDto.id}. Skipping this link.")
-                        return@forEach // Skip this linkDto
+                    if (detailDto.targetPokemonId != null && targetPokemon == null) {
+                        println("WARNING: Target Pokemon with ID ${detailDto.targetPokemonId} not found for source ${sourcePokemon.name} in chain ${chainDto.id}. Skipping this evolution detail.")
+                        return@forEach // Skip this specific detail
                     }
 
-                    linkDto.evolutionDetails.forEach { detailDto ->
-                        // Find the managed target Pokemon entity (can be null) from the lookup map
-                        val targetPokemon = detailDto.targetPokemonId?.let { targetId ->
-                            savedPokemonsLookupMap[targetId]
-                        }
+                    // Serialize condition to JSON string
+                    val conditionJson = detailDto.condition?.let { objectMapper.writeValueAsString(it) }
 
-                        // If targetPokemonId is not null but the entity wasn't found, log a warning
-                        if (detailDto.targetPokemonId != null && targetPokemon == null) {
-                            println("WARNING: Target Pokemon with ID ${detailDto.targetPokemonId} not found (target of evolution link) in chain ${chainDto.id} for source Pokemon ${sourcePokemon.name}. Skipping this evolution detail.")
-                            // Continue to the next detailDto in this case, don't skip the whole linkDto
-                            return@forEach // Skips the rest of this evolutionDetails loop iteration
-                        }
-
-                        // Serialize the condition DTO to JSON string for the JSONB column
-                        val conditionJson = detailDto.condition?.let { objectMapper.writeValueAsString(it) }
-
-                        evolutionLinksToSave.add(
-                            EvolutionLink(
-                                evolutionChain = evolutionChain, // Managed entity
-                                pokemon = sourcePokemon, // Managed entity (source)
-                                targetPokemon = targetPokemon, // Managed entity (target, can be null)
-                                condition = conditionJson // Store the JSON string
-                            )
+                    evolutionDetailsToSave.add(
+                        EvolutionDetail(
+                            evolutionChain = evolutionChain,
+                            pokemon = sourcePokemon,
+                            targetPokemon = targetPokemon,
+                            targetPokemonName = targetPokemon?.name,
+                            condition_type = detailDto.condition?.trigger, // Using 'trigger' as condition_type
+                            condition_value = conditionJson // Storing the full condition JSON in condition_value
                         )
-                    }
+                    )
                 }
-            } catch (e: Exception) {
-                println("ERROR: Error processing evolution links for chain ${chainDto.id}: ${e.message}")
-                e.printStackTrace()
             }
         }
-        evolutionLinkRepository.saveAll(evolutionLinksToSave)
-
+        evolutionDetailRepository.saveAll(evolutionDetailsToSave)
 
         // Return the total count of ALL entities SAVED within THIS function
-        return pokemonToSave.size + // Count of main Pokemon entities saved
+        return pokemonToSave.size +
                 statsToSave.size +
                 pokemonTypesToSave.size +
                 pokemonAbilitiesToSave.size +
                 pokemonEggGroupsToSave.size +
-                pokemonWeaknessesToSave.size +
-                evolutionLinksToSave.size // Count of EvolutionLink entities saved
+                weaknessesToSave.size +
+                evolutionDetailsToSave.size
     }
-
 }
