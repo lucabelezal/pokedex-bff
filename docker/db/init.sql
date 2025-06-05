@@ -34,19 +34,21 @@ CREATE TABLE Generation (
     FOREIGN KEY (region_id) REFERENCES Region(id)
 );
 
--- Create the Ability table
+-- Create the Ability table (Adjusted PK to use 'id')
 CREATE TABLE Ability (
-    name VARCHAR(255) PRIMARY KEY, -- Using name as PK as there's no explicit ID and it seems unique
+    id INT PRIMARY KEY, -- Use ID as PK as per new data
+    name VARCHAR(255) NOT NULL UNIQUE, -- Ensure name is also unique
     description TEXT,
     introduced_generation_id INT,
     FOREIGN KEY (introduced_generation_id) REFERENCES Generation(id)
 );
 
--- Create the Pokemon table (Pokemon details without stats and relationships initially)
+-- Create the Pokemon table (Removed unique constraint on national_pokedex_number and stats_id reference)
 CREATE TABLE Pokemon (
-    id INT PRIMARY KEY,
-    national_pokedex_number VARCHAR(4) NOT NULL UNIQUE,
+    id INT PRIMARY KEY, -- PK for each unique Pokemon form
+    national_pokedex_number VARCHAR(4) NOT NULL, -- No longer unique here, as multiple forms share it
     name VARCHAR(255) NOT NULL,
+    -- stats_id INT, -- Removed, stats will reference Pokemon.id directly
     generation_id INT NOT NULL,
     species_id INT NOT NULL,
     height_m NUMERIC(4, 2),
@@ -57,12 +59,12 @@ CREATE TABLE Pokemon (
     egg_cycles INT,
     FOREIGN KEY (generation_id) REFERENCES Generation(id),
     FOREIGN KEY (species_id) REFERENCES Species(id)
+    -- FOREIGN KEY (stats_id) REFERENCES Stats(id) -- Removed
 );
 
--- Create the Stats table (depends on Pokemon table's national_pokedex_number)
+-- Create the Stats table (Adjusted for 1:1 relation with Pokemon.id)
 CREATE TABLE Stats (
-    id INT PRIMARY KEY,
-    pokemon_national_pokedex_number VARCHAR(4) NOT NULL UNIQUE,
+    pokemon_id INT PRIMARY KEY, -- This column is both PK and FK to Pokemon
     total INT,
     hp INT,
     attack INT,
@@ -70,14 +72,14 @@ CREATE TABLE Stats (
     sp_atk INT,
     sp_def INT,
     speed INT,
-    FOREIGN KEY (pokemon_national_pokedex_number) REFERENCES Pokemon(national_pokedex_number)
+    FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id) -- FK linking to Pokemon
 );
 
--- Add the foreign key to Pokemon for stats_id after Stats table is created
-ALTER TABLE Pokemon
-ADD COLUMN stats_id INT,
-ADD CONSTRAINT fk_stats
-FOREIGN KEY (stats_id) REFERENCES Stats(id);
+-- Removed the ALTER TABLE for stats_id as it's no longer needed with the new Stats structure
+-- ALTER TABLE Pokemon
+-- ADD COLUMN stats_id INT,
+-- ADD CONSTRAINT fk_stats
+-- FOREIGN KEY (stats_id) REFERENCES Stats(id);
 
 
 -- Create the Pokemon_Type junction table for N:N relationship
@@ -89,14 +91,14 @@ CREATE TABLE Pokemon_Type (
     FOREIGN KEY (type_id) REFERENCES Type(id)
 );
 
--- Create the Pokemon_Ability junction table for N:N relationship
+-- Create the Pokemon_Ability junction table for N:N relationship (Adjusted to use ability_id)
 CREATE TABLE Pokemon_Ability (
     pokemon_id INT NOT NULL,
-    ability_name VARCHAR(255) NOT NULL,
+    ability_id INT NOT NULL, -- Reference Ability by ID now
     is_hidden BOOLEAN,
-    PRIMARY KEY (pokemon_id, ability_name),
+    PRIMARY KEY (pokemon_id, ability_id),
     FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
-    FOREIGN KEY (ability_name) REFERENCES Ability(name)
+    FOREIGN KEY (ability_id) REFERENCES Ability(id) -- FK references Ability.id
 );
 
 -- Create the Pokemon_Egg_Group junction table for N:N relationship
@@ -113,13 +115,12 @@ CREATE TABLE Evolution_Chain (
     id INT PRIMARY KEY
 );
 
--- Create the Evolution_Link table to store individual evolution steps
+-- Create the Evolution_Link table to store individual evolution steps (Condition stored as JSONB)
 CREATE TABLE Evolution_Link (
     evolution_chain_id INT NOT NULL,
-    pokemon_id INT NOT NULL,
-    target_pokemon_id INT, -- Can be NULL if it's the last in the chain
-    condition_type VARCHAR(255),
-    condition_value VARCHAR(255), -- Store as VARCHAR to accommodate different value types (level, item, etc.)
+    pokemon_id INT NOT NULL, -- The Pokemon that evolves
+    target_pokemon_id INT, -- The Pokemon it evolves into (Can be NULL if it's the last in the chain)
+    condition JSONB, -- Store the evolution condition as a JSONB object
     PRIMARY KEY (evolution_chain_id, pokemon_id), -- Composite PK for unique links within a chain
     FOREIGN KEY (evolution_chain_id) REFERENCES Evolution_Chain(id),
     FOREIGN KEY (pokemon_id) REFERENCES Pokemon(id),
