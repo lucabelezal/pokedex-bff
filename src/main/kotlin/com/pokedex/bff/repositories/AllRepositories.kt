@@ -4,133 +4,59 @@ import com.pokedex.bff.models.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
-// Repositórios para entidades com chave primária simples (Int)
-
-@Repository
-interface SuperContestEffectRepository : JpaRepository<SuperContestEffect, Int>
+// --- Repositórios Core ---
 
 @Repository
 interface RegionRepository : JpaRepository<Region, Int>
 
 @Repository
-interface GenerationRepository : JpaRepository<Generation, Int>
-
-@Repository
-interface AbilityRepository : JpaRepository<Ability, Int>
-
-@Repository
-interface DamageClassRepository : JpaRepository<DamageClass, Int>
-
-@Repository
-interface TypeRepository : JpaRepository<Type, Int>
-
-@Repository
-interface StatRepository : JpaRepository<Stat, Int>
-
-@Repository
-interface GrowthRateRepository : JpaRepository<GrowthRate, Int>
+interface TypeRepository : JpaRepository<Type, Int> {
+    fun findByName(name: String): Type?
+}
 
 @Repository
 interface EggGroupRepository : JpaRepository<EggGroup, Int>
 
 @Repository
-interface GenderRepository : JpaRepository<Gender, Int>
+interface SpeciesRepository : JpaRepository<Species, Int> {
+    fun findByNationalPokedexNumber(nationalPokedexNumber: String): Species?
+}
 
 @Repository
-interface CharacteristicRepository : JpaRepository<Characteristic, Int>
+interface GenerationRepository : JpaRepository<Generation, Int>
 
 @Repository
-interface FlavorRepository : JpaRepository<Flavor, Int>
+interface AbilityRepository : JpaRepository<Ability, String>
 
 @Repository
-interface NatureRepository : JpaRepository<Nature, Int>
+interface StatsRepository : JpaRepository<Stats, Int> {
+    fun findByPokemonNationalPokedexNumber(pokemonNationalPokedexNumber: String): Stats?
+}
 
 @Repository
-interface MoveTargetRepository : JpaRepository<MoveTarget, Int>
+interface PokemonRepository : JpaRepository<Pokemon, Int> {
+    fun findByNationalPokedexNumber(nationalPokedexNumber: String): Pokemon?
+    fun findByNameContainingIgnoreCase(name: String): List<Pokemon>
+}
+
+// --- Repositórios para Tabelas de Junção ---
 
 @Repository
-interface MoveEffectRepository : JpaRepository<MoveEffect, Int>
+interface PokemonTypeRepository : JpaRepository<PokemonType, Int>
 
 @Repository
-interface LanguageRepository : JpaRepository<Language, Int>
+interface PokemonAbilityRepository : JpaRepository<PokemonAbility, Int>
 
 @Repository
-interface MoveRepository : JpaRepository<Move, Int>
+interface PokemonEggGroupRepository : JpaRepository<PokemonEggGroup, Int>
 
 @Repository
-interface PokemonColorRepository : JpaRepository<PokemonColor, Int>
+interface PokemonWeaknessRepository : JpaRepository<PokemonWeakness, Int>
 
-@Repository
-interface PokemonShapeRepository : JpaRepository<PokemonShape, Int>
-
-@Repository
-interface PokemonHabitatRepository : JpaRepository<PokemonHabitat, Int>
+// --- Repositórios de Evolução ---
 
 @Repository
 interface EvolutionChainRepository : JpaRepository<EvolutionChain, Int>
 
 @Repository
-interface PokemonSpeciesRepository : JpaRepository<PokemonSpecies, Int>
-
-@Repository
-interface PokemonRepository : JpaRepository<Pokemon, Int>
-
-@Repository
-interface VersionGroupRepository : JpaRepository<VersionGroup, Int>
-
-@Repository
-interface PokemonFormRepository : JpaRepository<PokemonForm, Int>
-
-@Repository
-interface LocationRepository : JpaRepository<Location, Int>
-
-@Repository
-interface PokemonLocationAreaRepository : JpaRepository<LocationArea, Int>
-
-@Repository
-interface ContestTypeRepository : JpaRepository<ContestType, Int>
-
-@Repository
-interface ContestEffectRepository : JpaRepository<ContestEffect, Int>
-
-@Repository
-interface ItemCategoryRepository : JpaRepository<ItemCategory, Int>
-
-@Repository
-interface ItemRepository : JpaRepository<Item, Int>
-
-@Repository
-interface PokemonMoveMethodRepository : JpaRepository<PokemonMoveMethod, Int>
-
-@Repository
-interface BerryRepository : JpaRepository<Berry, Int>
-
-
-// Repositórios para entidades com chave primária composta (necessitam da classe EmbeddableId)
-
-@Repository
-interface MoveEffectProseRepository : JpaRepository<MoveEffectProse, MoveEffectProseId>
-
-@Repository
-interface PokemonStatRepository : JpaRepository<PokemonStat, PokemonStatId>
-
-@Repository
-interface PokemonTypeRepository : JpaRepository<PokemonType, PokemonTypeId>
-
-@Repository
-interface PokemonAbilityRepository : JpaRepository<PokemonAbility, PokemonAbilityId>
-
-@Repository
-interface PokemonEggGroupRepository : JpaRepository<PokemonEggGroup, PokemonEggGroupId>
-
-@Repository
-interface AbilityProseRepository : JpaRepository<AbilityProse, AbilityProseId>
-
-@Repository
-interface AbilityFlavorTextRepository : JpaRepository<AbilityFlavorText, AbilityFlavorTextId>
-
-@Repository
-interface PokemonMoveRepository : JpaRepository<PokemonMove, PokemonMoveId>
-
-@Repository
-interface BerryFlavorRepository : JpaRepository<BerryFlavor, BerryFlavorId>
+interface EvolutionLinkRepository : JpaRepository<EvolutionLink, EvolutionLinkPk>

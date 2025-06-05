@@ -1,4 +1,3 @@
-# src/main/resources/application.dev.yml
 spring:
   application:
     name: pokedex-bff
@@ -14,7 +13,7 @@ spring:
 
 app:
   csv:
-    location: ./docker/data/csvs/ # <--- MUDANÇA CRÍTICA AQUI!
+    location: data/
 
 logging:
   level:
