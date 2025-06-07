@@ -2,51 +2,51 @@
     {
         "id": 1,
         "name": "Geração I",
-        "regiaoId": 1
+        "region_id": 1
     },
     {
         "id": 2,
         "name": "Geração II",
-        "regiaoId": 2
+        "region_id": 2
     },
     {
         "id": 3,
         "name": "Geração III",
-        "regiaoId": 3
+        "region_id": 3
     },
     {
         "id": 4,
         "name": "Geração IV",
-        "regiaoId": 4
+        "region_id": 4
     },
     {
         "id": 5,
         "name": "Geração V",
-        "regiaoId": 5
+        "region_id": 5
     },
     {
         "id": 6,
         "name": "Geração VI",
-        "regiaoId": 6
+        "region_id": 6
     },
     {
         "id": 7,
         "name": "Geração VII",
-        "regiaoId": 7
+        "region_id": 7
     },
     {
         "id": 8,
         "name": "Geração VIII",
-        "regiaoId": 8
+        "region_id": 8
     },
     {
         "id": 9,
         "name": "Geração IX",
-        "regiaoId": 9
+        "region_id": 9
     },
     {
         "id": 10,
         "name": "Geração X",
-        "regiaoId": 10
+        "region_id": 10
     }
 ]

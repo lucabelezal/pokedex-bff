@@ -2,7 +2,6 @@ package com.pokedex.bff.services
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.fasterxml.jackson.module.kotlin.readValue
 import com.pokedex.bff.controllers.dtos.* // Importa todos os DTOs do seu pacote de DTOs
 import com.pokedex.bff.models.*
 import com.pokedex.bff.repositories.*
@@ -11,7 +10,6 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.core.io.ClassPathResource
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
-import java.util.*
 
 // Data class to store the result of each loading operation
 data class LoadResult(
@@ -173,7 +171,7 @@ class DataLoader(
 
     private fun loadSpecies(): Int {
         val speciesList = loadJsonFile("04_species.json", SpeciesInputDTO::class.java).map {
-            Species(id = it.id, nationalPokedexNumber = it.nationalPokedexNumber, name = it.name, species_en = it.species_en, species_pt = it.species_pt)
+            Species(id = it.id, nationalPokedexNumber = it.nationalPokedexNumber, name = it.name, speciesEn = it.speciesEn, speciesPT = it.speciesPT)
         }
         speciesRepository.saveAll(speciesList)
         speciesMap = speciesList.associateBy { it.id!! } // Populate map
@@ -314,8 +312,8 @@ class DataLoader(
                     name = pokemonDto.name,
                     generation = generation,
                     species = species,
-                    heightM = pokemonDto.heightM,
-                    weightKg = pokemonDto.weightKg,
+                    height = pokemonDto.height,
+                    weight = pokemonDto.weightKg,
                     description = pokemonDto.description,
                     // Sprites are serialized as JSON string
                     sprites = pokemonDto.sprites?.let { objectMapper.writeValueAsString(it) },
