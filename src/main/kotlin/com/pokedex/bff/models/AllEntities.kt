@@ -8,6 +8,7 @@ import jakarta.persistence.*
 data class Region(
     @Id
     val id: Int,
+
     @Column(nullable = false)
     val name: String
 )
@@ -17,8 +18,11 @@ data class Region(
 data class Type(
     @Id
     val id: Int,
+
     @Column(nullable = false)
     val name: String,
+
+    @Column(nullable = true)
     val color: String?
 )
 
@@ -27,6 +31,7 @@ data class Type(
 data class EggGroup(
     @Id
     val id: Int,
+
     @Column(nullable = false)
     val name: String
 )
@@ -36,12 +41,18 @@ data class EggGroup(
 data class Species(
     @Id
     val id: Int,
+
     @Column(nullable = false, unique = true)
     val nationalPokedexNumber: String,
+
     @Column(nullable = false)
     val name: String,
-    val species_en: String?,
-    val species_pt: String?
+
+    @Column(nullable = true)
+    val speciesEn: String?,
+
+    @Column(nullable = true)
+    val speciesPT: String?
 )
 
 @Entity
@@ -49,10 +60,12 @@ data class Species(
 data class Generation(
     @Id
     val id: Int,
+
     @Column(nullable = false)
     val name: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regiaoId")
+    @JoinColumn(name = "regionId")
     val region: Region?
 )
 
@@ -61,10 +74,13 @@ data class Generation(
 data class Ability(
     @Id
     val id: Int,
+
     @Column(nullable = false)
     val name: String,
-    @Column(columnDefinition = "TEXT")
+
+    @Column(columnDefinition = "TEXT", nullable = true)
     val description: String?,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "introducedGenerationId")
     val introducedGeneration: Generation?
@@ -74,24 +90,33 @@ data class Ability(
 @Table(name = "Stats")
 data class Stats(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // ID agora é auto-gerado pelo DB
-    val id: Int = 0, // Valor padrão para auto-gerado
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int = 0,
+
     @Column(nullable = false, unique = true)
     val pokemonNationalPokedexNumber: String,
+
     @Column(nullable = false)
     val pokemonName: String,
+
     @Column(nullable = false)
     val total: Int,
+
     @Column(nullable = false)
     val hp: Int,
+
     @Column(nullable = false)
     val attack: Int,
+
     @Column(nullable = false)
     val defense: Int,
+
     @Column(nullable = false)
     val spAtk: Int,
+
     @Column(nullable = false)
     val spDef: Int,
+
     @Column(nullable = false)
     val speed: Int
 )
@@ -101,45 +126,64 @@ data class Stats(
 data class Pokemon(
     @Id
     val id: Int,
+
     @Column(nullable = false, unique = true)
     val nationalPokedexNumber: String,
+
     @Column(nullable = false)
     val name: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "generation_id", nullable = false)
     val generation: Generation,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "species_id", nullable = false)
     val species: Species,
-    val heightM: Double?,
-    val weightKg: Double?,
-    @Column(columnDefinition = "TEXT")
+
+    @Column(nullable = true)
+    val height: Double?,
+
+    @Column(nullable = true)
+    val weight: Double?,
+
+    @Column(columnDefinition = "TEXT", nullable = true)
     val description: String?,
-    @Column(columnDefinition = "jsonb") // Armazena sprites como JSONB
-    val sprites: String?, // String JSON para armazenar o mapa de sprites
-    val gender_rate_value: Int?, // 0-8 for female%
+
+    @Column(columnDefinition = "jsonb", nullable = true)
+    val sprites: String?,
+
+    @Column(nullable = true)
+    val gender_rate_value: Int?,
+
+    @Column(nullable = true)
     val eggCycles: Int?,
-    @OneToOne(fetch = FetchType.LAZY) // Relacionamento 1-para-1 com Stats
-    @JoinColumn(name = "stats_id") // Coluna de junção para Stats
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stats_id")
     val stats: Stats?,
-    @ManyToOne(fetch = FetchType.LAZY) // Relacionamento com EvolutionChain
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evolution_chain_id")
-    val evolutionChain: EvolutionChain? = null, // Pode ser nulo
-    @JsonIgnore // Evita serialização recursiva
+    val evolutionChain: EvolutionChain? = null,
+
+    @JsonIgnore
     @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
     val pokemonTypes: MutableSet<PokemonType> = mutableSetOf(),
-    @JsonIgnore // Evita serialização recursiva
+
+    @JsonIgnore
     @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
     val pokemonAbilities: MutableSet<PokemonAbility> = mutableSetOf(),
-    @JsonIgnore // Evita serialização recursiva
+
+    @JsonIgnore
     @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
     val pokemonEggGroups: MutableSet<PokemonEggGroup> = mutableSetOf(),
-    @JsonIgnore // Evita serialização recursiva
+
+    @JsonIgnore
     @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
     val weaknesses: MutableSet<Weakness> = mutableSetOf()
 ) : java.io.Serializable
 
-// ID Class for composite key of PokemonType
 @Embeddable
 class PokemonTypeId : java.io.Serializable {
     var pokemon: Int? = null
@@ -161,7 +205,6 @@ data class PokemonType(
     val type: Type
 ) : java.io.Serializable
 
-// ID Class for composite key of PokemonAbility
 @Embeddable
 class PokemonAbilityId : java.io.Serializable {
     var pokemon: Int? = null
@@ -182,10 +225,10 @@ data class PokemonAbility(
     @JoinColumn(name = "ability_id", nullable = false)
     val ability: Ability,
 
+    @Column(nullable = false)
     val isHidden: Boolean
 ) : java.io.Serializable
 
-// ID Class for composite key of PokemonEggGroup
 @Embeddable
 class PokemonEggGroupId : java.io.Serializable {
     var pokemon: Int? = null
@@ -211,7 +254,7 @@ data class PokemonEggGroup(
 @Table(name = "Weakness")
 data class Weakness(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Assuming Weakness has its own ID now
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Int = 0,
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -219,7 +262,7 @@ data class Weakness(
     val pokemon: Pokemon,
 
     @Column(nullable = false)
-    val pokemon_name: String, // Keep for convenience, but can be derived from Pokemon entity
+    val pokemon_name: String,
 
     @Column(nullable = false)
     val weakness_type: String
@@ -229,8 +272,8 @@ data class Weakness(
 @Table(name = "Evolution_Chain")
 data class EvolutionChain(
     @Id
-    val id: Int, // ID da cadeia de evolução é definido por JSON
-    @JsonIgnore // Evita serialização recursiva
+    val id: Int,
+    @JsonIgnore
     @OneToMany(mappedBy = "evolutionChain", cascade = [CascadeType.ALL], orphanRemoval = true)
     val evolutionDetails: MutableSet<EvolutionDetail> = mutableSetOf()
 ) : java.io.Serializable
@@ -248,18 +291,18 @@ data class EvolutionDetail(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pokemonId", nullable = false)
-    val pokemon: Pokemon, // Pokémon de origem
+    val pokemon: Pokemon,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "targetPokemonId")
-    val targetPokemon: Pokemon?, // Pokémon alvo (pode ser nulo para o último da cadeia)
+    val targetPokemon: Pokemon?,
 
-    @Column // Coluna para o nome do Pokémon alvo (para conveniência)
+    @Column(nullable = true)
     val targetPokemonName: String?,
 
-    @Column(nullable = true) // Tipo da condição de evolução (e.g., "level-up", "trade")
+    @Column(nullable = true)
     val condition_type: String?,
 
-    @Column(columnDefinition = "jsonb") // Detalhes da condição como JSONB (e.g., min_level, item)
+    @Column(columnDefinition = "jsonb", nullable = true)
     val condition_value: String?
 )

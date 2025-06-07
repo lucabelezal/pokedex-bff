@@ -1,13 +1,13 @@
 [
     {
         "id": 1,
-        "nationalPokedexNumber": "0001",
+        "number": "0001",
         "name": "Bulbasaur",
-        "statsId": 1,
-        "generationId": 1,
-        "speciesId": 1,
-        "heightM": 0.7,
-        "weightKg": 6.9,
+        "stats_id": 1,
+        "generation_id": 1,
+        "species_id": 1,
+        "height": 0.7,
+        "weight": 6.9,
         "description": "Por um tempo após seu nascimento, ele usa os nutrientes armazenados na semente em suas costas para crescer.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png",
@@ -46,36 +46,36 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             5,
             8
         ],
         "abilities": [
             {
-                "abilityId": 65,
-                "isHidden": false
+                "ability_id": 65,
+                "is_hidden": false
             },
             {
-                "abilityId": 66,
-                "isHidden": true
+                "ability_id": 66,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             7,
             10
         ],
-        "evolutionChainId": 1
+        "evolution_chain_id": 1
     },
     {
         "id": 2,
-        "nationalPokedexNumber": "0002",
+        "number": "0002",
         "name": "Ivysaur",
-        "statsId": 2,
-        "generationId": 1,
-        "speciesId": 1,
-        "heightM": 1.0,
-        "weightKg": 13.0,
+        "stats_id": 2,
+        "generation_id": 1,
+        "species_id": 1,
+        "height": 1.0,
+        "weight": 13.0,
         "description": "Quanto mais luz solar Ivysaur absorve, mais força brota dentro dele, permitindo que o botão em suas costas cresça.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/2.png",
@@ -114,36 +114,36 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             5,
             8
         ],
         "abilities": [
             {
-                "abilityId": 65,
-                "isHidden": false
+                "ability_id": 65,
+                "is_hidden": false
             },
             {
-                "abilityId": 66,
-                "isHidden": true
+                "ability_id": 66,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             7,
             10
         ],
-        "evolutionChainId": 1
+        "evolution_chain_id": 1
     },
     {
         "id": 3,
-        "nationalPokedexNumber": "0003",
+        "number": "0003",
         "name": "Venusaur",
-        "statsId": 3,
-        "generationId": 1,
-        "speciesId": 1,
-        "heightM": 2.0,
-        "weightKg": 100.0,
+        "stats_id": 3,
+        "generation_id": 1,
+        "species_id": 1,
+        "height": 2.0,
+        "weight": 100.0,
         "description": "Enquanto se aquece ao sol, ele pode converter a luz em energia. Como resultado, é mais poderoso durante o verão.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3.png",
@@ -182,36 +182,36 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             5,
             8
         ],
         "abilities": [
             {
-                "abilityId": 65,
-                "isHidden": false
+                "ability_id": 65,
+                "is_hidden": false
             },
             {
-                "abilityId": 66,
-                "isHidden": true
+                "ability_id": 66,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             7,
             10
         ],
-        "evolutionChainId": 1
+        "evolution_chain_id": 1
     },
     {
         "id": 4,
-        "nationalPokedexNumber": "0003",
+        "number": "0003",
         "name": "Mega Venusaur",
-        "statsId": 4,
-        "generationId": 6,
-        "speciesId": 1,
-        "heightM": 2.4,
-        "weightKg": 155.5,
+        "stats_id": 4,
+        "generation_id": 6,
+        "species_id": 1,
+        "height": 2.4,
+        "weight": 155.5,
         "description": "Ao espalhar as largas pétalas de sua flor e capturar os raios solares, ele enche seu corpo de poder.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3.png",
@@ -224,32 +224,32 @@
             "front_shiny_female": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/female/3.png"
         },
         "gender_rate_value": 1,
-        "eggCycles": null,
-        "typeId": [
+        "egg_cycles": null,
+        "type_id": [
             5,
             8
         ],
         "abilities": [
             {
-                "abilityId": 80,
-                "isHidden": false
+                "ability_id": 80,
+                "is_hidden": false
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             7,
             10
         ],
-        "evolutionChainId": 1
+        "evolution_chain_id": 1
     },
     {
         "id": 5,
-        "nationalPokedexNumber": "0004",
+        "number": "0004",
         "name": "Charmander",
-        "statsId": 5,
-        "generationId": 1,
-        "speciesId": 2,
-        "heightM": 0.6,
-        "weightKg": 8.5,
+        "stats_id": 5,
+        "generation_id": 1,
+        "species_id": 2,
+        "height": 0.6,
+        "weight": 8.5,
         "description": "A chama em sua cauda indica sua força vital. Se estiver saudável, a chama arderá intensamente.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/4.png",
@@ -288,35 +288,35 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             2
         ],
         "abilities": [
             {
-                "abilityId": 67,
-                "isHidden": false
+                "ability_id": 67,
+                "is_hidden": false
             },
             {
-                "abilityId": 68,
-                "isHidden": true
+                "ability_id": 68,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             3,
             5
         ],
-        "evolutionChainId": 2
+        "evolution_chain_id": 2
     },
     {
         "id": 6,
-        "nationalPokedexNumber": "0005",
+        "number": "0005",
         "name": "Charmeleon",
-        "statsId": 6,
-        "generationId": 1,
-        "speciesId": 3,
-        "heightM": 1.1,
-        "weightKg": 19.0,
+        "stats_id": 6,
+        "generation_id": 1,
+        "species_id": 3,
+        "height": 1.1,
+        "weight": 19.0,
         "description": "Ele despedaça seus inimigos com suas garras afiadas e seu rabo de fogo. Seus oponentes fogem de sua ferocidade.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/5.png",
@@ -355,35 +355,35 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             2
         ],
         "abilities": [
             {
-                "abilityId": 67,
-                "isHidden": false
+                "ability_id": 67,
+                "is_hidden": false
             },
             {
-                "abilityId": 68,
-                "isHidden": true
+                "ability_id": 68,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             3,
             5
         ],
-        "evolutionChainId": 2
+        "evolution_chain_id": 2
     },
     {
         "id": 7,
-        "nationalPokedexNumber": "0006",
+        "number": "0006",
         "name": "Charizard",
-        "statsId": 7,
-        "generationId": 1,
-        "speciesId": 3,
-        "heightM": 1.7,
-        "weightKg": 90.5,
+        "stats_id": 7,
+        "generation_id": 1,
+        "species_id": 3,
+        "height": 1.7,
+        "weight": 90.5,
         "description": "Seu hálito de fogo é tão quente que pode derreter rochas. É conhecido por causar incêndios florestais acidentalmente.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6.png",
@@ -422,36 +422,36 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             2,
             10
         ],
         "abilities": [
             {
-                "abilityId": 67,
-                "isHidden": false
+                "ability_id": 67,
+                "is_hidden": false
             },
             {
-                "abilityId": 68,
-                "isHidden": true
+                "ability_id": 68,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             3,
             5
         ],
-        "evolutionChainId": 2
+        "evolution_chain_id": 2
     },
     {
         "id": 8,
-        "nationalPokedexNumber": "0006",
+        "number": "0006",
         "name": "Mega Charizard X",
-        "statsId": 8,
-        "generationId": 6,
-        "speciesId": 3,
-        "heightM": 1.7,
-        "weightKg": 110.5,
+        "stats_id": 8,
+        "generation_id": 6,
+        "species_id": 3,
+        "height": 1.7,
+        "weight": 110.5,
         "description": "Seu corpo se torna negro e as chamas que expele queimam com intensidade azul-claro, mais quente do que as chamas normais.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6.png",
@@ -464,32 +464,32 @@
             "front_shiny_female": null
         },
         "gender_rate_value": 1,
-        "eggCycles": null,
-        "typeId": [
+        "egg_cycles": null,
+        "type_id": [
             2,
             15
         ],
         "abilities": [
             {
-                "abilityId": 81,
-                "isHidden": false
+                "ability_id": 81,
+                "is_hidden": false
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             3,
             5
         ],
-        "evolutionChainId": 2
+        "evolution_chain_id": 2
     },
     {
         "id": 9,
-        "nationalPokedexNumber": "0006",
+        "number": "0006",
         "name": "Mega Charizard Y",
-        "statsId": 9,
-        "generationId": 6,
-        "speciesId": 3,
-        "heightM": 1.7,
-        "weightKg": 100.5,
+        "stats_id": 9,
+        "generation_id": 6,
+        "species_id": 3,
+        "height": 1.7,
+        "weight": 100.5,
         "description": "Seu poder de voo é incomparável. Ele pode atingir altitudes de 1.400 metros sem esforço.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6.png",
@@ -502,32 +502,32 @@
             "front_shiny_female": null
         },
         "gender_rate_value": 1,
-        "eggCycles": null,
-        "typeId": [
+        "egg_cycles": null,
+        "type_id": [
             2,
             10
         ],
         "abilities": [
             {
-                "abilityId": 82,
-                "isHidden": false
+                "ability_id": 82,
+                "is_hidden": false
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             3,
             5
         ],
-        "evolutionChainId": 2
+        "evolution_chain_id": 2
     },
     {
         "id": 10,
-        "nationalPokedexNumber": "0007",
+        "number": "0007",
         "name": "Squirtle",
-        "statsId": 10,
-        "generationId": 1,
-        "speciesId": 4,
-        "heightM": 0.5,
-        "weightKg": 9.0,
+        "stats_id": 10,
+        "generation_id": 1,
+        "species_id": 4,
+        "height": 0.5,
+        "weight": 9.0,
         "description": "Quando ele puxa seu pescoço para dentro de sua concha, ele pode disparar água com força surpreendente.",
         "sprites": {
             "back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/7.png",
@@ -566,30 +566,30 @@
             }
         },
         "gender_rate_value": 1,
-        "eggCycles": 20,
-        "typeId": [
+        "egg_cycles": 20,
+        "type_id": [
             3
         ],
         "abilities": [
             {
-                "abilityId": 69,
-                "isHidden": false
+                "ability_id": 69,
+                "is_hidden": false
             },
             {
-                "abilityId": 70,
-                "isHidden": true
+                "ability_id": 70,
+                "is_hidden": true
             }
         ],
-        "eggGroupIds": [
+        "egg_group_ids": [
             11,
             5
         ],
-        "evolutionChainId": 3
+        "evolution_chain_id": 3
     },
     {
         "id": 11,
-        "nationalPokedexNumber": "0008",
+        "number": "0008",
         "name": "Wartortle",
-        "statsId": 11
+        "stats_id": 11
     }
 ]
