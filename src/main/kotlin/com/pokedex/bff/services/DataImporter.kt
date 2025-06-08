@@ -360,14 +360,15 @@ class PokemonImportService(
         return counts
     }
 
-    // Função auxiliar para logar os resultados de importação
+    // Função auxiliar para logar os resultados de importação com emojis
     private fun logImportResult(entityName: String, counts: ImportCounts) {
-        logger.info("  -> Importação de $entityName concluída. Sucessos: ${counts.success}, Falhas: ${counts.errors}")
+        val statusEmoji = if (counts.errors == 0) "✅" else "❌"
+        logger.info("  $statusEmoji Importação de $entityName concluída. Sucessos: ${counts.success}, Falhas: ${counts.errors}")
     }
 
     @Transactional
     fun importAll() {
-        logger.info("====== INICIANDO IMPORTAÇÃO DOS DADOS DA POKEDEX ======")
+        logger.info("====== 🚀 INICIANDO IMPORTAÇÃO DOS DADOS DA POKEDEX 🚀 ======")
 
         var totalSuccess = 0
         var totalErrors = 0
@@ -534,8 +535,8 @@ class PokemonImportService(
         totalSuccess += weaknessesCounts.success
         totalErrors += weaknessesCounts.errors
 
-        logger.info("====== IMPORTAÇÃO DOS DADOS DA POKEDEX CONCLUÍDA ======")
-        logger.info("Resumo Geral da Importação: Sucessos Totais: $totalSuccess, Falhas Totais: $totalErrors")
+        logger.info("====== ✅ IMPORTAÇÃO DOS DADOS DA POKEDEX CONCLUÍDA ✅ ======")
+        logger.info("✨ Resumo Geral da Importação: Sucessos Totais: $totalSuccess, Falhas Totais: $totalErrors ✨")
     }
 }
 
