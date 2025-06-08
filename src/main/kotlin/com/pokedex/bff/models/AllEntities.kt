@@ -1,308 +1,315 @@
 package com.pokedex.bff.models
 
-import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
+import org.hibernate.annotations.JdbcTypeCode
+import org.hibernate.type.SqlTypes
 
 @Entity
-@Table(name = "Region")
+@Table(name = "regions")
 data class Region(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false)
-    val name: String
+    @Column(name = "name", unique = true)
+    var name: String = ""
 )
 
 @Entity
-@Table(name = "Type")
+@Table(name = "types")
 data class Type(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false)
-    val name: String,
+    @Column(name = "name", unique = true)
+    var name: String = "",
 
-    @Column(nullable = true)
-    val color: String?
+    @Column(name = "color")
+    var color: String? = null
 )
 
 @Entity
-@Table(name = "Egg_Group")
+@Table(name = "egg_groups")
 data class EggGroup(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false)
-    val name: String
+    @Column(name = "name", unique = true)
+    var name: String = ""
 )
 
 @Entity
-@Table(name = "Species")
-data class Species(
-    @Id
-    val id: Int,
-
-    @Column(nullable = false, unique = true)
-    val nationalPokedexNumber: String,
-
-    @Column(nullable = false)
-    val name: String,
-
-    @Column(nullable = true)
-    val speciesEn: String?,
-
-    @Column(nullable = true)
-    val speciesPT: String?
-)
-
-@Entity
-@Table(name = "Generation")
+@Table(name = "generations")
 data class Generation(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false)
-    val name: String,
+    @Column(name = "name", unique = true)
+    var name: String = "",
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "regionId")
-    val region: Region?
+    @JoinColumn(name = "region_id")
+    var region: Region? = null
 )
 
 @Entity
-@Table(name = "Ability")
+@Table(name = "abilities")
 data class Ability(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false)
-    val name: String,
+    @Column(name = "name", unique = true)
+    var name: String = "",
 
-    @Column(columnDefinition = "TEXT", nullable = true)
-    val description: String?,
+    @Column(name = "description", columnDefinition = "TEXT")
+    var description: String? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "introducedGenerationId")
-    val introducedGeneration: Generation?
+    @JoinColumn(name = "introduced_generation_id")
+    var introducedGeneration: Generation? = null
 )
 
 @Entity
-@Table(name = "Stats")
+@Table(name = "species")
+data class Species(
+    @Id
+    @Column(name = "id")
+    var id: Long = 0,
+
+    @Column(name = "pokemon_number")
+    var pokemon_number: String? = null,
+
+    @Column(name = "name")
+    var name: String = "",
+
+    @Column(name = "species_en")
+    var speciesEn: String? = null,
+
+    @Column(name = "species_pt")
+    var speciesPt: String? = null
+)
+
+@Entity
+@Table(name = "stats")
 data class Stats(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false, unique = true)
-    val pokemonNationalPokedexNumber: String,
+    @Column(name = "total")
+    var total: Int = 0,
 
-    @Column(nullable = false)
-    val pokemonName: String,
+    @Column(name = "hp")
+    var hp: Int = 0,
 
-    @Column(nullable = false)
-    val total: Int,
+    @Column(name = "attack")
+    var attack: Int = 0,
 
-    @Column(nullable = false)
-    val hp: Int,
+    @Column(name = "defense")
+    var defense: Int = 0,
 
-    @Column(nullable = false)
-    val attack: Int,
+    @Column(name = "sp_atk")
+    var spAtk: Int = 0,
 
-    @Column(nullable = false)
-    val defense: Int,
+    @Column(name = "sp_def")
+    var spDef: Int = 0,
 
-    @Column(nullable = false)
-    val spAtk: Int,
-
-    @Column(nullable = false)
-    val spDef: Int,
-
-    @Column(nullable = false)
-    val speed: Int
+    @Column(name = "speed")
+    var speed: Int = 0
 )
 
 @Entity
-@Table(name = "Pokemon")
+@Table(name = "evolution_chains")
+data class EvolutionChain(
+    @Id
+    @Column(name = "id")
+    var id: Long = 0,
+
+    // Removido: A tabela evolution_details não existe mais, então esta relação não é necessária.
+    // @OneToMany(mappedBy = "chain", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    // var details: MutableSet<EvolutionDetail> = mutableSetOf()
+
+    // Adicionado: Coluna JSONB para armazenar a estrutura da cadeia de evolução diretamente
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "chain_data", columnDefinition = "jsonb")
+    var chainData: String? = null // Usar String para mapear JSONB, será manipulado como JSON no serviço
+)
+
+@Entity
+@Table(name = "pokemons")
 data class Pokemon(
     @Id
-    val id: Int,
+    @Column(name = "id")
+    var id: Long = 0,
 
-    @Column(nullable = false, unique = true)
-    val nationalPokedexNumber: String,
+    @Column(name = "number")
+    var number: String? = null,
 
-    @Column(nullable = false)
-    val name: String,
+    @Column(name = "name")
+    var name: String = "",
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "generation_id", nullable = false)
-    val generation: Generation,
+    @Column(name = "height")
+    var height: Double? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "species_id", nullable = false)
-    val species: Species,
+    @Column(name = "weight")
+    var weight: Double? = null,
 
-    @Column(nullable = true)
-    val height: Double?,
+    @Column(name = "description", columnDefinition = "TEXT")
+    var description: String? = null,
 
-    @Column(nullable = true)
-    val weight: Double?,
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "sprites", columnDefinition = "jsonb")
+    var sprites: Sprites? = null,
 
-    @Column(columnDefinition = "TEXT", nullable = true)
-    val description: String?,
+    @Column(name = "gender_rate_value")
+    var genderRateValue: Int? = null,
 
-    @Column(columnDefinition = "jsonb", nullable = true)
-    val sprites: String?,
-
-    @Column(nullable = true)
-    val gender_rate_value: Int?,
-
-    @Column(nullable = true)
-    val eggCycles: Int?,
+    @Column(name = "egg_cycles")
+    var eggCycles: Int? = null,
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "stats_id")
-    val stats: Stats?,
+    @JoinColumn(name = "stats_id", referencedColumnName = "id")
+    var stats: Stats? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "generation_id")
+    var generation: Generation? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "species_id")
+    var species: Species? = null,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "region_id")
+    var region: Region? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "evolution_chain_id")
-    val evolutionChain: EvolutionChain? = null,
+    var evolutionChain: EvolutionChain? = null,
 
-    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+        name = "pokemon_types",
+        joinColumns = [JoinColumn(name = "pokemon_id")],
+        inverseJoinColumns = [JoinColumn(name = "type_id")]
+    )
+    var types: MutableSet<Type> = mutableSetOf(),
+
     @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val pokemonTypes: MutableSet<PokemonType> = mutableSetOf(),
+    var abilities: MutableSet<PokemonAbility> = mutableSetOf(),
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val pokemonAbilities: MutableSet<PokemonAbility> = mutableSetOf(),
+    @ManyToMany
+    @JoinTable(
+        name = "pokemon_egg_groups",
+        joinColumns = [JoinColumn(name = "pokemon_id")],
+        inverseJoinColumns = [JoinColumn(name = "egg_group_id")]
+    )
+    var eggGroups: MutableSet<EggGroup> = mutableSetOf(),
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val pokemonEggGroups: MutableSet<PokemonEggGroup> = mutableSetOf(),
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val weaknesses: MutableSet<Weakness> = mutableSetOf()
-) : java.io.Serializable
-
-@Embeddable
-class PokemonTypeId : java.io.Serializable {
-    var pokemon: Int? = null
-    var type: Int? = null
-}
-
-@Entity
-@Table(name = "Pokemon_Type")
-@IdClass(PokemonTypeId::class)
-data class PokemonType(
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id", nullable = false)
-    val pokemon: Pokemon,
-
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "type_id", nullable = false)
-    val type: Type
-) : java.io.Serializable
-
-@Embeddable
-class PokemonAbilityId : java.io.Serializable {
-    var pokemon: Int? = null
-    var ability: Int? = null
-}
-
-@Entity
-@Table(name = "Pokemon_Ability")
-@IdClass(PokemonAbilityId::class)
-data class PokemonAbility(
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id", nullable = false)
-    val pokemon: Pokemon,
-
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ability_id", nullable = false)
-    val ability: Ability,
-
-    @Column(nullable = false)
-    val isHidden: Boolean
-) : java.io.Serializable
-
-@Embeddable
-class PokemonEggGroupId : java.io.Serializable {
-    var pokemon: Int? = null
-    var eggGroup: Int? = null
-}
-
-@Entity
-@Table(name = "Pokemon_Egg_Group")
-@IdClass(PokemonEggGroupId::class)
-data class PokemonEggGroup(
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id", nullable = false)
-    val pokemon: Pokemon,
-
-    @Id
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "egg_group_id", nullable = false)
-    val eggGroup: EggGroup
-) : java.io.Serializable
-
-@Entity
-@Table(name = "Weakness")
-data class Weakness(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemon_id", nullable = false)
-    val pokemon: Pokemon,
-
-    @Column(nullable = false)
-    val pokemon_name: String,
-
-    @Column(nullable = false)
-    val weakness_type: String
+    @ManyToMany
+    @JoinTable(
+        name = "pokemon_weaknesses",
+        joinColumns = [JoinColumn(name = "pokemon_id")],
+        inverseJoinColumns = [JoinColumn(name = "type_id")]
+    )
+    var weaknesses: MutableSet<Type> = mutableSetOf()
 )
 
 @Entity
-@Table(name = "Evolution_Chain")
-data class EvolutionChain(
-    @Id
-    val id: Int,
-    @JsonIgnore
-    @OneToMany(mappedBy = "evolutionChain", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val evolutionDetails: MutableSet<EvolutionDetail> = mutableSetOf()
-) : java.io.Serializable
-
-@Entity
-@Table(name = "Evolution_Detail")
-data class EvolutionDetail(
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Int = 0,
+@Table(name = "pokemon_abilities")
+data class PokemonAbility(
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "evolutionChainId", nullable = false)
-    val evolutionChain: EvolutionChain,
+    @JoinColumn(name = "pokemon_id")
+    var pokemon: Pokemon,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pokemonId", nullable = false)
-    val pokemon: Pokemon,
+    @JoinColumn(name = "ability_id")
+    var ability: Ability,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "targetPokemonId")
-    val targetPokemon: Pokemon?,
+    @Column(name = "is_hidden")
+    var isHidden: Boolean = false
+)
 
-    @Column(nullable = true)
-    val targetPokemonName: String?,
+data class Sprites(
+    @JsonProperty("back_default")
+    val backDefault: String? = null,
+    @JsonProperty("back_female")
+    val backFemale: String? = null,
+    @JsonProperty("back_shiny")
+    val backShiny: String? = null,
+    @JsonProperty("back_shiny_female")
+    val backShinyFemale: String? = null,
+    @JsonProperty("front_default")
+    val frontDefault: String? = null,
+    @JsonProperty("front_female")
+    val frontFemale: String? = null,
+    @JsonProperty("front_shiny")
+    val frontShiny: String? = null,
+    @JsonProperty("front_shiny_female")
+    val frontShinyFemale: String? = null,
+    @JsonProperty("other")
+    val other: OtherSprites? = null
+)
 
-    @Column(nullable = true)
-    val condition_type: String?,
+data class OtherSprites(
+    @JsonProperty("dream_world")
+    val dreamWorld: DreamWorldSprites? = null,
+    @JsonProperty("home")
+    val home: HomeSprites? = null,
+    @JsonProperty("official-artwork")
+    val officialArtwork: OfficialArtworkSprites? = null,
+    @JsonProperty("showdown")
+    val showdown: ShowdownSprites? = null
+)
 
-    @Column(columnDefinition = "jsonb", nullable = true)
-    val condition_value: String?
+data class DreamWorldSprites(
+    @JsonProperty("front_default")
+    val frontDefault: String? = null,
+    @JsonProperty("front_female")
+    val frontFemale: String? = null
+)
+
+data class HomeSprites(
+    @JsonProperty("front_default")
+    val frontDefault: String? = null,
+    @JsonProperty("front_female")
+    val frontFemale: String? = null,
+    @JsonProperty("front_shiny")
+    val frontShiny: String? = null,
+    @JsonProperty("front_shiny_female")
+    val frontShinyFemale: String? = null
+)
+
+data class OfficialArtworkSprites(
+    @JsonProperty("front_default")
+    val frontDefault: String? = null,
+    @JsonProperty("front_shiny")
+    val frontShiny: String? = null
+)
+
+data class ShowdownSprites(
+    @JsonProperty("back_default")
+    val backDefault: String? = null,
+    @JsonProperty("back_female")
+    val backFemale: String? = null,
+    @JsonProperty("back_shiny")
+    val backShiny: String? = null,
+    @JsonProperty("back_shiny_female")
+    val backShinyFemale: String? = null,
+    @JsonProperty("front_default")
+    val frontDefault: String? = null,
+    @JsonProperty("front_female")
+    val frontFemale: String? = null,
+    @JsonProperty("front_shiny")
+    val frontShiny: String? = null,
+    @JsonProperty("front_shiny_female")
+    val frontShinyFemale: String? = null
 )
