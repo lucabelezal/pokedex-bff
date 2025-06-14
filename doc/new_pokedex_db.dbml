@@ -1,0 +1,164 @@
+Project PokemonDB {
+  database_type: 'PostgreSQL'
+  Note: 'Schema do banco de dados para informações de Pokémon'
+}
+
+Table Region {
+  id int [pk]
+  name varchar(255) [not null, unique]
+}
+
+Table Type {
+  id int [pk]
+  name varchar(255) [not null, unique]
+  color varchar(7)
+}
+
+Table Egg_Group {
+  id int [pk]
+  name varchar(255) [not null, unique]
+}
+
+Table Species {
+  id int [pk]
+  national_pokedex_number varchar(4) [not null, unique]
+  name varchar(255) [not null]
+  species_en varchar(255)
+  species_pt varchar(255)
+}
+
+Table Generation {
+  id int [pk]
+  name varchar(255) [not null, unique]
+  region_id int [not null]
+
+  indexes {
+    (region_id)
+  }
+}
+
+Table Ability {
+  name varchar(255) [pk] // Using name as PK as there's no explicit ID and it seems unique
+  description text
+  introduced_generation_id int
+
+  indexes {
+    (introduced_generation_id)
+  }
+}
+
+Table Pokemon {
+  id int [pk]
+  national_pokedex_number varchar(4) [not null, unique] // Main identifier for many relationships
+  name varchar(255) [not null]
+  stats_id int // Will be linked after Stats table
+  generation_id int [not null]
+  species_id int [not null]
+  height_m numeric(4, 2)
+  weight_kg numeric(6, 2)
+  description text
+  sprites jsonb // Store sprite URLs as JSONB
+  gender_rate_value int
+  egg_cycles int
+
+  indexes {
+    (stats_id)
+    (generation_id)
+    (species_id)
+  }
+}
+
+Table Stats {
+  id int [pk]
+  pokemon_national_pokedex_number varchar(4) [not null, unique] // Links directly to Pokemon's unique national_pokedex_number
+  total int
+  hp int
+  attack int
+  defense int
+  sp_atk int
+  sp_def int
+  speed int
+
+  indexes {
+    (pokemon_national_pokedex_number)
+  }
+}
+
+Table Pokemon_Type {
+  pokemon_id int [pk, not null]
+  type_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, type_id) [pk]
+  }
+}
+
+Table Pokemon_Ability {
+  pokemon_id int [pk, not null]
+  ability_name varchar(255) [pk, not null]
+  is_hidden boolean
+
+  indexes {
+    (pokemon_id, ability_name) [pk]
+  }
+}
+
+Table Pokemon_Egg_Group {
+  pokemon_id int [pk, not null]
+  egg_group_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, egg_group_id) [pk]
+  }
+}
+
+Table Evolution_Chain {
+  id int [pk]
+}
+
+Table Evolution_Link {
+  evolution_chain_id int [pk, not null]
+  pokemon_id int [pk, not null]
+  target_pokemon_id int // Can be NULL if it's the last in the chain
+  condition_type varchar(255)
+  condition_value varchar(255)
+
+  indexes {
+    (evolution_chain_id, pokemon_id) [pk]
+    (pokemon_id)
+    (target_pokemon_id)
+  }
+}
+
+Table Pokemon_Weakness {
+  pokemon_id int [pk, not null]
+  weakness_type_id int [pk, not null]
+
+  indexes {
+    (pokemon_id, weakness_type_id) [pk]
+  }
+}
+
+Ref: Generation.region_id > Region.id
+Ref: Ability.introduced_generation_id > Generation.id
+Ref: Pokemon.generation_id > Generation.id
+Ref: Pokemon.species_id > Species.id
+Ref: Pokemon.stats_id > Stats.id
+
+Ref: Stats.pokemon_national_pokedex_number > Pokemon.national_pokedex_number
+
+Ref: Pokemon_Type.pokemon_id > Pokemon.id
+Ref: Pokemon_Type.type_id > Type.id
+
+Ref: Pokemon_Ability.pokemon_id > Pokemon.id
+Ref: Pokemon_Ability.ability_name > Ability.name
+
+Ref: Pokemon_Egg_Group.pokemon_id > Pokemon.id
+Ref: Pokemon_Egg_Group.egg_group_id > Egg_Group.id
+
+Ref: Evolution_Link.evolution_chain_id > Evolution_Chain.id
+Ref: Evolution_Link.pokemon_id > Pokemon.id
+Ref: Evolution_Link.target_pokemon_id > Pokemon.id
+
+Ref: Pokemon_Weakness.pokemon_id > Pokemon.id
+Ref: Pokemon_Weakness.weakness_type_id > Type.id
