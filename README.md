@@ -88,23 +88,18 @@ make
 ===================================================================
   make help                   - Exibe esta mensagem de ajuda.
 
-  make setup-dev              - Configura e inicia o ambiente de desenvolvimento completo:
-                                  1. Inicia o PostgreSQL via Docker Compose.
-                                  2. Aguarda o DB estar acessível.
-                                  3. Inicia o BFF, que popula o DB com os JSONs.
+  make dev-setup              - Configura e inicia o ambiente (Linux/macOS).
+  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows).
 
-  make start-db               - Apenas inicia o contêiner do banco de dados PostgreSQL.
-  make stop-db                - Para o contêiner do banco de dados.
-  make clean-db               - Remove o contêiner do DB e seus volumes de dados (CUIDADO: APAGA OS DADOS!).
+  make start-db               - Inicia o banco PostgreSQL com Docker Compose.
+  make stop-db                - Para o contêiner do banco.
+  make clean-db               - Remove o banco e os volumes (apaga os dados!).
+  make load-data              - Executa o BFF e carrega os dados JSON.
+  make run-bff                - Executa o BFF sem importar dados.
+  make clean-bff              - Executa './gradlew clean'.
 
-  make load-data              - Inicia o BFF para carregar os dados JSON no DB.
-                                  (Requer que o DB já esteja rodando e acessível).
-  make clean-bff              - Limpa o projeto BFF (executa './gradlew clean').
-  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo).
-
-  make clean-all              - Limpa o ambiente de desenvolvimento completo:
-                                  1. Para o DB. 2. Remove o DB e seus volumes. 3. Limpa o BFF (incluindo caches do Gradle).
-  make force-remove-db-container - Força a remoção de um contêiner 'pokedex-db' órfão ou travado.
-  make deep-clean-gradle      - Realiza uma limpeza profunda dos caches e artefatos do Gradle.
+  make clean-all              - Para tudo, limpa DB, Gradle e contêineres.
+  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'.
+  make deep-clean-gradle      - Limpa caches e artefatos do Gradle.
 ===================================================================
 ```
