@@ -22,9 +22,9 @@ Os dados utilizados para popular o banco de dados local e alimentar as respostas
 
 O Pokedex BFF utiliza um banco de dados PostgreSQL para armazenar os dados de Pokémon de forma estruturada e relacional. A documentação completa do esquema do banco de dados é essencial para entender como os dados são organizados e relacionados.
 
-* **[Diagrama e Documentação Detalhada](doc/pokedex_db_info.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
-* **[DBML](doc/new_pokedex_db.dbml)**: O código DBML (Database Markup Language) que define o esquema do banco de dados de forma concisa e legível. Pode ser facilmente importado em ferramentas visuais como `dbdiagram.io` para uma representação gráfica interativa.
-* **[SQL](doc/new_pokedex_db.sql)**: O script SQL completo para a criação das tabelas e índices no seu banco de dados PostgreSQL. Ideal para configuração inicial ou recriação do esquema.
+* **[Diagrama e Documentação Detalhada](doc/pokedex_db.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
+* **[DBML](doc/pokedex_db.dbml)**: O código DBML (Database Markup Language) que define o esquema do banco de dados de forma concisa e legível. Pode ser facilmente importado em ferramentas visuais como `dbdiagram.io` para uma representação gráfica interativa.
+* **[SQL](doc/pokedex_db.sql)**: O script SQL completo para a criação das tabelas e índices no seu banco de dados PostgreSQL. Ideal para configuração inicial ou recriação do esquema.
 
 ## Tecnologias Utilizadas
 
@@ -47,7 +47,7 @@ Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente
 ### Pré-requisitos
 
 Certifique-se de ter as seguintes ferramentas instaladas:
-* [Java Development Kit (JDK) 17](https://www.oracle.com/java/technologies/downloads/)
+* [Java Development Kit (JDK) 21](https://www.oracle.com/java/technologies/downloads/)
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (inclui Docker e Docker Compose)
 * **GNU Make** (ou `make` no seu sistema, geralmente pré-instalado em sistemas Unix/Linux/macOS; para Windows, você pode usar WSL ou ferramentas como Chocolatey para instalar `make`).
 
@@ -62,7 +62,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 2.  **Configuração do Ambiente e Início (Recomendado):**
     * Para uma configuração rápida e completa do ambiente de desenvolvimento (iniciar DB e carregar dados):
         ```bash
-        make setup-dev
+        make dev-setup
         ```
       Este comando cuidará de:
         1.  Iniciar o contêiner PostgreSQL via Docker Compose.
@@ -88,23 +88,18 @@ make
 ===================================================================
   make help                   - Exibe esta mensagem de ajuda.
 
-  make setup-dev              - Configura e inicia o ambiente de desenvolvimento completo:
-                                  1. Inicia o PostgreSQL via Docker Compose.
-                                  2. Aguarda o DB estar acessível.
-                                  3. Inicia o BFF, que popula o DB com os CSVs.
+  make dev-setup              - Configura e inicia o ambiente (Linux/macOS).
+  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows).
 
-  make start-db               - Apenas inicia o contêiner do banco de dados PostgreSQL.
-  make stop-db                - Para o contêiner do banco de dados.
-  make clean-db               - Remove o contêiner do DB e seus volumes de dados (CUIDADO: APAGA OS DADOS!).
+  make start-db               - Inicia o banco PostgreSQL com Docker Compose.
+  make stop-db                - Para o contêiner do banco.
+  make clean-db               - Remove o banco e os volumes (apaga os dados!).
+  make load-data              - Executa o BFF e carrega os dados JSON.
+  make run-bff                - Executa o BFF sem importar dados.
+  make clean-bff              - Executa './gradlew clean'.
 
-  make load-data              - Inicia o BFF para carregar os dados CSV no DB.
-                                  (Requer que o DB já esteja rodando e acessível).
-  make clean-bff              - Limpa o projeto BFF (executa './gradlew clean').
-  make run-bff                - Inicia o BFF (sem carregar dados automaticamente, a menos que o perfil 'dev' esteja ativo).
-
-  make clean-all              - Limpa o ambiente de desenvolvimento completo:
-                                  1. Para o DB. 2. Remove o DB e seus volumes. 3. Limpa o BFF (incluindo caches do Gradle).
-  make force-remove-db-container - Força a remoção de um contêiner 'pokedex-db' órfão ou travado.
-  make deep-clean-gradle      - Realiza uma limpeza profunda dos caches e artefatos do Gradle.
+  make clean-all              - Para tudo, limpa DB, Gradle e contêineres.
+  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'.
+  make deep-clean-gradle      - Limpa caches e artefatos do Gradle.
 ===================================================================
 ```
