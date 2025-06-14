@@ -60,6 +60,8 @@ Este projeto utiliza uma pilha de tecnologias modernas e ferramentas práticas p
 
 <p><img src="doc/icons/beekeeperstudio.png" width="24" height="24" /> <strong>Beekeeper Studio</strong> — Cliente SQL visual para gerenciar e consultar o banco PostgreSQL. <a href="https://www.beekeeperstudio.io/">Download</a></p>
 
+<p><img src="doc/icons/bruno.png" width="24" height="24" /> <strong>Bruno</strong> — Cliente para testar e documentar APIs REST de forma intuitiva. <a href="https://www.usebruno.com/">Site Oficial</a></p>
+
 Essas tecnologias e ferramentas tornam o desenvolvimento e a manutenção do **Pokedex BFF** mais produtivos, organizados e escaláveis.
 
 ---
