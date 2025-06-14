@@ -43,15 +43,6 @@
         ]
     },
     {
-        "pokemon_name": "Giga Venusaur",
-        "weaknesses": [
-            "Fogo",
-            "Gelo",
-            "Psíquico",
-            "Voador"
-        ]
-    },
-    {
         "id": 5,
         "pokemon_id": 5,
         "pokemon_name": "Charmander",
@@ -102,14 +93,6 @@
         ]
     },
     {
-        "pokemon_name": "Giga Charizard",
-        "weaknesses": [
-            "Água",
-            "Elétrico",
-            "Pedra"
-        ]
-    },
-    {
         "id": 10,
         "pokemon_id": 10,
         "pokemon_name": "Squirtle",
@@ -140,13 +123,6 @@
         "id": 13,
         "pokemon_id": 13,
         "pokemon_name": "Mega Blastoise",
-        "weaknesses": [
-            "Elétrico",
-            "Planta"
-        ]
-    },
-    {
-        "pokemon_name": "Giga Blastoise",
         "weaknesses": [
             "Elétrico",
             "Planta"
@@ -199,6 +175,28 @@
         "id": 18,
         "pokemon_id": 18,
         "pokemon_name": "Kakuna",
+        "weaknesses": [
+            "Fogo",
+            "Pedra",
+            "Psíquico",
+            "Voador"
+        ]
+    },
+    {
+        "id": 19,
+        "pokemon_id": 13,
+        "pokemon_name": "Beedrill",
+        "weaknesses": [
+            "Fogo",
+            "Pedra",
+            "Psíquico",
+            "Voador"
+        ]
+    },
+    {
+        "id": 20,
+        "pokemon_id": 14,
+        "pokemon_name": "Mega Beedrill",
         "weaknesses": [
             "Fogo",
             "Pedra",

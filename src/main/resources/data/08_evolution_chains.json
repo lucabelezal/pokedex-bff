@@ -237,5 +237,89 @@
                 }
             ]
         }
+    },
+    {
+        "id": 6,
+        "chain": {
+            "pokemon": {
+                "id": 21,
+                "name": "Pidgey"
+            },
+            "evolutions_to": [
+                {
+                    "pokemon": {
+                        "id": 22,
+                        "name": "Pidgeotto"
+                    },
+                    "condition": {
+                        "type": "level_up",
+                        "value": 18,
+                        "description": "Nível 18"
+                    },
+                    "evolutions_to": [
+                        {
+                            "pokemon": {
+                                "id": 23,
+                                "name": "Pidgeot"
+                            },
+                            "condition": {
+                                "type": "level_up",
+                                "value": 36,
+                                "description": "Nível 36"
+                            },
+                            "evolutions_to": []
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    {
+        "id": 10,
+        "chain": {
+            "pokemon": {
+                "id": 172,
+                "name": "Pichu"
+            },
+            "evolutions_to": [
+                {
+                    "pokemon": {
+                        "id": 25,
+                        "name": "Pikachu"
+                    },
+                    "condition": {
+                        "type": "friendship",
+                        "value": "high",
+                        "description": "Alta Amizade"
+                    },
+                    "evolutions_to": [
+                        {
+                            "pokemon": {
+                                "id": 26,
+                                "name": "Raichu"
+                            },
+                            "condition": {
+                                "type": "item_use",
+                                "value": "Thunder Stone",
+                                "description": "Usar Pedra Trovão (fora de Alola)"
+                            },
+                            "evolutions_to": []
+                        },
+                        {
+                            "pokemon": {
+                                "id": 26,
+                                "name": "Alolan Raichu"
+                            },
+                            "condition": {
+                                "type": "item_use",
+                                "value": "Thunder Stone",
+                                "description": "Usar Pedra Trovão (em Alola)"
+                            },
+                            "evolutions_to": []
+                        }
+                    ]
+                }
+            ]
+        }
     }
 ]
