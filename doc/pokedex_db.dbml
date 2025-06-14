@@ -1,0 +1,121 @@
+Project Pokedex {
+  database_type: 'PostgreSQL'
+}
+
+Table regions {
+  id bigint [pk]
+  name varchar(255) [unique, not null]
+}
+
+Table types {
+  id bigint [pk]
+  name varchar(255) [unique, not null]
+  color varchar(7)
+}
+
+Table egg_groups {
+  id bigint [pk]
+  name varchar(255) [unique, not null]
+}
+
+Table generations {
+  id bigint [pk]
+  name varchar(255) [unique, not null]
+  region_id bigint
+}
+
+Table abilities {
+  id bigint [pk]
+  name varchar(255) [unique, not null]
+  description text
+  introduced_generation_id bigint
+}
+
+Table species {
+  id bigint [pk]
+  pokemon_number varchar(10)
+  name varchar(255) [not null]
+  species_en varchar(255)
+  species_pt varchar(255)
+}
+
+Table stats {
+  id bigint [pk]
+  total integer
+  hp integer
+  attack integer
+  defense integer
+  sp_atk integer
+  sp_def integer
+  speed integer
+}
+
+Table evolution_chains {
+  id bigint [pk]
+  chain_data jsonb [not null]
+}
+
+Table pokemons {
+  id bigint [pk]
+  number varchar(10)
+  name varchar(255) [not null]
+  height numeric(5, 2)
+  weight numeric(6, 2)
+  description text
+  sprites jsonb
+  gender_rate_value integer
+  egg_cycles integer
+  stats_id bigint [unique]
+  generation_id bigint
+  species_id bigint
+  region_id bigint
+  evolution_chain_id bigint
+}
+
+Table pokemon_types {
+  pokemon_id bigint
+  type_id bigint
+  indexes {
+    (pokemon_id, type_id) [pk]
+  }
+}
+
+Table pokemon_abilities {
+  id bigserial [pk]
+  pokemon_id bigint [not null]
+  ability_id bigint [not null]
+  is_hidden boolean [not null]
+}
+
+Table pokemon_egg_groups {
+  pokemon_id bigint
+  egg_group_id bigint
+  indexes {
+    (pokemon_id, egg_group_id) [pk]
+  }
+}
+
+Table pokemon_weaknesses {
+  pokemon_id bigint
+  type_id bigint
+  indexes {
+    (pokemon_id, type_id) [pk]
+  }
+}
+
+// Relationships
+Ref: generations.region_id > regions.id
+Ref: abilities.introduced_generation_id > generations.id
+Ref: pokemons.stats_id > stats.id
+Ref: pokemons.generation_id > generations.id
+Ref: pokemons.species_id > species.id
+Ref: pokemons.region_id > regions.id
+Ref: pokemons.evolution_chain_id > evolution_chains.id
+Ref: pokemon_types.pokemon_id > pokemons.id
+Ref: pokemon_types.type_id > types.id
+Ref: pokemon_abilities.pokemon_id > pokemons.id
+Ref: pokemon_abilities.ability_id > abilities.id
+Ref: pokemon_egg_groups.pokemon_id > pokemons.id
+Ref: pokemon_egg_groups.egg_group_id > egg_groups.id
+Ref: pokemon_weaknesses.pokemon_id > pokemons.id
+Ref: pokemon_weaknesses.type_id > types.id
