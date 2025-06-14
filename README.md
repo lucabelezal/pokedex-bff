@@ -18,6 +18,12 @@ Os dados utilizados para popular o banco de dados local e alimentar as respostas
 * **[Hey Pikachu! Pokedex](https://www.heypikachu.com/pokedex)**: Fornece dados visuais e descrições úteis para complementar as informações estruturadas, como sprites e obras de arte oficiais.
 * **[Pokemon Oficial (Brasil) - Pokedex](https://www.pokemon.com/br/pokedex)**: A Pokedex oficial da The Pokémon Company International, garantindo dados verificados e localizados para o público brasileiro.
 
+## Pokédex / Pokémon App
+
+<p><strong>🎨 Design por:</strong> Junior Saraiva</p>
+
+<p><img src="doc/icons/figma.png" width="24" height="24" /> <strong>Figma</strong> — Protótipo de interface e fluxo do aplicativo Pokédex. <a href="https://www.figma.com/community/file/1202971127473077147">Abrir no Figma</a></p>
+
 ## Informações do Banco de Dados (PostgreSQL)
 
 O Pokedex BFF utiliza um banco de dados PostgreSQL para armazenar os dados de Pokémon de forma estruturada e relacional. A documentação completa do esquema do banco de dados é essencial para entender como os dados são organizados e relacionados.
