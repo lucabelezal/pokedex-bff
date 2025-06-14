@@ -1,15 +1,19 @@
 spring:
+  application:
+    name: pokedex-bff
   datasource:
     url: jdbc:postgresql://localhost:5432/pokedex_db
     username: postgres
     password: postgres
+    driver-class-name: org.postgresql.Driver
   jpa:
+    hibernate:
+      ddl-auto: update # none update validate
     show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        hbm2ddl:
-          auto: update   # Pode ser 'update', 'create', 'create-drop' ou 'validate'
+
+app:
+  data:
+    location: data/
 
 logging:
   level:
