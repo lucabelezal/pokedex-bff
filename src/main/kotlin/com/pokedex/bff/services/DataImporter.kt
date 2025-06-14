@@ -370,45 +370,51 @@ class PokemonImportService(
     fun importAll() {
         logger.info("====== 🚀 INICIANDO IMPORTAÇÃO DOS DADOS DA POKEDEX 🚀 ======")
 
+        val importResults = mutableMapOf<String, ImportCounts>()
         var totalSuccess = 0
         var totalErrors = 0
 
         logger.info("Iniciando importação de Regiões...")
         val regionsCounts = importSimpleData(loadJson(JsonFile.REGIONS.filePath, object : TypeReference<List<RegionDto>>() {}), regionRepository) { dto -> Region(id = dto.id, name = dto.name) }
+        importResults["Regiões"] = regionsCounts
         logImportResult("Regiões", regionsCounts)
         totalSuccess += regionsCounts.success
         totalErrors += regionsCounts.errors
 
         logger.info("Iniciando importação de Tipos...")
         val typesCounts = importSimpleData(loadJson(JsonFile.TYPES.filePath, object : TypeReference<List<TypeDto>>() {}), typeRepository) { dto -> Type(id = dto.id, name = dto.name, color = dto.color) }
+        importResults["Tipos"] = typesCounts
         logImportResult("Tipos", typesCounts)
         totalSuccess += typesCounts.success
         totalErrors += typesCounts.errors
 
         logger.info("Iniciando importação de Grupos de Ovos...")
         val eggGroupsCounts = importSimpleData(loadJson(JsonFile.EGG_GROUPS.filePath, object : TypeReference<List<EggGroupDto>>() {}), eggGroupRepository) { dto -> EggGroup(id = dto.id, name = dto.name) }
+        importResults["Grupos de Ovos"] = eggGroupsCounts
         logImportResult("Grupos de Ovos", eggGroupsCounts)
         totalSuccess += eggGroupsCounts.success
         totalErrors += eggGroupsCounts.errors
 
         logger.info("Iniciando importação de Gerações...")
-        val allRegionsMapForGenerations = regionRepository.findAll().associateBy { it.id } // Renomeado
+        val allRegionsMapForGenerations = regionRepository.findAll().associateBy { it.id }
         val generationsCounts = importSimpleData(loadJson(JsonFile.GENERATIONS.filePath, object : TypeReference<List<GenerationDto>>() {}), generationRepository) { dto ->
-            val region = allRegionsMapForGenerations[dto.regionId] // Usando o mapa renomeado
+            val region = allRegionsMapForGenerations[dto.regionId]
                 ?: throw IllegalArgumentException("Region with ID ${dto.regionId} not found for Generation ${dto.name}")
             Generation(id = dto.id, name = dto.name, region = region)
         }
+        importResults["Gerações"] = generationsCounts
         logImportResult("Gerações", generationsCounts)
         totalSuccess += generationsCounts.success
         totalErrors += generationsCounts.errors
 
         logger.info("Iniciando importação de Habilidades...")
-        val allGenerationsMapForAbilities = generationRepository.findAll().associateBy { it.id } // Renomeado
+        val allGenerationsMapForAbilities = generationRepository.findAll().associateBy { it.id }
         val abilitiesCounts = importSimpleData(loadJson(JsonFile.ABILITIES.filePath, object : TypeReference<List<AbilityDto>>() {}), abilityRepository) { dto ->
-            val generation = allGenerationsMapForAbilities[dto.introducedGenerationId] // Usando o mapa renomeado
+            val generation = allGenerationsMapForAbilities[dto.introducedGenerationId]
                 ?: throw IllegalArgumentException("Generation with ID ${dto.introducedGenerationId} not found for Ability ${dto.name}")
             Ability(id = dto.id, name = dto.name, description = dto.description, introducedGeneration = generation)
         }
+        importResults["Habilidades"] = abilitiesCounts
         logImportResult("Habilidades", abilitiesCounts)
         totalSuccess += abilitiesCounts.success
         totalErrors += abilitiesCounts.errors
@@ -417,6 +423,7 @@ class PokemonImportService(
         val speciesCounts = importSimpleData(loadJson(JsonFile.SPECIES.filePath, object : TypeReference<List<SpeciesDto>>() {}), speciesRepository) { dto ->
             Species(id = dto.id, name = dto.name, pokemon_number = dto.pokemonNumber, speciesEn = dto.speciesEn, speciesPt = dto.speciesPt)
         }
+        importResults["Espécies"] = speciesCounts
         logImportResult("Espécies", speciesCounts)
         totalSuccess += speciesCounts.success
         totalErrors += speciesCounts.errors
@@ -425,6 +432,7 @@ class PokemonImportService(
         val statsCounts = importSimpleData(loadJson(JsonFile.STATS.filePath, object : TypeReference<List<StatsDto>>() {}), statsRepository) { dto ->
             Stats(id = dto.id, total = dto.total, hp = dto.hp, attack = dto.attack, defense = dto.defense, spAtk = dto.spAtk, spDef = dto.spDef, speed = dto.speed)
         }
+        importResults["Estatísticas"] = statsCounts
         logImportResult("Estatísticas", statsCounts)
         totalSuccess += statsCounts.success
         totalErrors += statsCounts.errors
@@ -434,6 +442,7 @@ class PokemonImportService(
             val chainDataJsonString = objectMapper.writeValueAsString(dto.chainData)
             EvolutionChain(id = dto.id, chainData = chainDataJsonString)
         }
+        importResults["Cadeias de Evolução"] = evolutionChainsCounts
         logImportResult("Cadeias de Evolução", evolutionChainsCounts)
         totalSuccess += evolutionChainsCounts.success
         totalErrors += evolutionChainsCounts.errors
@@ -442,14 +451,14 @@ class PokemonImportService(
         logger.info("Iniciando importação de Pokémons...")
         val pokemonDtos = loadJson(JsonFile.POKEMONS.filePath, object : TypeReference<List<PokemonDto>>() {})
         val pokemonsCounts = ImportCounts()
-        val regionsMapForPokemon = regionRepository.findAll().associateBy { it.id } // Renomeado
-        val statsMapForPokemon = statsRepository.findAll().associateBy { it.id } // Renomeado
-        val generationsMapForPokemon = generationRepository.findAll().associateBy { it.id } // Renomeado
-        val speciesMapForPokemon = speciesRepository.findAll().associateBy { it.id } // Renomeado
-        val eggGroupsMapForPokemon = eggGroupRepository.findAll().associateBy { it.id } // Renomeado
-        val typesMapForPokemon = typeRepository.findAll().associateBy { it.id } // Renomeado
-        val abilitiesMapForPokemon = abilityRepository.findAll().associateBy { it.id } // Renomeado
-        val evolutionChainsMapForPokemon = evolutionChainRepository.findAll().associateBy { it.id } // Renomeado
+        val regionsMapForPokemon = regionRepository.findAll().associateBy { it.id }
+        val statsMapForPokemon = statsRepository.findAll().associateBy { it.id }
+        val generationsMapForPokemon = generationRepository.findAll().associateBy { it.id }
+        val speciesMapForPokemon = speciesRepository.findAll().associateBy { it.id }
+        val eggGroupsMapForPokemon = eggGroupRepository.findAll().associateBy { it.id }
+        val typesMapForPokemon = typeRepository.findAll().associateBy { it.id }
+        val abilitiesMapForPokemon = abilityRepository.findAll().associateBy { it.id }
+        val evolutionChainsMapForPokemon = evolutionChainRepository.findAll().associateBy { it.id }
 
         for (dto in pokemonDtos) {
             try {
@@ -494,6 +503,7 @@ class PokemonImportService(
                 logger.error("Error importing Pokemon ${dto.name}: ${e.message}", e)
             }
         }
+        importResults["Pokémons"] = pokemonsCounts
         logImportResult("Pokémons", pokemonsCounts)
         totalSuccess += pokemonsCounts.success
         totalErrors += pokemonsCounts.errors
@@ -531,12 +541,22 @@ class PokemonImportService(
                 logger.error("Error importing weaknesses for ${weaknessDto.pokemonName}: ${e.message}", e)
             }
         }
+        importResults["Fraquezas"] = weaknessesCounts
         logImportResult("Fraquezas", weaknessesCounts)
         totalSuccess += weaknessesCounts.success
         totalErrors += weaknessesCounts.errors
 
         logger.info("====== ✅ IMPORTAÇÃO DOS DADOS DA POKEDEX CONCLUÍDA ✅ ======")
-        logger.info("✨ Resumo Geral da Importação: Sucessos Totais: $totalSuccess, Falhas Totais: $totalErrors ✨")
+        logger.info("✨ Resumo Geral da Importação:")
+        logger.info("   * Sucessos Totais: $totalSuccess ")
+        logger.info("   * Falhas Totais: $totalErrors")
+
+        logger.info("--- Detalhes da Importação por Tabela ---")
+        importResults.forEach { (entityName, counts) ->
+            val detailStatusEmoji = if (counts.errors == 0) "✅ SUCESSO COMPLETO" else "❌ FALHAS"
+            logger.info("  $entityName: $detailStatusEmoji (Sucessos: ${counts.success}, Falhas: ${counts.errors})")
+        }
+        logger.info("-----------------------------------------")
     }
 }
 
