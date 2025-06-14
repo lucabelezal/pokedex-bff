@@ -1,6 +1,3 @@
-Compreendo que você está com dificuldades para copiar o conteúdo do Canvas. Vou fornecer o mesmo conteúdo em Markdown aqui no chat, para que você possa copiá-lo facilmente:
-
-```markdown
 # Documentação do Esquema do Banco de Dados Pokémon
 
 Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL.
