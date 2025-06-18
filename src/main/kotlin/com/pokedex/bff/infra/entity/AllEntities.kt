@@ -1,4 +1,4 @@
-package com.pokedex.bff.models
+package com.pokedex.bff.infra.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*
@@ -130,14 +130,9 @@ data class EvolutionChain(
     @Column(name = "id")
     var id: Long = 0,
 
-    // Removido: A tabela evolution_details não existe mais, então esta relação não é necessária.
-    // @OneToMany(mappedBy = "chain", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    // var details: MutableSet<EvolutionDetail> = mutableSetOf()
-
-    // Adicionado: Coluna JSONB para armazenar a estrutura da cadeia de evolução diretamente
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "chain_data", columnDefinition = "jsonb")
-    var chainData: String? = null // Usar String para mapear JSONB, será manipulado como JSON no serviço
+    var chainData: String? = null
 )
 
 @Entity
@@ -192,7 +187,7 @@ data class Pokemon(
     @JoinColumn(name = "evolution_chain_id")
     var evolutionChain: EvolutionChain? = null,
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "pokemon_types",
         joinColumns = [JoinColumn(name = "pokemon_id")],
