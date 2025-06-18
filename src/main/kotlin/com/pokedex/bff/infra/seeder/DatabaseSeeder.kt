@@ -1,4 +1,4 @@
-package com.pokedex.bff.infra
+package com.pokedex.bff.infra.seeder
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -7,9 +7,27 @@ import org.springframework.core.io.ClassPathResource
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import com.pokedex.bff.entity.*
-import com.pokedex.bff.controller.dtos.*
-import com.pokedex.bff.repository.*
+import com.pokedex.bff.controller.dto.*
+import com.pokedex.bff.infra.entity.Ability
+import com.pokedex.bff.infra.entity.EggGroup
+import com.pokedex.bff.infra.entity.EvolutionChain
+import com.pokedex.bff.infra.entity.Generation
+import com.pokedex.bff.infra.entity.Pokemon
+import com.pokedex.bff.infra.entity.PokemonAbility
+import com.pokedex.bff.infra.entity.Region
+import com.pokedex.bff.infra.entity.Species
+import com.pokedex.bff.infra.entity.Stats
+import com.pokedex.bff.infra.entity.Type
+import com.pokedex.bff.infra.repository.AbilityRepository
+import com.pokedex.bff.infra.repository.EggGroupRepository
+import com.pokedex.bff.infra.repository.EvolutionChainRepository
+import com.pokedex.bff.infra.repository.GenerationRepository
+import com.pokedex.bff.infra.repository.PokemonAbilityRepository
+import com.pokedex.bff.infra.repository.PokemonRepository
+import com.pokedex.bff.infra.repository.RegionRepository
+import com.pokedex.bff.infra.repository.SpeciesRepository
+import com.pokedex.bff.infra.repository.StatsRepository
+import com.pokedex.bff.infra.repository.TypeRepository
 import com.pokedex.bff.utils.JsonFile
 import java.io.IOException
 
@@ -72,21 +90,37 @@ class DatabaseSeeder(
         var totalErrors = 0
 
         logger.info("Iniciando importação de Regiões...")
-        val regionsCounts = importSimpleData(loadJson(JsonFile.REGIONS.filePath, object : TypeReference<List<RegionDto>>() {}), regionRepository) { dto -> Region(id = dto.id, name = dto.name) }
+        val regionsCounts = importSimpleData(loadJson(JsonFile.REGIONS.filePath, object : TypeReference<List<RegionDto>>() {}), regionRepository) { dto ->
+            Region(
+                id = dto.id,
+                name = dto.name
+            )
+        }
         importResults["Regiões"] = regionsCounts
         logImportResult("Regiões", regionsCounts)
         totalSuccess += regionsCounts.success
         totalErrors += regionsCounts.errors
 
         logger.info("Iniciando importação de Tipos...")
-        val typesCounts = importSimpleData(loadJson(JsonFile.TYPES.filePath, object : TypeReference<List<TypeDto>>() {}), typeRepository) { dto -> Type(id = dto.id, name = dto.name, color = dto.color) }
+        val typesCounts = importSimpleData(loadJson(JsonFile.TYPES.filePath, object : TypeReference<List<TypeDto>>() {}), typeRepository) { dto ->
+            Type(
+                id = dto.id,
+                name = dto.name,
+                color = dto.color
+            )
+        }
         importResults["Tipos"] = typesCounts
         logImportResult("Tipos", typesCounts)
         totalSuccess += typesCounts.success
         totalErrors += typesCounts.errors
 
         logger.info("Iniciando importação de Grupos de Ovos...")
-        val eggGroupsCounts = importSimpleData(loadJson(JsonFile.EGG_GROUPS.filePath, object : TypeReference<List<EggGroupDto>>() {}), eggGroupRepository) { dto -> EggGroup(id = dto.id, name = dto.name) }
+        val eggGroupsCounts = importSimpleData(loadJson(JsonFile.EGG_GROUPS.filePath, object : TypeReference<List<EggGroupDto>>() {}), eggGroupRepository) { dto ->
+            EggGroup(
+                id = dto.id,
+                name = dto.name
+            )
+        }
         importResults["Grupos de Ovos"] = eggGroupsCounts
         logImportResult("Grupos de Ovos", eggGroupsCounts)
         totalSuccess += eggGroupsCounts.success
@@ -118,7 +152,13 @@ class DatabaseSeeder(
 
         logger.info("Iniciando importação de Espécies...")
         val speciesCounts = importSimpleData(loadJson(JsonFile.SPECIES.filePath, object : TypeReference<List<SpeciesDto>>() {}), speciesRepository) { dto ->
-            Species(id = dto.id, name = dto.name, pokemon_number = dto.pokemonNumber, speciesEn = dto.speciesEn, speciesPt = dto.speciesPt)
+            Species(
+                id = dto.id,
+                name = dto.name,
+                pokemon_number = dto.pokemonNumber,
+                speciesEn = dto.speciesEn,
+                speciesPt = dto.speciesPt
+            )
         }
         importResults["Espécies"] = speciesCounts
         logImportResult("Espécies", speciesCounts)
@@ -127,7 +167,16 @@ class DatabaseSeeder(
 
         logger.info("Iniciando importação de Estatísticas...")
         val statsCounts = importSimpleData(loadJson(JsonFile.STATS.filePath, object : TypeReference<List<StatsDto>>() {}), statsRepository) { dto ->
-            Stats(id = dto.id, total = dto.total, hp = dto.hp, attack = dto.attack, defense = dto.defense, spAtk = dto.spAtk, spDef = dto.spDef, speed = dto.speed)
+            Stats(
+                id = dto.id,
+                total = dto.total,
+                hp = dto.hp,
+                attack = dto.attack,
+                defense = dto.defense,
+                spAtk = dto.spAtk,
+                spDef = dto.spDef,
+                speed = dto.speed
+            )
         }
         importResults["Estatísticas"] = statsCounts
         logImportResult("Estatísticas", statsCounts)
@@ -191,7 +240,13 @@ class DatabaseSeeder(
                 dto.abilities.forEach { abilityDto ->
                     val ability = abilitiesMapForPokemon[abilityDto.abilityId]
                         ?: throw IllegalArgumentException("Ability with ID ${abilityDto.abilityId} not found for Pokemon ${dto.name}")
-                    pokemonAbilityRepository.save(PokemonAbility(pokemon = pokemon, ability = ability, isHidden = abilityDto.isHidden))
+                    pokemonAbilityRepository.save(
+                        PokemonAbility(
+                            pokemon = pokemon,
+                            ability = ability,
+                            isHidden = abilityDto.isHidden
+                        )
+                    )
                 }
                 pokemonsCounts.success++
             } catch (e: Exception) {

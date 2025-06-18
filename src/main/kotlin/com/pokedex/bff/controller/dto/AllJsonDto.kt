@@ -1,12 +1,12 @@
-package com.pokedex.bff.controller.dtos
+package com.pokedex.bff.controller.dto
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.pokedex.bff.entity.DreamWorldSprites
-import com.pokedex.bff.entity.HomeSprites
-import com.pokedex.bff.entity.OfficialArtworkSprites
-import com.pokedex.bff.entity.OtherSprites
-import com.pokedex.bff.entity.ShowdownSprites
-import com.pokedex.bff.entity.Sprites
+import com.pokedex.bff.infra.entity.DreamWorldSprites
+import com.pokedex.bff.infra.entity.HomeSprites
+import com.pokedex.bff.infra.entity.OfficialArtworkSprites
+import com.pokedex.bff.infra.entity.OtherSprites
+import com.pokedex.bff.infra.entity.ShowdownSprites
+import com.pokedex.bff.infra.entity.Sprites
 
 data class RegionDto(
     @JsonProperty("id")

@@ -1,7 +1,7 @@
 package com.pokedex.bff.service
 
-import com.pokedex.bff.controller.dtos.*
-import com.pokedex.bff.repository.PokemonRepository
+import com.pokedex.bff.controller.dto.*
+import com.pokedex.bff.infra.repository.PokemonRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

@@ -1,6 +1,15 @@
-package com.pokedex.bff.repository
+package com.pokedex.bff.infra.repository
 
-import com.pokedex.bff.entity.*
+import com.pokedex.bff.infra.entity.Ability
+import com.pokedex.bff.infra.entity.EggGroup
+import com.pokedex.bff.infra.entity.EvolutionChain
+import com.pokedex.bff.infra.entity.Generation
+import com.pokedex.bff.infra.entity.Pokemon
+import com.pokedex.bff.infra.entity.PokemonAbility
+import com.pokedex.bff.infra.entity.Region
+import com.pokedex.bff.infra.entity.Species
+import com.pokedex.bff.infra.entity.Stats
+import com.pokedex.bff.infra.entity.Type
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository

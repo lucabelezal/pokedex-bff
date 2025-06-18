@@ -1,4 +1,4 @@
-package com.pokedex.bff.entity
+package com.pokedex.bff.infra.entity
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import jakarta.persistence.*

@@ -1,6 +1,6 @@
 package com.pokedex.bff.controller
 
-import com.pokedex.bff.controller.dtos.PokemonListResponse
+import com.pokedex.bff.controller.dto.PokemonListResponse
 import com.pokedex.bff.service.PokemonService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
