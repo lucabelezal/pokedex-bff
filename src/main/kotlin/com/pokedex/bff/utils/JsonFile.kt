@@ -13,7 +13,6 @@ enum class JsonFile(val filePath: String) {
     POKEMONS("data/10_pokemon.json");
 
     companion object {
-        // Exemplo de como você poderia obter o caminho completo do arquivo
         fun getPath(file: JsonFile): String {
             return file.filePath
         }
