@@ -134,6 +134,6 @@ make
 
 # Arquitetura do Sistema — Pokédex BFF
 
-Se quiser, posso ajudar também a montar o arquivo `doc/ARCHITECTURE.md` com uma documentação mais detalhada e explicações técnicas. Quer?
+Se quiser, posso ajudar também a montar o arquivo [ARCHITECTURE.md](doc/ARCHITECTURE.md) com uma documentação mais detalhada e explicações técnicas. Quer?
 
 ---
