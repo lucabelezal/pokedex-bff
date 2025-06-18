@@ -1,4 +1,4 @@
-package com.pokedex.bff.controller.dtos
+package com.pokedex.bff.controller.dto
 
 data class PokemonListResponse(
     val pageInfo: PageInfo,

@@ -1,4 +1,4 @@
-package com.pokedex.bff.infra
+package com.pokedex.bff.infra.seeder
 
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner

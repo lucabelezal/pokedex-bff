@@ -2,18 +2,18 @@
 
 ## 1. Visão Geral
 
-O Pokédex BFF é um backend que oferece dados estruturados de Pokémon através de APIs REST.  
-A arquitetura é baseada em uma aplicação Spring Boot modular, seguindo boas práticas de separação de camadas para facilitar manutenção, testes e evolução.
+O **Pokédex BFF** é um backend que fornece dados estruturados de Pokémon através de APIs REST.
+A arquitetura é baseada em **Spring Boot**, organizada em camadas bem definidas para facilitar manutenção, testes e evolução.
 
 ---
 
 ## 2. Objetivos Arquiteturais
 
-- Manter separação clara entre apresentação, domínio e infraestrutura.  
-- Facilitar testes unitários e integração.  
-- Facilitar evolução, manutenibilidade e escalabilidade.  
-- Permitir substituição futura de tecnologias sem impacto na lógica de negócio.  
-- Suportar pré-carga de dados via JSON para banco relacional.
+* Separação clara entre apresentação, domínio e infraestrutura.
+* Facilidade para testes unitários e integração.
+* Evolução e manutenção simplificadas.
+* Substituição de tecnologias sem impacto na lógica de negócio.
+* Pré-carga de dados via JSON para banco relacional.
 
 ---
 
@@ -21,49 +21,49 @@ A arquitetura é baseada em uma aplicação Spring Boot modular, seguindo boas p
 
 ### Camadas
 
-| Camada       | Responsabilidade                                                        | Pacote Base                    |
-|--------------|------------------------------------------------------------------------|-------------------------------|
-| Controller   | Interface HTTP REST, recebimento e retorno de dados JSON via API       | `controller/`                  |
-| DTO          | Objetos para comunicação via API, desacoplados da camada persistência  | `controller/dtos/`             |
-| Service      | Orquestra lógica de aplicação, regras de negócio simples e fluxos      | `service/`                    |
-| Domain Model | Modelos de negócio puros, regras e validações de negócio (opcional)    | `domain/model/`                |
-| Infra Entity | Entidades JPA para mapeamento relacional e persistência                | `infra/entity/`                |
-| Infra Repo   | Repositórios Spring Data JPA para acesso ao banco                      | `infra/repository/`            |
-| Seeder       | Classes para carregamento inicial de dados (JSON → banco)              | `infra/seeder/`                |
-| Utils        | Utilitários e helpers genéricos                                        | `utils/`                      |
+| Camada               | Responsabilidade                                                    | Pacote Base         |
+| -------------------- | ------------------------------------------------------------------- | ------------------- |
+| **Controller**       | Interface HTTP REST, recebe e retorna dados JSON                    | `controller/`       |
+| **DTO**              | Objetos de troca de dados via API, desacoplados de persistência     | `controller/dtos/`  |
+| **Service**          | Orquestra lógica de aplicação, regras de negócio e fluxos           | `service/`          |
+| **Domain Model**     | Modelos de negócio puros, regras e validações de domínio (opcional) | `domain/model/`     |
+| **Infra Entity**     | Entidades JPA para mapeamento relacional                            | `infra/entity/`     |
+| **Infra Repository** | Repositórios Spring Data JPA para acesso ao banco                   | `infra/repository/` |
+| **Seeder**           | Carregamento inicial de dados (JSON → banco)                        | `infra/seeder/`     |
+| **Utils**            | Utilitários e helpers genéricos, reutilizáveis em todas as camadas  | `utils/`            |
 
 ---
 
 ## 4. Fluxo Principal
 
-1. **Cliente** faz requisição HTTP REST para o Controller.  
-2. **Controller** recebe parâmetros e delega para Service.  
-3. **Service** executa lógica de negócio e acessa Repositórios para CRUD.  
-4. **Repositórios** acessam banco via JPA.  
-5. **Dados** persistidos ou consultados são convertidos entre Entidades, Modelos e DTOs via mappers.  
-6. **Service** retorna DTOs para Controller, que retorna resposta HTTP.
+1. **Cliente** faz requisição HTTP REST para o Controller.
+2. **Controller** recebe os parâmetros e delega para o Service.
+3. **Service** executa a lógica de negócio e consulta os Repositórios.
+4. **Repositórios** acessam o banco de dados via JPA.
+5. **Dados** são convertidos entre Entidades, Modelos de Domínio e DTOs via mappers.
+6. **Service** retorna DTOs para o Controller, que devolve a resposta HTTP.
 
 ---
 
 ## 5. Tecnologias Utilizadas
 
-- **Spring Boot:** Framework principal para API REST e injeção de dependência.  
-- **Spring Data JPA:** Repositórios para acesso a banco relacional.  
-- **PostgreSQL:** Banco de dados relacional.  
-- **Jackson:** Serialização/deserialização JSON.  
-- **SLF4J + Logback:** Log de sistema.  
-- **Kotlin:** Linguagem principal.
+* **Spring Boot:** Framework principal para APIs REST e injeção de dependências.
+* **Spring Data JPA:** Repositórios e queries para banco relacional.
+* **PostgreSQL:** Banco de dados relacional robusto.
+* **Jackson:** Serialização/deserialização de JSON.
+* **SLF4J + Logback:** Logging estruturado.
+* **Kotlin:** Linguagem principal do projeto.
 
 ---
 
 ## 6. Padrões e Boas Práticas
 
-- **Separação de responsabilidades:** Cada camada tem função clara.  
-- **DTOs separados das entidades:** Evita exposição direta da estrutura interna.  
-- **Transações declarativas:** Controladas na camada de serviço com `@Transactional`.  
-- **Log detalhado:** Para rastreamento da importação e operações críticas.  
-- **Carregamento inicial:** Seeder para popular banco a partir de arquivos JSON.  
-- **Mapeamento manual via funções e extension methods:** Controle explícito de transformação.
+* **Separação de responsabilidades:** Cada camada com função única.
+* **DTOs isolados das entidades:** Evita vazamento de detalhes internos.
+* **Transações controladas via `@Transactional`.**
+* **Logging informativo e rastreável.**
+* **Seeder desacoplado para importar dados de arquivos JSON.**
+* **Transformações claras com funções utilitárias ou `extension functions`.**
 
 ---
 
@@ -71,62 +71,71 @@ A arquitetura é baseada em uma aplicação Spring Boot modular, seguindo boas p
 
 ### 7.1 Controller
 
-- Localizado em `controller/`.  
-- Recebe parâmetros de paginação, filtros.  
-- Retorna DTOs via ResponseEntity.
+* Local: `controller/`
+* Recebe parâmetros de paginação, filtros e comandos de rota.
+* Retorna DTOs encapsulados em `ResponseEntity`.
 
 ### 7.2 Service
 
-- Localizado em `service/`.  
-- Implementa lógica de paginação, orquestra repositórios.  
-- Transações são gerenciadas aqui.
+* Local: `service/`
+* Implementa lógica de orquestração, paginação, filtros.
+* Transações são gerenciadas nesta camada.
 
 ### 7.3 Domain Model
 
-- Classes Kotlin simples, sem dependências Spring.  
-- Regras e validações podem ser implementadas aqui.
+* Local: `domain/model/`
+* Classes simples, sem dependências externas.
 
 ### 7.4 Infra Entity
 
-- Entidades JPA com anotações `@Entity`, `@Table`.  
-- Mapear colunas, relações e constraints do banco.
+* Local: `infra/entity/`
+* Classes JPA com anotações `@Entity` e `@Table`.
 
 ### 7.5 Infra Repository
 
-- Interface estende `JpaRepository`.  
-- Métodos customizados e JPQL via `@Query`.
+* Local: `infra/repository/`
+* Interfaces estendendo `JpaRepository`.
+* Queries personalizadas via `@Query`.
 
 ### 7.6 Seeder
 
-- Executado em startup via `CommandLineRunner`.  
-- Carrega dados JSON e popula banco.  
-- Tratamento de erros e logs detalhados.
+* Local: `infra/seeder/`
+* Executado na inicialização (`CommandLineRunner`).
+* Lê JSONs, popula banco e faz logs de progresso.
+
+### 7.7 Utils
+
+* Local: `utils/`
+* Funções auxiliares e helpers genéricos.
+* Usados por qualquer camada.
 
 ---
 
-## 8. Exemplo de Estrutura de Pastas
+## 8. Estrutura de Pastas
 
 ```plaintext
 com.pokedex.bff
 ├── controller
-│   └── PokemonController.kt
+│   └── PokemonController.kt
 ├── controller/dtos
-│   └── PokemonListResponse.kt
+│   └── PokemonListResponse.kt
 ├── service
-│   └── PokemonService.kt
+│   └── PokemonService.kt
 ├── domain/model
-│   └── Pokemon.kt
+│   └── Pokemon.kt
 ├── infra/entity
-│   └── PokemonEntity.kt
+│   └── PokemonEntity.kt
 ├── infra/repository
-│   └── PokemonRepository.kt
+│   └── PokemonRepository.kt
 ├── infra/seeder
-│   └── DatabaseSeeder.kt
+│   └── DatabaseSeeder.kt
 ├── utils
-│   └── JsonFile.kt
+│   └── JsonFile.kt
 ```
 
-### Diagrama de Componentes
+---
+
+## 9. Diagrama de Componentes
 
 ```mermaid
 graph TD
@@ -141,9 +150,13 @@ graph TD
 
   Seeder --> Repository
   Seeder -->|Reads| JSONFiles[JSON Files]
-  ```
+  Service -->|Uses| Utils
+  Seeder -->|Uses| Utils
+```
 
-### Diagrama de Sequência
+---
+
+## 10. Diagrama de Sequência
 
 ```mermaid
 sequenceDiagram
@@ -161,4 +174,6 @@ sequenceDiagram
   Repository-->>Service: Page<Pokemon>
   Service-->>Controller: PokemonListResponse with pagination metadata
   Controller-->>Client: HTTP 200 + JSON payload
-  ```
+```
+
+---
