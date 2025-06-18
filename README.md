@@ -130,3 +130,10 @@ make
   make deep-clean-gradle      - Limpa caches e artefatos do Gradle.
 ===================================================================
 ```
+---
+
+# Arquitetura do Sistema — Pokédex BFF
+
+Se quiser, posso ajudar também a montar o arquivo `doc/ARCHITECTURE.md` com uma documentação mais detalhada e explicações técnicas. Quer?
+
+---
