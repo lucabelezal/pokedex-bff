@@ -37,11 +37,11 @@ A arquitetura é baseada em uma aplicação Spring Boot modular, seguindo boas p
 ## 4. Fluxo Principal
 
 1. **Cliente** faz requisição HTTP REST para o Controller.  
-2. Controller recebe parâmetros e delega para Service.  
-3. Service executa lógica de negócio e acessa Repositórios para CRUD.  
-4. Repositórios acessam banco via JPA.  
-5. Dados persistidos ou consultados são convertidos entre Entidades, Modelos e DTOs via mappers.  
-6. Service retorna DTOs para Controller, que retorna resposta HTTP.
+2. **Controller** recebe parâmetros e delega para Service.  
+3. **Service** executa lógica de negócio e acessa Repositórios para CRUD.  
+4. **Repositórios** acessam banco via JPA.  
+5. **Dados** persistidos ou consultados são convertidos entre Entidades, Modelos e DTOs via mappers.  
+6. **Service** retorna DTOs para Controller, que retorna resposta HTTP.
 
 ---
 
