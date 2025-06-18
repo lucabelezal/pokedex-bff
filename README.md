@@ -29,7 +29,7 @@ Os dados utilizados para popular o banco de dados local e alimentar as respostas
 
 O Pokedex BFF utiliza um banco de dados PostgreSQL para armazenar os dados de Pokémon de forma estruturada e relacional. A documentação completa do esquema do banco de dados é essencial para entender como os dados são organizados e relacionados.
 
-* **[Diagrama e Documentação Detalhada](doc/pokedex_db.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
+* **[Diagrama e Documentação Detalhada](doc/DATABASE.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
 * **[DBML](doc/pokedex_db.dbml)**: O código DBML (Database Markup Language) que define o esquema do banco de dados de forma concisa e legível. Pode ser facilmente importado em ferramentas visuais como `dbdiagram.io` para uma representação gráfica interativa.
 * **[SQL](doc/pokedex_db.sql)**: O script SQL completo para a criação das tabelas e índices no seu banco de dados PostgreSQL. Ideal para configuração inicial ou recriação do esquema.
 
