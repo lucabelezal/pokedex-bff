@@ -1,320 +1,20 @@
-package com.pokedex.bff.services
+package com.pokedex.bff.infra
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.slf4j.LoggerFactory
-import org.springframework.boot.CommandLineRunner
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.jpa.repository.JpaRepository
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import com.pokedex.bff.models.* // Importa todas as classes do pacote models
-import com.pokedex.bff.utils.JsonFile // Importa o novo enum JsonFile
+import com.pokedex.bff.entity.*
+import com.pokedex.bff.controller.dtos.*
+import com.pokedex.bff.repository.*
+import com.pokedex.bff.utils.JsonFile
 import java.io.IOException
 
-// DTOs para desserialização do JSON
-data class RegionDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("name")
-    val name: String
-)
-
-data class TypeDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("color")
-    val color: String?
-)
-
-data class EggGroupDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("name")
-    val name: String
-)
-
-data class SpeciesDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("pokemon_number")
-    val pokemonNumber: String?,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("species_en")
-    val speciesEn: String?,
-    @JsonProperty("species_pt")
-    val speciesPt: String?
-)
-
-data class GenerationDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("region_id")
-    val regionId: Long
-)
-
-data class AbilityDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("description")
-    val description: String?,
-    @JsonProperty("introduced_generation_id")
-    val introducedGenerationId: Long
-)
-
-data class StatsDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("total")
-    val total: Int,
-    @JsonProperty("hp")
-    val hp: Int,
-    @JsonProperty("attack")
-    val attack: Int,
-    @JsonProperty("defense")
-    val defense: Int,
-    @JsonProperty("sp_atk")
-    val spAtk: Int,
-    @JsonProperty("sp_def")
-    val spDef: Int,
-    @JsonProperty("speed")
-    val speed: Int
-)
-
-// DTO simplificado para EvolutionChain para armazenar a cadeia completa como JSONB
-data class EvolutionChainDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("chain")
-    val chainData: Any // Usa Any para capturar a estrutura JSON completa da cadeia
-)
-
-// DTO para representar a habilidade dentro do Pokémon, incluindo is_hidden
-data class PokemonAbilityDto(
-    @JsonProperty("ability_id")
-    val abilityId: Long,
-    @JsonProperty("is_hidden")
-    val isHidden: Boolean
-)
-
-data class PokemonDto(
-    @JsonProperty("id")
-    val id: Long,
-    @JsonProperty("number")
-    val number: String,
-    @JsonProperty("name")
-    val name: String,
-    @JsonProperty("description")
-    val description: String,
-    @JsonProperty("height")
-    val height: Double,
-    @JsonProperty("weight")
-    val weight: Double,
-    @JsonProperty("stats_id")
-    val statsId: Long,
-    @JsonProperty("generation_id")
-    val generationId: Long,
-    @JsonProperty("species_id")
-    val speciesId: Long,
-    @JsonProperty("region_id")
-    val regionId: Long?,
-    @JsonProperty("evolution_chain_id")
-    val evolutionChainId: Long,
-    @JsonProperty("gender_rate_value")
-    val genderRateValue: Int,
-    @JsonProperty("egg_cycles")
-    val eggCycles: Int?,
-    @JsonProperty("egg_group_ids")
-    val eggGroupIds: List<Long>,
-    @JsonProperty("type_ids")
-    val typeIds: List<Long>,
-    @JsonProperty("abilities")
-    val abilities: List<PokemonAbilityDto>, // Alterado para PokemonAbilityDto
-    @JsonProperty("sprites")
-    val sprites: SpritesDto
-)
-
-// Classes DTO para Sprites com funções de mapeamento para as classes de modelo
-data class SpritesDto(
-    @JsonProperty("back_default")
-    val backDefault: String?,
-    @JsonProperty("back_female")
-    val backFemale: String?,
-    @JsonProperty("back_shiny")
-    val backShiny: String?,
-    @JsonProperty("back_shiny_female")
-    val backShinyFemale: String?,
-    @JsonProperty("front_default")
-    val frontDefault: String?,
-    @JsonProperty("front_female")
-    val frontFemale: String?,
-    @JsonProperty("front_shiny")
-    val frontShiny: String?,
-    @JsonProperty("front_shiny_female")
-    val frontShinyFemale: String?,
-    @JsonProperty("other")
-    val other: OtherSpritesDto?
-) {
-    fun toModel(): Sprites {
-        return Sprites(
-            backDefault = this.backDefault,
-            backFemale = this.backFemale,
-            backShiny = this.backShiny,
-            backShinyFemale = this.backShinyFemale,
-            frontDefault = this.frontDefault,
-            frontFemale = this.frontFemale,
-            frontShiny = this.frontShiny,
-            frontShinyFemale = this.frontShinyFemale,
-            other = this.other?.toModel()
-        )
-    }
-}
-
-data class OtherSpritesDto(
-    @JsonProperty("dream_world")
-    val dreamWorld: DreamWorldDto?,
-    @JsonProperty("home")
-    val home: HomeDto?,
-    @JsonProperty("official-artwork")
-    val officialArtwork: OfficialArtworkDto?,
-    @JsonProperty("showdown")
-    val showdown: ShowdownDto?
-) {
-    fun toModel(): OtherSprites {
-        return OtherSprites(
-            dreamWorld = this.dreamWorld?.toModel(),
-            home = this.home?.toModel(),
-            officialArtwork = this.officialArtwork?.toModel(),
-            showdown = this.showdown?.toModel()
-        )
-    }
-}
-
-data class DreamWorldDto(
-    @JsonProperty("front_default")
-    val frontDefault: String?,
-    @JsonProperty("front_female")
-    val frontFemale: String?
-) {
-    fun toModel(): DreamWorldSprites {
-        return DreamWorldSprites(
-            frontDefault = this.frontDefault,
-            frontFemale = this.frontFemale
-        )
-    }
-}
-
-data class HomeDto(
-    @JsonProperty("front_default")
-    val frontDefault: String?,
-    @JsonProperty("front_female")
-    val frontFemale: String?,
-    @JsonProperty("front_shiny")
-    val frontShiny: String?,
-    @JsonProperty("front_shiny_female")
-    val frontShinyFemale: String?
-) {
-    fun toModel(): HomeSprites {
-        return HomeSprites(
-            frontDefault = this.frontDefault,
-            frontFemale = this.frontFemale,
-            frontShiny = this.frontShiny,
-            frontShinyFemale = this.frontShinyFemale
-        )
-    }
-}
-
-data class OfficialArtworkDto(
-    @JsonProperty("front_default")
-    val frontDefault: String?,
-    @JsonProperty("front_shiny")
-    val frontShiny: String?
-) {
-    fun toModel(): OfficialArtworkSprites {
-        return OfficialArtworkSprites(
-            frontDefault = this.frontDefault,
-            frontShiny = this.frontShiny
-        )
-    }
-}
-
-data class ShowdownDto(
-    @JsonProperty("back_default")
-    val backDefault: String?,
-    @JsonProperty("back_female")
-    val backFemale: String?,
-    @JsonProperty("back_shiny")
-    val backShiny: String?,
-    @JsonProperty("back_shiny_female")
-    val backShinyFemale: String?,
-    @JsonProperty("front_default")
-    val frontDefault: String?,
-    @JsonProperty("front_female")
-    val frontFemale: String?,
-    @JsonProperty("front_shiny")
-    val frontShiny: String?,
-    @JsonProperty("front_shiny_female")
-    val frontShinyFemale: String?
-) {
-    fun toModel(): ShowdownSprites {
-        return ShowdownSprites(
-            backDefault = this.backDefault,
-            backFemale = this.backFemale,
-            backShiny = this.backShiny,
-            backShinyFemale = this.backShinyFemale,
-            frontDefault = this.frontDefault,
-            frontFemale = this.frontFemale,
-            frontShiny = this.frontShiny,
-            frontShinyFemale = this.frontShinyFemale
-        )
-    }
-}
-
-
-data class WeaknessDto(
-    @JsonProperty("id")
-    val id: Long?,
-    @JsonProperty("pokemon_id")
-    val pokemonId: Long?,
-    @JsonProperty("pokemon_name")
-    val pokemonName: String,
-    @JsonProperty("weaknesses")
-    val weaknesses: List<String>
-)
-
-// Repositórios JPA
-interface RegionRepository : JpaRepository<Region, Long>
-interface TypeRepository : JpaRepository<Type, Long> {
-    fun findByNameIn(names: List<String>): List<Type>
-}
-interface EggGroupRepository : JpaRepository<EggGroup, Long>
-interface GenerationRepository : JpaRepository<Generation, Long>
-interface AbilityRepository : JpaRepository<Ability, Long>
-interface SpeciesRepository : JpaRepository<Species, Long>
-interface StatsRepository : JpaRepository<Stats, Long>
-interface EvolutionChainRepository : JpaRepository<EvolutionChain, Long>
-interface PokemonRepository : JpaRepository<Pokemon, Long> {
-    fun findByName(name: String): Pokemon?
-    fun findByIdIn(ids: List<Long>): List<Pokemon>
-}
-interface PokemonAbilityRepository : JpaRepository<PokemonAbility, Long>
-
-
-// Classe para contar sucessos e erros por operação de importação
-data class ImportCounts(var success: Int = 0, var errors: Int = 0)
-
-// Serviço de Importação
 @Service
-class PokemonImportService(
+class DatabaseSeeder(
     private val regionRepository: RegionRepository,
     private val typeRepository: TypeRepository,
     private val eggGroupRepository: EggGroupRepository,
@@ -327,7 +27,7 @@ class PokemonImportService(
     private val pokemonAbilityRepository: PokemonAbilityRepository,
     private val objectMapper: ObjectMapper
 ) {
-    private val logger = LoggerFactory.getLogger(PokemonImportService::class.java)
+    private val logger = LoggerFactory.getLogger(DatabaseSeeder::class.java)
 
     private fun <T> loadJson(filePath: String, typeReference: TypeReference<T>): T {
         try {
@@ -339,7 +39,6 @@ class PokemonImportService(
         }
     }
 
-    // Retorna ImportCounts para que os totais possam ser acumulados
     private fun <T : Any, D> importSimpleData(
         dtos: List<D>,
         repository: JpaRepository<T, Long>,
@@ -353,14 +52,12 @@ class PokemonImportService(
                 counts.success++
             } catch (e: Exception) {
                 counts.errors++
-                // Log individual error for debugging, but don't stop the process
                 logger.error("Error importing data with value $dto: ${e.message}", e)
             }
         }
         return counts
     }
 
-    // Função auxiliar para logar os resultados de importação com emojis
     private fun logImportResult(entityName: String, counts: ImportCounts) {
         val statusEmoji = if (counts.errors == 0) "✅" else "❌"
         logger.info("  $statusEmoji Importação de $entityName concluída. Sucessos: ${counts.success}, Falhas: ${counts.errors}")
@@ -447,7 +144,6 @@ class PokemonImportService(
         totalSuccess += evolutionChainsCounts.success
         totalErrors += evolutionChainsCounts.errors
 
-        // Pokemons e Weaknesses devem ser importados após a maioria das entidades relacionadas
         logger.info("Iniciando importação de Pokémons...")
         val pokemonDtos = loadJson(JsonFile.POKEMONS.filePath, object : TypeReference<List<PokemonDto>>() {})
         val pokemonsCounts = ImportCounts()
@@ -557,15 +253,5 @@ class PokemonImportService(
             logger.info("  $entityName: $detailStatusEmoji (Sucessos: ${counts.success}, Falhas: ${counts.errors})")
         }
         logger.info("-----------------------------------------")
-    }
-}
-
-@Component
-class DataImportRunner(private val importService: PokemonImportService) : CommandLineRunner {
-    private val logger = LoggerFactory.getLogger(DataImportRunner::class.java)
-
-    override fun run(vararg args: String?) {
-        logger.info("Executing Pokedex data import on application startup...")
-        importService.importAll()
     }
 }
