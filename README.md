@@ -94,7 +94,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
       Este comando cuidará de:
         1.  Iniciar o contêiner PostgreSQL via Docker Compose.
         2.  Aguardar o banco de dados estar pronto.
-        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados CSV.
+        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados dos arquivos jsons na pasta resource.
 
 ### Executando Apenas o Servidor (se o DB já estiver configurado)
 
@@ -134,6 +134,6 @@ make
 
 # Arquitetura do Sistema
 
-Se quiser, posso ajudar também a montar o arquivo [ARCHITECTURE.md](doc/ARCHITECTURE.md) com uma documentação mais detalhada e explicações técnicas. Quer?
+- [Arquitetura](doc/ARCHITECTURE.md)
 
 ---
