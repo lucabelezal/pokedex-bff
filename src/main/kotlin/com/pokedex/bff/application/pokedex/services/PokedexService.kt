@@ -6,13 +6,17 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
+interface PokedexService {
+    fun getPokemons(page: Int, size: Int): PokedexListResponse
+}
+
 @Service
-class PokedexService(
+class PokedexServiceImpl(
     private val pokemonRepository: PokemonRepository
-) {
+): PokedexService {
 
     @Transactional(readOnly = true)
-    fun getPokemons(page: Int, size: Int): PokedexListResponse {
+    override fun getPokemons(page: Int, size: Int): PokedexListResponse {
         val pageable = PageRequest.of(page, size)
         val pageResult = pokemonRepository.findAll(pageable)
 
