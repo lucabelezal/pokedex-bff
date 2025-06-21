@@ -1,6 +1,6 @@
-package com.pokedex.bff.controller.dto
+package com.pokedex.bff.domain.model
 
-data class PokemonListResponse(
+data class PokedexListResponse(
     val pageInfo: PageInfo,
     val search: Search,
     val filters: List<Any>,
