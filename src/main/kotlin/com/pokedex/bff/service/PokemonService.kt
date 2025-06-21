@@ -1,6 +1,12 @@
 package com.pokedex.bff.service
 
-import com.pokedex.bff.controller.dto.*
+import com.pokedex.bff.domain.model.PageInfo
+import com.pokedex.bff.domain.model.PokemonDetail
+import com.pokedex.bff.domain.model.PokemonImage
+import com.pokedex.bff.domain.model.PokemonImageElement
+import com.pokedex.bff.domain.model.PokedexListResponse
+import com.pokedex.bff.domain.model.PokemonType
+import com.pokedex.bff.domain.model.Search
 import com.pokedex.bff.infra.repository.PokemonRepository
 import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
@@ -12,7 +18,7 @@ class PokemonService(
 ) {
 
     @Transactional(readOnly = true)
-    fun getPokemons(page: Int, size: Int): PokemonListResponse {
+    fun getPokemons(page: Int, size: Int): PokedexListResponse {
         val pageable = PageRequest.of(page, size)
         val pageResult = pokemonRepository.findAll(pageable)
 
@@ -39,7 +45,7 @@ class PokemonService(
             )
         }
 
-        return PokemonListResponse(
+        return PokedexListResponse(
             pageInfo = PageInfo(
                 currentPage = pageResult.number,
                 totalPages = pageResult.totalPages,
