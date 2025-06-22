@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  postgres-db:
+  db:
     image: postgres:15-alpine
     env_file: .env
     volumes:
@@ -15,7 +15,7 @@ services:
     secrets:
       - postgres-password
 
-  pokedex-bff:
+  bff:
     image: pokedex-bff:prod
     environment:
       - SPRING_PROFILES_ACTIVE=prod
