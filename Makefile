@@ -23,8 +23,8 @@ help:
 	@echo "  make start-db               - Inicia o banco PostgreSQL com Docker Compose."
 	@echo "  make stop-db                - Para o contêiner do banco."
 	@echo "  make clean-db               - Remove o banco e os volumes (apaga os dados!)."
-	@echo "  make load-data              - Executa o BFF e carrega os dados JSON."
-	@echo "  make run-bff                - Executa o BFF sem importar dados."
+	@echo "  make load-data              - Executa o BFF e carrega os dados JSON com o profile DEV.."
+	@echo "  make run-bff                - Executa o BFF sem importar dados com o profile DEV.."
 	@echo "  make clean-bff              - Executa './gradlew clean'."
 	@echo ""
 	@echo "  make clean-all              - Para tudo, limpa DB, Gradle e contêineres."
@@ -60,11 +60,11 @@ clean-bff:
 	./gradlew clean
 
 run-bff:
-	@echo "--- Iniciando o BFF ---"
-	./gradlew bootRun
+	@echo "--- Iniciando o BFF no profile DEV ---"
+	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 load-data: start-db
-	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---"
+	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
@@ -77,8 +77,7 @@ dev-setup:
 	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
 	sleep 5
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---"
-	SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
+	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
@@ -110,7 +109,7 @@ dev-setup-for-windows: check-windows-env
 	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
 	sleep 5
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---"
+	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
 	gradlew.bat bootRun --args='--spring.profiles.active=dev'
 
 
