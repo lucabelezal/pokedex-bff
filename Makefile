@@ -78,6 +78,7 @@ dev-setup:
 	sleep 5
 	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
 	@echo "--- Iniciando o BFF e carregando dados JSON no DB ---"
+	SPRING_PROFILES_ACTIVE=dev ./gradlew bootRun
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
