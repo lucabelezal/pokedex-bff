@@ -279,7 +279,7 @@ graph TD
         IF_Controllers[Controllers]
         IF_Mappers[Mappers]
         IF_Validators[Validators]
-        IF_Views[Views (Opcional)]
+        IF_Views[Views]
     end
 
     IF_Layer --> APP_Layer[Application]
@@ -288,12 +288,12 @@ graph TD
         direction LR
         APP_Commands[Commands & Handlers]
         APP_Queries[Queries & Handlers]
-        APP_Services[App Services (Orquestração)]
+        APP_Services[App Services]
         APP_DTOs[DTOs]
     end
 
     APP_Layer --> DOM_Layer[Domain]
-    APP_Layer --> INFRA_Layer[Infrastructure (para queries diretas / read models)]
+    APP_Layer --> INFRA_Layer[Infrastructure]
 
     subgraph "Domain"
         direction LR
@@ -301,20 +301,20 @@ graph TD
         DOM_Entities[Entities]
         DOM_VOs[Value Objects]
         DOM_Events[Domain Events]
-        DOM_Repositories[Repositories (Interfaces)]
+        DOM_Repositories[Repositories]
         DOM_Factories[Factories]
         DOM_Specifications[Specifications]
         DOM_Exceptions[Domain Exceptions]
     end
 
-    DOM_Layer --> INFRA_Layer[Infrastructure (para implementações de repositório e event handlers)]
+    DOM_Layer --> INFRA_Layer[Infrastructure]
 
     subgraph "Infrastructure"
         direction LR
-        INFRA_Persistence[Persistence (ORM, Migrations, Seeders)]
+        INFRA_Persistence[Persistence]
         INFRA_RepositoriesImpl[Repositories Impl.]
-        INFRA_EventsBus[Event Handling (Bus, Consumers)]
-        INFRA_Services_Clients[Infra Services (Clients p/ Externos)]
+        INFRA_EventsBus[Event Handling]
+        INFRA_Services_Clients[Infra Services]
         INFRA_Configs[Configurations]
         INFRA_Utils[Utils Infra]
     end
@@ -333,7 +333,7 @@ graph TD
         SHARED_Utils_Generic[Utils Genéricos]
         SHARED_Constants[Constants]
         SHARED_Exceptions_Global[Global Exceptions / Base]
-        SHARED_Events_Integration[Integration Event Definitions (Opcional)]
+        SHARED_Events_Integration[Integration Event Definitions]
     end
 
     TEST_Layer[Tests]
@@ -349,9 +349,6 @@ graph TD
         TEST_Acceptance[Acceptance Tests]
     end
 
-    note "Fluxo de Comando: Interfaces -> Application (Commands) -> Domain -> Infrastructure (Repo Impl.) -> DB"
-    note "Fluxo de Consulta (CQRS): Interfaces -> Application (Queries) -> Infrastructure (Persistence/Read Models) -> DB"
-    note "Eventos de Domínio: Domain (dispara) -> Infrastructure (Event Bus) -> Outros Listeners (Application/Infrastructure)"
 ```
 
 ---
