@@ -2,29 +2,10 @@ package com.pokedex.bff.infrastructure.seeder.services
 
 import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.pokedex.bff.domain.pokedex.repositories.AbilityRepository
-import com.pokedex.bff.domain.pokedex.repositories.EggGroupRepository
-import com.pokedex.bff.domain.pokedex.repositories.EvolutionChainRepository
-import com.pokedex.bff.domain.pokedex.repositories.GenerationRepository
-import com.pokedex.bff.domain.pokedex.repositories.PokemonAbilityRepository
-import com.pokedex.bff.domain.pokedex.repositories.PokemonRepository
-import com.pokedex.bff.domain.pokedex.repositories.RegionRepository
-import com.pokedex.bff.domain.pokedex.repositories.SpeciesRepository
-import com.pokedex.bff.domain.pokedex.repositories.StatsRepository
-import com.pokedex.bff.domain.pokedex.repositories.TypeRepository
-import com.pokedex.bff.infrastructure.persistence.entities.*
-import com.pokedex.bff.infrastructure.seeder.dto.AbilityDto
-import com.pokedex.bff.infrastructure.seeder.dto.EggGroupDto
-import com.pokedex.bff.infrastructure.seeder.dto.EvolutionChainDto
-import com.pokedex.bff.infrastructure.seeder.dto.GenerationDto
-import com.pokedex.bff.infrastructure.seeder.dto.PokemonDto
-import com.pokedex.bff.infrastructure.seeder.dto.RegionDto
-import com.pokedex.bff.infrastructure.seeder.dto.SpeciesDto
-import com.pokedex.bff.infrastructure.seeder.dto.StatsDto
-import com.pokedex.bff.infrastructure.seeder.dto.TypeDto
-import com.pokedex.bff.infrastructure.seeder.dto.WeaknessDto
-import com.pokedex.bff.infrastructure.utils.ImportCounts
-import com.pokedex.bff.infrastructure.utils.JsonFile
+import com.pokedex.bff.domain.entities.*
+import com.pokedex.bff.domain.repositories.*
+import com.pokedex.bff.application.dto.seeder.*
+import com.pokedex.bff.infrastructure.utils.*
 import org.slf4j.LoggerFactory
 import org.springframework.core.io.ClassPathResource
 import org.springframework.data.jpa.repository.JpaRepository
@@ -144,7 +125,12 @@ class DatabaseSeeder(
         val abilitiesCounts = importSimpleData(loadJson(JsonFile.ABILITIES.filePath, object : TypeReference<List<AbilityDto>>() {}), abilityRepository) { dto ->
             val generation = allGenerationsMapForAbilities[dto.introducedGenerationId]
                 ?: throw IllegalArgumentException("Generation with ID ${dto.introducedGenerationId} not found for Ability ${dto.name}")
-            AbilityEntity(id = dto.id, name = dto.name, description = dto.description, introducedGeneration = generation)
+            AbilityEntity(
+                id = dto.id,
+                name = dto.name,
+                description = dto.description,
+                introducedGeneration = generation
+            )
         }
         importResults["Habilidades"] = abilitiesCounts
         logImportResult("Habilidades", abilitiesCounts)

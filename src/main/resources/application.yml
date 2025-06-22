@@ -1,6 +1,8 @@
 spring:
   application:
     name: pokedex-bff
+  profiles:
+    active: dev # dev prod
 
 server:
   port: 8080
