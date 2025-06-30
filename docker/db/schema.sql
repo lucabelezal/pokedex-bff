@@ -76,6 +76,8 @@ CREATE TABLE pokemons (
     weight NUMERIC(6, 2),
     description TEXT,
     sprites JSONB,
+    gender_male NUMERIC(4, 1),
+    gender_female NUMERIC(4, 1),
     gender_rate_value INT,
     egg_cycles INT,
     stats_id BIGINT UNIQUE, -- UNIQUE para relação One-to-One
