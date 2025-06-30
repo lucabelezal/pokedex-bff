@@ -30,7 +30,27 @@ help:
 	@echo "  make clean-all              - Para tudo, limpa DB, Gradle e contêineres."
 	@echo "  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'."
 	@echo "  make deep-clean-gradle      - Limpa caches e artefatos do Gradle."
+	@echo ""
+	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
 	@echo "==================================================================="
+
+# ==============================================================================
+# Documentação da API (Swagger)
+# ==============================================================================
+SWAGGER_URL = http://localhost:8080/swagger-ui/index.html
+
+open-swagger:
+	@echo "--- Abrindo Swagger UI no navegador: $(SWAGGER_URL) ---"
+	@if command -v xdg-open > /dev/null; then \
+		xdg-open $(SWAGGER_URL); \
+	elif command -v open > /dev/null; then \
+		open $(SWAGGER_URL); \
+	elif command -v start > /dev/null; then \
+		start $(SWAGGER_URL); \
+	else \
+		echo "Não foi possível detectar um comando para abrir URLs automaticamente."; \
+		echo "Por favor, abra manualmente: $(SWAGGER_URL)"; \
+	fi
 
 # ==============================================================================
 # Banco de Dados
