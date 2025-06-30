@@ -212,6 +212,8 @@ class DatabaseSeeder(
                     height = dto.height,
                     weight = dto.weight,
                     genderRateValue = dto.genderRateValue,
+                    genderMale = dto.gender?.male, // Mapeando o novo campo
+                    genderFemale = dto.gender?.female, // Mapeando o novo campo
                     eggCycles = dto.eggCycles,
                     stats = stats,
                     generation = generation,

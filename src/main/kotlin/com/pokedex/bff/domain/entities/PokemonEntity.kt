@@ -45,6 +45,12 @@ data class PokemonEntity(
     @Column(name = "gender_rate_value")
     var genderRateValue: Int? = null,
 
+    @Column(name = "gender_male")
+    var genderMale: Float? = null,
+
+    @Column(name = "gender_female")
+    var genderFemale: Float? = null,
+
     @Column(name = "egg_cycles")
     var eggCycles: Int? = null,
 
