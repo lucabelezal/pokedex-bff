@@ -4,6 +4,7 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+	jacoco
 }
 
 group = "com.pokedex"
@@ -46,7 +47,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
 		exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
 	}
-	testImplementation("io.mockk:mockk:1.13.9")
+	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
+	testImplementation(kotlin("test-junit5"))
+	// testImplementation("io.mockk:mockk:1.13.9")
 }
 
 kotlin {
@@ -66,4 +69,36 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+jacoco {
+	toolVersion = "0.8.11"
+}
+
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
+
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.required.set(true)
+		html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
+	}
+
+	classDirectories.setFrom(
+		fileTree("${buildDir}/classes/kotlin/main") {
+			exclude(
+				"**/com/pokedex/bff/PokedexBffApplication*",
+				"**/com/pokedex/bff/application/dto/**",
+				"**/com/pokedex/bff/domain/entities/**",
+				"**/com/pokedex/bff/infrastructure/configuration/**",
+			)
+		}
+	)
+
+	executionData.setFrom(fileTree(project.buildDir) {
+		include("jacoco/test.exec")
+	})
+
+	sourceSets(sourceSets.main.get())
 }
