@@ -61,6 +61,7 @@ dependencies {
 	}
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 	testImplementation(kotlin("test-junit5"))
+	testImplementation("io.mockk:mockk:1.13.10")
 }
 
 allOpen {
