@@ -1,10 +1,15 @@
 plugins {
+	// Core plugins
+	id("jacoco")
+
+	// Spring
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
+
+	// Kotlin
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
-	jacoco
 }
 
 group = "com.pokedex"
@@ -12,7 +17,14 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion.set(JavaLanguageVersion.of(21))
+	}
+}
+
+kotlin {
+	jvmToolchain(21)
+	compilerOptions {
+		freeCompilerArgs.add("-Xjsr305=strict")
 	}
 }
 
@@ -31,7 +43,7 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-	// CSV Processing
+	// CSV
 	implementation("org.apache.commons:commons-csv:1.10.0")
 
 	// Database
@@ -49,17 +61,7 @@ dependencies {
 	}
 	testImplementation("org.mockito.kotlin:mockito-kotlin:5.2.1")
 	testImplementation(kotlin("test-junit5"))
-	// testImplementation("io.mockk:mockk:1.13.9")
 }
-
-kotlin {
-	jvmToolchain(21)
-	compilerOptions {
-		freeCompilerArgs.add("-Xjsr305=strict")
-	}
-}
-
-// Configuração para entidades JPA
 
 allOpen {
 	annotation("jakarta.persistence.Entity")
@@ -67,7 +69,7 @@ allOpen {
 	annotation("jakarta.persistence.Embeddable")
 }
 
-tasks.withType<Test> {
+tasks.test {
 	useJUnitPlatform()
 }
 
@@ -86,7 +88,7 @@ tasks.jacocoTestReport {
 	}
 
 	classDirectories.setFrom(
-		fileTree("${buildDir}/classes/kotlin/main") {
+		fileTree(layout.buildDirectory.dir("classes/kotlin/main").get().asFile) {
 			exclude(
 				"**/com/pokedex/bff/PokedexBffApplication*",
 				"**/com/pokedex/bff/application/dto/**",
@@ -96,9 +98,11 @@ tasks.jacocoTestReport {
 		}
 	)
 
-	executionData.setFrom(fileTree(project.buildDir) {
-		include("jacoco/test.exec")
-	})
+	executionData.setFrom(
+		fileTree(layout.buildDirectory.get().asFile) {
+			include("jacoco/test.exec")
+		}
+	)
 
 	sourceSets(sourceSets.main.get())
 }
