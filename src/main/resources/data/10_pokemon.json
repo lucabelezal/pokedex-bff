@@ -11,6 +11,10 @@
         "species_id": 1,
         "region_id": 1,
         "evolution_chain_id": 1,
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
+        },
         "gender_rate_value": 1,
         "egg_cycles": 20,
         "egg_group_ids": [
@@ -135,6 +139,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -204,6 +212,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -269,6 +281,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -337,6 +353,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -405,6 +425,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -474,6 +498,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -539,6 +567,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -604,6 +636,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -672,6 +708,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -740,6 +780,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -808,6 +852,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -872,6 +920,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 87.5,
+            "female": 12.5
         }
     },
     {
@@ -939,6 +991,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1002,6 +1058,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1070,6 +1130,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1138,6 +1202,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1202,6 +1270,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1270,6 +1342,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1334,6 +1410,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1403,6 +1483,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1472,6 +1556,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1541,6 +1629,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1609,6 +1701,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     },
     {
@@ -1677,6 +1773,10 @@
                     "front_shiny_female": null
                 }
             }
+        },
+        "gender": {
+            "male": 50.0,
+            "female": 50.0
         }
     }
 ]
