@@ -27,8 +27,8 @@ data class PokemonDto(
     val evolutionChainId: Long,
     @JsonProperty("gender_rate_value")
     val genderRateValue: Int,
-    @JsonProperty("gender") // Novo campo adicionado
-    val gender: GenderRateSeedDTO?, // Pode ser nulo para Pokémon sem gênero
+    @JsonProperty("gender")
+    val gender: GenderRateDTO?,
     @JsonProperty("egg_cycles")
     val eggCycles: Int?,
     @JsonProperty("egg_group_ids")
