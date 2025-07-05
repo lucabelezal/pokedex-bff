@@ -29,9 +29,9 @@ Os dados utilizados para popular o banco de dados local e alimentar as respostas
 
 O Pokedex BFF utiliza um banco de dados PostgreSQL para armazenar os dados de Pokémon de forma estruturada e relacional. A documentação completa do esquema do banco de dados é essencial para entender como os dados são organizados e relacionados.
 
-* **[Diagrama e Documentação Detalhada](doc/pokedex_db.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
-* **[DBML](doc/pokedex_db.dbml)**: O código DBML (Database Markup Language) que define o esquema do banco de dados de forma concisa e legível. Pode ser facilmente importado em ferramentas visuais como `dbdiagram.io` para uma representação gráfica interativa.
-* **[SQL](doc/pokedex_db.sql)**: O script SQL completo para a criação das tabelas e índices no seu banco de dados PostgreSQL. Ideal para configuração inicial ou recriação do esquema.
+* **[Diagrama e Documentação Detalhada](doc/DATABASE.md)**: Este arquivo Markdown é o ponto de partida para compreender a arquitetura do banco de dados. Ele inclui um diagrama ERD (Entidade-Relacionamento) interativo (gerado com Mermaid), descrições de cada tabela, suas colunas, tipos de dados e os relacionamentos entre elas. **Altamente recomendado para uma compreensão profunda da estrutura de dados.**
+* **[DBML](doc/schema/pokedex_db.dbml)**: O código DBML (Database Markup Language) que define o esquema do banco de dados de forma concisa e legível. Pode ser facilmente importado em ferramentas visuais como `dbdiagram.io` para uma representação gráfica interativa.
+* **[SQL](doc/schema/pokedex_db.sql)**: O script SQL completo para a criação das tabelas e índices no seu banco de dados PostgreSQL. Ideal para configuração inicial ou recriação do esquema.
 
 ---
 
@@ -94,7 +94,7 @@ Certifique-se de ter as seguintes ferramentas instaladas:
       Este comando cuidará de:
         1.  Iniciar o contêiner PostgreSQL via Docker Compose.
         2.  Aguardar o banco de dados estar pronto.
-        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados CSV.
+        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados dos arquivos jsons na pasta resource.
 
 ### Executando Apenas o Servidor (se o DB já estiver configurado)
 
@@ -130,3 +130,20 @@ make
   make deep-clean-gradle      - Limpa caches e artefatos do Gradle.
 ===================================================================
 ```
+---
+
+## Documentação da API (Swagger)
+
+A documentação interativa da API do Pokedex BFF está disponível através do Swagger UI. Você pode explorar os endpoints, visualizar os modelos de dados e até mesmo testar as chamadas diretamente pelo navegador.
+
+*   **Link para o Swagger UI:** [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
+Certifique-se de que a aplicação Pokedex BFF esteja em execução para acessar a documentação.
+
+---
+
+# Arquitetura do Sistema
+
+- [Arquitetura](doc/ARCHITECTURE.md)
+
+---
