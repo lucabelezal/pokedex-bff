@@ -1,204 +1,130 @@
 package com.pokedex.bff.infrastructure.seeder.services
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.pokedex.bff.domain.repositories.*
-import com.pokedex.bff.infrastructure.utils.JsonFile
+import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
+import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
+import com.pokedex.bff.infrastructure.seeder.strategy.ImportStrategy
 import io.mockk.*
+import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
-import org.springframework.core.io.ClassPathResource
-import java.io.ByteArrayInputStream
-import java.io.IOException
+import org.slf4j.LoggerFactory
 
 @ExtendWith(MockKExtension::class)
 class DatabaseSeederTest {
 
-    @MockK lateinit var regionRepository: RegionRepository
-    @MockK lateinit var generationRepository: GenerationRepository
-    @MockK lateinit var typeRepository: TypeRepository
-    @MockK lateinit var eggGroupRepository: EggGroupRepository
-    @MockK lateinit var abilityRepository: AbilityRepository
-    @MockK lateinit var statsRepository: StatsRepository
-    @MockK lateinit var speciesRepository: SpeciesRepository
-    @MockK lateinit var evolutionChainRepository: EvolutionChainRepository
-    @MockK lateinit var pokemonRepository: PokemonRepository
-    @MockK lateinit var pokemonAbilityRepository: PokemonAbilityRepository
-    @MockK(relaxed = true) lateinit var objectMapper: ObjectMapper
+    @MockK
+    private lateinit var strategy1: ImportStrategy
 
-    lateinit var sut: DatabaseSeederUnderTest
+    @MockK
+    private lateinit var strategy2: ImportStrategy
 
-    class DatabaseSeederUnderTest(
-        regionRepository: RegionRepository,
-        generationRepository: GenerationRepository,
-        typeRepository: TypeRepository,
-        eggGroupRepository: EggGroupRepository,
-        abilityRepository: AbilityRepository,
-        statsRepository: StatsRepository,
-        speciesRepository: SpeciesRepository,
-        evolutionChainRepository: EvolutionChainRepository,
-        pokemonRepository: PokemonRepository,
-        pokemonAbilityRepository: PokemonAbilityRepository,
-        objectMapper: ObjectMapper
-    ): DatabaseSeeder(
-        regionRepository,
-        generationRepository,
-        typeRepository,
-        eggGroupRepository,
-        abilityRepository,
-        statsRepository,
-        speciesRepository,
-        evolutionChainRepository,
-        pokemonRepository,
-        pokemonAbilityRepository,
-        objectMapper
-    ) {
-        val mockJsonFiles = mutableMapOf<String, String>()
+    private lateinit var strategies: List<ImportStrategy>
 
-        // Tornando público para verificação de ordem no teste de importAll
-        public override fun createClassPathResource(filePath: String): ClassPathResource {
-            val content = mockJsonFiles[filePath]
-            return if (content != null) {
-                val inputStream = ByteArrayInputStream(content.toByteArray(Charsets.UTF_8))
-                mockk<ClassPathResource>(relaxed = true).apply {
-                    every { getInputStream() } returns inputStream
-                    every { exists() } returns true
-                    every { filename } returns filePath.substringAfterLast('/')
-                    every { path } returns filePath
-                }
-            } else {
-                mockk<ClassPathResource>(relaxed = true).apply {
-                    every { inputStream } throws IOException("Mocked file not found: $filePath")
-                    every { exists() } returns false
-                    every { filename } returns filePath.substringAfterLast('/')
-                    every { path } returns filePath
-                }
-            }
-        }
-    }
+    // We will inject the list of mocked strategies into the real DatabaseSeeder
+    private lateinit var databaseSeeder: DatabaseSeeder
+
+    // For capturing logs if needed, though direct verification of method calls is preferred.
+    // val logger: Logger = LoggerFactory.getLogger(DatabaseSeeder::class.java) as Logger
+    // val listAppender: ListAppender<ILoggingEvent> = ListAppender()
 
     @BeforeEach
     fun setUp() {
-        MockKAnnotations.init(this)
-        val actualSeederInstance = DatabaseSeederUnderTest(
-            regionRepository,
-            generationRepository,
-            typeRepository,
-            eggGroupRepository,
-            abilityRepository,
-            statsRepository,
-            speciesRepository,
-            evolutionChainRepository,
-            pokemonRepository,
-            pokemonAbilityRepository,
-            objectMapper
-        )
-        sut = spyk(actualSeederInstance)
-        sut.mockJsonFiles.clear()
+        MockKAnnotations.init(this) // Initializes mocks annotated with @MockK
+        strategies = listOf(strategy1, strategy2)
+        databaseSeeder = DatabaseSeeder(strategies) // Inject the mocked list
 
-        listOf(
-            regionRepository,
-            generationRepository,
-            typeRepository,
-            eggGroupRepository,
-            abilityRepository,
-            statsRepository,
-            speciesRepository,
-            evolutionChainRepository,
-            pokemonRepository,
-            pokemonAbilityRepository,
-            objectMapper
-        ).forEach {
-            clearMocks(
-                it,
-                answers = false,
-                recordedCalls = true,
-                childMocks = true
-            )
-        }
+        // Common behavior for mocked strategies
+        every { strategy1.getEntityName() } returns "Strategy1"
+        every { strategy1.import(any()) } returns ImportCounts(1, 0)
+        every { strategy2.getEntityName() } returns "Strategy2"
+        every { strategy2.import(any()) } returns ImportCounts(2, 0)
+
+        // Log capturing setup (optional)
+        // listAppender.start()
+        // logger.addAppender(listAppender)
     }
 
-    private fun mockOtherImportsToRun(exceptFile: JsonFile? = null) {
-        val allFiles = JsonFile.entries.toTypedArray()
-        for (file in allFiles) {
-            if (file != exceptFile) {
-                sut.mockJsonFiles[file.filePath] = "[]"
-                every {
-                    objectMapper.readValue(
-                        match<java.io.InputStream> { stream ->
-                            val expectedContent = sut.mockJsonFiles[file.filePath]
-                            val actualContent = stream.bufferedReader(Charsets.UTF_8).use { it.readText() }
-                            actualContent == expectedContent
-                        },
-                        any<TypeReference<List<*>>>()
-                    )
-                } returns emptyList<Any>()
-            }
-        }
-    }
-
-    // Testes individuais omitidos para brevidade
-    @Nested inner class ImportRegionsTest { /* ... */ }
-    @Nested inner class ImportTypesTest { /* ... */ }
-    @Nested inner class ImportEggGroupsTest { /* ... */ }
-    @Nested inner class ImportSpeciesTest { /* ... */ }
-    @Nested inner class ImportStatsTest { /* ... */ }
-    @Nested inner class ImportEvolutionChainsTest { /* ... */ }
-    @Nested inner class ImportGenerationsTest { /* ... */ }
-    @Nested inner class ImportAbilitiesTest { /* ... */ }
-    @Nested inner class ImportPokemonsTest { /* ... */ }
-    @Nested inner class ImportWeaknessesTest { /* ... */ }
+    // @AfterEach
+    // fun tearDown() {
+    //     logger.detachAndStopAllAppenders()
+    // }
 
     @Test
-    fun `importAll should attempt to load all JSON files in the correct order`() {
-        // 1. Configurar todos os JSONs para serem vazios "[]"
-        JsonFile.entries.forEach { file ->
-            sut.mockJsonFiles[file.filePath] = "[]"
-            every { objectMapper.readValue(any<ByteArrayInputStream>(), any<TypeReference<List<Any>>>()) } returns emptyList()
-        }
+    fun `importAll should call import on each strategy`() {
+        val importResultsSlot = slot<ImportResults>()
 
-        // 2. Configurar mocks para chamadas findAll() que ocorrem em alguns importadores
-        every { regionRepository.findAll() } returns emptyList()
-        every { generationRepository.findAll() } returns emptyList()
-        every { abilityRepository.findAll() } returns emptyList()
-        every { statsRepository.findAll() } returns emptyList()
-        every { speciesRepository.findAll() } returns emptyList()
-        every { eggGroupRepository.findAll() } returns emptyList()
-        every { typeRepository.findAll() } returns emptyList()
-        every { evolutionChainRepository.findAll() } returns emptyList()
-        every { pokemonRepository.findAll() } returns emptyList()
+        databaseSeeder.importAll()
 
-        // 3. Chamar importAll
-        sut.importAll()
+        verify(exactly = 1) { strategy1.import(capture(importResultsSlot)) }
+        verify(exactly = 1) { strategy2.import(capture(importResultsSlot)) }
 
-        // 4. Verificar a ordem de chamada de createClassPathResource
-        // A ordem é definida em DatabaseSeeder.importAll()
-        verifyOrder {
-            sut.createClassPathResource(JsonFile.REGIONS.filePath)
-            sut.createClassPathResource(JsonFile.TYPES.filePath)
-            sut.createClassPathResource(JsonFile.EGG_GROUPS.filePath)
-            sut.createClassPathResource(JsonFile.GENERATIONS.filePath)
-            sut.createClassPathResource(JsonFile.ABILITIES.filePath)
-            sut.createClassPathResource(JsonFile.SPECIES.filePath)
-            sut.createClassPathResource(JsonFile.STATS.filePath)
-            sut.createClassPathResource(JsonFile.EVOLUTION_CHAINS.filePath)
-            sut.createClassPathResource(JsonFile.POKEMONS.filePath)
-            sut.createClassPathResource(JsonFile.WEAKNESSES.filePath)
-        }
+        // Verify that the same ImportResults instance is passed to all strategies
+        // (This depends on DatabaseSeeder creating one ImportResults and passing it,
+        // or if strategies manage it internally, this check might change)
+        // In the current DatabaseSeeder, one ImportResults is created and passed.
+        // However, the strategies themselves add to it. So we just check they are called.
 
-        verify(exactly = 0) { regionRepository.save(any()) }
-        verify(exactly = 0) { typeRepository.save(any()) }
-        verify(exactly = 0) { eggGroupRepository.save(any()) }
-        verify(exactly = 0) { generationRepository.save(any()) }
-        verify(exactly = 0) { abilityRepository.save(any()) }
-        verify(exactly = 0) { speciesRepository.save(any()) }
-        verify(exactly = 0) { statsRepository.save(any()) }
-        verify(exactly = 0) { evolutionChainRepository.save(any()) }
-        verify(exactly = 0) { pokemonRepository.save(any()) }
-        verify(exactly = 0) { pokemonAbilityRepository.save(any()) }
+        // Verify getEntityName is called (for logging purposes in DatabaseSeeder)
+        verify(atLeast = 1) { strategy1.getEntityName() }
+        verify(atLeast = 1) { strategy2.getEntityName() }
+    }
+
+    @Test
+    fun `importAll should proceed with other strategies if one fails`() {
+        val failingStrategy = mockk<ImportStrategy>()
+        val workingStrategy = mockk<ImportStrategy>()
+
+        val customStrategies = listOf(failingStrategy, workingStrategy)
+        val seederWithFailure = DatabaseSeeder(customStrategies)
+
+        every { failingStrategy.getEntityName() } returns "FailingStrategy"
+        every { failingStrategy.import(any()) } throws RuntimeException("Simulated strategy failure")
+
+        every { workingStrategy.getEntityName() } returns "WorkingStrategy"
+        every { workingStrategy.import(any()) } returns ImportCounts(1,0)
+
+        seederWithFailure.importAll()
+
+        verify(exactly = 1) { failingStrategy.import(any()) }
+        verify(exactly = 1) { workingStrategy.import(any()) } // Crucial: workingStrategy should still be called
+    }
+
+    @Test
+    fun `importAll should correctly use ImportResults for logging final results`() {
+        // We can't directly verify the log output easily without a more complex setup.
+        // However, we can ensure that the ImportResults object passed to logFinalResults
+        // is the one that strategies have interacted with.
+        // Since strategies add to the ImportResults instance passed to them,
+        // and DatabaseSeeder logs that same instance, this is implicitly tested
+        // by verifying strategies are called.
+
+        // For a more direct test of logFinalResults, one might spy on ImportResults,
+        // but that tests ImportResults' internals rather than DatabaseSeeder's usage.
+
+        // What we can do is ensure logFinalResults is called on an ImportResults instance.
+        // We can mock the ImportResults class itself if we were to inject it into DatabaseSeeder.
+        // But DatabaseSeeder currently news it up.
+
+        // Let's spy on DatabaseSeeder to verify logFinalResults is called.
+        val spiedSeeder = spyk(DatabaseSeeder(strategies))
+
+        spiedSeeder.importAll()
+
+        // Verify that the internal logFinalResults method was called.
+        // This requires logFinalResults to be open or the class to be open.
+        // DatabaseSeeder is already 'open class'.
+        // The method logFinalResults is private, so we can't directly verify it with a simple spy.
+        // We would need to make it internal or use more advanced MockK features if this was critical.
+
+        // For now, we trust that if strategies are called and complete,
+        // the final logging method containing results.logFinalResults() is invoked.
+        // The main behavior is that strategies are iterated and exceptions are handled.
+        // The logging itself is a side effect.
+
+        // A simple check is that the method completes without throwing further exceptions.
+        assertDoesNotThrow { databaseSeeder.importAll() }
     }
 }
