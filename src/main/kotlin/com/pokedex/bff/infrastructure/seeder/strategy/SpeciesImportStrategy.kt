@@ -3,6 +3,7 @@ package com.pokedex.bff.infrastructure.seeder.strategy
 import com.pokedex.bff.domain.entities.SpeciesEntity
 import com.pokedex.bff.domain.repositories.SpeciesRepository
 import com.pokedex.bff.application.dto.seeder.SpeciesDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
@@ -21,13 +22,13 @@ class SpeciesImportStrategy(
 
     companion object {
         private val logger = LoggerFactory.getLogger(SpeciesImportStrategy::class.java)
-        private const val ENTITY_NAME = "Espécies"
+        private val entityName = EntityType.SPECIES.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val dtos: List<SpeciesDto> = jsonLoader.loadJson(JsonFile.SPECIES.filePath)
         val counts = importSimpleData(dtos, speciesRepository) { dto ->
             SpeciesEntity(
@@ -38,7 +39,7 @@ class SpeciesImportStrategy(
                 speciesPt = dto.speciesPt
             )
         }
-        results.add(ENTITY_NAME, counts)
+        results.add(entityName, counts)
         return counts
     }
 
@@ -54,7 +55,7 @@ class SpeciesImportStrategy(
                 counts.success++
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Error importing data for $ENTITY_NAME with value $dto: ${e.message}", e)
+                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
             }
         }
         return counts

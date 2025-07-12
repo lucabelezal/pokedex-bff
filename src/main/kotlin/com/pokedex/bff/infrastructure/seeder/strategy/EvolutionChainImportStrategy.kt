@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.pokedex.bff.domain.entities.EvolutionChainEntity
 import com.pokedex.bff.domain.repositories.EvolutionChainRepository
 import com.pokedex.bff.application.dto.seeder.EvolutionChainDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
@@ -18,24 +19,24 @@ import org.springframework.stereotype.Service
 class EvolutionChainImportStrategy(
     private val evolutionChainRepository: EvolutionChainRepository,
     private val jsonLoader: JsonLoader,
-    private val objectMapper: ObjectMapper // Needed for converting chainData to JSON string
+    private val objectMapper: ObjectMapper
 ) : ImportStrategy {
 
     companion object {
         private val logger = LoggerFactory.getLogger(EvolutionChainImportStrategy::class.java)
-        private const val ENTITY_NAME = "Cadeias de Evolução"
+        private val entityName = EntityType.EVOLUTION_CHAIN.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val dtos: List<EvolutionChainDto> = jsonLoader.loadJson(JsonFile.EVOLUTION_CHAINS.filePath)
         val counts = importSimpleData(dtos, evolutionChainRepository) { dto ->
             val chainDataJsonString = objectMapper.writeValueAsString(dto.chainData)
             EvolutionChainEntity(id = dto.id, chainData = chainDataJsonString)
         }
-        results.add(ENTITY_NAME, counts)
+        results.add(entityName, counts)
         return counts
     }
 
@@ -51,7 +52,7 @@ class EvolutionChainImportStrategy(
                 counts.success++
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Error importing data for $ENTITY_NAME with value $dto: ${e.message}", e)
+                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
             }
         }
         return counts

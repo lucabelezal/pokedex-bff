@@ -4,6 +4,7 @@ import com.pokedex.bff.domain.entities.PokemonAbilityEntity
 import com.pokedex.bff.domain.entities.PokemonEntity
 import com.pokedex.bff.domain.repositories.*
 import com.pokedex.bff.application.dto.seeder.PokemonDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.dto.PokemonImportRelations
@@ -33,18 +34,17 @@ class PokemonImportStrategy(
 
     companion object {
         private val logger = LoggerFactory.getLogger(PokemonImportStrategy::class.java)
-        private const val ENTITY_NAME = "Pokémons"
+        private val entityName = EntityType.POKEMON.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
-    @Transactional // Pokemons and their abilities should be saved in one transaction per pokemon
+    @Transactional
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val dtos: List<PokemonDto> = jsonLoader.loadJson(JsonFile.POKEMONS.filePath)
         val counts = ImportCounts()
 
-        // Preload all required relations once
         val relations = PokemonImportRelations(
             regions = regionRepository.findAll().associateBy { it.id },
             stats = statsRepository.findAll().associateBy { it.id },
@@ -69,7 +69,7 @@ class PokemonImportStrategy(
             }
         }
 
-        results.add(ENTITY_NAME, counts)
+        results.add(entityName, counts)
         return counts
     }
 

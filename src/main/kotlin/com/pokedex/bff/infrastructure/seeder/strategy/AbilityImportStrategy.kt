@@ -4,6 +4,7 @@ import com.pokedex.bff.domain.entities.AbilityEntity
 import com.pokedex.bff.domain.repositories.AbilityRepository
 import com.pokedex.bff.domain.repositories.GenerationRepository
 import com.pokedex.bff.application.dto.seeder.AbilityDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.exception.DataImportException
@@ -18,19 +19,19 @@ import org.springframework.stereotype.Service
 @Order(5)
 class AbilityImportStrategy(
     private val abilityRepository: AbilityRepository,
-    private val generationRepository: GenerationRepository, // Dependency for ability
+    private val generationRepository: GenerationRepository,
     private val jsonLoader: JsonLoader
 ) : ImportStrategy {
 
     companion object {
         private val logger = LoggerFactory.getLogger(AbilityImportStrategy::class.java)
-        private const val ENTITY_NAME = "Habilidades"
+        private val entityName = EntityType.ABILITY.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val generationsMap = generationRepository.findAll().associateBy { it.id }
         val dtos: List<AbilityDto> = jsonLoader.loadJson(JsonFile.ABILITIES.filePath)
 
@@ -44,7 +45,7 @@ class AbilityImportStrategy(
                 introducedGeneration = generation
             )
         }
-        results.add(ENTITY_NAME, counts)
+        results.add(entityName, counts)
         return counts
     }
 
@@ -60,10 +61,10 @@ class AbilityImportStrategy(
                 counts.success++
             } catch (e: DataImportException) {
                 counts.errors++
-                logger.error("Data dependency error for $ENTITY_NAME with value $dto: ${e.message}")
+                logger.error("Data dependency error for $entityName with value $dto: ${e.message}")
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Error importing data for $ENTITY_NAME with value $dto: ${e.message}", e)
+                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
             }
         }
         return counts

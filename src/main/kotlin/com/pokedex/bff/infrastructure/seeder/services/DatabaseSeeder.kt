@@ -1,9 +1,5 @@
 package com.pokedex.bff.infrastructure.seeder.services
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.pokedex.bff.domain.repositories.*
 import com.pokedex.bff.infrastructure.seeder.strategy.ImportStrategy
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
