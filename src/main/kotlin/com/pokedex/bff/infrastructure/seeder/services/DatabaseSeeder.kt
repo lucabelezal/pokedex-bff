@@ -34,12 +34,14 @@ open class DatabaseSeeder(
         strategies.forEach { strategy ->
             logger.info("Executando strategy: ${strategy.getEntityName()}...")
             try {
-                val counts = strategy.import(results) // strategy.import now adds to results directly or returns counts to be added
-                // If strategy.import returns counts, uncomment next line and adjust strategy.import
-                // results.add(strategy.getEntityName(), counts)
+                val counts = strategy.import(results)
+                if (counts.errors > 0) {
+                    logger.warn("Strategy ${strategy.getEntityName()} concluída com ${counts.errors} erro(s).")
+                }
             } catch (e: Exception) {
-                logger.error("Erro executando strategy ${strategy.getEntityName()}: ${e.message}", e)
-                // Optionally, add to results as a global error for this strategy if not handled within
+                logger.error("Erro fatal executando strategy ${strategy.getEntityName()}: ${e.message}", e)
+                // Depending on the desired behavior, we might want to rethrow or handle differently.
+                // For now, we log it and continue with the next strategy.
             }
         }
         logFinalResults(results)
