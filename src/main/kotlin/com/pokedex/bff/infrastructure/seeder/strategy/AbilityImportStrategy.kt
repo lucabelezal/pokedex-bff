@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 class AbilityImportStrategy(
     private val abilityRepository: AbilityRepository,
-    private val generationRepository: GenerationRepository, // Dependency for ability
+    private val generationRepository: GenerationRepository,
     private val jsonLoader: JsonLoader
 ) : ImportStrategy {
 

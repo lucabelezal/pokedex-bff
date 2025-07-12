@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 @Service
 class GenerationImportStrategy(
     private val generationRepository: GenerationRepository,
-    private val regionRepository: RegionRepository, // Dependency for generation
+    private val regionRepository: RegionRepository,
     private val jsonLoader: JsonLoader
 ) : ImportStrategy {
 
