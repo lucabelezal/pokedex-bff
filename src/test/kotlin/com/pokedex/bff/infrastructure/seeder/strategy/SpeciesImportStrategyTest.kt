@@ -42,12 +42,12 @@ class SpeciesImportStrategyTest {
     @Test
     fun `import should process species successfully`() {
         val speciesDtos = listOf(
-            SpeciesDto(1, "Bulbasaur", 1, "Seed Pokémon", "Pokémon Semente"),
-            SpeciesDto(2, "Ivysaur", 2, "Seed Pokémon", "Pokémon Semente")
+            SpeciesDto(1, "Bulbasaur", "Seed Pokémon", "Pokémon Semente"),
+            SpeciesDto(2, "Ivysaur", "Seed Pokémon", "Pokémon Semente")
         )
         val expectedEntities = listOf(
-            SpeciesEntity(id = 1, name = "Bulbasaur", pokemon_number = 1, speciesEn = "Seed Pokémon", speciesPt = "Pokémon Semente"),
-            SpeciesEntity(id = 2, name = "Ivysaur", pokemon_number = 2, speciesEn = "Seed Pokémon", speciesPt = "Pokémon Semente")
+            SpeciesEntity(id = 1, name = "Bulbasaur", speciesEn = "Seed Pokémon", speciesPt = "Pokémon Semente"),
+            SpeciesEntity(id = 2, name = "Ivysaur", speciesEn = "Seed Pokémon", speciesPt = "Pokémon Semente")
         )
         val expectedCounts = ImportCounts(success = 2, errors = 0)
 
@@ -78,9 +78,9 @@ class SpeciesImportStrategyTest {
 
     @Test
     fun `import should handle exceptions during save and count errors`() {
-        val speciesDtos = listOf(SpeciesDto(1, "Charmander", 4, "Lizard Pokémon", "Pokémon Lagarto"))
+        val speciesDtos = listOf(SpeciesDto(1, "Charmander", "Lizard Pokémon", "Pokémon Lagarto"))
         val expectedCounts = ImportCounts(success = 0, errors = 1)
-        val entityToSave = SpeciesEntity(id = 1, name = "Charmander", pokemon_number = 4, speciesEn = "Lizard Pokémon", speciesPt = "Pokémon Lagarto")
+        val entityToSave = SpeciesEntity(id = 1, name = "Charmander", speciesEn = "Lizard Pokémon", speciesPt = "Pokémon Lagarto")
 
         every { jsonLoader.loadJson<List<SpeciesDto>>(JsonFile.SPECIES.filePath) } returns speciesDtos
         every { speciesRepository.save(entityToSave) } throws RuntimeException("DB error")
