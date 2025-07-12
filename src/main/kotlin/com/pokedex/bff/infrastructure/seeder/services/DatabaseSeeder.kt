@@ -8,21 +8,13 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 open class DatabaseSeeder(
-    private val strategies: List<ImportStrategy>,
-    // ObjectMapper and specific repositories might still be needed if JsonLoader or strategies don't encapsulate everything.
-    // For now, assuming strategies handle their own repository needs via injection.
-    // private val objectMapper: ObjectMapper
+    private val strategies: List<ImportStrategy>
 ) {
-    // --------------------------
-    // Constants and Configuration
-    // --------------------------
+
     companion object {
         private val logger = LoggerFactory.getLogger(DatabaseSeeder::class.java)
     }
 
-    // --------------------------
-    // Public API
-    // --------------------------
     @Transactional
     fun importAll() {
         logStart()
@@ -36,24 +28,11 @@ open class DatabaseSeeder(
                 }
             } catch (e: Exception) {
                 logger.error("Erro fatal executando strategy ${strategy.getEntityName()}: ${e.message}", e)
-                // Depending on the desired behavior, we might want to rethrow or handle differently.
-                // For now, we log it and continue with the next strategy.
             }
         }
         logFinalResults(results)
     }
 
-    // --------------------------
-    // Data Import Methods (All moved to strategy classes)
-    // --------------------------
-
-    // --------------------------
-    // Helper Methods (All moved or adapted into strategy classes)
-    // --------------------------
-
-    // --------------------------
-    // Logging Methods
-    // --------------------------
     private fun logStart() {
         logger.info("====== 🚀 INICIANDO IMPORTAÇÃO DOS DADOS DA POKEDEX 🚀 ======")
     }
@@ -62,11 +41,4 @@ open class DatabaseSeeder(
         results.logFinalResults()
     }
 
-    // --------------------------
-    // Helper Classes (These have been moved to dto package)
-    // --------------------------
-    // private class ImportCounts(...) - MOVED
-    // private class ImportResults {...} - MOVED
-    // private data class PokemonImportRelations(...) - MOVED
-    // private class DataImportException(...) - MOVED
 }
