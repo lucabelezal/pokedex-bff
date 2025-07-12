@@ -5,7 +5,7 @@ import com.pokedex.bff.infrastructure.seeder.exception.DataImportException
 import org.slf4j.Logger
 import org.springframework.data.jpa.repository.JpaRepository
 
-fun <T : Any, D> importData(
+fun <T: Any, D> importData(
     dtos: List<D>,
     repository: JpaRepository<T, Long>,
     transform: (D) -> T,
