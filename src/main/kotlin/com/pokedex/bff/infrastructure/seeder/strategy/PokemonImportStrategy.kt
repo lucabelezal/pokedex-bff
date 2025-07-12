@@ -11,10 +11,12 @@ import com.pokedex.bff.infrastructure.seeder.exception.DataImportException
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Order(9)
 class PokemonImportStrategy(
     private val pokemonRepository: PokemonRepository,
     private val regionRepository: RegionRepository,
@@ -36,12 +38,13 @@ class PokemonImportStrategy(
 
     override fun getEntityName(): String = ENTITY_NAME
 
-    @Transactional
+    @Transactional // Pokemons and their abilities should be saved in one transaction per pokemon
     override fun import(results: ImportResults): ImportCounts {
         logger.info("Iniciando importação de $ENTITY_NAME...")
         val dtos: List<PokemonDto> = jsonLoader.loadJson(JsonFile.POKEMONS.filePath)
         val counts = ImportCounts()
 
+        // Preload all required relations once
         val relations = PokemonImportRelations(
             regions = regionRepository.findAll().associateBy { it.id },
             stats = statsRepository.findAll().associateBy { it.id },

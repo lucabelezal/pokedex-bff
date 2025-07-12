@@ -8,10 +8,12 @@ import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 
 @Service
+@Order(6)
 class SpeciesImportStrategy(
     private val speciesRepository: SpeciesRepository,
     private val jsonLoader: JsonLoader
