@@ -30,8 +30,8 @@ class RegionImportStrategy(
         val counts = importSimpleData(dtos, regionRepository) { dto ->
             RegionEntity(id = dto.id, name = dto.name)
         }
-        results.add(ENTITY_NAME, counts) // Adiciona ao ImportResults geral
-        return counts // Retorna os counts específicos desta strategy
+        results.add(ENTITY_NAME, counts)
+        return counts
     }
 
     private fun <T : Any, D> importSimpleData(

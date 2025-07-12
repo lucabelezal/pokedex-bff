@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service
 class EvolutionChainImportStrategy(
     private val evolutionChainRepository: EvolutionChainRepository,
     private val jsonLoader: JsonLoader,
-    private val objectMapper: ObjectMapper // Needed for converting chainData to JSON string
+    private val objectMapper: ObjectMapper
 ) : ImportStrategy {
 
     companion object {

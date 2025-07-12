@@ -25,13 +25,12 @@ class WeaknessImportStrategy(
 
     override fun getEntityName(): String = ENTITY_NAME
 
-    @Transactional // Each pokemon's weaknesses update should be transactional
+    @Transactional
     override fun import(results: ImportResults): ImportCounts {
         logger.info("Iniciando importação de $ENTITY_NAME...")
         val dtos: List<WeaknessDto> = jsonLoader.loadJson(JsonFile.WEAKNESSES.filePath)
         val counts = ImportCounts()
 
-        // Preload data
         val pokemonMap = pokemonRepository.findAll().associateBy { it.name }
         val typeMap = typeRepository.findAll().associateBy { it.name }
 
@@ -41,7 +40,7 @@ class WeaknessImportStrategy(
                 if (pokemon == null) {
                     logger.warn("Pokémon '${dto.pokemonName}' não encontrado para importar fraquezas")
                     counts.errors++
-                    return@forEach // continue to next dto
+                    return@forEach
                 }
 
                 val weaknessTypesFound = dto.weaknesses.mapNotNull { typeName ->
@@ -52,22 +51,16 @@ class WeaknessImportStrategy(
                         }
                     } ?: run {
                         logger.warn("Tipo '$typeName' não encontrado para fraqueza do Pokémon ${dto.pokemonName}")
-                        null // type not found, will be filtered out by mapNotNull
+                        null
                     }
                 }
 
                 if (weaknessTypesFound.isNotEmpty()) {
-                     // Check if any actual new weaknesses were added.
-                     // The pokemon.weaknesses.add inside mapNotNull already modified the set.
-                     // We just need to save if there were valid types to add.
                     pokemonRepository.save(pokemon)
                     counts.success++
                 } else if (dto.weaknesses.any { typeMap[it] == null }) {
-                    // If there were type names in DTO but none were found in DB, count as error.
                     counts.errors++
                 }
-                // If dto.weaknesses was empty, or all types were already present, it's not an error nor a direct success for this DTO.
-                // The current logic counts a success if any valid weakness type is processed and saved.
 
             } catch (e: Exception) {
                 counts.errors++

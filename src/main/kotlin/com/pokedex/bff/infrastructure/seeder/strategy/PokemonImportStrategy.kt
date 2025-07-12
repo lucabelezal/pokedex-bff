@@ -36,13 +36,12 @@ class PokemonImportStrategy(
 
     override fun getEntityName(): String = ENTITY_NAME
 
-    @Transactional // Pokemons and their abilities should be saved in one transaction per pokemon
+    @Transactional
     override fun import(results: ImportResults): ImportCounts {
         logger.info("Iniciando importação de $ENTITY_NAME...")
         val dtos: List<PokemonDto> = jsonLoader.loadJson(JsonFile.POKEMONS.filePath)
         val counts = ImportCounts()
 
-        // Preload all required relations once
         val relations = PokemonImportRelations(
             regions = regionRepository.findAll().associateBy { it.id },
             stats = statsRepository.findAll().associateBy { it.id },
