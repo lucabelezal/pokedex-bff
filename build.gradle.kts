@@ -10,6 +10,9 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+
+	// Code quality
+	id("org.sonarqube") version "6.2.0.5505"
 }
 
 group = "com.pokedex"

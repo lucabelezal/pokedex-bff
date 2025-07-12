@@ -8,7 +8,7 @@ JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 SONAR_PROJECT_KEY        := pokedex-bff
 SONAR_PROJECT_NAME       := Pokedex BFF
 SONAR_HOST_URL           := http://localhost:9000
-SONAR_LOGIN_TOKEN        := YOUR_TOKEN_HERE # SUBSTITUA PELO TOKEN REAL
+SONAR_LOGIN_TOKEN        := sqp_6faebb36878394f1abd3ee625ffe2d97837168ee
 
 # Caminhos
 BUILD_DIR                := build
@@ -163,26 +163,45 @@ sonarqube-stop:
 	sudo docker stop $(SONARQUBE_CONTAINER_NAME) > /dev/null 2>&1 || true
 	sudo docker rm $(SONARQUBE_CONTAINER_NAME) > /dev/null 2>&1 || true
 
+BRANCH_NAME := $(shell git rev-parse --abbrev-ref HEAD)
+
+# --- Regra para Análise do SonarQube ---
 sonarqube-analyze:
-	@echo "--- Executando análise do SonarQube com SonarScanner CLI... ---"
-	@if [ ! -f "$(JACOCO_REPORT_XML)" ]; then \
-		echo "ERRO: Relatório JaCoCo XML não encontrado em $(JACOCO_REPORT_XML)."; \
-		echo "Execute 'make test' primeiro para gerar o relatório."; \
-		exit 1; \
-	fi
-	sudo docker run --rm \
-		-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
-		-e SONAR_LOGIN="$(SONAR_LOGIN_TOKEN)" \
-		-v "$(shell pwd):/usr/src" \
-		sonarsource/sonar-scanner-cli \
-		-Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
-		-Dsonar.projectName="$(SONAR_PROJECT_NAME)" \
-		-Dsonar.sources=. \
-		-Dsonar.java.binaries=$(BUILD_DIR)/classes \
-		-Dsonar.kotlin.binaries=$(BUILD_DIR)/classes/kotlin/main \
-		-Dsonar.coverage.jacoco.xmlReportPaths=$(JACOCO_REPORT_XML) \
-		-Dsonar.language=kotlin
-	@echo "--- Análise SonarQube concluída. Verifique os resultados em: $(SONAR_HOST_URL) ---"
+	@echo "Obtendo o nome da branch atual: '$(BRANCH_NAME)'..."
+	@echo "Analisando projeto 'pokedex-bff' na branch '$(BRANCH_NAME)' com SonarQube..."
+	# Executa a tarefa 'sonar' do Gradle
+	./gradlew sonar \
+		-Dsonar.projectKey=pokedex-bff \
+		-Dsonar.projectName='pokedex-bff' \
+		-Dsonar.host.url=http://localhost:9000 \
+		-Dsonar.token=sqp_6faebb36878394f1abd3ee625ffe2d97837168ee \
+		-Dsonar.branch.name=$(BRANCH_NAME) # Envia o nome da branch para o SonarQube
+
+# @echo "--- Executando análise do SonarQube com SonarScanner CLI... ---"
+# @if [ ! -f "$(JACOCO_REPORT_XML)" ]; then \
+# 	echo "ERRO: Relatório JaCoCo XML não encontrado em $(JACOCO_REPORT_XML)."; \
+# 	echo "Execute 'make test' primeiro para gerar o relatório."; \
+# 	exit 1; \
+# fi
+# sudo docker run --rm \
+# 	-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
+# 	-e SONAR_LOGIN="$(SONAR_LOGIN_TOKEN)" \
+# 	-v "$(shell pwd):/usr/src" \
+# 	sonarsource/sonar-scanner-cli \
+# 	-Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+# 	-Dsonar.projectName="$(SONAR_PROJECT_NAME)" \
+# 	-Dsonar.sources=. \
+# 	-Dsonar.java.binaries=$(BUILD_DIR)/classes \
+# 	-Dsonar.kotlin.binaries=$(BUILD_DIR)/classes/kotlin/main \
+# 	-Dsonar.coverage.jacoco.xmlReportPaths=$(JACOCO_REPORT_XML) \
+# 	-Dsonar.language=kotlin
+# @echo "--- Análise SonarQube concluída. Verifique os resultados em: $(SONAR_HOST_URL) ---"
+
+# ./gradlew sonar \
+#   -Dsonar.projectKey=pokedex-bff \
+#   -Dsonar.projectName='pokedex-bff' \
+#   -Dsonar.host.url=http://localhost:9000 \
+#   -Dsonar.token=sqp_6faebb36878394f1abd3ee625ffe2d97837168ee
 
 # ==============================================================================
 # Orquestração Completa (Linux/macOS)
