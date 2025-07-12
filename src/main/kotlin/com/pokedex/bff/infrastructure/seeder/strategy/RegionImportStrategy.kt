@@ -3,6 +3,7 @@ package com.pokedex.bff.infrastructure.seeder.strategy
 import com.pokedex.bff.domain.entities.RegionEntity
 import com.pokedex.bff.domain.repositories.RegionRepository
 import com.pokedex.bff.application.dto.seeder.RegionDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
@@ -21,19 +22,19 @@ class RegionImportStrategy(
 
     companion object {
         private val logger = LoggerFactory.getLogger(RegionImportStrategy::class.java)
-        private const val ENTITY_NAME = "Regiões"
+        private val entityName = EntityType.REGION.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val dtos: List<RegionDto> = jsonLoader.loadJson(JsonFile.REGIONS.filePath)
         val counts = importSimpleData(dtos, regionRepository) { dto ->
             RegionEntity(id = dto.id, name = dto.name)
         }
-        results.add(ENTITY_NAME, counts) // Adiciona ao ImportResults geral
-        return counts // Retorna os counts específicos desta strategy
+        results.add(entityName, counts)
+        return counts
     }
 
     private fun <T : Any, D> importSimpleData(
@@ -48,7 +49,7 @@ class RegionImportStrategy(
                 counts.success++
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Error importing data for $ENTITY_NAME with value $dto: ${e.message}", e)
+                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
             }
         }
         return counts

@@ -3,6 +3,7 @@ package com.pokedex.bff.infrastructure.seeder.strategy
 import com.pokedex.bff.domain.entities.StatsEntity
 import com.pokedex.bff.domain.repositories.StatsRepository
 import com.pokedex.bff.application.dto.seeder.StatsDto
+import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
@@ -21,13 +22,13 @@ class StatsImportStrategy(
 
     companion object {
         private val logger = LoggerFactory.getLogger(StatsImportStrategy::class.java)
-        private const val ENTITY_NAME = "Estatísticas"
+        private val entityName = EntityType.STATS.entityName
     }
 
-    override fun getEntityName(): String = ENTITY_NAME
+    override fun getEntityName(): String = entityName
 
     override fun import(results: ImportResults): ImportCounts {
-        logger.info("Iniciando importação de $ENTITY_NAME...")
+        logger.info("Iniciando importação de $entityName...")
         val dtos: List<StatsDto> = jsonLoader.loadJson(JsonFile.STATS.filePath)
         val counts = importSimpleData(dtos, statsRepository) { dto ->
             StatsEntity(
@@ -41,7 +42,7 @@ class StatsImportStrategy(
                 speed = dto.speed
             )
         }
-        results.add(ENTITY_NAME, counts)
+        results.add(entityName, counts)
         return counts
     }
 
@@ -57,7 +58,7 @@ class StatsImportStrategy(
                 counts.success++
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Error importing data for $ENTITY_NAME with value $dto: ${e.message}", e)
+                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
             }
         }
         return counts
