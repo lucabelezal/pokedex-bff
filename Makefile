@@ -4,11 +4,27 @@
 DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
 JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 
+# --- Configurações SonarQube & Jacoco (Adicionado pela IA) ---
+SONAR_PROJECT_KEY        := pokedex-bff
+SONAR_PROJECT_NAME       := Pokedex BFF
+SONAR_HOST_URL           := http://localhost:9000
+SONAR_LOGIN_TOKEN        := YOUR_TOKEN_HERE # SUBSTITUA PELO TOKEN REAL
+
+# Caminhos
+BUILD_DIR                := build
+JACOCO_REPORT_XML        := $(BUILD_DIR)/reports/jacoco/test/jacocoTestReport.xml
+
+# Configurações Docker para SonarQube
+SONARQUBE_IMAGE          := sonarqube:latest
+SONARQUBE_CONTAINER_NAME := sonarqube-instance
+# --- Fim das Configurações SonarQube & Jacoco ---
+
 # ==============================================================================
 # Comandos PHONY
 # ==============================================================================
 .PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report
+		test test-class open-jacoco-report \
+		sonarqube-start sonarqube-stop sonarqube-analyze analyze
 
 # ==============================================================================
 # Ajuda
@@ -133,6 +149,42 @@ open-jacoco-report:
 	fi
 
 # ==============================================================================
+# SonarQube
+# ==============================================================================
+
+sonarqube-start:
+	@echo "--- Iniciando contêiner SonarQube em segundo plano... ---"
+	sudo docker run -d --name $(SONARQUBE_CONTAINER_NAME) -p 9000:9000 -p 9092:9092 $(SONARQUBE_IMAGE)
+	@echo "Aguardando SonarQube iniciar (pode levar alguns minutos)..."
+	@sleep 30
+
+sonarqube-stop:
+	@echo "--- Parando e removendo contêiner SonarQube... ---"
+	sudo docker stop $(SONARQUBE_CONTAINER_NAME) > /dev/null 2>&1 || true
+	sudo docker rm $(SONARQUBE_CONTAINER_NAME) > /dev/null 2>&1 || true
+
+sonarqube-analyze:
+	@echo "--- Executando análise do SonarQube com SonarScanner CLI... ---"
+	@if [ ! -f "$(JACOCO_REPORT_XML)" ]; then \
+		echo "ERRO: Relatório JaCoCo XML não encontrado em $(JACOCO_REPORT_XML)."; \
+		echo "Execute 'make test' primeiro para gerar o relatório."; \
+		exit 1; \
+	fi
+	sudo docker run --rm \
+		-e SONAR_HOST_URL="$(SONAR_HOST_URL)" \
+		-e SONAR_LOGIN="$(SONAR_LOGIN_TOKEN)" \
+		-v "$(shell pwd):/usr/src" \
+		sonarsource/sonar-scanner-cli \
+		-Dsonar.projectKey=$(SONAR_PROJECT_KEY) \
+		-Dsonar.projectName="$(SONAR_PROJECT_NAME)" \
+		-Dsonar.sources=. \
+		-Dsonar.java.binaries=$(BUILD_DIR)/classes \
+		-Dsonar.kotlin.binaries=$(BUILD_DIR)/classes/kotlin/main \
+		-Dsonar.coverage.jacoco.xmlReportPaths=$(JACOCO_REPORT_XML) \
+		-Dsonar.language=kotlin
+	@echo "--- Análise SonarQube concluída. Verifique os resultados em: $(SONAR_HOST_URL) ---"
+
+# ==============================================================================
 # Orquestração Completa (Linux/macOS)
 # ==============================================================================
 
@@ -179,10 +231,19 @@ dev-setup-for-windows: check-windows-env
 
 
 # ==============================================================================
+# Análise Completa com SonarQube
+# ==============================================================================
+
+analyze: clean-bff test sonarqube-start sonarqube-analyze sonarqube-stop
+	@echo "==================================================================="
+	@echo "          Fluxo de análise com SonarQube concluído.              "
+	@echo "==================================================================="
+
+# ==============================================================================
 # Limpeza Total
 # ==============================================================================
 
-clean-all: deep-clean-gradle stop-db clean-db
+clean-all: deep-clean-gradle stop-db clean-db sonarqube-stop
 	@echo "==================================================================="
 	@echo " Todos os contêineres, volumes e builds limpos. "
 	@echo "==================================================================="
