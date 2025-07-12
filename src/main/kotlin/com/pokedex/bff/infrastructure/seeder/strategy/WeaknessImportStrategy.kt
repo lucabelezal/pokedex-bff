@@ -41,39 +41,40 @@ class WeaknessImportStrategy(
             try {
                 val pokemon = pokemonMap[dto.pokemonName]
                 if (pokemon == null) {
-                    logger.warn("Pokémon '${dto.pokemonName}' não encontrado para importar fraquezas")
+                    logger.warn("Pokémon '${dto.pokemonName}' não encontrado para importar fraquezas. DTO ignorado.")
                     counts.errors++
                     return@forEach // continue to next dto
                 }
 
-                val weaknessTypesFound = dto.weaknesses.mapNotNull { typeName ->
-                    typeMap[typeName]?.also { typeEntity ->
-                        // Add if not already present (PokemonEntity.weaknesses should be a Set)
-                        if (pokemon.weaknesses.add(typeEntity)) {
-                            // if add returns true, it means it was added
-                        }
-                    } ?: run {
-                        logger.warn("Tipo '$typeName' não encontrado para fraqueza do Pokémon ${dto.pokemonName}")
-                        null // type not found, will be filtered out by mapNotNull
+                // 1. Find all valid TypeEntity objects for the weaknesses listed in the DTO.
+                val validWeaknessTypes = dto.weaknesses.mapNotNull { typeName ->
+                    typeMap[typeName] ?: run {
+                        logger.warn("Tipo de fraqueza '$typeName' não encontrado no banco de dados para o Pokémon ${dto.pokemonName}")
+                        null
                     }
                 }
 
-                if (weaknessTypesFound.isNotEmpty()) {
-                     // Check if any actual new weaknesses were added.
-                     // The pokemon.weaknesses.add inside mapNotNull already modified the set.
-                     // We just need to save if there were valid types to add.
+                // 2. Add all valid types to the Pokemon's weaknesses set.
+                // The addAll method returns true if the set was modified.
+                val wereNewWeaknessesAdded = pokemon.weaknesses.addAll(validWeaknessTypes)
+
+                // 3. Save only if new weaknesses were actually added.
+                if (wereNewWeaknessesAdded) {
                     pokemonRepository.save(pokemon)
                     counts.success++
-                } else if (dto.weaknesses.any { typeMap[it] == null }) {
-                    // If there were type names in DTO but none were found in DB, count as error.
-                    counts.errors++
+                } else {
+                    // If the DTO had weakness names, but none were valid, it's an error.
+                    if (validWeaknessTypes.isEmpty() && dto.weaknesses.isNotEmpty()) {
+                        logger.error("Nenhum dos tipos de fraqueza especificados para ${dto.pokemonName} era válido: ${dto.weaknesses}")
+                        counts.errors++
+                    }
+                    // If no new weaknesses were added because they were already present,
+                    // or if the DTO weakness list was empty, we do nothing. It's not a success, but not an error either.
                 }
-                // If dto.weaknesses was empty, or all types were already present, it's not an error nor a direct success for this DTO.
-                // The current logic counts a success if any valid weakness type is processed and saved.
 
             } catch (e: Exception) {
                 counts.errors++
-                logger.error("Erro importando fraquezas para ${dto.pokemonName}: ${e.message}", e)
+                logger.error("Erro inesperado ao importar fraquezas para ${dto.pokemonName}: ${e.message}", e)
             }
         }
 

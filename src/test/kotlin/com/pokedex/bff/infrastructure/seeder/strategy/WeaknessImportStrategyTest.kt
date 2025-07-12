@@ -100,22 +100,18 @@ class WeaknessImportStrategyTest {
     }
 
     @Test
-    fun `import should not add existing weaknesses or types`() {
-        // Charmander is already Fire type and weak to Water. Let's try to add Fire as weakness (should not happen)
-        // and Water as weakness (already there).
-        val weaknessDtos = listOf(WeaknessDto("Charmander", listOf("Fire", "Water")))
+    fun `import should not save if weakness already exists`() {
+        // Charmander is already weak to Water.
+        val weaknessDtos = listOf(WeaknessDto("Charmander", listOf("Water")))
         every { jsonLoader.loadJson<List<WeaknessDto>>(JsonFile.WEAKNESSES.filePath) } returns weaknessDtos
 
         val initialWeaknessCount = pokemonCharmander.weaknesses.size
         val counts = weaknessImportStrategy.import(importResults)
 
-        // It's a success if valid weakness types are processed, even if no *new* ones are added.
-        // The current logic saves if weaknessTypesFound is not empty, which it will be for "Water".
-        // If "Fire" was the only one, it would not save.
-        assertEquals(ImportCounts(success = 1, errors = 0), counts) // Success because Water is a valid weakness to add
-        assertEquals(initialWeaknessCount, pokemonCharmander.weaknesses.size) // No new unique weakness added
-        assertFalse(pokemonCharmander.weaknesses.contains(typeFire)) // Should not add its own type as weakness
-        verify(exactly = 1) { pokemonRepository.save(pokemonCharmander) } // Saved because "Water" was processed
+        // Not a success because save is not called. Not an error either.
+        assertEquals(ImportCounts(success = 0, errors = 0), counts)
+        assertEquals(initialWeaknessCount, pokemonCharmander.weaknesses.size)
+        verify(exactly = 0) { pokemonRepository.save(pokemonCharmander) }
     }
 
     @Test
@@ -144,19 +140,18 @@ class WeaknessImportStrategyTest {
     }
 
     @Test
-    fun `import should partially succeed if some weakness types are found and others not for a Pokemon`() {
-        // Pikachu to be weak to Grass (found) and UnknownType (not found)
-        val weaknessDtos = listOf(WeaknessDto("Pikachu", listOf("Grass", "UnknownType")))
+    fun `import should save if some weakness types are new and others are not`() {
+        // Charmander is already weak to Water. Let's add Water (existing) and Grass (new).
+        val weaknessDtos = listOf(WeaknessDto("Charmander", listOf("Water", "Grass")))
         every { jsonLoader.loadJson<List<WeaknessDto>>(JsonFile.WEAKNESSES.filePath) } returns weaknessDtos
 
         val counts = weaknessImportStrategy.import(importResults)
 
-        // Counts as success because "Grass" was found and added. The "UnknownType" is logged as a warning.
+        // Counts as a success because the set was modified (Grass was added).
         assertEquals(ImportCounts(success = 1, errors = 0), counts)
-        assertTrue(pokemonPikachu.weaknesses.contains(typeGrass))
-        verify(exactly = 1) { pokemonRepository.save(pokemonPikachu) }
+        assertTrue(pokemonCharmander.weaknesses.contains(typeGrass))
+        verify(exactly = 1) { pokemonRepository.save(pokemonCharmander) }
     }
-
 
     @Test
     fun `import should handle empty weakness list in DTO gracefully`() {
