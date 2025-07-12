@@ -19,7 +19,7 @@ class JsonLoader(private val objectMapper: ObjectMapper) {
         return ClassPathResource(filePath)
     }
 
-    final inline fun <reified T> loadJson(filePath: String): T {
+    inline fun <reified T> loadJson(filePath: String): T {
         return loadJson(filePath, object : TypeReference<T>() {})
     }
 
