@@ -9,10 +9,10 @@ import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.exception.DataImportException
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
+import com.pokedex.bff.infrastructure.seeder.util.importData
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -35,33 +35,12 @@ class GenerationImportStrategy(
         val regionsMap = regionRepository.findAll().associateBy { it.id }
         val dtos: List<GenerationDto> = jsonLoader.loadJson(JsonFile.GENERATIONS.filePath)
 
-        val counts = importDependentData(dtos, generationRepository) { dto ->
+        val counts = importData(dtos, generationRepository, { dto ->
             val region = regionsMap[dto.regionId]
                 ?: throw DataImportException("Region with ID ${dto.regionId} not found for Generation ${dto.name}")
             GenerationEntity(id = dto.id, name = dto.name, region = region)
-        }
+        }, logger, entityName)
         results.add(entityName, counts)
-        return counts
-    }
-
-    private fun <D, T : Any> importDependentData(
-        dtos: List<D>,
-        repository: JpaRepository<T, Long>,
-        transform: (D) -> T
-    ): ImportCounts {
-        val counts = ImportCounts()
-        dtos.forEach { dto ->
-            try {
-                repository.save(transform(dto))
-                counts.success++
-            } catch (e: DataImportException) {
-                counts.errors++
-                logger.error("Data dependency error for $entityName with value $dto: ${e.message}")
-            } catch (e: Exception) {
-                counts.errors++
-                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
-            }
-        }
         return counts
     }
 }

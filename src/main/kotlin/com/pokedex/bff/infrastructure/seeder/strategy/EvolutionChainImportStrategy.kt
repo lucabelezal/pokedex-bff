@@ -8,10 +8,10 @@ import com.pokedex.bff.infrastructure.seeder.data.EntityType
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
+import com.pokedex.bff.infrastructure.seeder.util.importData
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
-import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 
 @Service
@@ -32,29 +32,11 @@ class EvolutionChainImportStrategy(
     override fun import(results: ImportResults): ImportCounts {
         logger.info("Iniciando importação de $entityName...")
         val dtos: List<EvolutionChainDto> = jsonLoader.loadJson(JsonFile.EVOLUTION_CHAINS.filePath)
-        val counts = importSimpleData(dtos, evolutionChainRepository) { dto ->
+        val counts = importData(dtos, evolutionChainRepository, { dto ->
             val chainDataJsonString = objectMapper.writeValueAsString(dto.chainData)
             EvolutionChainEntity(id = dto.id, chainData = chainDataJsonString)
-        }
+        }, logger, entityName)
         results.add(entityName, counts)
-        return counts
-    }
-
-    private fun <T : Any, D> importSimpleData(
-        dtos: List<D>,
-        repository: JpaRepository<T, Long>,
-        transform: (D) -> T
-    ): ImportCounts {
-        val counts = ImportCounts()
-        dtos.forEach { dto ->
-            try {
-                repository.save(transform(dto))
-                counts.success++
-            } catch (e: Exception) {
-                counts.errors++
-                logger.error("Error importing data for $entityName with value $dto: ${e.message}", e)
-            }
-        }
         return counts
     }
 }

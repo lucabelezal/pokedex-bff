@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.pokedex.bff.domain.entities.EvolutionChainEntity
 import com.pokedex.bff.domain.repositories.EvolutionChainRepository
 import com.pokedex.bff.application.dto.seeder.EvolutionChainDto
-import com.pokedex.bff.application.dto.seeder.EvolutionLinkDto // Assuming structure for chainData
+import com.pokedex.bff.application.dto.seeder.EvolutionLinkDto
 import com.pokedex.bff.infrastructure.seeder.dto.ImportCounts
 import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
@@ -46,7 +46,7 @@ class EvolutionChainImportStrategyTest {
 
     @Test
     fun `import should process evolution chains successfully`() {
-        val chainLink = EvolutionLinkDto("bulbasaur", emptyList()) // Simplified
+        val chainLink = EvolutionLinkDto("bulbasaur", emptyList())
         val evolutionChainDtos = listOf(
             EvolutionChainDto(1, chainLink),
             EvolutionChainDto(2, EvolutionLinkDto("charmander", emptyList()))
