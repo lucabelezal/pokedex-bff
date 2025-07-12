@@ -10,13 +10,15 @@ import com.pokedex.bff.infrastructure.seeder.exception.DataImportException
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Service
 
 @Service
+@Order(5)
 class AbilityImportStrategy(
     private val abilityRepository: AbilityRepository,
-    private val generationRepository: GenerationRepository,
+    private val generationRepository: GenerationRepository, // Dependency for ability
     private val jsonLoader: JsonLoader
 ) : ImportStrategy {
 

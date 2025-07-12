@@ -8,10 +8,12 @@ import com.pokedex.bff.infrastructure.seeder.dto.ImportResults
 import com.pokedex.bff.infrastructure.seeder.util.JsonLoader
 import com.pokedex.bff.infrastructure.utils.JsonFile
 import org.slf4j.LoggerFactory
+import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Order(10)
 class WeaknessImportStrategy(
     private val pokemonRepository: PokemonRepository,
     private val typeRepository: TypeRepository,
@@ -25,12 +27,13 @@ class WeaknessImportStrategy(
 
     override fun getEntityName(): String = ENTITY_NAME
 
-    @Transactional
+    @Transactional // Each pokemon's weaknesses update should be transactional
     override fun import(results: ImportResults): ImportCounts {
         logger.info("Iniciando importação de $ENTITY_NAME...")
         val dtos: List<WeaknessDto> = jsonLoader.loadJson(JsonFile.WEAKNESSES.filePath)
         val counts = ImportCounts()
 
+        // Preload data
         val pokemonMap = pokemonRepository.findAll().associateBy { it.name }
         val typeMap = typeRepository.findAll().associateBy { it.name }
 
@@ -40,7 +43,7 @@ class WeaknessImportStrategy(
                 if (pokemon == null) {
                     logger.warn("Pokémon '${dto.pokemonName}' não encontrado para importar fraquezas")
                     counts.errors++
-                    return@forEach
+                    return@forEach // continue to next dto
                 }
 
                 val weaknessTypesFound = dto.weaknesses.mapNotNull { typeName ->
@@ -51,16 +54,22 @@ class WeaknessImportStrategy(
                         }
                     } ?: run {
                         logger.warn("Tipo '$typeName' não encontrado para fraqueza do Pokémon ${dto.pokemonName}")
-                        null
+                        null // type not found, will be filtered out by mapNotNull
                     }
                 }
 
                 if (weaknessTypesFound.isNotEmpty()) {
+                     // Check if any actual new weaknesses were added.
+                     // The pokemon.weaknesses.add inside mapNotNull already modified the set.
+                     // We just need to save if there were valid types to add.
                     pokemonRepository.save(pokemon)
                     counts.success++
                 } else if (dto.weaknesses.any { typeMap[it] == null }) {
+                    // If there were type names in DTO but none were found in DB, count as error.
                     counts.errors++
                 }
+                // If dto.weaknesses was empty, or all types were already present, it's not an error nor a direct success for this DTO.
+                // The current logic counts a success if any valid weakness type is processed and saved.
 
             } catch (e: Exception) {
                 counts.errors++
