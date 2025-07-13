@@ -2,6 +2,7 @@ name: "1 - Feature CI"
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - 'feature/**'
       - 'feat/**'
@@ -20,29 +21,10 @@ on:
       - 'build/**'
       - 'revert/**'
       - 'temp/**'
-  # push:
-  #   branches:
-  #     - 'feature/**'
-  #     - 'feat/**'
-  #     - 'fix/**'
-  #     - 'hotfix/**'
-  #     - 'release/**'
-  #     - 'bugfix/**'
-  #     - 'support/**'
-  #     - 'chore/**'
-  #     - 'docs/**'
-  #     - 'style/**'
-  #     - 'refactor/**'
-  #     - 'perf/**'
-  #     - 'test/**'
-  #     - 'ci/**'
-  #     - 'build/**'
-  #     - 'revert/**'
-  #     - 'temp/**'
+
 
 jobs:
   call-reusable-workflow:
-    if: github.event_name == 'pull_request' || (github.event_name == 'push' && github.ref != 'refs/heads/main')
     uses: ./.github/workflows/reusable-workflow.yml
 
   sonar:
