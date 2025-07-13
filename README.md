@@ -35,3 +35,4 @@ Aqui estão as seções importantes para explorar o **Pokedex BFF**:
 * 🏗️ [**Arquitetura do Sistema**](doc/ARCHITECTURE.md)  
   _Camadas, responsabilidades e organização._
 
+
