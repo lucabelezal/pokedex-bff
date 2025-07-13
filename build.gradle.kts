@@ -78,34 +78,20 @@ jacoco {
 	toolVersion = "0.8.11"
 }
 
-tasks.jacocoTestReport {
-	dependsOn(tasks.test)
+tasks.named<JacocoReport>("jacocoTestReport") {
+    dependsOn(tasks.test)
 
-	reports {
-		xml.required.set(true)
-		csv.required.set(false)
-		html.required.set(true)
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
 		html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
-	}
+    }
 
-	classDirectories.setFrom(
-		fileTree(layout.buildDirectory.dir("classes/kotlin/main").get().asFile) {
-			exclude(
-				"**/com/pokedex/bff/PokedexBffApplication*",
-				"**/com/pokedex/bff/application/dto/**",
-				"**/com/pokedex/bff/domain/entities/**",
-				"**/com/pokedex/bff/infrastructure/configuration/**"
-			)
-		}
-	)
-
-	executionData.setFrom(
-		fileTree(layout.buildDirectory.get().asFile) {
-			include("jacoco/test.exec")
-		}
-	)
-
-	sourceSets(sourceSets.main.get())
+    classDirectories.setFrom(
+        fileTree("${buildDir}/classes/kotlin/main") {
+            include("com/pokedex/bff/infrastructure/seeder/runners/**")
+        }
+    )
 }
 
 sonarqube {
