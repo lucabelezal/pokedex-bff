@@ -95,22 +95,16 @@ tasks.named<JacocoReport>("jacocoTestReport") {
 }
 
 sonarqube {
-	properties {
-        // Apenas a pasta infra será analisada
+    properties {
+		property("sonar.projectKey", "lucabelezal_pokedex-bff")
+		property("sonar.organization", "skeleton")
+		property("sonar.host.url", "https://sonarcloud.io")
         property("sonar.sources", "src/main/kotlin/com/pokedex/bff/infrastructure")
-
-        // Caminho do relatório JaCoCo em XML
         property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
-
-        // Excluir testes
-        property("sonar.test.exclusions", "**/src/test/**,**/*Test.kt,**/*Tests.kt")
-
-        // Excluir pacotes específicos da análise
+        property("sonar.test.exclusions", "**/src/test/**,**/*Test.kt")
         property("sonar.exclusions", "**/domain/**,**/shared/**,**/dto/**")
-
-        // Excluir pacotes específicos da cobertura
         property("sonar.coverage.exclusions", "**/domain/**,**/shared/**,**/dto/**")
-		
-	}
+    }
 }
+
 
