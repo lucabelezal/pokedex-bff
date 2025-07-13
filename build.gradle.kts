@@ -8,7 +8,7 @@ plugins {
 
 	// Code quality
 	id "org.sonarqube" version "6.2.0.5505"
-	
+
 	// Kotlin
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
@@ -108,12 +108,12 @@ tasks.jacocoTestReport {
 	)
 
 	sourceSets(sourceSets.main.get())
+}
 
-	sonar {
-		properties {
-			property "sonar.projectKey", "lucabelezal_pokedex-bff"
-			property "sonar.organization", "skeleton"
-			property "sonar.host.url", "https://sonarcloud.io"
-		}
+sonarqube {
+	properties {
+		property("sonar.projectKey", "lucabelezal_pokedex-bff")
+		property("sonar.organization", "skeleton")
+		property("sonar.host.url", "https://sonarcloud.io")
 	}
 }
