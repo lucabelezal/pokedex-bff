@@ -6,13 +6,20 @@ on:
       - 'feature/**'
       - 'feat/**'
       - 'fix/**'
+      - 'hotfix/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'support/**'
       - 'chore/**'
       - 'docs/**'
       - 'style/**'
       - 'refactor/**'
       - 'perf/**'
       - 'test/**'
-      - 'ci/**'
+      - 'ci/**'           
+      - 'build/**'       
+      - 'revert/**'       
+      - 'temp/**'
 
 jobs:
   build:
