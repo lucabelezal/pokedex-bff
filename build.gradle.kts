@@ -1,13 +1,11 @@
 plugins {
-	// Core plugins
+	// Core
 	id("jacoco")
+	id("org.sonarqube") version "6.2.0.5505"
 
 	// Spring
 	id("org.springframework.boot") version "3.2.4"
 	id("io.spring.dependency-management") version "1.1.4"
-
-	// Code quality
-	id "org.sonarqube" version "6.2.0.5505"
 
 	// Kotlin
 	kotlin("jvm") version "1.9.23"
@@ -46,13 +44,13 @@ dependencies {
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-	// CSV
-	implementation("org.apache.commons:commons-csv:1.10.0")
-
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 
-	// OpenAPI (Swagger)
+	// CSV
+	implementation("org.apache.commons:commons-csv:1.10.0")
+
+	// Swagger/OpenAPI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
 	// Dev Tools
@@ -96,7 +94,7 @@ tasks.jacocoTestReport {
 				"**/com/pokedex/bff/PokedexBffApplication*",
 				"**/com/pokedex/bff/application/dto/**",
 				"**/com/pokedex/bff/domain/entities/**",
-				"**/com/pokedex/bff/infrastructure/configuration/**",
+				"**/com/pokedex/bff/infrastructure/configuration/**"
 			)
 		}
 	)
