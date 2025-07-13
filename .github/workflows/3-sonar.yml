@@ -38,12 +38,6 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      # - name: Set up JDK 17
-      #   uses: actions/setup-java@v4
-      #   with:
-      #     java-version: 17
-      #     distribution: 'zulu'
-
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -58,7 +52,15 @@ jobs:
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
 
-      - name: Build and analyze
+      - name: Run tests and generate JaCoCo report
+        run: ./gradlew test jacocoTestReport --info
+
+      - name: Run SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar --info
+        run: ./gradlew sonar --info
+
+      # - name: Build and analyze
+      #   env:
+      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      #   run: ./gradlew build sonar --info

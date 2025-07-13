@@ -103,3 +103,4 @@ sonarqube {
         property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
 	}
 }
+
