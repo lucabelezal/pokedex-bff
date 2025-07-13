@@ -10,6 +10,7 @@ jobs:
     uses: ./.github/workflows/reusable-workflow.yml
 
   deploy:
+    if: github.event.pull_request.merged == true
     needs: call-reusable-workflow
     runs-on: ubuntu-latest
     steps:
