@@ -3,7 +3,23 @@ name: "1 - Feature CI"
 on:
   push:
     branches:
-      - '**'
+      - 'feature/**'
+      - 'feat/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'release/**'
+      - 'bugfix/**'
+      - 'support/**'
+      - 'chore/**'
+      - 'docs/**'
+      - 'style/**'
+      - 'refactor/**'
+      - 'perf/**'
+      - 'test/**'
+      - 'ci/**'           
+      - 'build/**'       
+      - 'revert/**'       
+      - 'temp/**'
 
 jobs:
   build:
