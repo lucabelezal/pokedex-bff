@@ -6,6 +6,7 @@
   <img src="https://img.shields.io/badge/version-1.0.0-blue" />
   <img src="https://img.shields.io/badge/license-Apache%202.0-orange" />
 </p>
+
 ## 📚 Sumário
 
 Aqui estão as seções importantes para explorar o **Pokedex BFF**:
