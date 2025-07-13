@@ -12,6 +12,7 @@ on:
       - 'refactor/**'
       - 'perf/**'
       - 'test/**'
+      - 'ci/**'
 
 jobs:
   build:
