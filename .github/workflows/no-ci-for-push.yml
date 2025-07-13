@@ -1,0 +1,13 @@
+name: "No CI for Push on Non-Main Branches"
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  do_nothing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Do Nothing
+        run: echo "This job does nothing and is only here to prevent CI from running on pushes to non-main branches."
