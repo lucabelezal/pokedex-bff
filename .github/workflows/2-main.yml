@@ -1,4 +1,4 @@
-name: Main CI/CD
+name: "2 - Main CI/CD"
 
 on:
   pull_request:
