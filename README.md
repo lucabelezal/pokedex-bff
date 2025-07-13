@@ -3,6 +3,7 @@
 </p>
 <p align="center">
   <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
+  <img src=https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=coverage />
   <img src="https://img.shields.io/badge/status-active-brightgreen" />
   <img src="https://img.shields.io/badge/version-1.0.0-blue" />
   <img src="https://img.shields.io/badge/license-Apache%202.0-orange" />
