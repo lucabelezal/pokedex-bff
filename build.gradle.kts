@@ -99,8 +99,11 @@ sonarqube {
 		property("sonar.projectKey", "lucabelezal_pokedex-bff")
 		property("sonar.organization", "skeleton")
 		property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
+        // property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
+        // property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
+		property("sonar.sources", "src/main/kotlin/com/pokedex/bff/infrastructure")
+        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
+		
 	}
 }
 
