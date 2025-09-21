@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   db:
+    container_name: pokedex-bff-db
     image: postgres:15-alpine
     env_file: .env
     volumes:
@@ -16,6 +17,7 @@ services:
       - postgres-password
 
   bff:
+    container_name: pokedex-mobile-bff
     image: pokedex-bff:prod
     environment:
       - SPRING_PROFILES_ACTIVE=prod
@@ -24,7 +26,7 @@ services:
     networks:
       - pokedex-net
     depends_on:
-      postgres-db:
+      db:
         condition: service_healthy
     secrets:
       - db-password
