@@ -8,7 +8,7 @@ JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 # Comandos PHONY
 # ==============================================================================
 .PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report
+		test test-class open-jacoco-report generate-sql-data db-bootstrap dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell
 
 # ==============================================================================
 # Ajuda
@@ -39,6 +39,12 @@ help:
 	@echo "  make deep-clean-gradle      - Limpa caches e artefatos do Gradle."
 	@echo ""
 	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
+	@echo ""
+	@echo "  make generate-sql-data        - Gera o SQL de dados a partir dos JSONs (src/main/resources/data)"
+	@echo "  make db-bootstrap             - Gera o SQL e sobe o ambiente completo (DB + BFF)"
+	@echo ""
+	@echo "  O comando 'db-bootstrap' executa tudo: gera o SQL, inicializa o banco e sobe o BFF já pronto para uso."
+	@echo "  Útil para ambientes limpos, CI/CD ou onboarding rápido."
 	@echo "==================================================================="
 
 # ==============================================================================
@@ -129,8 +135,29 @@ open-jacoco-report:
 		start $(JACOCO_REPORT_PATH); \
 	else \
 		echo "Não foi possível detectar um comando para abrir URLs/arquivos automaticamente."; \
-		echo "Por favor, abra manualmente: $(JACOCO_REPORT_PATH)"; \
+		echo "Por favor, abra manualmente: $(JACOCO_REPORT_PATH); \
 	fi
+
+# ==============================================================================
+# Novo fluxo: Geração e carga de dados SQL a partir dos JSONs
+# ==============================================================================
+
+# Gera o arquivo docker/db/init-data.sql a partir dos JSONs
+# Uso: make generate-sql-data
+# Requer: Python 3
+#
+generate-sql-data:
+	@echo "[INFO] Gerando docker/db/init-data.sql a partir dos JSONs..."
+	python3 scripts/json2sql.py
+
+# Sobe o ambiente completo (gera SQL, sobe DB e BFF)
+# Uso: make db-bootstrap
+#
+db-bootstrap: generate-sql-data
+	@echo "[INFO] Gerando JAR do BFF com Gradle..."
+	./gradlew clean build
+	@echo "[INFO] Subindo ambiente completo (DB + BFF) com Docker Compose..."
+	docker-compose up --build
 
 # ==============================================================================
 # Orquestração Completa (Linux/macOS)
@@ -198,3 +225,63 @@ deep-clean-gradle:
 	./gradlew clean --refresh-dependencies --no-build-cache
 	rm -rf build .gradle
 	@echo "--- Limpeza profunda do Gradle concluída. ---"
+
+# ======================================================================
+# Ambiente de Desenvolvimento Local
+# ======================================================================
+# make dev-db-up         - Sobe apenas o banco de dev (porta 5433, volume isolado)
+# make dev-db-down       - Para e remove o banco de dev
+# make dev-db-clean      - Remove banco de dev e volume (apaga dados)
+# make dev-db-shell      - Abre um shell psql no banco de dev
+
+# Sobe apenas o banco de dev
+# Uso: make dev-db-up
+#
+dev-db-up:
+	docker compose -f docker/docker-compose.dev.yml up -d
+	@echo "[INFO] Gerando arquivo SQL a partir dos JSONs..."
+	python3 scripts/json_to_sql.py
+	@echo "[INFO] Arquivo SQL gerado. Subindo logs do banco de dados para verificar importação..."
+	docker compose -f docker/docker-compose.dev.yml logs -f db
+
+# Para e remove o banco de dev
+# Uso: make dev-db-down
+#
+dev-db-down:
+	docker compose -f docker/docker-compose.dev.yml down
+
+# Remove banco de dev e volume (apaga dados)
+# Uso: make dev-db-clean
+#
+dev-db-clean:
+	docker compose -f docker/docker-compose.dev.yml down -v --remove-orphans
+
+# Abre um shell psql no banco de dev
+# Uso: make dev-db-shell
+#
+dev-db-shell:
+	PGPASSWORD=postgres psql -h localhost -U postgres -p 5433 -d pokedex_dev_db
+
+# ======================================================================
+# Ambiente de Produção/Deploy
+# ======================================================================
+# make prod-up           - Sobe todo o ambiente de produção (DB + BFF)
+# make prod-down         - Para e remove containers de prod
+# make prod-clean        - Remove containers e volumes de prod (apaga dados)
+# make prod-shell        - Abre um shell psql no banco de prod
+
+prod-up: db-bootstrap
+
+prod-down:
+	docker-compose down
+
+prod-clean:
+	docker-compose down -v --remove-orphans
+
+prod-shell:
+	PGPASSWORD=pokedex psql -h localhost -U pokedex -p 5432 -d pokedex
+
+clean-docker:
+	@docker-compose -f docker/docker-compose.dev.yml down -v --remove-orphans
+	@docker volume prune -f
+	@echo "Volumes e containers removidos com sucesso!"

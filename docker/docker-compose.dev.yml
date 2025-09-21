@@ -1,6 +1,6 @@
 services:
   db:
-    container_name: pokedex-dev-db
+    container_name: pokedex-bff-db-dev
     image: postgres:16-alpine
     restart: always
     environment:
@@ -8,15 +8,30 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: pokedex_dev_db
     ports:
-      - "5432:5432"
+      - "5434:5432"  # Porta local 5434 para evitar conflito com outros serviços
     volumes:
-      - db_data_dev:/var/lib/postgresql/data
-      - ./docker/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+      - pokedex-bff-data:/var/lib/postgresql/data  # Ajusta o nome do volume para evitar redundância
+      - ./docker/db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro  # Corrige o caminho do arquivo para garantir que seja montado corretamente
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d pokedex_dev_db"]
       interval: 5s
       timeout: 5s
       retries: 5
 
+  bff:
+    container_name: pokedex-mobile-bff-dev
+    build:
+      context: ../  # Adjusted to point to the correct project root relative to docker
+      dockerfile: Dockerfile  # Explicitly specify the Dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/pokedex_dev_db  # Ajusta para a porta interna do container
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      db:
+        condition: service_healthy  # Aguarda o banco estar pronto antes de iniciar
+    ports:
+      - "8081:8080"  # Porta local 8081 para evitar conflito com prod
+
 volumes:
-  db_data_dev:
+  pokedex-bff-data:
