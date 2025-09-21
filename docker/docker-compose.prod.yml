@@ -1,3 +1,6 @@
+# Arquivo para configuração de produção
+# Inclui secrets, rede overlay e limites de recursos
+
 version: '3.8'
 
 services:
