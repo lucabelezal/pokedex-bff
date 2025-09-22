@@ -1,8 +1,8 @@
 package com.pokedex.bff.infrastructure.repository
 
-import com.pokedex.bff.domain.model.Pokemon
+import com.pokedex.bff.domain.entities.Pokemon
 import com.pokedex.bff.domain.repository.PokemonRepository
-import com.pokedex.bff.domain.entities.PokemonEntity
+import com.pokedex.bff.infrastructure.persistence.entities.PokemonEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

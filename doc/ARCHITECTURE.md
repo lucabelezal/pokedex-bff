@@ -19,35 +19,27 @@ A arquitetura é baseada em **Spring Boot** e Kotlin, organizada em camadas bem 
 
 ## 3. Visão Geral da Arquitetura
 
-A arquitetura é dividida nas seguintes camadas principais, com pacotes base localizados em `com.pokedex.bff` (dentro de `src/main/kotlin/` ou `src/test/kotlin/` para testes). A estrutura detalhada abaixo descreve uma arquitetura robusta e escalável, incorporando elementos de DDD, CQRS e Arquitetura Limpa. *Nota: Nem todos os diretórios listados podem estar presentes na implementação atual, mas representam a estrutura ideal ou recomendada.*
+A arquitetura segue rigorosamente os princípios do **Clean Architecture**, com camadas bem definidas e dependências apontando sempre para o centro (domínio). A estrutura foi refatorada para seguir as melhores práticas de separação de responsabilidades.
 
-### Camadas e Componentes Detalhados
+### Camadas e Componentes Implementados
 
 | Camada Principal   | Subcomponente/Diretório        | Responsabilidade                                                                                                                               |
 | :----------------- | :----------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Interfaces**     | `controllers/`                 | Recebe requisições HTTP, delega para a camada de Aplicação. Lida com a apresentação dos dados (ex: JSON).                                        |
-|                    | `views/`                       | (Opcional para BFFs puros) Renderização de templates no servidor, se aplicável.                                                                 |
-|                    | `mappers/`                     | Mapeamento entre DTOs da Aplicação e modelos de visualização ou formatos de resposta específicos da interface.                                       |
-|                    | `validators/`                  | Validação de dados de entrada específicos da interface (ex: formato de requisição).                                                              |
-| **Application**    | `services/`                    | Orquestra casos de uso, coordena a lógica de aplicação. Pode usar Command Handlers e Query Handlers. (Observado: `PokedexService.kt`)        |
-|                    | `commands/`                    | Definições de Comandos (intenções de mudança de estado) e seus Handlers.                                                                       |
-|                    | `queries/`                     | Definições de Consultas (solicitações de dados) e seus Handlers.                                                                               |
-|                    | `dto/`                         | Objetos de Transferência de Dados usados para comunicação entre camadas (ex: entrada para Comandos, saída de Consultas). (Observado)             |
-| **Domain**         | `aggregates/`                  | Raízes de Agregação, que são clusters de entidades e VOs tratados como uma unidade. Contêm a lógica de negócio central.                         |
-|                    | `entities/`                    | Objetos de domínio com identidade e ciclo de vida. (Observado: `PokemonEntity.kt`, etc.)                                                        |
-|                    | `valueobjects/`                | Objetos que representam um valor descritivo sem identidade. (Observado em `application/`, movido para `domain/` conceitualmente)                |
-|                    | `events/`                      | Eventos de Domínio que capturam ocorrências significativas dentro do domínio.                                                                   |
-|                    | `exceptions/`                  | Exceções específicas do domínio.                                                                                                               |
-|                    | `factories/`                   | Lógica para criação complexa de objetos de domínio (Entidades, Agregados).                                                                     |
-|                    | `repositories/`                | Interfaces que definem contratos para persistência de Agregados/Entidades. (Observado: `PokemonRepository.kt` interface)                       |
-|                    | `specifications/`              | Lógica de consulta de domínio reutilizável e combinável.                                                                                       |
-| **Infrastructure** | `repositories/`                | Implementações concretas das interfaces de Repositório do Domínio (ex: usando Spring Data JPA).                                                  |
-|                    | `persistence/`                 | Configuração de ORM, migrações de banco de dados, scripts de seed. (Observado: `seeder/`)                                                       |
-|                    | `events/`                      | Implementação de publicação e subscrição de eventos (ex: message brokers, event bus local).                                                      |
-|                    | `services/`                    | Clientes para serviços externos (ex: APIs de terceiros, gateways de email), serviços de infraestrutura (ex: sistema de arquivos).                |
-|                    | `configurations/`              | Configurações do framework (Spring), segurança, CORS, OpenAPI. (Observado)                                                                     |
-|                    | `utils/`                       | Utilitários específicos da infraestrutura (ex: `JsonFile.kt` para seeders). (Observado)                                                          |
-| **Shared**         | `utils/`                       | Utilitários genéricos e reutilizáveis em múltiplas camadas (ex: manipulação de strings, datas).                                               |
+| **Interfaces**     | `controllers/`                 | Controllers REST que recebem requisições HTTP e delegam para Use Cases. Implementados: `PokedexController.kt`, `PokemonController.kt`        |
+|                    | `dto/`                         | DTOs específicos da interface externa (requests/responses da API). Separado dos DTOs de aplicação                                            |
+| **Application**    | `usecase/`                     | Use Cases que orquestram a lógica de aplicação. Implementado: `BuscarPokemonUseCase.kt`                                                      |
+|                    | `services/`                    | Services de aplicação para coordenação de múltiplos use cases. Implementado: `PokedexService.kt`                                            |
+|                    | `dto/`                         | DTOs para comunicação entre camadas (request/response). Implementados: `PokemonDto.kt`, `SearchDto.kt`, etc.                                |
+| **Domain**         | `entities/`                    | **Entidades puras de domínio** sem anotações de framework. Representam conceitos de negócio: `Pokemon.kt`, `Species.kt`, `Type.kt`, etc.    |
+|                    | `valueobjects/`                | Value Objects do domínio para conceitos imutáveis. Implementados: `SpritesVO.kt`, `OfficialArtworkSpritesVO.kt`, etc.                       |
+|                    | `repository/`                  | **Interfaces** de repositório definindo contratos de persistência. Implementado: `PokemonRepository.kt`                                     |
+|                    | `exceptions/`                  | Exceções específicas do domínio para violações de regras de negócio                                                                          |
+| **Infrastructure** | `persistence/entities/`        | **Entities JPA** com anotações de persistência. Movidas da domain: `PokemonEntity.kt`, `TypeEntity.kt`, etc.                               |
+|                    | `repository/`                  | Implementações concretas dos repositórios usando Spring Data JPA. Implementado: `JpaPokemonRepository.kt`                                   |
+|                    | `configurations/`              | Configurações do Spring Boot, CORS, OpenAPI. Implementados: `OpenApiConfiguration.kt`, `CorsConfiguration.kt`                              |
+|                    | `config/`                      | Configurações de beans e use cases. Implementado: `UseCaseConfig.kt`                                                                        |
+|                    | `migration/`                   | Scripts de migração de banco (pasta mantida para futuras migrações)                                                                          |
+| **Shared**         | `exceptions/`                  | Exceções globais e handlers compartilhados entre camadas                                                                                     |
 |                    | `constants/`                   | Constantes globais da aplicação.                                                                                                               |
 |                    | `events/`                      | (Opcional) Definições de eventos de integração ou tipos de eventos compartilhados, se não específicos do domínio.                                |
 |                    | `exceptions/`                  | Exceções compartilhadas ou handlers globais. (Observado: `GlobalExceptionHandler.kt`)                                                          |
@@ -58,35 +50,55 @@ A arquitetura é dividida nas seguintes camadas principais, com pacotes base loc
 
 ---
 
-## 4. Fluxo Principal (Exemplo com CQRS: Comando para Criar Pokémon)
+## 4. Princípios da Clean Architecture Implementados
 
-1.  **Cliente Externo** faz uma requisição HTTP POST para `Interfaces/Controllers/PokemonController`.
-2.  O `Controller` valida a requisição e usa um `Interfaces/Mappers` para converter o payload em um `Application/Commands/CreatePokemonCommand`.
-3.  O `Controller` envia o `Comando` para um Command Bus ou diretamente para o `Application/Commands/CreatePokemonCommandHandler` correspondente.
-4.  O `CommandHandler` (em `Application`):
-    *   Pode usar `Domain/Factories` para criar instâncias de `Domain/Aggregates/PokemonAggregate` ou `Domain/Entities/PokemonEntity`.
-    *   Aplica lógica de negócio contida no Agregado/Entidade.
-    *   Usa uma interface de `Domain/Repositories/PokemonRepository` para persistir o novo Agregado/Entidade. A implementação concreta estará em `Infrastructure/Repositories/`.
-    *   Pode disparar `Domain/Events/PokemonCreatedEvent` através de um Domain Event Publisher.
-5.  `Infrastructure/Events/` (Listeners de Eventos de Domínio) podem reagir ao `PokemonCreatedEvent` para executar ações secundárias (ex: enviar notificação, atualizar read models).
-6.  O `CommandHandler` retorna um resultado (ex: ID do Pokémon criado) ou void.
-7.  O `Controller` retorna uma resposta HTTP apropriada (ex: 201 Created com o ID).
+### 4.1 Separação de Responsabilidades
+- **Domain**: Contém apenas regras de negócio puras, sem dependências externas
+- **Application**: Orquestra use cases e coordena operações entre domínio e infraestrutura  
+- **Infrastructure**: Implementa detalhes técnicos (persistência, configurações, frameworks)
+- **Interfaces**: Adaptadores para comunicação externa (REST APIs, DTOs)
 
-**(Exemplo com CQRS: Consulta para Obter Pokémon)**
+### 4.2 Regra de Dependência
+As dependências sempre apontam para o centro:
+```
+Interfaces → Application → Domain ← Infrastructure
+```
 
-1.  **Cliente Externo** faz uma requisição HTTP GET para `Interfaces/Controllers/PokemonController`.
-2.  O `Controller` valida e converte os parâmetros da requisição em um `Application/Queries/GetPokemonQuery`.
-3.  O `Controller` envia a `Consulta` para um Query Bus ou diretamente para o `Application/Queries/GetPokemonQueryHandler`.
-4.  O `QueryHandler` (em `Application`):
-    *   Interage diretamente com `Infrastructure/Persistence` (ex: usando uma view otimizada, Dapper, JDBC, ou mesmo repositórios se for um read model simples) para buscar os dados.
-    *   Pode usar `Domain/Specifications` se a lógica de consulta for complexa e reutilizável, embora queries diretas sejam comuns para otimizar leituras.
-    *   Mapeia os dados brutos para `Application/DTO/PokemonDTO`.
-5.  O `QueryHandler` retorna o `PokemonDTO`.
-6.  O `Controller` recebe o `DTO` e o serializa como resposta HTTP.
+### 4.3 Inversão de Dependência
+- Domain define interfaces (ex: `PokemonRepository`)
+- Infrastructure implementa as interfaces (ex: `JpaPokemonRepository`)
+- Application usa as abstrações, não implementações concretas
+
+### 4.4 Entidades vs Entities JPA
+- **Domain/Entities**: Objetos puros de negócio (ex: `Pokemon.kt`)
+- **Infrastructure/Persistence/Entities**: Mapeamento JPA (ex: `PokemonEntity.kt`)
+- Esta separação permite trocar tecnologias de persistência sem afetar o domínio
 
 ---
 
-## 5. Tecnologias Utilizadas
+## 5. Fluxo Principal (Clean Architecture)
+
+### 5.1 Exemplo: Buscar Pokémon por ID
+
+1. **Cliente Externo** faz requisição GET para `interfaces/controllers/PokemonController`
+2. **Controller** valida parâmetros e chama `application/usecase/BuscarPokemonUseCase`
+3. **Use Case** usa interface `domain/repository/PokemonRepository` para buscar dados
+4. **Repository Implementation** (`infrastructure/repository/JpaPokemonRepository`) executa consulta
+5. **JPA Entity** (`infrastructure/persistence/entities/PokemonEntity`) é convertida para **Domain Entity** (`domain/entities/Pokemon`)
+6. **Domain Entity** é convertida para **DTO** (`application/dto/response/PokemonDto`)
+7. **Controller** retorna DTO como JSON para o cliente
+
+### 5.2 Exemplo: Listar Pokédex
+
+1. **Cliente** faz GET para `interfaces/controllers/PokedexController`
+2. **Controller** chama `application/services/PokedexService`
+3. **Service** orquestra múltiplas consultas e aplica lógica de apresentação
+4. **Service** usa repositórios via interfaces do domínio
+5. **Resposta** estruturada é retornada como `PokedexListResponse`
+
+---
+
+## 6. Tecnologias Utilizadas
 
 * **Spring Boot:** Framework principal para APIs REST, injeção de dependências e configuração automática.
 * **Kotlin:** Linguagem principal do projeto, rodando na JVM.
@@ -100,21 +112,19 @@ A arquitetura é dividida nas seguintes camadas principais, com pacotes base loc
 
 ---
 
-## 6. Padrões e Boas Práticas
+## 7. Padrões e Boas Práticas Implementados
 
-* **Design Orientado ao Domínio (DDD):** Foco em modelar o núcleo do negócio (Agregados, Entidades, Value Objects, Eventos de Domínio, Repositórios, Fábricas, Especificações).
-* **Command Query Responsibility Segregation (CQRS):** Separação de operações que alteram estado (Comandos) das que leem estado (Consultas). Isso permite otimizar cada lado independentemente.
-* **Arquitetura Limpa/Hexagonal:** Camadas bem definidas com dependências apontando para o interior (Domain é o centro). Interfaces (portas) no domínio e adaptadores na infraestrutura.
-* **Inversão de Dependência (DIP):** Camadas de alto nível dependem de abstrações, não de implementações.
-* **DTOs para Contratos:** DTOs são usados para comunicação entre a camada de Aplicação e as camadas externas (Interfaces, Infrastructure para eventos).
-* **Imutabilidade:** Preferir objetos imutáveis, especialmente Value Objects e DTOs.
-* **Testes Abrangentes:** Cobertura com testes unitários, de integração e de aceitação.
+* **Clean Architecture**: Separação rigorosa de camadas com dependências apontando para o domínio
+* **Inversão de Dependência (DIP)**: Interfaces definidas no domínio, implementadas na infraestrutura
+* **Single Responsibility Principle**: Cada classe tem uma única responsabilidade bem definida
+* **Separation of Concerns**: Entidades de domínio separadas de entities JPA
+* **DTOs para Contratos**: DTOs específicos para comunicação entre camadas
+* **Imutabilidade**: Value Objects e DTOs imutáveis sempre que possível
+* **Repository Pattern**: Abstração da persistência através de interfaces
 
 ---
 
-## 7. Detalhes Técnicos por Camada (Expandido)
-
-A estrutura de pacotes sugerida para `com.pokedex.bff` seria:
+## 8. Estrutura de Pastas Atual (Implementada)
 
 ### 7.1 Interfaces (`com.pokedex.bff.interfaces`)
 
@@ -213,197 +223,73 @@ A estrutura de testes deve espelhar a estrutura de `src/main/kotlin/` para clare
 ```plaintext
 com.pokedex.bff
 ├── application
-│   ├── commands      // Comandos e Handlers (ex: CreatePokemonCommand.kt, CreatePokemonCommandHandler.kt)
-│   ├── dto           // DTOs para entrada/saída da camada de aplicação (ex: PokemonDTO.kt) (Observado)
-│   ├── queries       // Consultas e Handlers (ex: GetPokemonByIdQuery.kt, GetPokemonByIdQueryHandler.kt)
-│   └── services      // Serviços de aplicação para orquestração (Observado: PokedexService.kt)
+│   ├── dto           // DTOs para request/response da aplicação
+│   │   ├── request   // DTOs de entrada
+│   │   └── response  // DTOs de saída (PokemonDto.kt, SearchDto.kt, etc.)
+│   ├── services      // Services de aplicação (PokedexService.kt)
+│   └── usecase       // Use Cases específicos (BuscarPokemonUseCase.kt)
 │
 ├── domain
-│   ├── aggregates    // Raízes de Agregação (ex: PokemonAggregate.kt)
-│   ├── entities      // Entidades do domínio (Observado: PokemonEntity.kt)
-│   ├── events        // Eventos de Domínio (ex: PokemonRegisteredEvent.kt)
-│   ├── exceptions    // Exceções de Domínio (ex: InvalidStatsException.kt)
-│   ├── factories     // Fábricas para criar objetos de domínio (ex: PokemonFactory.kt)
-│   ├── repositories  // Interfaces de Repositório (Observado: PokemonRepository.kt)
-│   ├── specifications// Especificações de consulta de domínio
-│   └── valueobjects  // Value Objects (Observado em application/, movido para cá: SpritesVO.kt)
+│   ├── entities      // Entidades puras de domínio (Pokemon.kt, Type.kt, Species.kt, etc.)
+│   ├── exceptions    // Exceções específicas do domínio
+│   ├── repository    // Interfaces de repositório (PokemonRepository.kt)
+│   ├── repositories  // Interfaces adicionais de repositório
+│   └── valueobjects  // Value Objects (SpritesVO.kt, OfficialArtworkSpritesVO.kt, etc.)
 │
 ├── infrastructure
-│   ├── configurations// Configurações do Spring, Segurança, OpenAPI (Observado)
-│   ├── events        // Implementação de Event Bus/Message Broker consumers/producers
-│   ├── persistence   // Configs de ORM, Migrações, Seeders (Observado: seeder/)
-│   ├── repositories  // Implementações de Repositório (ex: PostgresPokemonRepository.kt)
-│   ├── services      // Clientes para serviços externos, etc.
-│   └── utils         // Utilitários de infraestrutura (Observado: JsonFile.kt)
+│   ├── config        // Configurações de beans (UseCaseConfig.kt)
+│   ├── configurations// Configurações do Spring (OpenApiConfiguration.kt, CorsConfiguration.kt)
+│   ├── migration     // Scripts de migração (mantido para futuras migrações)
+│   ├── persistence
+│   │   └── entities  // Entities JPA (PokemonEntity.kt, TypeEntity.kt, etc.)
+│   └── repository    // Implementações de repositório (JpaPokemonRepository.kt)
 │
 ├── interfaces
-│   ├── controllers   // Controllers REST (Observado: PokedexController.kt)
-│   ├── mappers       // Mapeadores para DTOs <-> Modelos de View/Resposta
-│   ├── validators    // Validadores de entrada da interface
-│   └── views         // (Opcional) Server-side templates
+│   ├── controllers   // Controllers REST (PokedexController.kt, PokemonController.kt)
+│   └── dto          // DTOs específicos da interface REST (PokemonDto.kt)
 │
-├── shared            // Código compartilhado entre camadas
-│   ├── constants     // Constantes globais
-│   ├── events        // (Opcional) Definições de eventos de integração
-│   ├── exceptions    // Exceções base, GlobalExceptionHandler (Observado)
-│   └── utils         // Utilitários genéricos
+├── shared
+│   └── exceptions   // Exceções globais e handlers compartilhados
 │
-└── Application.kt    // Ponto de entrada do Spring Boot
-
-src/test/kotlin/com/pokedex/bff
-├── unit              // Testes unitários (espelhando a estrutura do main)
-│   ├── application
-│   │   └── commands
-│   └── domain
-│       └── aggregates
-├── integration       // Testes de integração
-│   ├── infrastructure
-│   │   └── repositories
-│   └── application
-├── acceptance        // Testes de aceitação/E2E
-│   └── interfaces
-│       └── controllers
-└── mocks             // Mocks e utilitários de teste
+└── PokedexBffApplication.kt // Ponto de entrada do Spring Boot
 ```
 
 ---
 
-## 9. Diagrama de Componentes (Visão Geral com Foco em CQRS e DDD)
+## 9. Benefícios da Refatoração Realizada
 
-```mermaid
-graph TD
-    Client([Cliente Externo]) -->|HTTP REST| IF_Layer[Interfaces]
+### 9.1 Antes da Refatoração (Problemas)
+- ❌ Pastas duplicadas: `interface/` e `interfaces/`
+- ❌ Entities JPA na camada de domínio
+- ❌ Value Objects na camada application  
+- ❌ Arquivos `.keep` desnecessários poluindo o projeto
+- ❌ Utilitários de seeder não utilizados na infrastructure
+- ❌ Confusão entre entities e models no domínio
 
-    subgraph "Interfaces"
-        direction LR
-        IF_Controllers[Controllers]
-        IF_Mappers[Mappers]
-        IF_Validators[Validators]
-        IF_Views[Views]
-    end
+### 9.2 Depois da Refatoração (Soluções)
+- ✅ **Estrutura unificada**: Uma única pasta `interfaces/`
+- ✅ **Separação clara**: Domain entities puros, JPA entities na infrastructure
+- ✅ **Clean Architecture**: Value Objects no domínio onde pertencem
+- ✅ **Projeto limpo**: Removidos arquivos desnecessários
+- ✅ **Infrastructure focada**: Apenas código realmente usado
+- ✅ **Nomenclatura consistente**: Entities no domínio, sem duplicações
 
-    IF_Layer --> APP_Layer[Application]
-
-    subgraph "Application"
-        direction LR
-        APP_Commands[Commands & Handlers]
-        APP_Queries[Queries & Handlers]
-        APP_Services[App Services]
-        APP_DTOs[DTOs]
-    end
-
-    APP_Layer --> DOM_Layer[Domain]
-    APP_Layer --> INFRA_Layer[Infrastructure]
-
-    subgraph "Domain"
-        direction LR
-        DOM_Aggregates[Aggregates]
-        DOM_Entities[Entities]
-        DOM_VOs[Value Objects]
-        DOM_Events[Domain Events]
-        DOM_Repositories[Repositories]
-        DOM_Factories[Factories]
-        DOM_Specifications[Specifications]
-        DOM_Exceptions[Domain Exceptions]
-    end
-
-    DOM_Layer --> INFRA_Layer[Infrastructure]
-
-    subgraph "Infrastructure"
-        direction LR
-        INFRA_Persistence[Persistence]
-        INFRA_RepositoriesImpl[Repositories Impl.]
-        INFRA_EventsBus[Event Handling]
-        INFRA_Services_Clients[Infra Services]
-        INFRA_Configs[Configurations]
-        INFRA_Utils[Utils Infra]
-    end
-
-    INFRA_Persistence --> Database[(PostgreSQL DB)]
-    INFRA_Services_Clients --> ExternalServices([External APIs/Services])
-
-    SHARED_Layer[Shared Code]
-    SHARED_Layer -.-> IF_Layer
-    SHARED_Layer -.-> APP_Layer
-    SHARED_Layer -.-> DOM_Layer
-    SHARED_Layer -.-> INFRA_Layer
-
-    subgraph "Shared Code"
-        direction LR
-        SHARED_Utils_Generic[Utils Genéricos]
-        SHARED_Constants[Constants]
-        SHARED_Exceptions_Global[Global Exceptions / Base]
-        SHARED_Events_Integration[Integration Event Definitions]
-    end
-
-    TEST_Layer[Tests]
-    TEST_Layer -.-> IF_Layer
-    TEST_Layer -.-> APP_Layer
-    TEST_Layer -.-> DOM_Layer
-    TEST_Layer -.-> INFRA_Layer
-
-    subgraph "Tests"
-        direction TB
-        TEST_Unit[Unit Tests]
-        TEST_Integration[Integration Tests]
-        TEST_Acceptance[Acceptance Tests]
-    end
-
-```
+### 9.3 Vantagens Arquiteturais
+- 🎯 **Testabilidade**: Domain sem dependências externas é facilmente testável
+- 🔄 **Flexibilidade**: Troca de tecnologias de persistência sem afetar domínio
+- 📦 **Manutenibilidade**: Responsabilidades claras facilitam manutenção
+- 🚀 **Escalabilidade**: Estrutura preparada para crescimento do projeto
+- 🛡️ **Robustez**: Regras de negócio protegidas de mudanças tecnológicas
 
 ---
 
-## 10. Diagrama de Sequência (Exemplo: Comando para Criar Pokémon)
+## 10. Próximos Passos Recomendados
 
-```mermaid
-sequenceDiagram
-    participant Client as Cliente Externo
-    participant Controller as PokemonController (Interfaces)
-    participant CmdBus as CommandBus (Application)
-    participant Handler as CreatePokemonCmdHandler (Application)
-    participant Factory as PokemonFactory (Domain)
-    participant Aggregate as PokemonAggregate (Domain)
-    participant Repo as PokemonRepository (Domain Interface)
-    participant RepoImpl as PokemonRepositoryImpl (Infrastructure)
-    participant EventPub as DomainEventPublisher (Infrastructure)
-
-    Client->>Controller: HTTP POST /pokemons (payload)
-    Controller->>Controller: Valida payload
-    Controller->>CmdBus: dispatch(CreatePokemonCommand(payload))
-    CmdBus->>Handler: handle(command)
-    Handler->>Factory: create(command.data)
-    Factory-->>Aggregate: new PokemonAggregate(...)
-    Handler->>Aggregate: executeBusinessLogic(...)
-    Handler->>Repo: save(pokemonAggregate)
-    Repo-->>RepoImpl: save(pokemonAggregate)
-    RepoImpl-->>DB: (Persiste dados)
-    Handler->>EventPub: publish(PokemonCreatedEvent(...))
-    EventPub-->>InfraEventHandler: (Notifica listeners)
-    Handler-->>CmdBus: (Retorna ID ou void)
-    CmdBus-->>Controller: (Retorna ID ou void)
-    Controller-->>Client: HTTP 201 Created (ID)
-```
-
-**(Exemplo: Consulta para Listar Pokémons)**
-```mermaid
-sequenceDiagram
-    participant Client as Cliente Externo
-    participant Controller as PokedexController (Interfaces)
-    participant QueryBus as QueryBus (Application)
-    participant Handler as GetPokemonsQueryHandler (Application)
-    participant ReadRepo as PokemonReadRepository (Infrastructure/Persistence)
-    participant DB as PostgreSQL Database
-
-    Client->>Controller: GET /pokemons?page=0&size=10
-    Controller->>QueryBus: dispatch(GetPokemonsQuery(page=0,size=10))
-    QueryBus->>Handler: handle(query)
-    Handler->>ReadRepo: findWithFilters(query.filters, query.pageable)
-    ReadRepo->>DB: SELECT ... FROM pokemons_read_model ...
-    DB-->>ReadRepo: Lista de Pokemons (Read Model)
-    ReadRepo-->>Handler: Page<PokemonDTO>
-    Handler-->>QueryBus: Page<PokemonDTO>
-    QueryBus-->>Controller: Page<PokemonDTO>
-    Controller-->>Client: HTTP 200 OK + JSON (Page<PokemonDTO>)
-```
-
+1. **Testes**: Implementar testes unitários para entities de domínio
+2. **Use Cases**: Expandir use cases para operações CRUD completas
+3. **Validation**: Adicionar validações de domínio nas entities
+4. **Error Handling**: Implementar exceções específicas de domínio
+5. **Documentation**: Manter documentação alinhada com evolução do código
 ---
+
+*Documento atualizado após refatoração para Clean Architecture em 22/09/2025*
