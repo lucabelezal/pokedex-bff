@@ -30,7 +30,7 @@ TABLE_VALID_FIELDS = {
     "types": ["id", "name", "color"],
     "egg_groups": ["id", "name"],
     "generations": ["id", "name", "region_id"],
-    "abilities": ["id", "name", "description", "effect"],
+    "abilities": ["id", "name", "description", "introduced_generation_id"],
     "species": ["id", "pokemon_number", "name", "species_en", "species_pt", "description", "color", "generation_id"],
     "stats": ["id", "total", "hp", "attack", "defense", "sp_atk", "sp_def", "speed"],
     "evolution_chains": ["id", "chain_data"],
