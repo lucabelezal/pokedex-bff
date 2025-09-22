@@ -8,7 +8,7 @@ JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 # Comandos PHONY  
 # ==============================================================================
 .PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report generate-sql-data validate-db install-db-deps db-only-up db-only-down db-only-restart db-only-clean db-only-shell db-info \
+		test test-class open-jacoco-report generate-sql-data validate-db check-deps install-db-deps db-only-up db-only-down db-only-restart db-only-clean db-only-shell db-info \
 		dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell clean-docker
 
 # ==============================================================================
@@ -21,6 +21,7 @@ help:
 	@echo "  make help                   - Exibe esta mensagem de ajuda."
 	@echo ""
 	@echo "🔧 CONFIGURAÇÃO INICIAL:"
+	@echo "  make check-deps             - Verifica se todas as dependências estão instaladas."
 	@echo "  make dev-setup              - Configura e inicia o ambiente (Linux/macOS)."
 	@echo "  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
 	@echo ""
@@ -144,8 +145,14 @@ open-jacoco-report:
 	fi
 
 # ==============================================================================
-# Geração de Dados SQL
+# Verificação de Dependências e Geração de Dados SQL
 # ==============================================================================
+
+# Verifica se todas as dependências estão instaladas
+# Uso: make check-deps
+check-deps:
+	@echo "🔍 Verificando dependências do sistema..."
+	python3 tools/database/check_dependencies.py
 
 # Gera o arquivo docker/db/init-data.sql a partir dos JSONs
 # Uso: make generate-sql-data
