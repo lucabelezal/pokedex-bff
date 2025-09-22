@@ -1,6 +1,16 @@
 # Documentação do Esquema do Banco de Dados Pokémon
 
-Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL.
+Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL e está implementado seguindo os princípios da **Clean Architecture**.
+
+## Contexto Arquitetural
+
+O projeto utiliza **Clean Architecture** com separação clara entre as camadas:
+
+- **Entidades de Domínio** (`src/main/kotlin/com/pokedex/bff/domain/entities/`): Representam os conceitos puros de negócio sem dependências externas
+- **Entidades JPA** (`src/main/kotlin/com/pokedex/bff/infrastructure/persistence/entities/`): Mapeiam as tabelas do banco de dados com anotações específicas do JPA/Hibernate
+- **DTOs de Interface** (`src/main/kotlin/com/pokedex/bff/interfaces/dto/`): Gerenciam a serialização/deserialização de dados para comunicação externa
+
+Os dados JSON complexos (como sprites) são mapeados através de DTOs especializados na camada de interface, garantindo que a lógica de serialização não contamine o domínio.
 
 ## Visão Geral do Esquema
 
@@ -21,6 +31,37 @@ As 13 tabelas são:
 11. `pokemon_egg_groups` (Tabela de Junção)
 12. `evolution_chains` (Contém detalhes da evolução em JSON)
 13. `pokemon_weaknesses` (Tabela de Junção)
+
+## Arquitetura de Entidades
+
+### Separação de Responsabilidades
+
+O projeto implementa uma clara separação entre diferentes tipos de entidades:
+
+#### Entidades de Domínio (`domain/entities/`)
+- **Propósito**: Representam conceitos puros de negócio
+- **Características**: Sem dependências de frameworks, anotações ou bibliotecas externas
+- **Exemplos**: `Pokemon.kt`, `Species.kt`, `Region.kt`
+- **Regras**: Contêm apenas lógica de negócio e validações de domínio
+
+#### Entidades JPA (`infrastructure/persistence/entities/`)
+- **Propósito**: Mapeamento das tabelas do banco de dados
+- **Características**: Utilizam anotações JPA/Hibernate para persistência
+- **Exemplos**: `PokemonJpaEntity.kt`, `SpeciesJpaEntity.kt`, `RegionJpaEntity.kt`
+- **Regras**: Responsáveis apenas pelo mapeamento objeto-relacional
+
+#### DTOs de Interface (`interfaces/dto/`)
+- **Propósito**: Serialização/deserialização para comunicação externa
+- **Características**: Contêm anotações Jackson para JSON
+- **Subpacotes**:
+  - `sprites/`: DTOs para dados JSON complexos (ex: `SpritesDto.kt`, `OfficialArtworkSpritesDto.kt`)
+- **Regras**: Isolam preocupações de serialização da lógica de domínio
+
+### Campos JSON (sprites)
+Os campos `sprites` (JSONB) são mapeados através de DTOs especializados na camada de interface. Isso garante que:
+- A lógica de serialização não contamine as entidades de domínio
+- A estrutura JSON seja bem definida e tipada
+- Mudanças no formato de serialização não afetem a lógica de negócio
 
 ## Entidades (Tabelas) e Seus Relacionamentos
 
@@ -119,7 +160,7 @@ Armazena as informações principais de cada Pokémon individual (incluindo suas
     *   `height` (NUMERIC(5, 2)): Altura do Pokémon em metros.
     *   `weight` (NUMERIC(6, 2)): Peso do Pokémon em quilogramas.
     *   `description` (TEXT): Descrição de Pokédex do Pokémon.
-    *   `sprites` (JSONB): Objeto JSON que armazena URLs para diferentes sprites do Pokémon.
+    *   `sprites` (JSONB): Objeto JSON que armazena URLs para diferentes sprites do Pokémon. Mapeado através de DTOs especializados (`SpritesDto`, `OfficialArtworkSpritesDto`) na camada de interface para garantir tipagem forte e isolamento da lógica de serialização.
     *   `gender_rate_value` (INT): Taxa de gênero (informações sobre proporção de gênero, ex: 0-8, -1 para sem gênero).
     *   `egg_cycles` (INT): Número de ciclos de ovos para chocar.
 *   **Relacionamentos:**
@@ -261,7 +302,7 @@ erDiagram
         numeric_5_2 height "Altura (m)"
         numeric_6_2 weight "Peso (kg)"
         text description "Descrição Pokédex"
-        jsonb sprites "URLs dos sprites"
+        jsonb sprites "URLs dos sprites (via DTOs especializados)"
         integer gender_rate_value "Taxa de gênero"
         integer egg_cycles "Ciclos de ovo"
         bigint stats_id UK FK "ID dos stats (stats.id)"
@@ -342,3 +383,20 @@ erDiagram
     pokemon_weaknesses ||--|{ pokemons : "associa fraqueza"
     pokemon_weaknesses ||--|{ types : "associa fraqueza"
 ```
+
+## Considerações de Implementação
+
+### Campos JSON (JSONB)
+Os campos `sprites` e `chain_data` utilizam o tipo JSONB do PostgreSQL para armazenar dados estruturados complexos. A implementação segue o padrão da Clean Architecture:
+
+- **Na camada de infraestrutura**: Entidades JPA mapeiam diretamente os campos JSONB
+- **Na camada de interface**: DTOs especializados (`SpritesDto`, `OfficialArtworkSpritesDto`) gerenciam a serialização/deserialização
+- **Na camada de domínio**: Entidades puras não dependem de detalhes de persistência ou serialização
+
+### Mapeamento Objeto-Relacional
+O projeto mantém separação clara entre:
+- **Conceitos de negócio**: Representados nas entidades de domínio
+- **Persistência**: Implementada nas entidades JPA da infraestrutura  
+- **Comunicação externa**: Gerenciada pelos DTOs de interface
+
+Esta separação garante que mudanças na estrutura do banco de dados ou formatos de serialização não afetem a lógica de negócio central da aplicação.
