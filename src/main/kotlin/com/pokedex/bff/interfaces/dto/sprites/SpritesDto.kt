@@ -1,8 +1,8 @@
-package com.pokedex.bff.domain.valueobjects
+package com.pokedex.bff.interfaces.dto.sprites
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class SpritesVO(
+data class SpritesDto(
     @JsonProperty("back_default")
     val backDefault: String? = null,
     @JsonProperty("back_female")
@@ -20,5 +20,5 @@ data class SpritesVO(
     @JsonProperty("front_shiny_female")
     val frontShinyFemale: String? = null,
     @JsonProperty("other")
-    val other: OtherSpritesVO? = null
+    val other: OtherSpritesDto? = null
 )
