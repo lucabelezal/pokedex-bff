@@ -1,6 +1,6 @@
 package com.pokedex.bff.infrastructure.persistence.entities
 
-import com.pokedex.bff.domain.valueobjects.SpritesVO
+import com.pokedex.bff.interfaces.dto.sprites.SpritesDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -40,7 +40,7 @@ data class PokemonEntity(
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "sprites", columnDefinition = "jsonb")
-    var sprites: SpritesVO? = null,
+    var sprites: SpritesDto? = null,
 
     @Column(name = "gender_rate_value")
     var genderRateValue: Int? = null,

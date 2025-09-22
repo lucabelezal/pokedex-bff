@@ -1,8 +1,8 @@
-package com.pokedex.bff.domain.valueobjects
+package com.pokedex.bff.interfaces.dto.sprites
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class OfficialArtworkSpritesVO(
+data class OfficialArtworkSpritesDto(
     @JsonProperty("front_default")
     val frontDefault: String? = null,
     @JsonProperty("front_shiny")
