@@ -6,12 +6,32 @@ Ferramentas de desenvolvimento para o projeto Pokédex BFF.
 
 ```
 tools/
-└── database/               # Ferramentas relacionadas ao banco de dados
-    ├── generate_sql_from_json.py  # Gera SQL a partir dos JSONs
-    └── validate_database.py       # Valida estrutura e dados do banco
+└── database/                       # Ferramentas relacionadas ao banco de dados
+    ├── check_dependencies.py       # Verifica dependências do sistema
+    ├── generate_sql_from_json.py   # Gera SQL a partir dos JSONs
+    └── validate_database.py        # Valida estrutura e dados do banco
 ```
 
 ## 🔧 Ferramentas Disponíveis
+
+### 🔍 Verificador de Dependências (`check_dependencies.py`)
+
+Verifica se todas as dependências necessárias estão instaladas no sistema.
+
+**Uso:**
+```bash
+# Via Makefile (recomendado)
+make check-deps
+
+# Ou diretamente
+python3 tools/database/check_dependencies.py
+```
+
+**Recursos:**
+- Verifica Python 3.7+, Docker, Docker Compose, Make, psycopg2
+- Compatível com Linux, macOS e Windows
+- Fornece instruções de instalação específicas por SO
+- Testa conectividade com Docker daemon
 
 ### 📊 Gerador de SQL (`generate_sql_from_json.py`)
 

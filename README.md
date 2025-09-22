@@ -60,6 +60,15 @@ pokedex-bff/
 
 ### 🚀 Como Iniciar o Desenvolvimento
 
+#### 0. ⚡ Verificar Dependências (PRIMEIRO PASSO)
+Antes de começar, verifique se todas as dependências estão instaladas:
+```sh
+make check-deps
+```
+- **O que verifica**: Python 3.7+, Docker, Docker Compose, Make, psycopg2
+- **Compatibilidade**: Linux (Debian/Ubuntu), macOS, Windows (WSL/Git Bash)
+- **Se algo faltar**: O script mostra instruções de instalação específicas para seu sistema
+
 #### 1. Gerar dados SQL dos JSONs
 Converte os arquivos JSON numerados em comandos SQL:
 ```sh
@@ -105,6 +114,49 @@ Os arquivos JSON seguem uma **ordem específica** para respeitar dependências d
 8. `08_evolution_chains.json` → Cadeias evolutivas
 9. `09_pokemon.json` → Pokémons (depende de species/abilities/stats)
 10. `10_weaknesses.json` → Fraquezas (depende de pokémons)
+
+---
+
+## 💻 Requisitos e Compatibilidade
+
+### 📋 Dependências Necessárias
+
+| Ferramenta | Versão Mínima | Propósito |
+|------------|---------------|-----------|
+| **Python** | 3.7+ | Scripts de geração e validação |
+| **Docker** | 20.0+ | Containerização do banco |
+| **Docker Compose** | 2.0+ | Orquestração de serviços |
+| **Make** | 3.8+ | Automação de comandos |
+| **psycopg2** | 2.8+ | Conexão Python-PostgreSQL |
+
+### 🌐 Compatibilidade Multiplataforma
+
+#### ✅ **Linux (Debian/Ubuntu)**
+```bash
+# Instalar dependências
+sudo apt update
+sudo apt install python3 python3-pip build-essential
+curl -fsSL https://get.docker.com -o get-docker.sh && sh get-docker.sh
+sudo apt install docker-compose-plugin
+pip3 install psycopg2-binary
+```
+
+#### ✅ **macOS**
+```bash
+# Com Homebrew
+brew install python3 docker make
+pip3 install psycopg2-binary
+```
+
+#### ✅ **Windows**
+- **Opção 1 - WSL2** (Recomendado): Use Ubuntu no WSL2 + Docker Desktop
+- **Opção 2 - Git Bash**: Docker Desktop + Python + Make (via chocolatey)
+- **Opção 3 - PowerShell**: Use `docker` e `python` diretamente
+
+### 🔧 Verificação Automática
+O comando `make check-deps` verifica automaticamente todas as dependências e fornece instruções de instalação específicas para seu sistema operacional.
+
+---
 
 ### ➕ Adicionando Novos Dados
 

@@ -70,6 +70,9 @@ pokedex-bff/
 ### 🔧 Comandos de Desenvolvimento
 
 ```bash
+# Verificação de dependências
+make check-deps           # Executa: tools/database/check_dependencies.py
+
 # Gerar SQL a partir dos JSONs
 make generate-sql-data      # Executa: tools/database/generate_sql_from_json.py
 
@@ -82,6 +85,16 @@ make db-info              # Informações de conexão
 # Validação
 make validate-db          # Executa: tools/database/validate_database.py
 ```
+
+### 🌐 Compatibilidade Multiplataforma
+
+O projeto é **totalmente compatível** com:
+- **Linux**: Debian, Ubuntu (testado)
+- **macOS**: Intel e Apple Silicon (testado)  
+- **Windows**: WSL2, Git Bash, PowerShell (suporte via instruções automáticas)
+
+**Dependências verificadas automaticamente:**
+- Python 3.7+, Docker 20.0+, Docker Compose 2.0+, Make 3.8+, psycopg2 2.8+
 
 ### 📊 Status da Validação
 
