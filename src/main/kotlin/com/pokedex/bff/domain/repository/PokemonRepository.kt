@@ -1,6 +1,6 @@
 package com.pokedex.bff.domain.repository
 
-import com.pokedex.bff.domain.model.Pokemon
+import com.pokedex.bff.domain.entities.Pokemon
 
 interface PokemonRepository {
     fun findById(id: Long): Pokemon?

@@ -4,16 +4,49 @@
 
 ---
 
-## 🏗️ REORGANIZAÇÃO ESTRUTURAL (Setembro 2025)
+## 🏗️ REORGANIZAÇÃO ARQUITETURAL (Setembro 2025)
 
-### 📊 Estrutura Anterior vs. Atual
+### 🎯 **Clean Architecture Implementada**
 
-#### ❌ ANTES (estrutura dispersa):
-- **Dados**: `src/main/resources/data/` (misturado com resources do Spring)
-- **Scripts**: `scripts/` (na raiz, desorganizado)  
-- **SQL**: `docker/db/` (misturado com configs Docker)
+O projeto foi completamente refatorado seguindo os princípios do **Clean Architecture**, com separação rigorosa de responsabilidades e dependências apontando sempre para o centro (domínio).
 
-#### ✅ DEPOIS (estrutura organizada):
+#### ✅ **ESTRUTURA ATUAL (Clean Architecture)**:
+```
+src/main/kotlin/com/pokedex/bff/
+├── application/                     # 🎯 Casos de uso e orquestração
+│   ├── dto/                        # DTOs de request/response
+│   ├── services/                   # Application Services
+│   └── usecase/                    # Use Cases
+├── domain/                         # � Regras de negócio puras
+│   ├── entities/                   # Entities de domínio (sem anotações)
+│   ├── valueobjects/              # Value Objects
+│   ├── repository/                # Interfaces de repositório
+│   └── exceptions/                # Exceções de domínio
+├── infrastructure/                 # 🔧 Detalhes técnicos e frameworks
+│   ├── persistence/entities/       # Entities JPA (com anotações)
+│   ├── repository/                # Implementações de repositório
+│   ├── configurations/            # Configs do Spring Boot
+│   ├── config/                    # Configs de use cases
+│   └── migration/                 # Migrações de banco
+├── interfaces/                    # 🌐 Controladores e DTOs externos
+│   ├── controllers/               # REST Controllers
+│   └── dto/                      # DTOs da API
+└── shared/                       # 🤝 Utilitários compartilhados
+    └── exceptions/               # Exceções globais
+```
+
+### � **Refatoração Realizada**
+
+| Ação | Antes | Depois | Benefício |
+|------|-------|--------|-----------|
+| **Unificação** | `interface/` + `interfaces/` | `interfaces/` único | Estrutura consistente |
+| **Separação** | JPA entities no domain | `infrastructure/persistence/entities/` | Domain puro |
+| **Relocação** | Value Objects em application | `domain/valueobjects/` | Seguir Clean Architecture |
+| **Limpeza** | Arquivos `.keep` desnecessários | Removidos | Projeto limpo |
+| **Remoção** | Seeders Kotlin não utilizados | Removidos | Foco no essencial |
+
+### 📁 **Estrutura de Dados Organizada**
+
 ```
 pokedex-bff/
 ├── data/
@@ -27,19 +60,18 @@ pokedex-bff/
 └── docker/                # 🐳 Configurações Docker limpas
 ```
 
-### 📁 Movimentações Realizadas
-
-| Tipo | Origem | Destino | Status |
-|------|--------|---------|--------|
-| **JSONs** | `src/main/resources/data/` | `data/json/` | ✅ |
-| **Scripts Python** | `scripts/` | `tools/database/` | ✅ |
-| **Schema SQL** | `docker/db/schema.sql` | `database/schema/` | ✅ |
-| **Seeds SQL** | `docker/db/init-data.sql` | `database/seeds/` | ✅ |
-| **Limpeza** | Arquivos legacy e diretórios vazios | - | ✅ |
-
 ---
 
 ## 🔄 Estrutura e Fluxo de Dados
+
+### 🏛️ **Princípios Clean Architecture**
+
+1. **Regra de Dependência**: `Interfaces → Application → Domain ← Infrastructure`
+2. **Domain Puro**: Sem dependências externas, apenas regras de negócio
+3. **Inversão de Dependência**: Interfaces definidas no domain, implementadas na infrastructure
+4. **Separação de Entidades**: 
+   - `domain/entities/`: Objetos puros de negócio
+   - `infrastructure/persistence/entities/`: Mapeamento JPA
 
 ### 📋 Sequência de Dados (Dependências de Chaves Estrangeiras)
 
@@ -58,14 +90,27 @@ pokedex-bff/
 
 ### 🎯 Fluxo de Desenvolvimento
 
-1. **Desacoplamento Total**: BFF sem seeder ou carga automática
-2. **Inicialização por SQL**: `database/schema/schema.sql` + `database/seeds/init-data.sql`
-3. **Geração Automática**: `tools/database/generate_sql_from_json.py` converte JSONs
-4. **Validação**: `tools/database/validate_database.py` verifica banco
+1. **Clean Architecture**: Separação rigorosa de camadas com domain independente
+2. **Desacoplamento Total**: BFF sem seeder ou carga automática
+3. **Inicialização por SQL**: `database/schema/schema.sql` + `database/seeds/init-data.sql`
+4. **Geração Automática**: `tools/database/generate_sql_from_json.py` converte JSONs
+5. **Validação**: `tools/database/validate_database.py` verifica banco
 
 ---
 
 ## 💻 Comandos Principais
+
+### 🏗️ **Comandos de Arquitetura**
+
+```bash
+# Compilação e verificação
+./gradlew compileKotlin      # Verifica estrutura Clean Architecture
+./gradlew test              # Executa testes unitários e integração
+./gradlew build             # Build completo com validações
+
+# Análise de código  
+./gradlew check             # Análise estática e qualidade
+```
 
 ### 🔧 Comandos de Desenvolvimento
 
@@ -98,8 +143,10 @@ O projeto é **totalmente compatível** com:
 
 ### 📊 Status da Validação
 
+- ✅ **Clean Architecture**: Estrutura refatorada seguindo princípios rigorosos
+- ✅ **Compilação**: Zero erros após refatoração de packages e imports
 - ✅ **Estrutura**: 13 tabelas criadas
-- ✅ **Dados**: 1223 registros inseridos
+- ✅ **Dados**: 1223+ registros inseridos (incluindo correções de gender fields)
 - ✅ **Integridade**: 0 problemas encontrados
 - ✅ **Comandos**: Todos os targets make funcionando
 
@@ -120,6 +167,7 @@ O projeto é **totalmente compatível** com:
 - **Dependências**: Respeitar chaves estrangeiras na ordem
 - **Naming**: Nome da tabela = arquivo sem prefixo numérico (ex: `01_region.json` → `regions`)
 - **Logs**: Scripts Python mostram progresso detalhado
+- **Correções aplicadas**: Gender fields, species fields, abilities generation_id
 
 ---
 
@@ -144,50 +192,42 @@ volumes:
 | Arquivo | Propósito |
 |---------|-----------|
 | `README.md` | Guia completo de setup de desenvolvimento |
+| `doc/ARCHITECTURE.md` | **🆕 Documentação completa Clean Architecture** |
 | `data/README.md` | Documentação da estrutura de dados |
 | `tools/README.md` | Documentação das ferramentas |
 | `CONTEXT.md` | Este arquivo - contexto e histórico do projeto |
 
 ---
 
-## 🎯 Observações Importantes
+## 🎯 Benefícios da Refatoração
 
-- **CI/CD Ready**: Estrutura otimizada para pipelines
-- **Onboarding**: Processo claro para novos desenvolvedores
-- **Ambientes Limpos**: Inicialização consistente
-- **Separação de Responsabilidades**: Dados fonte vs. dados gerados
-- **Manutenibilidade**: Estrutura lógica e documentada
+### 🏗️ **Arquiteturais**
+- ✅ **Testabilidade**: Domain sem dependências externas
+- ✅ **Flexibilidade**: Troca de tecnologias sem afetar domínio
+- ✅ **Manutenibilidade**: Responsabilidades claras
+- ✅ **Escalabilidade**: Estrutura preparada para crescimento
+
+### 🧹 **Organizacionais**
+- ✅ **Projeto Limpo**: Removidos arquivos desnecessários
+- ✅ **Estrutura Consistente**: Nomenclatura e organização padronizadas
+- ✅ **Separação Clara**: Domain entities vs JPA entities
+- ✅ **Imports Corretos**: Todos os packages atualizados automaticamente
 
 ---
 
-> 💡 **Nota**: Sempre atualize este arquivo ao realizar mudanças estruturais, de build ou de fluxo de dados.
+## 🚀 Próximos Passos
 
-## Comandos Principais
-## Comandos Principais
-- `make generate-sql-data`: Gera SQL a partir dos JSONs (`tools/database/generate_sql_from_json.py`)
-- `make db-only-up`: Sobe banco isolado com dados pré-carregados
-- `make db-only-restart`: Reinicia banco com dados atualizados
-- `make validate-db`: Valida estrutura e dados do banco (`tools/database/validate_database.py`)
-- `make db-info`: Exibe informações de conexão para DBeaver/pgAdmin
+1. **Testes**: Implementar testes unitários para domain entities
+2. **Use Cases**: Expandir use cases para operações CRUD completas
+3. **Validation**: Adicionar validações de domínio nas entities
+4. **Error Handling**: Implementar exceções específicas de domínio
+5. **Documentation**: Manter docs alinhadas com evolução
 
-## Processo para Novos Dados
-1. Editar JSONs em `data/json/` (manter sequência numérica)
-2. Executar `make generate-sql-data`
-3. Executar `make db-only-restart`
-4. Validar com `make validate-db`
+---
 
-## Observações Importantes
-- Nome da tabela é extraído do JSON removendo prefixo numérico (ex: `01_region.json` → tabela `regions`)
-- Scripts Python exibem logs detalhados de sucesso/erro
-- Banco é populado automaticamente sem dependência do BFF
-- Estrutura otimizada para CI/CD, onboarding e ambientes limpos
-- Separação clara: dados fonte (JSONs) vs. dados gerados (SQL)
+> 💡 **Nota**: Esta refatoração estabelece uma base sólida para desenvolvimento futuro, seguindo as melhores práticas de Clean Architecture e facilitando manutenção e testes.
 
-## Documentação Atualizada
-- `README.md`: Guia completo de setup de desenvolvimento
-- `data/README.md`: Documentação da estrutura de dados
-- `tools/README.md`: Documentação das ferramentas
-- `REORGANIZATION_SUMMARY.md`: Resumo detalhado da transformação
+---
 
-# Sempre atualize este arquivo ao realizar mudanças estruturais, de build ou de fluxo de dados.
+*Documento atualizado após refatoração Clean Architecture - 22/09/2025*
 

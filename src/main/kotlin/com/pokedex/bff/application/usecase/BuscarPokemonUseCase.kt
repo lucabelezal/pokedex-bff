@@ -1,6 +1,6 @@
 package com.pokedex.bff.application.usecase
 
-import com.pokedex.bff.domain.model.Pokemon
+import com.pokedex.bff.domain.entities.Pokemon
 import com.pokedex.bff.domain.repository.PokemonRepository
 
 class BuscarPokemonUseCase(
