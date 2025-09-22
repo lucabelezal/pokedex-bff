@@ -156,6 +156,12 @@ def process_special_tables(table_name: str, records: List[Dict[str, Any]]) -> Li
             main_record = {k: v for k, v in filtered_record.items() 
                           if k not in ['type_ids', 'abilities', 'egg_group_ids', 'weaknesses']}
             
+            # Extrai dados do objeto gender aninhado
+            if 'gender' in record and isinstance(record['gender'], dict):
+                gender_data = record['gender']
+                main_record['gender_male'] = gender_data.get('male')
+                main_record['gender_female'] = gender_data.get('female')
+            
             sql_statements.append(generate_insert_sql(table_name, [main_record])[0])
             
             pokemon_id = record.get('id')
