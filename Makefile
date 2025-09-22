@@ -8,7 +8,7 @@ JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 # Comandos PHONY  
 # ==============================================================================
 .PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report generate-sql-data validate-db install-db-deps db-only-up db-only-down db-only-clean db-only-shell db-info \
+		test test-class open-jacoco-report generate-sql-data validate-db install-db-deps db-only-up db-only-down db-only-restart db-only-clean db-only-shell db-info \
 		dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell clean-docker
 
 # ==============================================================================
@@ -27,6 +27,7 @@ help:
 	@echo "🗄️  BANCO DE DADOS (Isolado):"
 	@echo "  make db-only-up             - Sobe APENAS o banco com dados pré-carregados."
 	@echo "  make db-only-down           - Para o banco isolado."
+	@echo "  make db-only-restart        - Reinicia o banco isolado."
 	@echo "  make db-only-clean          - Remove banco isolado e volumes (apaga dados!)."
 	@echo "  make db-only-shell          - Abre shell psql no banco isolado."
 	@echo "  make db-info                - Exibe informações de conexão para DBeaver/pgAdmin."
@@ -90,6 +91,7 @@ open-swagger:
 start-db: db-only-up
 stop-db: db-only-down  
 clean-db: db-only-clean
+restart-db: db-only-restart
 
 # ==============================================================================
 # BFF - Spring Boot / Gradle
@@ -149,9 +151,8 @@ open-jacoco-report:
 # Uso: make generate-sql-data
 # Requer: Python 3
 generate-sql-data:
-	@echo "🔄 Gerando docker/db/init-data.sql a partir dos JSONs..."
-	python3 scripts/generate_sql_from_json.py
-	@echo "✅ Arquivo init-data.sql gerado com sucesso!"
+	@echo "� Gerando init-data.sql a partir dos JSONs..."
+	python3 tools/database/generate_sql_from_json.py
 
 # Instala dependências Python para validação do banco
 # Uso: make install-db-deps
@@ -165,7 +166,7 @@ install-db-deps:
 # Requer: banco ativo (use db-only-up primeiro) e dependências (use install-db-deps primeiro)
 validate-db:
 	@echo "🔍 Validando estrutura e dados do banco..."
-	python3 scripts/validate_database.py
+	python3 tools/database/validate_database.py
 	@echo "✅ Validação concluída!"
 
 # ==============================================================================
@@ -186,6 +187,9 @@ db-only-up: generate-sql-data
 db-only-down:
 	@echo "🔄 Parando banco isolado..."
 	docker compose -f docker/docker-compose.db-only.yml down
+
+# Reinicia o banco isolado
+db-only-restart: db-only-down db-only-up
 
 # Remove banco isolado e volumes
 db-only-clean:
@@ -237,7 +241,7 @@ db-info:
 dev-setup:
 	@echo "🔄 Iniciando setup de desenvolvimento..."
 	@echo "📊 Gerando dados SQL..."
-	python3 scripts/generate_sql_from_json.py
+	python3 tools/database/generate_sql_from_json.py
 	@echo "🔄 Subindo banco de dados..."
 	docker compose -f docker/docker-compose.dev.yml up -d db
 	@echo "⏳ Aguardando banco inicializar..."
@@ -271,7 +275,7 @@ check-windows-env:
 dev-setup-for-windows: check-windows-env
 	@echo "🔄 Iniciando setup para Windows..."
 	@echo "📊 Gerando dados SQL..."
-	python3 scripts/generate_sql_from_json.py
+	python3 tools/database/generate_sql_from_json.py
 	@echo "🔄 Subindo banco de dados..."
 	docker compose -f docker/docker-compose.dev.yml up -d db
 	@echo "⏳ Aguardando banco inicializar..."

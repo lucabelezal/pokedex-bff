@@ -39,50 +39,83 @@ Aqui estão as seções importantes para explorar o **Pokedex BFF**:
 
 ---
 
-## 🚀 Novo Fluxo de Inicialização e Carga de Dados
+## 🛠️ Setup de Desenvolvimento e Estrutura do Projeto
 
-A partir da versão 2025.09, o BFF está **totalmente desacoplado da carga e inicialização de dados**. O banco de dados é populado via scripts SQL, sem dependência de seeder ou carga automática no BFF.
+### 📂 Estrutura de Arquivos
 
-### 1. Gerar os dados SQL a partir dos JSONs
+O projeto está organizado para facilitar o desenvolvimento e manutenção:
 
-Execute o script abaixo para converter todos os arquivos JSON de `src/main/resources/data` em comandos SQL:
-
-```sh
-python3 scripts/json2sql.py
+```
+pokedex-bff/
+├── data/               # 📊 Dados fonte
+│   └── json/          # Arquivos JSON numerados (01-10)
+├── database/          # 🗄️ Scripts de banco
+│   ├── schema/        # DDL - estrutura das tabelas
+│   ├── seeds/         # DML - dados iniciais gerados
+│   └── migrations/    # Scripts de migração
+├── tools/             # 🔧 Ferramentas de desenvolvimento
+│   └── database/      # Scripts Python para banco
+└── docker/            # 🐳 Configurações Docker
 ```
 
-Isso irá gerar/atualizar o arquivo `docker/db/init-data.sql`.
+### 🚀 Como Iniciar o Desenvolvimento
 
-### 2. Subir o ambiente com Docker Compose
-
-O banco será criado e populado automaticamente ao subir o ambiente:
-
+#### 1. Gerar dados SQL dos JSONs
+Converte os arquivos JSON numerados em comandos SQL:
 ```sh
-docker-compose up --build
+make generate-sql-data
+```
+- **O que faz**: Lê os 10 arquivos JSON em sequência e gera `database/seeds/init-data.sql`
+- **Script**: `tools/database/generate_sql_from_json.py`
+
+#### 2. Subir banco de desenvolvimento
+Inicia apenas o banco PostgreSQL com dados:
+```sh
+make db-only-up
+```
+- **O que faz**: Executa schema, popula dados e disponibiliza banco em `localhost:5434`
+- **Quando usar**: Para desenvolvimento focado no banco ou testes de dados
+
+#### 3. Validar banco
+Verifica se todas as tabelas e dados foram carregados corretamente:
+```sh
+make validate-db
+```
+- **O que faz**: Conecta ao banco e valida 13 tabelas esperadas com contagem de registros
+- **Script**: `tools/database/validate_database.py`
+
+#### 4. Gerenciar banco
+```sh
+make db-only-restart    # Reinicia banco com dados atualizados
+make db-only-down       # Para o banco
+make db-info           # Exibe informações de conexão
 ```
 
-- O serviço `db` executa `schema.sql` e `init-data.sql`.
-- O serviço `bff` sobe sem executar nenhuma carga de dados.
+### 📊 Sequência de Criação dos Dados
 
-### 3. Atualizar dados
+Os arquivos JSON seguem uma **ordem específica** para respeitar dependências de chaves estrangeiras:
 
-Para atualizar os dados:
-- Edite os arquivos JSON em `src/main/resources/data`.
-- Execute novamente o script Python.
-- Reinicie o banco de dados.
+1. `01_region.json` → Regiões base
+2. `02_type.json` → Tipos de Pokémon  
+3. `03_egg_group.json` → Grupos de ovos
+4. `04_generation.json` → Gerações
+5. `05_ability.json` → Habilidades
+6. `06_species.json` → Espécies (depende de regiões/gerações)
+7. `07_stats.json` → Estatísticas
+8. `08_evolution_chains.json` → Cadeias evolutivas
+9. `09_pokemon.json` → Pokémons (depende de species/abilities/stats)
+10. `10_weaknesses.json` → Fraquezas (depende de pokémons)
 
-> **Nota:** Os arquivos JSON em `src/main/resources/data` devem ser nomeados com prefixos numéricos (ex: `01_region.json`, `02_type.json`, etc.) para garantir a ordem correta de importação e evitar problemas de integridade relacional. O script de importação respeita essa ordem automaticamente. Certifique-se de que os dados estejam consistentes e que todas as referências de chave estrangeira existam nos arquivos anteriores.
+### ➕ Adicionando Novos Dados
 
----
+Para adicionar novos Pokémons ou dados:
 
-## ❌ O que foi removido
-- Todo o código de seeder, runners, estratégias e utilitários.
-- Qualquer dependência de carga automática de dados no ciclo do BFF.
-- O subprojeto `pokedex-seeder`.
+1. **Edite os JSONs**: Atualize os arquivos em `data/json/` respeitando a sequência
+2. **Gere SQL**: Execute `make generate-sql-data` 
+3. **Atualize banco**: Execute `make db-only-restart`
+4. **Valide**: Execute `make validate-db`
 
----
+> ⚠️ **Importante**: Mantenha a numeração sequencial dos arquivos e respeite as dependências. Novos inserts devem ser adicionados aos JSONs correspondentes, nunca diretamente no SQL.
 
-## ✅ O que mudou
-- O BFF agora **apenas consome dados já existentes no banco**.
-- O banco é inicializado e populado de forma independente, via scripts SQL.
-- O fluxo está mais limpo, reprodutível e alinhado com boas práticas de arquitetura.
+> **Nota:** Os arquivos JSON em `data/json/` devem ser nomeados com prefixos numéricos (ex: `01_region.json`, `02_type.json`, etc.) para garantir a ordem correta de importação e evitar problemas de integridade relacional. O script de importação respeita essa ordem automaticamente. Certifique-se de que os dados estejam consistentes e que todas as referências de chave estrangeira existam nos arquivos anteriores.
+

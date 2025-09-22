@@ -13,8 +13,8 @@ services:
       - "5434:5432"  # Porta local 5434 para evitar conflito com outros serviços
     volumes:
       - pokedex-bff-data:/var/lib/postgresql/data
-      - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
-      - ./db/init-data.sql:/docker-entrypoint-initdb.d/02_init-data.sql:ro
+      - ../database/schema/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ../database/seeds/init-data.sql:/docker-entrypoint-initdb.d/02_init-data.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d pokedex_dev_db"]
       interval: 5s

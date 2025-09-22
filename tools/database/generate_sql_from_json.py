@@ -333,11 +333,11 @@ def main():
         data_dir = Path(sys.argv[1])
     else:
         # Usa diretório padrão do projeto
-        script_dir = Path(__file__).parent.parent  # Sobe um nível do scripts/
-        data_dir = script_dir / "src" / "main" / "resources" / "data"
+        script_dir = Path(__file__).parent.parent.parent  # Sobe para raiz do projeto
+        data_dir = script_dir / "data" / "json"
     
     # Arquivo de saída
-    output_file = Path(__file__).parent.parent / "docker" / "db" / "init-data.sql"
+    output_file = Path(__file__).parent.parent.parent / "database" / "seeds" / "init-data.sql"
     
     # Valida diretório de entrada
     if not data_dir.exists():
