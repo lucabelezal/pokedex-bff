@@ -1,0 +1,31 @@
+version: '3.8'
+
+# Docker Compose para execução isolada do banco de dados
+# Permite testar a criação e população do banco independentemente do BFF
+
+services:
+  db:
+    container_name: pokedex-bff-db-standalone
+    image: postgres:16-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pokedex_dev_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./db/init-data.sql:/docker-entrypoint-initdb.d/02_init-data.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d pokedex_dev_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+# Sem volumes nomeados para facilitar limpeza em testes

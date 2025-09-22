@@ -1,1088 +1,1251 @@
-BEGIN;
--- Dados para region
-INSERT INTO region (id, name) VALUES
-(1, 'Kanto'),
-(2, 'Johto'),
-(3, 'Hoenn'),
-(4, 'Sinnoh'),
-(5, 'Unova'),
-(6, 'Kalos'),
-(7, 'Alola'),
-(8, 'Galar'),
-(9, 'Paldea'),
-(10, 'Hisui');
+-- init-data.sql
+-- Arquivo gerado automaticamente a partir dos JSONs de dados
+-- Gerado em: Seg 22 Set 2025 08:27:31 -03
 
--- Dados para type
-INSERT INTO type (id, name, color) VALUES
-(1, 'Normal', '#A8A77A'),
-(2, 'Fogo', '#EE8130'),
-(3, 'Água', '#6390F0'),
-(4, 'Elétrico', '#F7D02C'),
-(5, 'Grama', '#7AC74C'),
-(6, 'Gelo', '#96D9D6'),
-(7, 'Lutador', '#C22E28'),
-(8, 'Venenoso', '#A33EA1'),
-(9, 'Terrestre', '#E2BF65'),
-(10, 'Voador', '#A98FF3'),
-(11, 'Psíquico', '#F95587'),
-(12, 'Inseto', '#A6B91A'),
-(13, 'Pedra', '#B6A136'),
-(14, 'Fantasma', '#735797'),
-(15, 'Dragão', '#6F35FC'),
-(16, 'Sombrio', '#705746'),
-(17, 'Aço', '#B7B7CE'),
-(18, 'Fada', '#D685AD');
+-- Início da carga de dados
 
--- Dados para egg_group
-INSERT INTO egg_group (id, name) VALUES
-(1, 'Amorfo'),
-(2, 'Inseto'),
-(3, 'Dragão'),
-(4, 'Fada'),
-(5, 'Campo'),
-(6, 'Voador'),
-(7, 'Grama'),
-(8, 'Humanoide'),
-(9, 'Mineral'),
-(10, 'Monstro'),
-(11, 'Água 1'),
-(12, 'Água 2'),
-(13, 'Água 3'),
-(14, 'Ditto'),
-(15, 'Indescoberto');
+-- Dados da tabela: regions (origem: 01_region.json)
+INSERT INTO regions (id, name) VALUES (1, 'Kanto');
+INSERT INTO regions (id, name) VALUES (2, 'Johto');
+INSERT INTO regions (id, name) VALUES (3, 'Hoenn');
+INSERT INTO regions (id, name) VALUES (4, 'Sinnoh');
+INSERT INTO regions (id, name) VALUES (5, 'Unova');
+INSERT INTO regions (id, name) VALUES (6, 'Kalos');
+INSERT INTO regions (id, name) VALUES (7, 'Alola');
+INSERT INTO regions (id, name) VALUES (8, 'Galar');
+INSERT INTO regions (id, name) VALUES (9, 'Paldea');
+INSERT INTO regions (id, name) VALUES (10, 'Hisui');
 
--- Dados para generation
-INSERT INTO generation (id, name, region_id) VALUES
-(1, 'Geração I', 1),
-(2, 'Geração II', 2),
-(3, 'Geração III', 3),
-(4, 'Geração IV', 4),
-(5, 'Geração V', 5),
-(6, 'Geração VI', 6),
-(7, 'Geração VII', 7),
-(8, 'Geração VIII', 8),
-(9, 'Geração IX', 9),
-(10, 'Geração X', 10);
+-- Dados da tabela: types (origem: 02_type.json)
+INSERT INTO types (id, name, color) VALUES (1, 'Normal', '#A8A77A');
+INSERT INTO types (id, name, color) VALUES (2, 'Fogo', '#EE8130');
+INSERT INTO types (id, name, color) VALUES (3, 'Água', '#6390F0');
+INSERT INTO types (id, name, color) VALUES (4, 'Elétrico', '#F7D02C');
+INSERT INTO types (id, name, color) VALUES (5, 'Grama', '#7AC74C');
+INSERT INTO types (id, name, color) VALUES (6, 'Gelo', '#96D9D6');
+INSERT INTO types (id, name, color) VALUES (7, 'Lutador', '#C22E28');
+INSERT INTO types (id, name, color) VALUES (8, 'Venenoso', '#A33EA1');
+INSERT INTO types (id, name, color) VALUES (9, 'Terrestre', '#E2BF65');
+INSERT INTO types (id, name, color) VALUES (10, 'Voador', '#A98FF3');
+INSERT INTO types (id, name, color) VALUES (11, 'Psíquico', '#F95587');
+INSERT INTO types (id, name, color) VALUES (12, 'Inseto', '#A6B91A');
+INSERT INTO types (id, name, color) VALUES (13, 'Pedra', '#B6A136');
+INSERT INTO types (id, name, color) VALUES (14, 'Fantasma', '#735797');
+INSERT INTO types (id, name, color) VALUES (15, 'Dragão', '#6F35FC');
+INSERT INTO types (id, name, color) VALUES (16, 'Sombrio', '#705746');
+INSERT INTO types (id, name, color) VALUES (17, 'Aço', '#B7B7CE');
+INSERT INTO types (id, name, color) VALUES (18, 'Fada', '#D685AD');
 
--- Dados para ability
-INSERT INTO ability (id, name, description, introduced_generation_id) VALUES
-(1, 'Adaptabilidade', 'Aumenta o poder de movimentos do mesmo tipo do Pokémon.', 4),
-(2, 'Pele Celeste', 'Transforma movimentos do tipo Normal em movimentos do tipo Voador e aumenta ligeiramente seu poder.', 6),
-(3, 'Rescaldo', 'Causa dano ao atacante que desfere o golpe final.', 4),
-(4, 'Bloqueio Aéreo', 'Elimina os efeitos do clima.', 3),
-(5, 'Analítico', 'Aumenta o poder do movimento se o Pokémon atacar por último.', 5),
-(6, 'Ponto de Raiva', 'Maximiza o Ataque após receber um acerto crítico.', 4),
-(7, 'Carapaça Raivosa', 'Reduz Defesa/Def. Esp. e aumenta Ataque/At. Esp./Velocidade quando o HP cai abaixo da metade.', 9),
-(8, 'Antecipação', 'Pressente movimentos perigosos de um oponente.', 4),
-(9, 'Armadilha de Arena', 'Impede o oponente de fugir.', 3),
-(10, 'Cauda Blindada', 'Impede o oponente de usar movimentos de prioridade.', 9),
-(11, 'Véu Aromático', 'Protege aliados de ataques que limitam suas escolhas de movimento.', 6),
-(12, 'Como Um Só', 'Combina Nervosismo e Relincho Arrepiante/Relincho Sinistro.', 8),
-(13, 'Quebra Aura', 'Reduz o poder de movimentos dos tipos Sombrio e Fada.', 6),
-(14, 'Pesadelos', 'Reduz o HP de um oponente adormecido.', 4),
-(15, 'Apanhar Bola', 'Recupera uma Poké Bola de um arremesso falho.', 8),
-(16, 'Bateria', 'Aumenta o poder dos movimentos Especiais dos companheiros de equipe.', 7),
-(17, 'Armadura de Batalha', 'O Pokémon é protegido contra acertos críticos.', 3),
-(18, 'Laço de Batalha', 'Transforma-se em Ash-Greninja após nocautear um oponente.', 7),
-(19, 'Contas da Ruína', 'Reduz a Defesa Especial de todos os Pokémon, exceto o próprio.', 9),
-(20, 'Impulso Bestial', 'O Pokémon aumenta seu atributo mais proficiente cada vez que nocauteia um Pokémon.', 7),
-(21, 'Frenesi', 'Aumenta o Ataque Especial quando o HP cai abaixo da metade.', 7),
-(22, 'Bico Grande', 'Protege o Pokémon de ataques que reduzem a Defesa.', 5),
-(23, 'Chama', 'Aumenta o poder de movimentos do tipo Fogo em apuros.', 3),
-(24, 'À Prova de Bala', 'Protege o Pokémon de movimentos de bola e bomba.', 6),
-(25, 'Bochechas Fofas', 'Restaura HP adicional quando uma Berry é consumida.', 6),
-(26, 'Relincho Arrepiante', 'Aumenta o Ataque após nocautear um Pokémon.', 8),
-(27, 'Clorofila', 'Aumenta a Velocidade do Pokémon sob luz solar.', 3),
-(28, 'Corpo Puro', 'Impede que outros Pokémon reduzam seus atributos.', 3),
-(29, 'Nuvem Serena', 'Elimina os efeitos do clima.', 3),
-(30, 'Mudança de Cor', 'Muda o tipo do Pokémon para o do movimento do oponente.', 3),
-(31, 'Comatoso', 'O Pokémon está sempre dormindo, mas ainda pode atacar.', 7),
-(32, 'Comandante', 'Entra na boca de um Dondozo aliado se houver um no campo.', 9),
-(33, 'Competitivo', 'Aumenta acentuadamente o Ataque Especial quando os atributos do Pokémon são reduzidos.', 6),
-(34, 'Olhos Compostos', 'A precisão do Pokémon é aumentada.', 3),
-(35, 'Contrário', 'Faz com que as mudanças de atributos tenham um efeito oposto.', 5),
-(36, 'Corrosão', 'O Pokémon pode envenenar tipos Aço e Venenoso.', 7),
-(37, 'Co-Estrela', 'Copia as mudanças de atributos do aliado ao entrar em batalha.', 9),
-(38, 'Penugem de Algodão', 'Reduz a Velocidade do oponente quando atingido.', 8),
-(39, 'Ruminação', 'Pode comer a mesma Berry duas vezes.', 9),
-(40, 'Medicina Curiosa', 'Redefine todas as mudanças de atributos ao entrar no campo de batalha.', 8),
-(41, 'Corpo Amaldiçoado', 'Pode desabilitar um movimento usado no Pokémon.', 5),
-(42, 'Charme Fofo', 'Contato com o Pokémon pode causar atração.', 3),
-(43, 'Umidade', 'Impede o uso de movimentos autodestrutivos.', 3),
-(44, 'Dançarino', 'Copia os movimentos de Dança do oponente.', 7),
-(45, 'Aura Sombria', 'Aumenta o poder de movimentos do tipo Sombrio para todos os Pokémon em batalha.', 6),
-(46, 'Escudo Intrépido', 'Aumenta a Defesa em batalha.', 8),
-(47, 'Ofuscante', 'Protege o Pokémon de movimentos de alta prioridade.', 7),
-(48, 'Derrotista', 'Reduz os atributos quando o HP cai abaixo da metade.', 5),
-(49, 'Desafiador', 'Aumenta acentuadamente o Ataque quando os atributos do Pokémon são reduzidos.', 5),
-(50, 'Corrente Delta', 'Cria ventos fortes quando a habilidade é ativada.', 6),
-(51, 'Terra Desolada', 'Torna a luz solar extremamente forte quando a habilidade é ativada.', 6),
-(52, 'Disfarce', 'Evita dano por um turno.', 7),
-(53, 'Download', 'Ajusta o poder de acordo com as defesas de um oponente.', 4),
-(54, 'Mandíbula de Dragão', 'Aumenta o poder de movimentos do tipo Dragão.', 8),
-(55, 'Chuvisco', 'O Pokémon faz chover quando entra em uma batalha.', 3),
-(56, 'Seca', 'Torna a luz solar forte quando o Pokémon entra em uma batalha.', 3),
-(57, 'Pele Seca', 'Reduz HP se estiver quente. Água restaura HP.', 4),
-(58, 'Madrugador', 'O Pokémon acorda rapidamente do sono.', 3),
-(59, 'Devorador de Terra', 'Restaura HP quando atingido por um movimento do tipo Terrestre.', 9),
-(60, 'Efeito Esporo', 'Contato pode envenenar ou causar paralisia ou sono.', 3),
-(61, 'Surto Elétrico', 'O Pokémon cria um Terreno Elétrico quando entra em uma batalha.', 7),
-(62, 'Eletromorfose', 'Dobra o poder do próximo movimento do tipo Elétrico quando atingido por um ataque.', 9),
-(63, 'Encarnar Aspecto', 'Aumenta Ataque/Defesa/Def. Esp./Velocidade dependendo da forma.', 9),
-(64, 'Saída de Emergência', 'Troca quando o HP cai abaixo de 50%.', 7),
-(65, 'Aura Feérica', 'Aumenta o poder de movimentos do tipo Fada para todos os Pokémon em batalha.', 6),
-(66, 'Filtro', 'Reduz o dano de ataques super eficazes.', 4),
-(67, 'Corpo Flamejante', 'Contato com o Pokémon pode queimar o atacante.', 3),
-(68, 'Impulso Flamejante', 'Aumenta o poder de ataques especiais quando queimado.', 5),
-(69, 'Absorver Fogo', 'Aumenta o poder de movimentos do tipo Fogo se for atingido por um.', 3),
-(70, 'Dádiva Floral', 'Aumenta o poder dos Pokémon da equipe quando está ensolarado.', 4),
-(71, 'Véu Floral', 'Impede a redução dos atributos de Pokémon aliados do tipo Planta.', 6),
-(72, 'Fofo', 'Reduz pela metade o dano de movimentos de contato, mas dobra o dano de movimentos do tipo Fogo.', 7),
-(73, 'Previsão', 'Castform se transforma com o clima.', 3),
-(74, 'Prevenir', 'Determina quais movimentos um oponente possui.', 4),
-(75, 'Guarda Amiga', 'Reduz o dano causado aos aliados.', 5),
-(76, 'Revistar', 'O Pokémon pode verificar o item segurado por um oponente.', 4),
-(77, 'Corpo Metálico Completo', 'Impede que outros Pokémon reduzam seus atributos.', 7),
-(78, 'Casaco de Pelo', 'Reduz o dano de movimentos físicos.', 6),
-(79, 'Asas Vendaval', 'Dá prioridade a movimentos do tipo Voador.', 6),
-(80, 'Galvanizar', 'Movimentos do tipo Normal tornam-se do tipo Elétrico e seu poder é aumentado.', 7),
-(81, 'Gula', 'Incentiva o uso antecipado de uma Berry segurada.', 4),
-(82, 'Bom como Ouro', 'Concede imunidade a movimentos de status.', 9),
-(83, 'Gosmento', 'Contato com o Pokémon reduz a Velocidade do atacante.', 6),
-(84, 'Táticas de Gorila', 'Aumenta o Ataque do Pokémon, mas só permite o uso do primeiro movimento selecionado.', 8),
-(85, 'Pelagem de Grama', 'Aumenta a Defesa em Terreno Gramado.', 6),
-(86, 'Surto Gramado', 'O Pokémon cria um Terreno Gramado quando entra em uma batalha.', 7),
-(87, 'Relincho Sinistro', 'Aumenta o Ataque Especial após nocautear um Pokémon.', 8),
-(88, 'Cão de Guarda', 'Aumenta o Ataque se intimidado e impede ser forçado a trocar.', 9),
-(89, 'Míssil Engolido', 'Retorna com uma presa na boca após usar Surf ou Dive.', 8),
-(90, 'Tripas', 'Aumenta o Ataque se houver um problema de status.', 3),
-(91, 'Motor Hadrônico', 'Cria um Terreno Elétrico ao entrar em batalha e aumenta o Ataque Especial enquanto ativo.', 9),
-(92, 'Colheita', 'Pode criar outra Berry após uma ser usada.', 5),
-(93, 'Curandeiro', 'Pode curar as condições de status de um aliado.', 5),
-(94, 'À Prova de Calor', 'Enfraquece o poder de movimentos do tipo Fogo.', 4),
-(95, 'Metal Pesado', 'Dobra o peso do Pokémon.', 5),
-(96, 'Coletar Mel', 'O Pokémon pode coletar Mel de algum lugar.', 4),
-(97, 'Hospitalidade', 'Restaura parcialmente o HP de um aliado quando ele entra em batalha.', 9),
-(98, 'Poder Enorme', 'Aumenta o Ataque do Pokémon.', 3),
-(99, 'Interruptor de Fome', 'Muda de forma a cada turno.', 8),
-(100, 'Agitação', 'Aumenta o Ataque, mas reduz a precisão.', 3),
-(101, 'Hidratação', 'Cura problemas de status se estiver chovendo.', 4),
-(102, 'Cortador Hiper', 'Impede que outros Pokémon reduzam seu Ataque.', 3),
-(103, 'Corpo de Gelo', 'O Pokémon recupera HP gradualmente em uma tempestade de granizo.', 4),
-(104, 'Face de Gelo', 'Evita dano de movimentos Físicos por um turno.', 8),
-(105, 'Escamas de Gelo', 'Reduz pela metade o dano de movimentos Especiais.', 8),
-(106, 'Iluminar', 'Aumenta a probabilidade de encontrar Pokémon selvagens.', 3),
-(107, 'Ilusão', 'Entra em batalha disfarçado como o último Pokémon da equipe.', 5),
-(108, 'Imunidade', 'Impede que o Pokémon seja envenenado.', 3),
-(109, 'Impostor', 'Transforma-se no Pokémon que está enfrentando.', 5),
-(110, 'Infiltrador', 'Passa pela barreira do oponente e ataca.', 5),
-(111, 'Entranhas Expostas', 'Causa dano ao desmaiar.', 7),
-(112, 'Foco Interno', 'O Pokémon é protegido contra recuo (flinch).', 3),
-(113, 'Insônia', 'Impede que o Pokémon adormeça.', 3),
-(114, 'Intimidação', 'Reduz o Ataque do oponente.', 3),
-(115, 'Espada Intrépida', 'Aumenta o Ataque em batalha.', 8),
-(116, 'Farpas de Ferro', 'Inflige dano ao Pokémon em contato.', 5),
-(117, 'Punho de Ferro', 'Aumenta o poder de movimentos de soco.', 4),
-(118, 'Justificado', 'Aumenta o Ataque quando atingido por um movimento do tipo Sombrio.', 5),
-(119, 'Olhar Aguçado', 'Impede que outros Pokémon reduzam sua precisão.', 3),
-(120, 'Desajeitado', 'O Pokémon não pode usar nenhum item segurado.', 4),
-(121, 'Defesa de Folha', 'Previne problemas de status sob tempo ensolarado.', 4),
-(122, 'Levitar', 'Concede imunidade a movimentos do tipo Terrestre.', 3),
-(123, 'Líbero', 'Muda o tipo do Pokémon para o do seu último movimento usado.', 8),
-(124, 'Metal Leve', 'Reduz pela metade o peso do Pokémon.', 5),
-(125, 'Para-raios', 'Atrai todos os movimentos do tipo Elétrico para aumentar o At. Esp.', 3),
-(126, 'Flexível', 'O Pokémon é protegido contra paralisia.', 3),
-(127, 'Aroma Persistente', 'Contato muda a Habilidade do atacante para Aroma Persistente.', 9),
-(128, 'Lodo Líquido', 'Causa dano a atacantes que usam qualquer movimento de drenagem.', 3),
-(129, 'Voz Líquida', 'Todos os movimentos baseados em som tornam-se do tipo Água.', 7),
-(130, 'Longo Alcance', 'O Pokémon usa seus movimentos sem fazer contato com o alvo.', 7),
-(131, 'Salto Mágico', 'Reflete movimentos que alteram o status.', 5),
-(132, 'Guarda Mágica', 'Protege o Pokémon de dano indireto.', 4),
-(133, 'Mágico', 'O Pokémon rouba o item segurado de um Pokémon que atinge com um movimento.', 6),
-(134, 'Armadura Magma', 'Impede que o Pokémon seja congelado.', 3),
-(135, 'Atração Magnética', 'Impede Pokémon do tipo Aço de escapar.', 3),
-(136, 'Escama Milagrosa', 'Aumenta a Defesa se houver um problema de status.', 3),
-(137, 'Mega Lançador', 'Aumenta o poder de movimentos de aura e pulso.', 6),
-(138, 'Implacável', 'Os ataques do Pokémon tornam-se acertos críticos se o alvo estiver envenenado.', 7),
-(139, 'Mimetismo', 'Muda o tipo dependendo do terreno.', 8),
-(140, 'Olho da Mente', 'Ignora a Evasão do oponente e permite que ataques do tipo Normal e Lutador atinjam Fantasmas.', 9),
-(141, 'Menos', 'Aumenta o At. Esp. se outro Pokémon tiver Mais ou Menos.', 3),
-(142, 'Armadura Espelhada', 'Reflete quaisquer efeitos de redução de atributos.', 8),
-(143, 'Surto Nebuloso', 'O Pokémon cria um Terreno Nebuloso quando entra em uma batalha.', 7),
-(144, 'Quebra-molde', 'Movimentos podem ser usados independentemente das Habilidades.', 4),
-(145, 'Temperamental', 'Aumenta um atributo e reduz outro.', 5),
-(146, 'Motor Drive', 'Aumenta a Velocidade se atingido por um movimento do tipo Elétrico.', 4),
-(147, 'Autoestima', 'Aumenta o Ataque após nocautear qualquer Pokémon.', 5),
-(148, 'Multiescamas', 'Reduz o dano quando o HP está cheio.', 5),
-(149, 'Multitipo', 'Muda o tipo para corresponder à Placa segurada.', 4),
-(150, 'Múmia', 'Contato com este Pokémon espalha esta Habilidade.', 5),
-(151, 'Poder Micelial', 'Movimentos de status atacam por último, mas não são afetados pela habilidade do oponente.', 9),
-(152, 'Cura Natural', 'Todos os problemas de status são curados quando ele é trocado.', 3),
-(153, 'Neuroforça', 'Aumenta o poder de movimentos que são super eficazes.', 7),
-(154, 'Gás Neutralizante', 'Neutraliza as habilidades de todos os Pokémon em batalha.', 8),
-(155, 'Sem Guarda', 'Garante que os ataques pelo ou contra o Pokémon acertem.', 4),
-(156, 'Normalizar', 'Todos os movimentos do Pokémon tornam-se do tipo Normal.', 4),
-(157, 'Indiferente', 'Impede que se apaixone.', 3),
-(158, 'Oportunista', 'Copia os aumentos de atributos do oponente.', 9),
-(159, 'Pulso de Oricalco', 'Torna a luz solar forte ao entrar em batalha e aumenta o Ataque enquanto ativo.', 9),
-(160, 'Casaco Protetor', 'Protege o Pokémon de dano climático.', 5),
-(161, 'Supercrescimento', 'Aumenta o poder de movimentos do tipo Planta em apuros.', 3),
-(162, 'Ritmo Próprio', 'Impede que o Pokémon fique confuso.', 3),
-(163, 'Laço Parental', 'Permite que o Pokémon ataque duas vezes.', 6),
-(164, 'Véu Pastel', 'Impede que o Pokémon e seus aliados sejam envenenados.', 8),
-(165, 'Corpo Perecível', 'Quando atingido por um movimento de contato direto, o Pokémon e o atacante desmaiarão após três turnos, a menos que saiam da batalha.', 8),
-(166, 'Batedor de Carteira', 'Rouba um item quando atingido por outro Pokémon.', 5),
-(167, 'Coleta', 'O Pokémon pode pegar itens.', 3),
-(168, 'Pele Feérica', 'Transforma movimentos do tipo Normal em movimentos do tipo Fada e aumenta ligeiramente seu poder.', 6),
-(169, 'Mais', 'Aumenta o At. Esp. se outro Pokémon tiver Mais ou Menos.', 3),
-(170, 'Cura Venenosa', 'Restaura HP se o Pokémon estiver envenenado.', 4),
-(171, 'Ponto Venenoso', 'Contato com o Pokémon pode envenenar o atacante.', 3),
-(172, 'Marionetista Venenoso', 'Pokémon envenenados também ficam confusos.', 9),
-(173, 'Toque Venenoso', 'Pode envenenar alvos quando um Pokémon faz contato.', 5),
-(174, 'Construção de Poder', 'Muda de forma quando o HP cai abaixo da metade.', 7),
-(175, 'Poder da Alquimia', 'O Pokémon copia a Habilidade de um aliado derrotado.', 7),
-(176, 'Ponto de Poder', 'Apenas estar perto do Pokémon aumenta o poder dos movimentos.', 8),
-(177, 'Zombeteiro', 'Dá prioridade a um movimento de status.', 5),
-(178, 'Pressão', 'O Pokémon aumenta o uso de PP do oponente.', 3),
-(179, 'Mar Primordial', 'Faz chover intensamente quando a habilidade é ativada.', 6),
-(180, 'Armadura Prisma', 'Reduz o dano de ataques super eficazes.', 7),
-(181, 'Cauda de Hélice', 'Ignora movimentos e habilidades que atraem movimentos.', 8),
-(182, 'Mutante', 'Muda o tipo do Pokémon para o do seu último movimento usado.', 6),
-(183, 'Protossíntese', 'Aumenta o atributo mais alto sob luz solar forte, ou se estiver segurando Energia Impulsionadora.', 9),
-(184, 'Surto Psíquico', 'O Pokémon cria um Terreno Psíquico quando entra em uma batalha.', 7),
-(185, 'Punk Rock', 'Aumenta movimentos baseados em som e reduz pela metade o dano dos mesmos movimentos.', 8),
-(186, 'Poder Puro', 'Aumenta o Ataque do Pokémon.', 3),
-(187, 'Sal Purificador', 'Protege de condições de status e reduz pela metade o dano de movimentos do tipo Fantasma.', 9),
-(188, 'Motor Quark', 'Aumenta o atributo mais alto em Terreno Elétrico, ou se estiver segurando Energia Impulsionadora.', 9),
-(189, 'Majestade Real', 'Impede o uso de movimentos de prioridade.', 7),
-(190, 'Saque Rápido', 'O Pokémon pode atacar primeiro ocasionalmente.', 8),
-(191, 'Pés Rápidos', 'Aumenta a Velocidade se houver um problema de status.', 4),
-(192, 'Prato de Chuva', 'O Pokémon recupera HP gradualmente na chuva.', 3),
-(193, 'Assustado', 'Movimentos do tipo Inseto, Fantasma ou Sombrio o assustam e aumentam sua Velocidade.', 5),
-(194, 'Receptor', 'Herda a habilidade de um aliado quando ele desmaia.', 7),
-(195, 'Imprudente', 'Aumenta o poder de movimentos que causam dano de recuo.', 4),
-(196, 'Refrigerar', 'Transforma movimentos do tipo Normal em movimentos do tipo Gelo e aumenta ligeiramente seu poder.', 6),
-(197, 'Regenerador', 'Restaura um pouco de HP quando retirado da batalha.', 5),
-(198, 'Amadurecer', 'Dobra o efeito das berries.', 8),
-(199, 'Rivalidade', 'Causa mais dano a um Pokémon do mesmo gênero.', 4),
-(200, 'Sistema RKS', 'Muda o tipo dependendo do item segurado.', 7),
-(201, 'Cabeça de Pedra', 'Protege o Pokémon de dano de recuo.', 3),
-(202, 'Carga Rochosa', 'Aumenta o poder de movimentos do tipo Pedra.', 9),
-(203, 'Pele Áspera', 'Inflige dano ao atacante em contato.', 3),
-(204, 'Fugir', 'Permite uma fuga certeira de Pokémon selvagens.', 3),
-(205, 'Força da Areia', 'Aumenta o poder de certos movimentos em uma tempestade de areia.', 5),
-(206, 'Ímpeto da Areia', 'Aumenta a Velocidade do Pokémon em uma tempestade de areia.', 5),
-(207, 'Cuspir Areia', 'Cria uma tempestade de areia quando atingido por um ataque.', 8),
-(208, 'Corrente de Areia', 'O Pokémon invoca uma tempestade de areia em batalha.', 3),
-(209, 'Véu de Areia', 'Aumenta a evasão do Pokémon em uma tempestade de areia.', 3),
-(210, 'Absorver Seiva', 'Aumenta o Ataque quando atingido por um movimento do tipo Planta.', 5),
-(211, 'Escolaridade', 'Muda Wishiwashi para a Forma Escolar.', 7),
-(212, 'Intrépido', 'Permite que movimentos atinjam Pokémon do tipo Fantasma.', 4),
-(213, 'Limpador de Tela', 'Anula os efeitos de Tela de Luz, Refletor e Véu de Aurora.', 8),
-(214, 'Semeador', 'Transforma o solo em Terreno Gramado quando o Pokémon é atingido por um ataque.', 9),
-(215, 'Graça Serena', 'Aumenta a probabilidade de efeitos adicionais aparecerem.', 3),
-(216, 'Escudo Sombrio', 'Reduz o dano quando o HP está cheio.', 7),
-(217, 'Marca Sombria', 'Impede o oponente de escapar.', 3),
-(218, 'Nitidez', 'Aumenta o poder de movimentos cortantes.', 9),
-(219, 'Troca de Pele', 'O Pokémon pode curar seus próprios problemas de status.', 3),
-(220, 'Força Bruta', 'Remove efeitos adicionais para aumentar o dano do movimento.', 5),
-(221, 'Armadura de Concha', 'O Pokémon é protegido contra acertos críticos.', 3),
-(222, 'Pó de Escudo', 'Bloqueia os efeitos adicionais dos ataques recebidos.', 3),
-(223, 'Escudos Baixos', 'Muda os atributos quando o HP cai abaixo da metade.', 7),
-(224, 'Simples', 'Dobra todas as mudanças de atributos.', 4),
-(225, 'Elo de Habilidade', 'Aumenta a frequência de movimentos de múltiplos acertos.', 4),
-(226, 'Início Lento', 'Reduz temporariamente pela metade o Ataque e a Velocidade.', 4),
-(227, 'Ímpeto na Neve', 'Aumenta a Velocidade do Pokémon em uma tempestade de granizo.', 7),
-(228, 'Franco Atirador', 'Aumenta o poder dos movimentos se eles se tornarem acertos críticos.', 4),
-(229, 'Manto de Neve', 'Aumenta a evasão em uma tempestade de granizo.', 4),
-(230, 'Alerta de Neve', 'O Pokémon invoca uma tempestade de granizo em batalha.', 4),
-(231, 'Poder Solar', 'Sob luz solar, o At. Esp. é aumentado, mas o HP diminui.', 4),
-(232, 'Rocha Sólida', 'Reduz o dano de ataques super eficazes.', 4),
-(233, 'Coração Anímico', 'Aumenta o Ataque Especial quando outro Pokémon desmaia.', 7),
-(234, 'À Prova de Som', 'Concede imunidade a movimentos baseados em som.', 3),
-(235, 'Aumento de Velocidade', 'Sua Velocidade é gradualmente aumentada.', 3),
-(236, 'Tocaia', 'Causa dano em dobro a Pokémon que entram em campo.', 7),
-(237, 'Parado', 'O Pokémon se move depois de todos os outros Pokémon.', 4),
-(238, 'Firme', 'Ignora movimentos e habilidades que atraem movimentos.', 8),
-(239, 'Vigor', 'Aumenta a Defesa quando atacado.', 7),
-(240, 'Mudança de Postura', 'Muda de forma dependendo dos movimentos usados.', 6),
-(241, 'Estático', 'Contato com o Pokémon pode causar paralisia.', 3),
-(242, 'Inabalável', 'Aumenta a Velocidade cada vez que o Pokémon recua (flinch).', 4),
-(243, 'Motor a Vapor', 'Aumenta drasticamente a Velocidade quando atingido por um movimento do tipo Fogo ou Água.', 8),
-(244, 'Trabalhador do Aço', 'Aumenta o poder de movimentos do tipo Aço.', 7),
-(245, 'Espírito de Aço', 'Aumenta o poder dos movimentos do tipo Aço dos Pokémon aliados.', 8),
-(246, 'Mau Cheiro', 'O mau cheiro pode fazer o alvo recuar (flinch).', 3),
-(247, 'Aperto Pegajoso', 'Protege o Pokémon contra roubo de item.', 3),
-(248, 'Drenagem Torrencial', 'Atrai todos os movimentos do tipo Água para aumentar o At. Esp.', 4),
-(249, 'Mandíbula Forte', 'Aumenta o poder de movimentos de mordida.', 6),
-(250, 'Robustez', 'Não pode ser nocauteado com um único golpe.', 3),
-(251, 'Ventosas', 'Nega todos os movimentos que forçam a troca.', 3),
-(252, 'Super Sorte', 'Aumenta as taxas de acerto crítico dos movimentos.', 4),
-(253, 'Xarope Superdoce', 'Reduz a Evasão do oponente ao entrar em batalha.', 9),
-(254, 'Suserano Supremo', 'Ataque e Ataque Especial são aumentados para cada Pokémon da equipe que foi derrotado.', 9),
-(255, 'Surfista Elétrico', 'Dobra a Velocidade durante o Terreno Elétrico.', 7),
-(256, 'Enxame', 'Aumenta o poder de movimentos do tipo Inseto em apuros.', 3),
-(257, 'Véu Doce', 'Impede que o Pokémon e aliados adormeçam.', 6),
-(258, 'Nado Rápido', 'Aumenta a Velocidade do Pokémon na chuva.', 3),
-(259, 'Espada da Ruína', 'Reduz o Ataque de todos os Pokémon, exceto o próprio.', 9),
-(260, 'Simbiose', 'O Pokémon pode passar um item para um aliado.', 6),
-(261, 'Sincronizar', 'Passa uma queimadura, veneno ou paralisia para o oponente.', 3),
-(262, 'Tábuas da Ruína', 'Reduz o Ataque de todos os Pokémon, exceto o próprio.', 9),
-(263, 'Pés Emaranhados', 'Aumenta a evasão se o Pokémon estiver confuso.', 4),
-(264, 'Cabelo Emaranhado', 'Contato com o Pokémon reduz a Velocidade do atacante.', 7),
-(265, 'Técnico', 'Aumenta o poder dos movimentos mais fracos do Pokémon.', 4),
-(266, 'Telepatia', 'Antecipa o ataque de um aliado e o desvia.', 5),
-(267, 'Carapaça Tera', 'Movimentos não são muito eficazes quando o HP está cheio.', 9),
-(268, 'Mudança Tera', 'Transforma-se na Forma Terastal em batalha.', 9),
-(269, 'Teraforma Zero', 'Elimina todos os efeitos de clima e terreno.', 9),
-(270, 'Teravolt', 'Movimentos podem ser usados independentemente das Habilidades.', 5),
-(271, 'Troca Térmica', 'Aumenta o Ataque quando atingido por um movimento do tipo Fogo. Não pode ser queimado.', 9),
-(272, 'Gordura Espessa', 'Aumenta a resistência a movimentos dos tipos Fogo e Gelo.', 3),
-(273, 'Lente Tingida', 'Aumenta o poder de movimentos “não muito eficazes”.', 4),
-(274, 'Torrente', 'Aumenta o poder de movimentos do tipo Água em apuros.', 3),
-(275, 'Garras Resistentes', 'Aumenta o poder de movimentos de contato.', 6),
-(276, 'Impulso Tóxico', 'Aumenta o poder de ataques físicos quando envenenado.', 5),
-(277, 'Corrente Tóxica', 'Pode causar envenenamento grave.', 9),
-(278, 'Detritos Tóxicos', 'Espalha espinhos venenosos aos pés da equipe adversária quando o Pokémon sofre dano de movimentos físicos.', 9),
-(279, 'Rastrear', 'O Pokémon copia a Habilidade de um oponente.', 3),
-(280, 'Transistor', 'Aumenta o poder de movimentos do tipo Elétrico.', 8),
-(281, 'Triagem', 'Dá prioridade a movimentos restauradores.', 7),
-(282, 'Vadiagem', 'O Pokémon não pode atacar em turnos consecutivos.', 3),
-(283, 'Turbochama', 'Movimentos podem ser usados independentemente das Habilidades.', 5),
-(284, 'Inconsciente', 'Ignora quaisquer mudanças de atributos no Pokémon adversário.', 4),
-(285, 'Desimpedir', 'Aumenta a Velocidade se um item segurado for usado.', 4),
-(286, 'Nervosismo', 'Deixa o oponente nervoso e incapaz de comer Berries.', 5),
-(287, 'Punho Invisível', 'Movimentos de contato podem atingir através de Proteger/Detectar.', 8),
-(288, 'Vaso da Ruína', 'Reduz o Ataque Especial de todos os Pokémon, exceto o próprio.', 9),
-(289, 'Estrela da Vitória', 'Aumenta a precisão de seus aliados e de si mesmo.', 5),
-(290, 'Espírito Vital', 'Impede que o Pokémon adormeça.', 3),
-(291, 'Absorver Voltagem', 'Restaura HP se atingido por um movimento do tipo Elétrico.', 3),
-(292, 'Espírito Errante', 'Troca habilidades com oponentes em contato.', 8),
-(293, 'Absorver Água', 'Restaura HP se atingido por um movimento do tipo Água.', 3),
-(294, 'Bolha d''Água', 'Reduz pela metade o dano de movimentos do tipo Fogo, dobra o poder dos movimentos do tipo Água usados e previne queimaduras.', 7),
-(295, 'Compactação Aquática', 'Aumenta acentuadamente a Defesa quando atingido por um movimento do tipo Água.', 7),
-(296, 'Véu d''Água', 'Impede que o Pokémon sofra queimaduras.', 3),
-(297, 'Armadura Fraca', 'Ataques físicos reduzem a Defesa e aumentam a Velocidade.', 5),
-(298, 'Corpo Bem Assado', 'Imune a movimentos do tipo Fogo, e a Defesa é acentuadamente aumentada.', 9),
-(299, 'Fumaça Branca', 'Impede que outros Pokémon reduzam seus atributos.', 3),
-(300, 'Retirada Estratégica', 'Troca quando o HP cai abaixo da metade.', 7),
-(301, 'Poder Eólico', 'Dobra o poder do próximo movimento do tipo Elétrico usado, quando atingido por um movimento de vento.', 9),
-(302, 'Cavaleiro do Vento', 'Não sofre dano de movimentos de vento e aumenta o Ataque se atingido por um.', 9),
-(303, 'Superguarda', 'Apenas movimentos super eficazes acertarão.', 3),
-(304, 'Pele Maravilha', 'Faz com que movimentos que alteram o status tenham maior probabilidade de errar.', 5),
-(305, 'Modo Zen', 'Muda de forma quando o HP cai abaixo da metade.', 5),
-(306, 'Zero a Herói', 'Transforma-se em sua Forma Herói ao ser trocado.', 9);
+-- Dados da tabela: egg_groups (origem: 03_egg_group.json)
+INSERT INTO egg_groups (id, name) VALUES (1, 'Amorfo');
+INSERT INTO egg_groups (id, name) VALUES (2, 'Inseto');
+INSERT INTO egg_groups (id, name) VALUES (3, 'Dragão');
+INSERT INTO egg_groups (id, name) VALUES (4, 'Fada');
+INSERT INTO egg_groups (id, name) VALUES (5, 'Campo');
+INSERT INTO egg_groups (id, name) VALUES (6, 'Voador');
+INSERT INTO egg_groups (id, name) VALUES (7, 'Grama');
+INSERT INTO egg_groups (id, name) VALUES (8, 'Humanoide');
+INSERT INTO egg_groups (id, name) VALUES (9, 'Mineral');
+INSERT INTO egg_groups (id, name) VALUES (10, 'Monstro');
+INSERT INTO egg_groups (id, name) VALUES (11, 'Água 1');
+INSERT INTO egg_groups (id, name) VALUES (12, 'Água 2');
+INSERT INTO egg_groups (id, name) VALUES (13, 'Água 3');
+INSERT INTO egg_groups (id, name) VALUES (14, 'Ditto');
+INSERT INTO egg_groups (id, name) VALUES (15, 'Indescoberto');
 
--- Dados para species
-INSERT INTO species (id, pokemon_number, name, species_en, species_pt) VALUES
-(1, '0001', 'Bulbasaur', 'Seed Pokémon', 'Pokémon Semente'),
-(2, '0002', 'Ivysaur', 'Seed Pokémon', 'Pokémon Semente'),
-(3, '0003', 'Venusaur', 'Seed Pokémon', 'Pokémon Semente'),
-(4, '0004', 'Charmander', 'Lizard Pokémon', 'Pokémon Lagarto'),
-(5, '0005', 'Charmeleon', 'Flame Pokémon', 'Pokémon Chama'),
-(6, '0006', 'Charizard', 'Flame Pokémon', 'Pokémon Chama'),
-(7, '0007', 'Squirtle', 'Tiny Turtle Pokémon', 'Pokémon Jovem Tartaruga'),
-(8, '0008', 'Wartortle', 'Turtle Pokémon', 'Pokémon Tartaruga'),
-(9, '0009', 'Blastoise', 'Shellfish Pokémon', 'Pokémon Concha'),
-(10, '0010', 'Caterpie', 'Worm Pokémon', 'Pokémon Lagarta'),
-(11, '0011', 'Metapod', 'Cocoon Pokémon', 'Pokémon Crisálida'),
-(12, '0012', 'Butterfree', 'Butterfly Pokémon', 'Pokémon Borboleta'),
-(13, '0013', 'Weedle', 'Hairy Bug Pokémon', 'Pokémon Lagarta Peluda'),
-(14, '0014', 'Kakuna', 'Cocoon Pokémon', 'Pokémon Crisálida'),
-(15, '0015', 'Beedrill', 'Poison Bee Pokémon', 'Pokémon Abelha Venenosa'),
-(16, '0016', 'Pidgey', 'Tiny Bird Pokémon', 'Pokémon Pequeno Pássaro'),
-(17, '0017', 'Pidgeotto', 'Bird Pokémon', 'Pokémon Pássaro'),
-(18, '0018', 'Pidgeot', 'Bird Pokémon', 'Pokémon Pássaro'),
-(19, '0019', 'Rattata', 'Mouse Pokémon', 'Pokémon Rato'),
-(20, '0020', 'Raticate', 'Mouse Pokémon', 'Pokémon Rato'),
-(21, '0021', 'Spearow', 'Tiny Bird Pokémon', 'Pokémon Pequeno Pássaro'),
-(22, '0022', 'Fearow', 'Beak Pokémon', 'Pokémon Bico'),
-(23, '0023', 'Ekans', 'Snake Pokémon', 'Pokémon Cobra'),
-(24, '0024', 'Arbok', 'Cobra Pokémon', 'Pokémon Cobra'),
-(25, '0025', 'Pikachu', 'Mouse Pokémon', 'Pokémon Rato'),
-(26, '0026', 'Raichu', 'Mouse Pokémon', 'Pokémon Rato'),
-(27, '0027', 'Sandshrew', 'Mouse Pokémon', 'Pokémon Rato'),
-(28, '0028', 'Sandslash', 'Mouse Pokémon', 'Pokémon Rato'),
-(29, '0029', 'Nidoran♀', 'Poison Pin Pokémon', 'Pokémon Espinho Venenoso'),
-(30, '0030', 'Nidorina', 'Poison Pin Pokémon', 'Pokémon Espinho Venenoso'),
-(31, '0031', 'Nidoqueen', 'Drill Pokémon', 'Pokémon Perfurador'),
-(32, '0032', 'Nidoran♂', 'Poison Pin Pokémon', 'Pokémon Espinho Venenoso'),
-(33, '0033', 'Nidorino', 'Poison Pin Pokémon', 'Pokémon Espinho Venenoso'),
-(34, '0034', 'Nidoking', 'Drill Pokémon', 'Pokémon Perfurador'),
-(35, '0035', 'Clefairy', 'Fairy Pokémon', 'Pokémon Fada'),
-(36, '0036', 'Clefable', 'Fairy Pokémon', 'Pokémon Fada'),
-(37, '0037', 'Vulpix', 'Fox Pokémon', 'Pokémon Raposa'),
-(38, '0038', 'Ninetales', 'Fox Pokémon', 'Pokémon Raposa'),
-(39, '0039', 'Jigglypuff', 'Balloon Pokémon', 'Pokémon Balão'),
-(40, '0040', 'Wigglytuff', 'Balloon Pokémon', 'Pokémon Balão'),
-(41, '0041', 'Zubat', 'Bat Pokémon', 'Pokémon Morcego'),
-(42, '0042', 'Golbat', 'Bat Pokémon', 'Pokémon Morcego'),
-(43, '0043', 'Oddish', 'Weed Pokémon', 'Pokémon Erva Daninha'),
-(44, '0044', 'Gloom', 'Weed Pokémon', 'Pokémon Erva Daninha'),
-(45, '0045', 'Vileplume', 'Flower Pokémon', 'Pokémon Flor'),
-(46, '0046', 'Paras', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(47, '0047', 'Parasect', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(48, '0048', 'Venonat', 'Insect Pokémon', 'Pokémon Inseto'),
-(49, '0049', 'Venomoth', 'Poison Moth Pokémon', 'Pokémon Mariposa Venenosa'),
-(50, '0050', 'Diglett', 'Mole Pokémon', 'Pokémon Toupeira'),
-(51, '0051', 'Dugtrio', 'Mole Pokémon', 'Pokémon Toupeira'),
-(52, '0052', 'Meowth', 'Scratch Cat Pokémon', 'Pokémon Gato Rabiscador'),
-(53, '0053', 'Persian', 'Classy Cat Pokémon', 'Pokémon Gato Siamês'),
-(54, '0054', 'Psyduck', 'Duck Pokémon', 'Pokémon Pato'),
-(55, '0055', 'Golduck', 'Duck Pokémon', 'Pokémon Pato'),
-(56, '0056', 'Mankey', 'Pig Monkey Pokémon', 'Pokémon Macaco Porco'),
-(57, '0057', 'Primeape', 'Pig Monkey Pokémon', 'Pokémon Macaco Porco'),
-(58, '0058', 'Growlithe', 'Puppy Pokémon', 'Pokémon Filhote'),
-(59, '0058', 'Growlithe Hisuian Form', 'Scout Pokémon', 'Pokémon Observador'),
-(60, '0059', 'Arcanine', 'Legendary Pokémon', 'Pokémon Lenda'),
-(61, '0060', 'Poliwag', 'Tadpole Pokémon', 'Pokémon Girino'),
-(62, '0061', 'Poliwhirl', 'Tadpole Pokémon', 'Pokémon Girino'),
-(63, '0062', 'Poliwrath', 'Tadpole Pokémon', 'Pokémon Girino'),
-(64, '0063', 'Abra', 'Psi Pokémon', 'Pokémon Poder Psíquico'),
-(65, '0064', 'Kadabra', 'Psi Pokémon', 'Pokémon Poder Psíquico'),
-(66, '0065', 'Alakazam', 'Psi Pokémon', 'Pokémon Poder Psíquico'),
-(67, '0066', 'Machop', 'Superpower Pokémon', 'Pokémon Força Sobre-humana'),
-(68, '0067', 'Machoke', 'Superpower Pokémon', 'Pokémon Força Sobre-humana'),
-(69, '0068', 'Machamp', 'Superpower Pokémon', 'Pokémon Força Sobre-humana'),
-(70, '0069', 'Bellsprout', 'Flower Pokémon', 'Pokémon Flor'),
-(71, '0070', 'Weepinbell', 'Flycatcher Pokémon', 'Pokémon Papa-moscas'),
-(72, '0071', 'Victreebel', 'Flycatcher Pokémon', 'Pokémon Papa-moscas'),
-(73, '0072', 'Tentacool', 'Jellyfish Pokémon', 'Pokémon Água-viva'),
-(74, '0073', 'Tentacruel', 'Jellyfish Pokémon', 'Pokémon Água-viva'),
-(75, '0074', 'Geodude', 'Rock Pokémon', 'Pokémon Rocha'),
-(76, '0075', 'Graveler', 'Rock Pokémon', 'Pokémon Rocha'),
-(77, '0076', 'Golem', 'Megaton Pokémon', 'Pokémon Megaton'),
-(78, '0077', 'Ponyta', 'Fire Horse Pokémon', 'Pokémon Cavalo de Fogo'),
-(79, '0077', 'Ponyta Galarian Form', 'Unique Horn Pokémon', 'Pokémon Um Chifre'),
-(80, '0078', 'Rapidash', 'Fire Horse Pokémon', 'Pokémon Cavalo de Fogo'),
-(81, '0078', 'Rapidash Galarian Form', 'Unique Horn Pokémon', 'Pokémon Um Chifre'),
-(82, '0079', 'Slowpoke', 'Dopey Pokémon', 'Pokémon Estúpido'),
-(83, '0080', 'Slowbro', 'Hermit Crab Pokémon', 'Pokémon Caranguejo Eremita'),
-(84, '0081', 'Magnemite', 'Magnet Pokémon', 'Pokémon Imã'),
-(85, '0082', 'Magneton', 'Magnet Pokémon', 'Pokémon Imã'),
-(86, '0083', 'Farfetch''d', 'Wild Duck Pokémon', 'Pokémon Pato-selvagem'),
-(87, '0084', 'Doduo', 'Twin Bird Pokémon', 'Pokémon Pássaro Gêmeo'),
-(88, '0085', 'Dodrio', 'Triple Bird Pokémon', 'Pokémon Pássaro Trigêmeo'),
-(89, '0086', 'Seel', 'Sea Lion Pokémon', 'Pokémon Leão Marinho'),
-(90, '0087', 'Dewgong', 'Sea Lion Pokémon', 'Pokémon Leão Marinho'),
-(91, '0088', 'Grimer', 'Sludge Pokémon', 'Pokémon Lama'),
-(92, '0089', 'Muk', 'Sludge Pokémon', 'Pokémon Lama'),
-(93, '0090', 'Shellder', 'Bivalve Pokémon', 'Pokémon Bivalve'),
-(94, '0091', 'Cloyster', 'Bivalve Pokémon', 'Pokémon Bivalve'),
-(95, '0092', 'Gastly', 'Gas Pokémon', 'Pokémon Gasoso'),
-(96, '0093', 'Haunter', 'Gas Pokémon', 'Pokémon Gasoso'),
-(97, '0094', 'Gengar', 'Shadow Pokémon', 'Pokémon Sombra'),
-(98, '0095', 'Onix', 'Rock Snake Pokémon', 'Pokémon Cobra de Pedra'),
-(99, '0096', 'Drowzee', 'Hypnosis Pokémon', 'Pokémon Hipnose'),
-(100, '0097', 'Hypno', 'Hypnosis Pokémon', 'Pokémon Hipnose'),
-(101, '0098', 'Krabby', 'River Crab Pokémon', 'Pokémon Caranguejo de Água Doce'),
-(102, '0099', 'Kingler', 'Pincer Pokémon', 'Pokémon Pinça'),
-(103, '0100', 'Voltorb', 'Ball Pokémon', 'Pokémon Bola'),
-(104, '0100', 'Voltorb Hisuian Form', 'Sphere Pokémon', 'Pokémon Esfera'),
-(105, '0101', 'Electrode', 'Ball Pokémon', 'Pokémon Bola'),
-(106, '0101', 'Electrode Hisuian Form', 'Sphere Pokémon', 'Pokémon Esfera'),
-(107, '0102', 'Exeggcute', 'Egg Pokémon', 'Pokémon Ovo'),
-(108, '0103', 'Exeggutor', 'Coconut Pokémon', 'Pokémon Coco'),
-(109, '0104', 'Cubone', 'Lonely Pokémon', 'Pokémon Solitário'),
-(110, '0105', 'Marowak', 'Bone Keeper Pokémon', 'Pokémon Amante de Osso'),
-(111, '0106', 'Hitmonlee', 'Kicking Pokémon', 'Pokémon Chute'),
-(112, '0107', 'Hitmonchan', 'Punching Pokémon', 'Pokémon Soco'),
-(113, '0108', 'Lickitung', 'Licking Pokémon', 'Pokémon Lambida'),
-(114, '0109', 'Koffing', 'Poison Gas Pokémon', 'Pokémon Gás Venenoso'),
-(115, '0110', 'Weezing', 'Poison Gas Pokémon', 'Pokémon Gás Venenoso'),
-(116, '0111', 'Rhyhorn', 'Spikes Pokémon', 'Pokémon Espinhoso'),
-(117, '0112', 'Rhydon', 'Drill Pokémon', 'Pokémon Perfurador'),
-(118, '0113', 'Chansey', 'Egg Pokémon', 'Pokémon Ovo'),
-(119, '0114', 'Tangela', 'Vine Pokémon', 'Pokémon Cipó'),
-(120, '0115', 'Kangaskhan', 'Parent Pokémon', 'Pokémon Pai e Filho'),
-(121, '0116', 'Horsea', 'Dragon Pokémon', 'Pokémon Dragão'),
-(122, '0117', 'Seadra', 'Dragon Pokémon', 'Pokémon Dragão'),
-(123, '0118', 'Goldeen', 'Goldfish Pokémon', 'Pokémon Peixe Dourado'),
-(124, '0119', 'Seaking', 'Goldfish Pokémon', 'Pokémon Peixe Dourado'),
-(125, '0120', 'Staryu', 'Star Shape Pokémon', 'Pokémon Forma de Estrela'),
-(126, '0121', 'Starmie', 'Mysterious Pokémon', 'Pokémon Misterioso'),
-(127, '0122', 'Mr. Mime', 'Barrier Pokémon', 'Pokémon Barreira'),
-(128, '0122', 'Mr. Mime Galarian Form', 'Dancing Pokémon', 'Pokémon Dançarino'),
-(129, '0123', 'Scyther', 'Mantis Pokémon', 'Pokémon Louva-a-deus'),
-(130, '0124', 'Jynx', 'Human Shape Pokémon', 'Pokémon Humanoide'),
-(131, '0125', 'Electabuzz', 'Electric Pokémon', 'Pokémon Choque Elétrico'),
-(132, '0126', 'Magmar', 'Spitfire Pokémon', 'Pokémon Cuspidor de Fogo'),
-(133, '0127', 'Pinsir', 'Stag Beetle Pokémon', 'Pokémon Besouro Cervo'),
-(134, '0128', 'Tauros', 'Wild Bull Pokémon', 'Pokémon Touro Selvagem'),
-(135, '0129', 'Magikarp', 'Fish Pokémon', 'Pokémon Peixe'),
-(136, '0130', 'Gyarados', 'Atrocious Pokémon', 'Pokémon Atroz'),
-(137, '0131', 'Lapras', 'Transport Pokémon', 'Pokémon Transporte'),
-(138, '0132', 'Ditto', 'Transform Pokémon', 'Pokémon Transformação'),
-(139, '0133', 'Eevee', 'Evolution Pokémon', 'Pokémon Evolução'),
-(140, '0134', 'Vaporeon', 'Bubble Jet Pokémon', 'Pokémon Jato de Bolha'),
-(141, '0135', 'Jolteon', 'Lightning Pokémon', 'Pokémon Relâmpago'),
-(142, '0136', 'Flareon', 'Flame Pokémon', 'Pokémon Chama'),
-(143, '0137', 'Porygon', 'Virtual Pokémon', 'Pokémon Virtual'),
-(144, '0138', 'Omanyte', 'Spiral Pokémon', 'Pokémon Espiral'),
-(145, '0139', 'Omastar', 'Spiral Pokémon', 'Pokémon Espiral'),
-(146, '0140', 'Kabuto', 'Shellfish Pokémon', 'Pokémon Concha'),
-(147, '0141', 'Kabutops', 'Shellfish Pokémon', 'Pokémon Concha'),
-(148, '0142', 'Aerodactyl', 'Fossil Pokémon', 'Pokémon Fóssil'),
-(149, '0143', 'Snorlax', 'Sleeping Pokémon', 'Pokémon Dorminhoco'),
-(150, '0144', 'Articuno', 'Freeze Pokémon', 'Pokémon Congelante'),
-(151, '0144', 'Articuno Galarian Form', 'Cruel Pokémon', 'Pokémon Cruel'),
-(152, '0145', 'Zapdos', 'Electric Pokémon', 'Pokémon Choque Elétrico'),
-(153, '0145', 'Zapdos Galarian Form', 'Strong Legs Pokémon', 'Pokémon Pernas Fortes'),
-(154, '0146', 'Moltres', 'Flame Pokémon', 'Pokémon Chama'),
-(155, '0146', 'Moltres Galarian Form', 'Malevolent Pokémon', 'Pokémon Malévolo'),
-(156, '0147', 'Dratini', 'Dragon Pokémon', 'Pokémon Dragão'),
-(157, '0148', 'Dragonair', 'Dragon Pokémon', 'Pokémon Dragão'),
-(158, '0149', 'Dragonite', 'Dragon Pokémon', 'Pokémon Dragão'),
-(159, '0150', 'Mewtwo', 'Genetic Pokémon', 'Pokémon Genético'),
-(160, '0151', 'Mew', 'New Species Pokémon', 'Pokémon Nova Espécie'),
-(161, '0152', 'Chikorita', 'Leaf Pokémon', 'Pokémon Folha'),
-(162, '0153', 'Bayleef', 'Leaf Pokémon', 'Pokémon Folha'),
-(163, '0154', 'Meganium', 'Herb Pokémon', 'Pokémon Erva'),
-(164, '0155', 'Cyndaquil', 'Fire Mouse Pokémon', 'Pokémon Rato de Fogo'),
-(165, '0156', 'Quilava', 'Volcano Pokémon', 'Pokémon Vulcão'),
-(166, '0157', 'Typhlosion', 'Volcano Pokémon', 'Pokémon Vulcão'),
-(167, '0157', 'Typhlosion Hisuian Form', 'Ghost Flame Pokémon', 'Pokémon Chama Fantasma'),
-(168, '0158', 'Totodile', 'Big Jaw Pokémon', 'Pokémon Mandíbula Grande'),
-(169, '0159', 'Croconaw', 'Big Jaw Pokémon', 'Pokémon Mandíbula Grande'),
-(170, '0160', 'Feraligatr', 'Big Jaw Pokémon', 'Pokémon Mandíbula Grande'),
-(171, '0161', 'Sentret', 'Scout Pokémon', 'Pokémon Observador'),
-(172, '0162', 'Furret', 'Long Body Pokémon', 'Pokémon Tronco Longo'),
-(173, '0163', 'Hoothoot', 'Owl Pokémon', 'Pokémon Coruja'),
-(174, '0164', 'Noctowl', 'Owl Pokémon', 'Pokémon Coruja'),
-(175, '0165', 'Ledyba', 'Five Star Pokémon', 'Pokémon Cinco Estrelas'),
-(176, '0166', 'Ledian', 'Five Star Pokémon', 'Pokémon Cinco Estrelas'),
-(177, '0167', 'Spinarak', 'String Spit Pokémon', 'Pokémon Cuspidor de Fio'),
-(178, '0168', 'Ariados', 'Long Leg Pokémon', 'Pokémon Perna Longa'),
-(179, '0169', 'Crobat', 'Bat Pokémon', 'Pokémon Morcego'),
-(180, '0170', 'Chinchou', 'Angler Pokémon', 'Pokémon Peixe-pescador'),
-(181, '0171', 'Lanturn', 'Light Pokémon', 'Pokémon Luz'),
-(182, '0172', 'Pichu', 'Tiny Mouse Pokémon', 'Pokémon Rato Pequeno'),
-(183, '0173', 'Cleffa', 'Star Shape Pokémon', 'Pokémon Forma de Estrela'),
-(184, '0174', 'Igglybuff', 'Balloon Pokémon', 'Pokémon Balão'),
-(185, '0175', 'Togepi', 'Spike Ball Pokémon', 'Pokémon Bola de Espinhos'),
-(186, '0176', 'Togetic', 'Happiness Pokémon', 'Pokémon Felicidade'),
-(187, '0177', 'Natu', 'Tiny Bird Pokémon', 'Pokémon Pequeno Pássaro'),
-(188, '0178', 'Xatu', 'Mystic Pokémon', 'Pokémon Espírito'),
-(189, '0179', 'Mareep', 'Wool Pokémon', 'Pokémon Fiapo'),
-(190, '0180', 'Flaaffy', 'Wool Pokémon', 'Pokémon Fiapo'),
-(191, '0181', 'Ampharos', 'Light Pokémon', 'Pokémon Luz'),
-(192, '0182', 'Bellossom', 'Flower Pokémon', 'Pokémon Flor'),
-(193, '0183', 'Marill', 'Aqua Mouse Pokémon', 'Pokémon Rato Aquático'),
-(194, '0184', 'Azumarill', 'Aqua Rabbit Pokémon', 'Pokémon Coelho Aquático'),
-(195, '0185', 'Sudowoodo', 'Imitation Pokémon', 'Pokémon Imitação'),
-(196, '0186', 'Politoed', 'Frog Pokémon', 'Pokémon Sapo'),
-(197, '0187', 'Hoppip', 'Cottonweed Pokémon', 'Pokémon Erva-algodão'),
-(198, '0188', 'Skiploom', 'Cottonweed Pokémon', 'Pokémon Erva-algodão'),
-(199, '0189', 'Jumpluff', 'Cottonweed Pokémon', 'Pokémon Erva-algodão'),
-(200, '0190', 'Aipom', 'Long Tail Pokémon', 'Pokémon Cauda Longa'),
-(201, '0191', 'Sunkern', 'Seed Pokémon', 'Pokémon Semente'),
-(202, '0192', 'Sunflora', 'Sun Pokémon', 'Pokémon Sol'),
-(203, '0193', 'Yanma', 'Clear Wing Pokémon', 'Pokémon Asa Fina'),
-(204, '0194', 'Wooper', 'Water Fish Pokémon', 'Pokémon Peixe-d''água'),
-(205, '0194', 'Wooper Paldean Form', 'Poison Fish Pokémon', 'Pokémon Peixe Venenoso'),
-(206, '0195', 'Quagsire', 'Water Fish Pokémon', 'Pokémon Peixe-d''água'),
-(207, '0196', 'Espeon', 'Sun Pokémon', 'Pokémon Sol'),
-(208, '0197', 'Umbreon', 'Moonlight Pokémon', 'Pokémon Luz da Lua'),
-(209, '0198', 'Murkrow', 'Darkness Pokémon', 'Pokémon Escuridão'),
-(210, '0199', 'Slowking', 'Royal Pokémon', 'Pokémon Monarca'),
-(211, '0199', 'Slowking Galarian Form', 'Hexpert Pokémon', 'Pokémon Xamã'),
-(212, '0200', 'Misdreavus', 'Screech Pokémon', 'Pokémon Grito Noturno'),
-(213, '0201', 'Unown', 'Symbol Pokémon', 'Pokémon Símbolo'),
-(214, '0202', 'Wobbuffet', 'Patient Pokémon', 'Pokémon Resistência'),
-(215, '0203', 'Girafarig', 'Long Neck Pokémon', 'Pokémon Pescoço Longo'),
-(216, '0204', 'Pineco', 'Bagworm Pokémon', 'Pokémon Bicho-da-seda'),
-(217, '0205', 'Forretress', 'Bagworm Pokémon', 'Pokémon Bicho-da-seda'),
-(218, '0206', 'Dunsparce', 'Land Snake Pokémon', 'Pokémon Cobra Terrestre'),
-(219, '0207', 'Gligar', 'Fly Scorpion Pokémon', 'Pokémon Escorpião Voador'),
-(220, '0208', 'Steelix', 'Iron Snake Pokémon', 'Pokémon Cobra de Ferro'),
-(221, '0209', 'Snubbull', 'Fairy Pokémon', 'Pokémon Fada'),
-(222, '0210', 'Granbull', 'Fairy Pokémon', 'Pokémon Fada'),
-(223, '0211', 'Qwilfish', 'Balloon Pokémon', 'Pokémon Balão'),
-(224, '0212', 'Scizor', 'Pincer Pokémon', 'Pokémon Pinça'),
-(225, '0213', 'Shuckle', 'Mold Pokémon', 'Pokémon Fermentação'),
-(226, '0214', 'Heracross', 'Single Horn Pokémon', 'Pokémon Chifre Único'),
-(227, '0215', 'Sneasel', 'Sharp Claw Pokémon', 'Pokémon Garra'),
-(228, '0216', 'Teddiursa', 'Little Bear Pokémon', 'Pokémon Urso Pequeno'),
-(229, '0217', 'Ursaring', 'Hibernator Pokémon', 'Pokémon Hibernação'),
-(230, '0218', 'Slugma', 'Lava Pokémon', 'Pokémon Lava'),
-(231, '0219', 'Magcargo', 'Lava Pokémon', 'Pokémon Lava'),
-(232, '0220', 'Swinub', 'Pig Pokémon', 'Pokémon Javali'),
-(233, '0221', 'Piloswine', 'Swine Pokémon', 'Pokémon Javali Selvagem'),
-(234, '0222', 'Corsola', 'Coral Pokémon', 'Pokémon Coral'),
-(235, '0223', 'Remoraid', 'Jet Pokémon', 'Pokémon Jato'),
-(236, '0224', 'Octillery', 'Jet Pokémon', 'Pokémon Jato'),
-(237, '0225', 'Delibird', 'Delivery Pokémon', 'Pokémon Correio'),
-(238, '0226', 'Mantine', 'Kite Pokémon', 'Pokémon Pipa'),
-(239, '0227', 'Skarmory', 'Armor Bird Pokémon', 'Pokémon Pássaro Armadura'),
-(240, '0228', 'Houndour', 'Dark Pokémon', 'Pokémon Sombrio'),
-(241, '0229', 'Houndoom', 'Dark Pokémon', 'Pokémon Sombrio'),
-(242, '0230', 'Kingdra', 'Dragon Pokémon', 'Pokémon Dragão'),
-(243, '0231', 'Phanpy', 'Long Nose Pokémon', 'Pokémon Nariz Longo'),
-(244, '0232', 'Donphan', 'Armor Pokémon', 'Pokémon Armadura'),
-(245, '0233', 'Porygon2', 'Virtual Pokémon', 'Pokémon Virtual'),
-(246, '0234', 'Stantler', 'Big Horn Pokémon', 'Pokémon Chifre Grande'),
-(247, '0235', 'Smeargle', 'Painter Pokémon', 'Pokémon Pintor'),
-(248, '0236', 'Tyrogue', 'Scuffle Pokémon', 'Pokémon Briga'),
-(249, '0237', 'Hitmontop', 'Handstand Pokémon', 'Pokémon Parada de Mão'),
-(250, '0238', 'Smoochum', 'Kiss Pokémon', 'Pokémon Beijo'),
-(251, '0239', 'Elekid', 'Electric Pokémon', 'Pokémon Elétrico'),
-(252, '0240', 'Magby', 'Live Coal Pokémon', 'Pokémon Brasa Viva'),
-(253, '0241', 'Miltank', 'Milk Cow Pokémon', 'Pokémon Vaca Leiteira'),
-(254, '0242', 'Blissey', 'Happiness Pokémon', 'Pokémon Felicidade'),
-(255, '0243', 'Raikou', 'Thunder Pokémon', 'Pokémon Trovão'),
-(256, '0244', 'Entei', 'Volcano Pokémon', 'Pokémon Vulcão'),
-(257, '0245', 'Suicune', 'Aurora Pokémon', 'Pokémon Aurora'),
-(258, '0246', 'Larvitar', 'Rock Skin Pokémon', 'Pokémon Pele de Rocha'),
-(259, '0247', 'Pupitar', 'Hard Shell Pokémon', 'Pokémon Bala'),
-(260, '0248', 'Tyranitar', 'Armor Pokémon', 'Pokémon Armadura'),
-(261, '0249', 'Lugia', 'Diving Pokémon', 'Pokémon Mergulhador'),
-(262, '0250', 'Ho-Oh', 'Rainbow Pokémon', 'Pokémon Arco-íris'),
-(263, '0251', 'Celebi', 'Time Travel Pokémon', 'Pokémon Viajante do Tempo'),
-(264, '0252', 'Treecko', 'Wood Gecko Pokémon', 'Pokémon Lagartixa da Floresta'),
-(265, '0253', 'Grovyle', 'Wood Gecko Pokémon', 'Pokémon Lagartixa da Floresta'),
-(266, '0254', 'Sceptile', 'Forest Pokémon', 'Pokémon Selva'),
-(267, '0255', 'Torchic', 'Chick Pokémon', 'Pokémon Pintinho'),
-(268, '0256', 'Combusken', 'Young Fowl Pokémon', 'Pokémon Frango'),
-(269, '0257', 'Blaziken', 'Blaze Pokémon', 'Pokémon Chamas Furiosas'),
-(270, '0258', 'Mudkip', 'Mud Fish Pokémon', 'Pokémon Peixe do Pântano'),
-(271, '0259', 'Marshtomp', 'Mud Fish Pokémon', 'Pokémon Peixe do Pântano'),
-(272, '0260', 'Swampert', 'Mud Fish Pokémon', 'Pokémon Peixe do Pântano'),
-(273, '0261', 'Poochyena', 'Bite Pokémon', 'Pokémon Mordida'),
-(274, '0262', 'Mightyena', 'Bite Pokémon', 'Pokémon Mordida'),
-(275, '0263', 'Zigzagoon', 'Tiny Raccoon Pokémon', 'Pokémon Pequeno Guaxinim'),
-(276, '0264', 'Linoone', 'Rushing Pokémon', 'Pokémon Avanço'),
-(277, '0265', 'Wurmple', 'Worm Pokémon', 'Pokémon Lagarta'),
-(278, '0266', 'Silcoon', 'Cocoon Pokémon', 'Pokémon Crisálida'),
-(279, '0267', 'Beautifly', 'Butterfly Pokémon', 'Pokémon Borboleta'),
-(280, '0268', 'Cascoon', 'Cocoon Pokémon', 'Pokémon Crisálida'),
-(281, '0269', 'Dustox', 'Poison Moth Pokémon', 'Pokémon Mariposa Venenosa'),
-(282, '0270', 'Lotad', 'Water Weed Pokémon', 'Pokémon Erva Aquática Flutuante'),
-(283, '0271', 'Lombre', 'Jolly Pokémon', 'Pokémon Alegre'),
-(284, '0272', 'Ludicolo', 'Carefree Pokémon', 'Pokémon Otimista'),
-(285, '0273', 'Seedot', 'Acorn Pokémon', 'Pokémon Bolota'),
-(286, '0274', 'Nuzleaf', 'Wily Pokémon', 'Pokémon Malicioso'),
-(287, '0275', 'Shiftry', 'Wicked Pokémon', 'Pokémon Maligno'),
-(288, '0276', 'Taillow', 'Tiny Swallow Pokémon', 'Pokémon Andorinha Pequena'),
-(289, '0277', 'Swellow', 'Swallow Pokémon', 'Pokémon Andorinha'),
-(290, '0278', 'Wingull', 'Seagull Pokémon', 'Pokémon Gaivota-de-Cauda-Preta'),
-(291, '0279', 'Pelipper', 'Water Bird Pokémon', 'Pokémon Ave Aquática'),
-(292, '0280', 'Ralts', 'Feeling Pokémon', 'Pokémon Sentimento'),
-(293, '0281', 'Kirlia', 'Emotion Pokémon', 'Pokémon Emoção'),
-(294, '0282', 'Gardevoir', 'Embrace Pokémon', 'Pokémon Abraço'),
-(295, '0283', 'Surskit', 'Pond Skater Pokémon', 'Pokémon Inseto-d''água'),
-(296, '0284', 'Masquerain', 'Eyeball Pokémon', 'Pokémon Globo Ocular'),
-(297, '0285', 'Shroomish', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(298, '0286', 'Breloom', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(299, '0287', 'Slakoth', 'Slacker Pokémon', 'Pokémon Preguiça'),
-(300, '0288', 'Vigoroth', 'Wild Monkey Pokémon', 'Pokémon Macaco Descontrolado'),
-(301, '0289', 'Slaking', 'Lazy Pokémon', 'Pokémon Preguiçoso'),
-(302, '0290', 'Nincada', 'Trainee Pokémon', 'Pokémon de Classe Inferior'),
-(303, '0291', 'Ninjask', 'Ninja Pokémon', 'Pokémon Ninja'),
-(304, '0292', 'Shedinja', 'Shed Pokémon', 'Pokémon Casca'),
-(305, '0293', 'Whismur', 'Whisper Pokémon', 'Pokémon Sussurro'),
-(306, '0294', 'Loudred', 'Big Voice Pokémon', 'Pokémon Voz Grande'),
-(307, '0295', 'Exploud', 'Loud Noise Pokémon', 'Pokémon Ruído'),
-(308, '0296', 'Makuhita', 'Guts Pokémon', 'Pokémon Coragem'),
-(309, '0297', 'Hariyama', 'Arm Thrust Pokémon', 'Pokémon Impulso de Palma'),
-(310, '0298', 'Azurill', 'Polka Dot Pokémon', 'Pokémon Bolinhas'),
-(311, '0299', 'Nosepass', 'Compass Pokémon', 'Pokémon Bússola'),
-(312, '0300', 'Skitty', 'Kitten Pokémon', 'Pokémon Gatinho'),
-(313, '0301', 'Delcatty', 'Prim Pokémon', 'Pokémon Prim e Proper'),
-(314, '0302', 'Sableye', 'Darkness Pokémon', 'Pokémon Escuridão'),
-(315, '0303', 'Mawile', 'Deceiver Pokémon', 'Pokémon Enganador'),
-(316, '0304', 'Aron', 'Iron Armor Pokémon', 'Pokémon Armadura de Ferro'),
-(317, '0305', 'Lairon', 'Iron Armor Pokémon', 'Pokémon Armadura de Ferro'),
-(318, '0306', 'Aggron', 'Iron Armor Pokémon', 'Pokémon Armadura de Ferro'),
-(319, '0307', 'Meditite', 'Meditate Pokémon', 'Pokémon Meditação'),
-(320, '0308', 'Medicham', 'Meditate Pokémon', 'Pokémon Meditação'),
-(321, '0309', 'Electrike', 'Lightning Pokémon', 'Pokémon Relâmpago'),
-(322, '0310', 'Manectric', 'Discharge Pokémon', 'Pokémon Descarga'),
-(323, '0311', 'Plusle', 'Cheering Pokémon', 'Pokémon Torcida'),
-(324, '0312', 'Minun', 'Cheering Pokémon', 'Pokémon Torcida'),
-(325, '0313', 'Volbeat', 'Firefly Pokémon', 'Pokémon Vagalume'),
-(326, '0314', 'Illumise', 'Firefly Pokémon', 'Pokémon Vagalume'),
-(327, '0315', 'Roselia', 'Thorn Pokémon', 'Pokémon Espinho'),
-(328, '0316', 'Gulpin', 'Stomach Pokémon', 'Pokémon Estômago'),
-(329, '0317', 'Swalot', 'Poison Bag Pokémon', 'Pokémon Bolsa de Veneno'),
-(330, '0318', 'Carvanha', 'Savage Pokémon', 'Pokémon Feroz'),
-(331, '0319', 'Sharpedo', 'Brutal Pokémon', 'Pokémon Brutal'),
-(332, '0320', 'Wailmer', 'Ball Whale Pokémon', 'Pokémon Baleia Bola'),
-(333, '0321', 'Wailord', 'Float Whale Pokémon', 'Pokémon Baleia Flutuante'),
-(334, '0322', 'Numel', 'Numb Pokémon', 'Pokémon Cabeça Grossa'),
-(335, '0323', 'Camerupt', 'Eruption Pokémon', 'Pokémon Erupção'),
-(336, '0324', 'Torkoal', 'Coal Pokémon', 'Pokémon Carvão'),
-(337, '0325', 'Spoink', 'Bounce Pokémon', 'Pokémon Saltitante'),
-(338, '0326', 'Grumpig', 'Manipulate Pokémon', 'Pokémon Manipulação'),
-(339, '0327', 'Spinda', 'Spot Panda Pokémon', 'Pokémon Panda Mancha'),
-(340, '0328', 'Trapinch', 'Ant Pit Pokémon', 'Pokémon Larva de Formiga-leão'),
-(341, '0329', 'Vibrava', 'Vibration Pokémon', 'Pokémon Vibração'),
-(342, '0330', 'Flygon', 'Mystic Pokémon', 'Pokémon Espírito'),
-(343, '0331', 'Cacnea', 'Cactus Pokémon', 'Pokémon Cacto'),
-(344, '0332', 'Cacturne', 'Scarecrow Pokémon', 'Pokémon Planta Espantalho'),
-(345, '0333', 'Swablu', 'Cotton Bird Pokémon', 'Pokémon Pássaro Algodão'),
-(346, '0334', 'Altaria', 'Humming Pokémon', 'Pokémon Zumbido'),
-(347, '0335', 'Zangoose', 'Cat Ferret Pokémon', 'Pokémon Mangusto'),
-(348, '0336', 'Seviper', 'Fang Snake Pokémon', 'Pokémon Cobra de Presas'),
-(349, '0337', 'Lunatone', 'Meteorite Pokémon', 'Pokémon Meteorito'),
-(350, '0338', 'Solrock', 'Meteorite Pokémon', 'Pokémon Meteorito'),
-(351, '0339', 'Barboach', 'Whiskers Pokémon', 'Pokémon Peixe com Barba'),
-(352, '0340', 'Whiscash', 'Whiskers Pokémon', 'Pokémon Peixe com Barba'),
-(353, '0341', 'Corphish', 'Ruffian Pokémon', 'Pokémon Rufião'),
-(354, '0342', 'Crawdaunt', 'Rogue Pokémon', 'Pokémon Rufião'),
-(355, '0343', 'Baltoy', 'Clay Doll Pokémon', 'Pokémon Figura de Barro'),
-(356, '0344', 'Claydol', 'Clay Doll Pokémon', 'Pokémon Figura de Barro'),
-(357, '0345', 'Lileep', 'Sea Lily Pokémon', 'Pokémon Lírio do Mar'),
-(358, '0346', 'Cradily', 'Barnacle Pokémon', 'Pokémon Copo de Pedra'),
-(359, '0347', 'Anorith', 'Old Shrimp Pokémon', 'Pokémon Camarão Antigo'),
-(360, '0348', 'Armaldo', 'Plate Pokémon', 'Pokémon Armadura'),
-(361, '0349', 'Feebas', 'Fish Pokémon', 'Pokémon Peixe'),
-(362, '0350', 'Milotic', 'Tender Pokémon', 'Pokémon Afeto'),
-(363, '0351', 'Castform', 'Weather Pokémon', 'Pokémon Tempo'),
-(364, '0352', 'Kecleon', 'Color Swap Pokémon', 'Pokémon Mudança de Cor'),
-(365, '0353', 'Shuppet', 'Puppet Pokémon', 'Pokémon Boneca'),
-(366, '0354', 'Banette', 'Marionette Pokémon', 'Pokémon Brinquedo de Pelúcia'),
-(367, '0355', 'Duskull', 'Requiem Pokémon', 'Pokémon Aproximação da Morte'),
-(368, '0356', 'Dusclops', 'Beckon Pokémon', 'Pokémon Gesticular'),
-(369, '0357', 'Tropius', 'Fruit Pokémon', 'Pokémon Fruta'),
-(370, '0358', 'Chimecho', 'Wind Chime Pokémon', 'Pokémon Sino de Vento'),
-(371, '0359', 'Absol', 'Disaster Pokémon', 'Pokémon Desastre'),
-(372, '0360', 'Wynaut', 'Bright Pokémon', 'Pokémon Alegre'),
-(373, '0361', 'Snorunt', 'Snow Hat Pokémon', 'Pokémon Guarda-chuva de Neve'),
-(374, '0362', 'Glalie', 'Face Pokémon', 'Pokémon Rosto'),
-(375, '0363', 'Spheal', 'Clap Pokémon', 'Pokémon Bater Palmas'),
-(376, '0364', 'Sealeo', 'Ball Roll Pokémon', 'Pokémon Rolar Bola'),
-(377, '0365', 'Walrein', 'Ice Break Pokémon', 'Pokémon Quebra-gelo'),
-(378, '0366', 'Clamperl', 'Bivalve Pokémon', 'Pokémon Bivalve'),
-(379, '0367', 'Huntail', 'Deep Sea Pokémon', 'Pokémon Mar Profundo'),
-(380, '0368', 'Gorebyss', 'South Sea Pokémon', 'Pokémon Mar do Sul'),
-(381, '0369', 'Relicanth', 'Longevity Pokémon', 'Pokémon Longevidade'),
-(382, '0370', 'Luvdisc', 'Rendezvous Pokémon', 'Pokémon Encontro'),
-(383, '0371', 'Bagon', 'Rock Head Pokémon', 'Pokémon Cabeça Dura'),
-(384, '0372', 'Shelgon', 'Endurance Pokémon', 'Pokémon Paciente'),
-(385, '0373', 'Salamence', 'Dragon Pokémon', 'Pokémon Dragão'),
-(386, '0374', 'Beldum', 'Iron Ball Pokémon', 'Pokémon Bola de Ferro'),
-(387, '0375', 'Metang', 'Iron Claw Pokémon', 'Pokémon Garra de Ferro'),
-(388, '0376', 'Metagross', 'Iron Leg Pokémon', 'Pokémon Perna de Ferro'),
-(389, '0377', 'Regirock', 'Rock Peak Pokémon', 'Pokémon Montanha Rochosa'),
-(390, '0378', 'Regice', 'Iceberg Pokémon', 'Pokémon Iceberg'),
-(391, '0379', 'Registeel', 'Iron Pokémon', 'Pokémon Ferro'),
-(392, '0380', 'Latias', 'Eon Pokémon', 'Pokémon Infinito'),
-(393, '0381', 'Latios', 'Eon Pokémon', 'Pokémon Infinito'),
-(394, '0382', 'Kyogre', 'Sea Basin Pokémon', 'Pokémon Fundo do Mar'),
-(395, '0383', 'Groudon', 'Continent Pokémon', 'Pokémon Continente'),
-(396, '0384', 'Rayquaza', 'Sky High Pokémon', 'Pokémon Céu'),
-(397, '0385', 'Jirachi', 'Wish Pokémon', 'Pokémon Desejo'),
-(398, '0386', 'Deoxys', 'DNA Pokémon', 'Pokémon DNA'),
-(399, '0387', 'Turtwig', 'Tiny Leaf Pokémon', 'Pokémon Folha Nova'),
-(400, '0388', 'Grotle', 'Grove Pokémon', 'Pokémon Bosque'),
-(401, '0389', 'Torterra', 'Continent Pokémon', 'Pokémon Continente'),
-(402, '0390', 'Chimchar', 'Chimp Pokémon', 'Pokémon Macaco Pequeno'),
-(403, '0391', 'Monferno', 'Playful Pokémon', 'Pokémon Travesso'),
-(404, '0392', 'Infernape', 'Flame Pokémon', 'Pokémon Chama'),
-(405, '0393', 'Piplup', 'Penguin Pokémon', 'Pokémon Pinguim'),
-(406, '0394', 'Prinplup', 'Penguin Pokémon', 'Pokémon Pinguim'),
-(407, '0395', 'Empoleon', 'Emperor Pokémon', 'Pokémon Imperador'),
-(408, '0396', 'Starly', 'Starling Pokémon', 'Pokémon Estorninho'),
-(409, '0397', 'Staravia', 'Starling Pokémon', 'Pokémon Estorninho'),
-(410, '0398', 'Staraptor', 'Predator Pokémon', 'Pokémon Ave de Rapina'),
-(411, '0399', 'Bidoof', 'Plump Mouse Pokémon', 'Pokémon Rato Redondo'),
-(412, '0400', 'Bibarel', 'Beaver Pokémon', 'Pokémon Castor'),
-(413, '0401', 'Kricketot', 'Cricket Pokémon', 'Pokémon Grilo'),
-(414, '0402', 'Kricketune', 'Cricket Pokémon', 'Pokémon Grilo'),
-(415, '0403', 'Shinx', 'Flash Pokémon', 'Pokémon Flash'),
-(416, '0404', 'Luxio', 'Spark Pokémon', 'Pokémon Relâmpago'),
-(417, '0405', 'Luxray', 'Gleam Eyes Pokémon', 'Pokémon Olhos Brilhantes'),
-(418, '0406', 'Budew', 'Bud Pokémon', 'Pokémon Botão'),
-(419, '0407', 'Roserade', 'Bouquet Pokémon', 'Pokémon Buquê'),
-(420, '0408', 'Cranidos', 'Head Butt Pokémon', 'Pokémon Cabeçada'),
-(421, '0409', 'Rampardos', 'Head Butt Pokémon', 'Pokémon Cabeçada'),
-(422, '0410', 'Shieldon', 'Shield Pokémon', 'Pokémon Escudo'),
-(423, '0411', 'Bastiodon', 'Shield Pokémon', 'Pokémon Escudo'),
-(424, '0412', 'Burmy', 'Bagworm Pokémon', 'Pokémon Bicho-da-seda'),
-(425, '0413', 'Wormadam', 'Bagworm Pokémon', 'Pokémon Bicho-da-seda'),
-(426, '0414', 'Mothim', 'Moth Pokémon', 'Pokémon Mariposa Bagworm'),
-(427, '0415', 'Combee', 'Tiny Bee Pokémon', 'Pokémon Larva de Abelha'),
-(428, '0416', 'Vespiquen', 'Beehive Pokémon', 'Pokémon Colmeia'),
-(429, '0417', 'Pachirisu', 'EleSquirrel Pokémon', 'Pokémon Esquilo Elétrico'),
-(430, '0418', 'Buizel', 'Sea Weasel Pokémon', 'Pokémon Doninha do Mar'),
-(431, '0419', 'Floatzel', 'Sea Weasel Pokémon', 'Pokémon Doninha do Mar'),
-(432, '0420', 'Cherubi', 'Cherry Pokémon', 'Pokémon Cereja'),
-(433, '0421', 'Cherrim', 'Blossom Pokémon', 'Pokémon Flor de Cerejeira'),
-(434, '0422', 'Shellos', 'Sea Slug Pokémon', 'Pokémon Lesma do Mar'),
-(435, '0423', 'Gastrodon', 'Sea Slug Pokémon', 'Pokémon Lesma do Mar'),
-(436, '0424', 'Ambipom', 'Long Tail Pokémon', 'Pokémon Cauda Longa'),
-(437, '0425', 'Drifloon', 'Balloon Pokémon', 'Pokémon Balão'),
-(438, '0426', 'Drifblim', 'Blimp Pokémon', 'Pokémon Dirigível'),
-(439, '0427', 'Buneary', 'Rabbit Pokémon', 'Pokémon Coelho'),
-(440, '0428', 'Lopunny', 'Rabbit Pokémon', 'Pokémon Coelho'),
-(441, '0429', 'Mismagius', 'Magical Pokémon', 'Pokémon Mágico'),
-(442, '0430', 'Honchkrow', 'Big Boss Pokémon', 'Pokémon Grande Chefe'),
-(443, '0431', 'Glameow', 'Catty Pokémon', 'Pokémon Sedutor'),
-(444, '0432', 'Purugly', 'Tiger Cat Pokémon', 'Pokémon Gato Tigre'),
-(445, '0433', 'Chingling', 'Bell Pokémon', 'Pokémon Sino'),
-(446, '0434', 'Stunky', 'Skunk Pokémon', 'Pokémon Gambá'),
-(447, '0435', 'Skuntank', 'Skunk Pokémon', 'Pokémon Gambá'),
-(448, '0436', 'Bronzor', 'Bronze Pokémon', 'Pokémon Bronze'),
-(449, '0437', 'Bronzong', 'Bronze Bell Pokémon', 'Pokémon Sino de Bronze'),
-(450, '0438', 'Bonsly', 'Bonsai Pokémon', 'Pokémon Bonsai'),
-(451, '0439', 'Mime Jr.', 'Mime Pokémon', 'Pokémon Mímico'),
-(452, '0440', 'Happiny', 'Playhouse Pokémon', 'Pokémon Casa de Brincar'),
-(453, '0441', 'Chatot', 'Music Note Pokémon', 'Pokémon Nota Musical'),
-(454, '0442', 'Spiritomb', 'Forbidden Pokémon', 'Pokémon Selado'),
-(455, '0443', 'Gible', 'Land Shark Pokémon', 'Pokémon Tubarão Terrestre'),
-(456, '0444', 'Gabite', 'Cave Pokémon', 'Pokémon Caverna'),
-(457, '0445', 'Garchomp', 'Mach Pokémon', 'Pokémon Mach'),
-(458, '0446', 'Munchlax', 'Big Eater Pokémon', 'Pokémon Glutão'),
-(459, '0447', 'Riolu', 'Emanation Pokémon', 'Pokémon Onda'),
-(460, '0448', 'Lucario', 'Aura Pokémon', 'Pokémon Onda'),
-(461, '0449', 'Hippopotas', 'Hippo Pokémon', 'Pokémon Hipopótamo'),
-(462, '0450', 'Hippowdon', 'Heavyweight Pokémon', 'Pokémon Peso Pesado'),
-(463, '0451', 'Skorupi', 'Scorpion Pokémon', 'Pokémon Escorpião'),
-(464, '0452', 'Drapion', 'Ogre Scorpion Pokémon', 'Pokémon Escorpião Monstro'),
-(465, '0453', 'Croagunk', 'Toxic Mouth Pokémon', 'Pokémon Picada Venenosa'),
-(466, '0454', 'Toxicroak', 'Toxic Mouth Pokémon', 'Pokémon Picada Venenosa'),
-(467, '0455', 'Carnivine', 'Bug Catcher Pokémon', 'Pokémon Caçador de Insetos'),
-(468, '0456', 'Finneon', 'Wing Fish Pokémon', 'Pokémon Peixe Asa'),
-(469, '0457', 'Lumineon', 'Neon Pokémon', 'Pokémon Neon'),
-(470, '0458', 'Mantyke', 'Kite Pokémon', 'Pokémon Pipa'),
-(471, '0459', 'Snover', 'Frost Tree Pokémon', 'Pokémon Árvore Coberta de Gelo'),
-(472, '0460', 'Abomasnow', 'Frost Tree Pokémon', 'Pokémon Árvore Coberta de Gelo'),
-(473, '0461', 'Weavile', 'Sharp Claw Pokémon', 'Pokémon Garra'),
-(474, '0462', 'Magnezone', 'Magnet Area Pokémon', 'Pokémon Campo Magnético'),
-(475, '0463', 'Lickilicky', 'Licking Pokémon', 'Pokémon Lambida'),
-(476, '0464', 'Rhyperior', 'Drill Pokémon', 'Pokémon Perfurador'),
-(477, '0465', 'Tangrowth', 'Vine Pokémon', 'Pokémon Cipó'),
-(478, '0466', 'Electivire', 'Thunderbolt Pokémon', 'Pokémon Trovão e Relâmpago'),
-(479, '0467', 'Magmortar', 'Blast Pokémon', 'Pokémon Fumaça de Explosão'),
-(480, '0468', 'Togekiss', 'Jubilee Pokémon', 'Pokémon Bênção'),
-(481, '0469', 'Yanmega', 'Ogre Darner Pokémon', 'Pokémon Libélula Ogro'),
-(482, '0470', 'Leafeon', 'Verdant Pokémon', 'Pokémon Verdura Fresca'),
-(483, '0471', 'Glaceon', 'Fresh Snow Pokémon', 'Pokémon Neve Fresca'),
-(484, '0472', 'Gliscor', 'Fang Scorpion Pokémon', 'Pokémon Escorpião de Presas'),
-(485, '0473', 'Mamoswine', 'Twin Tusk Pokémon', 'Pokémon Presa Dupla'),
-(486, '0474', 'Porygon-Z', 'Virtual Pokémon', 'Pokémon Virtual'),
-(487, '0475', 'Gallade', 'Blade Pokémon', 'Pokémon Lâmina'),
-(488, '0476', 'Probopass', 'Compass Pokémon', 'Pokémon Bússola'),
-(489, '0477', 'Dusknoir', 'Gripper Pokémon', 'Pokémon Agarrador'),
-(490, '0478', 'Froslass', 'Snow Land Pokémon', 'Pokémon País da Neve'),
-(491, '0479', 'Rotom', 'Plasma Pokémon', 'Pokémon Plasma'),
-(492, '0480', 'Uxie', 'Knowledge Pokémon', 'Pokémon Conhecimento'),
-(493, '0481', 'Mesprit', 'Emotion Pokémon', 'Pokémon Emoção'),
-(494, '0482', 'Azelf', 'Willpower Pokémon', 'Pokémon Vontade'),
-(495, '0483', 'Dialga', 'Temporal Pokémon', 'Pokémon Tempo'),
-(496, '0484', 'Palkia', 'Spatial Pokémon', 'Pokémon Espaço'),
-(497, '0485', 'Heatran', 'Lava Dome Pokémon', 'Pokémon Caldeira'),
-(498, '0486', 'Regigigas', 'Colossal Pokémon', 'Pokémon Gigantesco'),
-(499, '0487', 'Giratina', 'Renegade Pokémon', 'Pokémon Rebelde'),
-(500, '0488', 'Cresselia', 'Lunar Pokémon', 'Pokémon Lua Crescente'),
-(501, '0489', 'Phione', 'Sea Drifter Pokémon', 'Pokémon Oceano'),
-(502, '0490', 'Manaphy', 'Seafaring Pokémon', 'Pokémon Migração'),
-(503, '0491', 'Darkrai', 'Pitch-Black Pokémon', 'Pokémon Escuridão'),
-(504, '0492', 'Shaymin', 'Gratitude Pokémon', 'Pokémon Gratidão'),
-(505, '0493', 'Arceus', 'Alpha Pokémon', 'Pokémon Criação'),
-(506, '0494', 'Victini', 'Victory Pokémon', 'Pokémon Vitória'),
-(507, '0495', 'Snivy', 'Grass Snake Pokémon', 'Pokémon Cobra de Grama'),
-(508, '0496', 'Servine', 'Grass Snake Pokémon', 'Pokémon Cobra de Grama'),
-(509, '0497', 'Serperior', 'Regal Pokémon', 'Pokémon Real'),
-(510, '0498', 'Tepig', 'Fire Pig Pokémon', 'Pokémon Porco de Fogo'),
-(511, '0499', 'Pignite', 'Fire Pig Pokémon', 'Pokémon Porco de Fogo'),
-(512, '0500', 'Emboar', 'Mega Fire Pig Pokémon', 'Pokémon Grande Porco de Fogo'),
-(513, '0501', 'Oshawott', 'Sea Otter Pokémon', 'Pokémon Lontra do Mar'),
-(514, '0502', 'Dewott', 'Discipline Pokémon', 'Pokémon Treinamento'),
-(515, '0503', 'Samurott', 'Formidable Pokémon', 'Pokémon Dignificado'),
-(516, '0504', 'Patrat', 'Scout Pokémon', 'Pokémon Observador'),
-(517, '0505', 'Watchog', 'Lookout Pokémon', 'Pokémon Vigilante'),
-(518, '0506', 'Lillipup', 'Puppy Pokémon', 'Pokémon Filhote'),
-(519, '0507', 'Herdier', 'Loyal Dog Pokémon', 'Pokémon Cão Fiel'),
-(520, '0508', 'Stoutland', 'Big-Hearted Pokémon', 'Pokémon Tolerante'),
-(521, '0509', 'Purrloin', 'Devious Pokémon', 'Pokémon Mal-humorado'),
-(522, '0510', 'Liepard', 'Cruel Pokémon', 'Pokémon Cruel'),
-(523, '0511', 'Pansage', 'Grass Monkey Pokémon', 'Pokémon Macaco de Grama'),
-(524, '0512', 'Simisage', 'Thorn Monkey Pokémon', 'Pokémon Macaco de Espinhos'),
-(525, '0513', 'Pansear', 'High Temp Pokémon', 'Pokémon Alta Temperatura'),
-(526, '0514', 'Simisear', 'Ember Pokémon', 'Pokémon Faíscas'),
-(527, '0515', 'Panpour', 'Spray Pokémon', 'Pokémon Salpico de Água'),
-(528, '0516', 'Simipour', 'Geyser Pokémon', 'Pokémon Água Alta'),
-(529, '0517', 'Munna', 'Dream Eater Pokémon', 'Pokémon Comedor de Sonhos'),
-(530, '0518', 'Musharna', 'Drowsing Pokémon', 'Pokémon Transe'),
-(531, '0519', 'Pidove', 'Tiny Pigeon Pokémon', 'Pokémon Pequeno Pombo'),
-(532, '0520', 'Tranquill', 'Wild Pigeon Pokémon', 'Pokémon Pombo Selvagem'),
-(533, '0521', 'Unfezant', 'Proud Pokémon', 'Pokémon Orgulho'),
-(534, '0522', 'Blitzle', 'Electrified Pokémon', 'Pokémon Eletrificado'),
-(535, '0523', 'Zebstrika', 'Thunderbolt Pokémon', 'Pokémon Trovão e Relâmpago'),
-(536, '0524', 'Roggenrola', 'Mantle Pokémon', 'Pokémon Manto'),
-(537, '0525', 'Boldore', 'Ore Pokémon', 'Pokémon Minério'),
-(538, '0526', 'Gigalith', 'Compressed Pokémon', 'Pokémon Alta Pressão'),
-(539, '0527', 'Woobat', 'Bat Pokémon', 'Pokémon Morcego'),
-(540, '0528', 'Swoobat', 'Courting Pokémon', 'Pokémon Cortejo'),
-(541, '0529', 'Drilbur', 'Mole Pokémon', 'Pokémon Toupeira'),
-(542, '0530', 'Excadrill', 'Subterrene Pokémon', 'Pokémon Terra Profunda'),
-(543, '0531', 'Audino', 'Hearing Pokémon', 'Pokémon Audição'),
-(544, '0532', 'Timburr', 'Muscular Pokémon', 'Pokémon Músculo'),
-(545, '0533', 'Gurdurr', 'Muscular Pokémon', 'Pokémon Músculo'),
-(546, '0534', 'Conkeldurr', 'Muscular Pokémon', 'Pokémon Músculo'),
-(547, '0535', 'Tympole', 'Tadpole Pokémon', 'Pokémon Girino'),
-(548, '0536', 'Palpitoad', 'Vibration Pokémon', 'Pokémon Vibração'),
-(549, '0537', 'Seismitoad', 'Vibration Pokémon', 'Pokémon Vibração'),
-(550, '0538', 'Throh', 'Judo Pokémon', 'Pokémon Judô'),
-(551, '0539', 'Sawk', 'Karate Pokémon', 'Pokémon Caratê'),
-(552, '0540', 'Sewaddle', 'Sewing Pokémon', 'Pokémon Costura'),
-(553, '0541', 'Swadloon', 'Leaf-Wrapped Pokémon', 'Pokémon Capa da Floresta'),
-(554, '0542', 'Leavanny', 'Nurturing Pokémon', 'Pokémon Criação de Filhos'),
-(555, '0543', 'Venipede', 'Centipede Pokémon', 'Pokémon Centopeia'),
-(556, '0544', 'Whirlipede', 'Curlipede Pokémon', 'Pokémon Centopeia de Casulo'),
-(557, '0545', 'Scolipede', 'Megapede Pokémon', 'Pokémon Mega Centopeia'),
-(558, '0546', 'Cottonee', 'Cotton Puff Pokémon', 'Pokémon Bola de Algodão'),
-(559, '0547', 'Whimsicott', 'Windveiled Pokémon', 'Pokémon Escondido pelo Vento'),
-(560, '0548', 'Petilil', 'Bulb Pokémon', 'Pokémon Raiz'),
-(561, '0549', 'Lilligant', 'Flowering Pokémon', 'Pokémon Decoração de Flores'),
-(562, '0549', 'Lilligant Hisuian Form', 'Spinning Pokémon', 'Pokémon Rotação'),
-(563, '0550', 'Basculin', 'Hostile Pokémon', 'Pokémon Violento'),
-(564, '0550', 'Basculin White-Striped Form', 'Mellow Pokémon', 'Pokémon Gentil'),
-(565, '0551', 'Sandile', 'Desert Croc Pokémon', 'Pokémon Crocodilo do Deserto'),
-(566, '0552', 'Krokorok', 'Desert Croc Pokémon', 'Pokémon Crocodilo do Deserto'),
-(567, '0553', 'Krookodile', 'Intimidation Pokémon', 'Pokémon Ameaçador'),
-(568, '0554', 'Darumaka', 'Zen Charm Pokémon', 'Pokémon Daruma'),
-(569, '0555', 'Darmanitan', 'Blazing Pokémon', 'Pokémon Em Chamas'),
-(570, '0555', 'Darmanitan Galarian Form', 'Zen Charm Pokémon', 'Pokémon Daruma'),
-(571, '0555', 'Darmanitan Galarian Form Zen Mode', 'Blazing Pokémon', 'Pokémon Em Chamas'),
-(572, '0556', 'Maractus', 'Cactus Pokémon', 'Pokémon Cacto'),
-(573, '0557', 'Dwebble', 'Rock Inn Pokémon', 'Pokémon Eremita de Pedra'),
-(574, '0558', 'Crustle', 'Stone Home Pokémon', 'Pokémon Eremita de Rocha'),
-(575, '0559', 'Scraggy', 'Shedding Pokémon', 'Pokémon Troca de Pele'),
-(576, '0560', 'Scrafty', 'Hoodlum Pokémon', 'Pokémon Patife'),
-(577, '0561', 'Sigilyph', 'Avianoid Pokémon', 'Pokémon Pseudo-Pássaro'),
-(578, '0562', 'Yamask', 'Spirit Pokémon', 'Pokémon Espírito'),
-(579, '0563', 'Cofagrigus', 'Coffin Pokémon', 'Pokémon Caixão'),
-(580, '0564', 'Tirtouga', 'Prototurtle Pokémon', 'Pokémon Tartaruga Antiga'),
-(581, '0565', 'Carracosta', 'Prototurtle Pokémon', 'Pokémon Tartaruga Antiga'),
-(582, '0566', 'Archen', 'First Bird Pokémon', 'Pokémon Pássaro Mais Antigo'),
-(583, '0567', 'Archeops', 'First Bird Pokémon', 'Pokémon Pássaro Mais Antigo'),
-(584, '0568', 'Trubbish', 'Trash Bag Pokémon', 'Pokémon Saco de Lixo'),
-(585, '0569', 'Garbodor', 'Trash Heap Pokémon', 'Pokémon Lixão'),
-(586, '0570', 'Zorua', 'Tricky Fox Pokémon', 'Pokémon Raposa Maligna'),
-(587, '0570', 'Zorua Hisuian Form', 'Spiteful Fox Pokémon', 'Pokémon Raposa Rancorosa'),
-(588, '0571', 'Zoroark', 'Illusion Fox Pokémon', 'Pokémon Raposa Ilusória'),
-(589, '0571', 'Zoroark Hisuian Form', 'Baneful Fox Pokémon', 'Pokémon Raposa da Maldição'),
-(590, '0572', 'Minccino', 'Chinchilla Pokémon', 'Pokémon Chinchila'),
-(591, '0573', 'Cinccino', 'Scarf Pokémon', 'Pokémon Cachecol'),
-(592, '0574', 'Gothita', 'Fixation Pokémon', 'Pokémon Olhar Fixo'),
-(593, '0575', 'Gothorita', 'Manipulate Pokémon', 'Pokémon Manipulação'),
-(594, '0576', 'Gothitelle', 'Astral Body Pokémon', 'Pokémon Corpo Celestial'),
-(595, '0577', 'Solosis', 'Cell Pokémon', 'Pokémon Célula'),
-(596, '0578', 'Duosion', 'Mitosis Pokémon', 'Pokémon Mitose'),
-(597, '0579', 'Reuniclus', 'Multiplying Pokémon', 'Pokémon Amplificação'),
-(598, '0580', 'Ducklett', 'Water Bird Pokémon', 'Pokémon Ave Aquática'),
-(599, '0581', 'Swanna', 'White Bird Pokémon', 'Pokémon Cisne'),
-(600, '0582', 'Vanillite', 'Fresh Snow Pokémon', 'Pokémon Neve Fresca'),
-(601, '0583', 'Vanillish', 'Icy Snow Pokémon', 'Pokémon Gelo e Neve'),
-(602, '0584', 'Vanilluxe', 'Snowstorm Pokémon', 'Pokémon Nevasca'),
-(603, '0585', 'Deerling', 'Season Pokémon', 'Pokémon Sazonal'),
-(604, '0586', 'Sawsbuck', 'Season Pokémon', 'Pokémon Sazonal'),
-(605, '0587', 'Emolga', 'Sky Squirrel Pokémon', 'Pokémon Esquilo Voador'),
-(606, '0588', 'Karrablast', 'Clamping Pokémon', 'Pokémon Mordida'),
-(607, '0589', 'Escavalier', 'Cavalry Pokémon', 'Pokémon Cavalaria'),
-(608, '0590', 'Foongus', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(609, '0591', 'Amoonguss', 'Mushroom Pokémon', 'Pokémon Cogumelo'),
-(610, '0592', 'Frillish', 'Floating Pokémon', 'Pokémon Flutuante'),
-(611, '0593', 'Jellicent', 'Floating Pokémon', 'Pokémon Flutuante'),
-(612, '0594', 'Alomomola', 'Caring Pokémon', 'Pokémon Cuidado'),
-(613, '0595', 'Joltik', 'Attaching Pokémon', 'Pokémon Aderente'),
-(614, '0596', 'Galvantula', 'EleSpider Pokémon', 'Pokémon Aranha Elétrica'),
-(615, '0597', 'Ferroseed', 'Thorn Seed Pokémon', 'Pokémon Semente de Espinho'),
-(616, '0598', 'Ferrothorn', 'Thorn Pod Pokémon', 'Pokémon Bola de Espinho'),
-(617, '0599', 'Klink', 'Gear Pokémon', 'Pokémon Engrenagem'),
-(618, '0600', 'Klang', 'Gear Pokémon', 'Pokémon Engrenagem'),
-(619, '0601', 'Klinklang', 'Gear Pokémon', 'Pokémon Engrenagem'),
-(620, '0602', 'Tynamo', 'EleFish Pokémon', 'Pokémon Peixe Elétrico');
+-- Dados da tabela: generations (origem: 04_generation.json)
+INSERT INTO generations (id, name, region_id) VALUES (1, 'Geração I', 1);
+INSERT INTO generations (id, name, region_id) VALUES (2, 'Geração II', 2);
+INSERT INTO generations (id, name, region_id) VALUES (3, 'Geração III', 3);
+INSERT INTO generations (id, name, region_id) VALUES (4, 'Geração IV', 4);
+INSERT INTO generations (id, name, region_id) VALUES (5, 'Geração V', 5);
+INSERT INTO generations (id, name, region_id) VALUES (6, 'Geração VI', 6);
+INSERT INTO generations (id, name, region_id) VALUES (7, 'Geração VII', 7);
+INSERT INTO generations (id, name, region_id) VALUES (8, 'Geração VIII', 8);
+INSERT INTO generations (id, name, region_id) VALUES (9, 'Geração IX', 9);
+INSERT INTO generations (id, name, region_id) VALUES (10, 'Geração X', 10);
 
--- Dados para stats
-INSERT INTO stats (id, pokemon_number, pokemon_name, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES
-(1, '0001', 'Bulbasaur', 318, 45, 49, 49, 65, 65, 45),
-(2, '0002', 'Ivysaur', 405, 60, 62, 63, 80, 80, 60),
-(3, '0003', 'Venusaur', 525, 80, 82, 83, 100, 100, 80),
-(4, '0003', 'Venusaur Mega Venusaur', 625, 80, 100, 123, 122, 120, 80),
-(5, '0004', 'Charmander', 309, 39, 52, 43, 60, 50, 65),
-(6, '0005', 'Charmeleon', 405, 58, 64, 58, 80, 65, 80),
-(7, '0006', 'Charizard', 534, 78, 84, 78, 109, 85, 100),
-(8, '0006', 'Mega Charizard X', 634, 78, 130, 111, 130, 85, 100),
-(9, '0006', 'Mega Charizard Y', 634, 78, 104, 78, 159, 115, 100),
-(10, '0007', 'Squirtle', 314, 44, 48, 65, 50, 64, 43),
-(11, '0008', 'Wartortle', 405, 59, 63, 80, 65, 80, 58),
-(12, '0009', 'Blastoise', 530, 79, 83, 100, 85, 105, 78),
-(13, '0009', 'Mega Blastoise', 630, 79, 103, 120, 135, 115, 78),
-(14, '0010', 'Caterpie', 195, 45, 30, 35, 20, 20, 45),
-(15, '0011', 'Metapod', 205, 50, 20, 55, 25, 25, 30),
-(16, '0012', 'Butterfree', 395, 60, 45, 50, 90, 80, 70),
-(17, '0013', 'Weedle', 195, 40, 35, 30, 20, 20, 50),
-(18, '0014', 'Kakuna', 205, 45, 25, 50, 25, 25, 35),
-(19, '0015', 'Beedrill', 395, 65, 90, 40, 45, 80, 75),
-(20, '0015', 'Mega Beedrill', 495, 65, 150, 40, 15, 80, 145),
-(21, '0003', 'Giga Venusaur', 525, 80, 82, 83, 100, 100, 80),
-(22, '0006', 'Giga Charizard', 534, 78, 84, 78, 109, 85, 100),
-(23, '0009', 'Giga Blastoise', 530, 79, 83, 100, 85, 105, 78),
-(24, '0026', 'Raichu', 485, 90, 85, 50, 95, 85, 110),
-(25, '0025', 'Pikachu', 320, 35, 55, 40, 50, 50, 90);
+-- Dados da tabela: abilities (origem: 05_ability.json)
+INSERT INTO abilities (id, name, description) VALUES (1, 'Adaptabilidade', 'Aumenta o poder de movimentos do mesmo tipo do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (2, 'Pele Celeste', 'Transforma movimentos do tipo Normal em movimentos do tipo Voador e aumenta ligeiramente seu poder.');
+INSERT INTO abilities (id, name, description) VALUES (3, 'Rescaldo', 'Causa dano ao atacante que desfere o golpe final.');
+INSERT INTO abilities (id, name, description) VALUES (4, 'Bloqueio Aéreo', 'Elimina os efeitos do clima.');
+INSERT INTO abilities (id, name, description) VALUES (5, 'Analítico', 'Aumenta o poder do movimento se o Pokémon atacar por último.');
+INSERT INTO abilities (id, name, description) VALUES (6, 'Ponto de Raiva', 'Maximiza o Ataque após receber um acerto crítico.');
+INSERT INTO abilities (id, name, description) VALUES (7, 'Carapaça Raivosa', 'Reduz Defesa/Def. Esp. e aumenta Ataque/At. Esp./Velocidade quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (8, 'Antecipação', 'Pressente movimentos perigosos de um oponente.');
+INSERT INTO abilities (id, name, description) VALUES (9, 'Armadilha de Arena', 'Impede o oponente de fugir.');
+INSERT INTO abilities (id, name, description) VALUES (10, 'Cauda Blindada', 'Impede o oponente de usar movimentos de prioridade.');
+INSERT INTO abilities (id, name, description) VALUES (11, 'Véu Aromático', 'Protege aliados de ataques que limitam suas escolhas de movimento.');
+INSERT INTO abilities (id, name, description) VALUES (12, 'Como Um Só', 'Combina Nervosismo e Relincho Arrepiante/Relincho Sinistro.');
+INSERT INTO abilities (id, name, description) VALUES (13, 'Quebra Aura', 'Reduz o poder de movimentos dos tipos Sombrio e Fada.');
+INSERT INTO abilities (id, name, description) VALUES (14, 'Pesadelos', 'Reduz o HP de um oponente adormecido.');
+INSERT INTO abilities (id, name, description) VALUES (15, 'Apanhar Bola', 'Recupera uma Poké Bola de um arremesso falho.');
+INSERT INTO abilities (id, name, description) VALUES (16, 'Bateria', 'Aumenta o poder dos movimentos Especiais dos companheiros de equipe.');
+INSERT INTO abilities (id, name, description) VALUES (17, 'Armadura de Batalha', 'O Pokémon é protegido contra acertos críticos.');
+INSERT INTO abilities (id, name, description) VALUES (18, 'Laço de Batalha', 'Transforma-se em Ash-Greninja após nocautear um oponente.');
+INSERT INTO abilities (id, name, description) VALUES (19, 'Contas da Ruína', 'Reduz a Defesa Especial de todos os Pokémon, exceto o próprio.');
+INSERT INTO abilities (id, name, description) VALUES (20, 'Impulso Bestial', 'O Pokémon aumenta seu atributo mais proficiente cada vez que nocauteia um Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (21, 'Frenesi', 'Aumenta o Ataque Especial quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (22, 'Bico Grande', 'Protege o Pokémon de ataques que reduzem a Defesa.');
+INSERT INTO abilities (id, name, description) VALUES (23, 'Chama', 'Aumenta o poder de movimentos do tipo Fogo em apuros.');
+INSERT INTO abilities (id, name, description) VALUES (24, 'À Prova de Bala', 'Protege o Pokémon de movimentos de bola e bomba.');
+INSERT INTO abilities (id, name, description) VALUES (25, 'Bochechas Fofas', 'Restaura HP adicional quando uma Berry é consumida.');
+INSERT INTO abilities (id, name, description) VALUES (26, 'Relincho Arrepiante', 'Aumenta o Ataque após nocautear um Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (27, 'Clorofila', 'Aumenta a Velocidade do Pokémon sob luz solar.');
+INSERT INTO abilities (id, name, description) VALUES (28, 'Corpo Puro', 'Impede que outros Pokémon reduzam seus atributos.');
+INSERT INTO abilities (id, name, description) VALUES (29, 'Nuvem Serena', 'Elimina os efeitos do clima.');
+INSERT INTO abilities (id, name, description) VALUES (30, 'Mudança de Cor', 'Muda o tipo do Pokémon para o do movimento do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (31, 'Comatoso', 'O Pokémon está sempre dormindo, mas ainda pode atacar.');
+INSERT INTO abilities (id, name, description) VALUES (32, 'Comandante', 'Entra na boca de um Dondozo aliado se houver um no campo.');
+INSERT INTO abilities (id, name, description) VALUES (33, 'Competitivo', 'Aumenta acentuadamente o Ataque Especial quando os atributos do Pokémon são reduzidos.');
+INSERT INTO abilities (id, name, description) VALUES (34, 'Olhos Compostos', 'A precisão do Pokémon é aumentada.');
+INSERT INTO abilities (id, name, description) VALUES (35, 'Contrário', 'Faz com que as mudanças de atributos tenham um efeito oposto.');
+INSERT INTO abilities (id, name, description) VALUES (36, 'Corrosão', 'O Pokémon pode envenenar tipos Aço e Venenoso.');
+INSERT INTO abilities (id, name, description) VALUES (37, 'Co-Estrela', 'Copia as mudanças de atributos do aliado ao entrar em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (38, 'Penugem de Algodão', 'Reduz a Velocidade do oponente quando atingido.');
+INSERT INTO abilities (id, name, description) VALUES (39, 'Ruminação', 'Pode comer a mesma Berry duas vezes.');
+INSERT INTO abilities (id, name, description) VALUES (40, 'Medicina Curiosa', 'Redefine todas as mudanças de atributos ao entrar no campo de batalha.');
+INSERT INTO abilities (id, name, description) VALUES (41, 'Corpo Amaldiçoado', 'Pode desabilitar um movimento usado no Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (42, 'Charme Fofo', 'Contato com o Pokémon pode causar atração.');
+INSERT INTO abilities (id, name, description) VALUES (43, 'Umidade', 'Impede o uso de movimentos autodestrutivos.');
+INSERT INTO abilities (id, name, description) VALUES (44, 'Dançarino', 'Copia os movimentos de Dança do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (45, 'Aura Sombria', 'Aumenta o poder de movimentos do tipo Sombrio para todos os Pokémon em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (46, 'Escudo Intrépido', 'Aumenta a Defesa em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (47, 'Ofuscante', 'Protege o Pokémon de movimentos de alta prioridade.');
+INSERT INTO abilities (id, name, description) VALUES (48, 'Derrotista', 'Reduz os atributos quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (49, 'Desafiador', 'Aumenta acentuadamente o Ataque quando os atributos do Pokémon são reduzidos.');
+INSERT INTO abilities (id, name, description) VALUES (50, 'Corrente Delta', 'Cria ventos fortes quando a habilidade é ativada.');
+INSERT INTO abilities (id, name, description) VALUES (51, 'Terra Desolada', 'Torna a luz solar extremamente forte quando a habilidade é ativada.');
+INSERT INTO abilities (id, name, description) VALUES (52, 'Disfarce', 'Evita dano por um turno.');
+INSERT INTO abilities (id, name, description) VALUES (53, 'Download', 'Ajusta o poder de acordo com as defesas de um oponente.');
+INSERT INTO abilities (id, name, description) VALUES (54, 'Mandíbula de Dragão', 'Aumenta o poder de movimentos do tipo Dragão.');
+INSERT INTO abilities (id, name, description) VALUES (55, 'Chuvisco', 'O Pokémon faz chover quando entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (56, 'Seca', 'Torna a luz solar forte quando o Pokémon entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (57, 'Pele Seca', 'Reduz HP se estiver quente. Água restaura HP.');
+INSERT INTO abilities (id, name, description) VALUES (58, 'Madrugador', 'O Pokémon acorda rapidamente do sono.');
+INSERT INTO abilities (id, name, description) VALUES (59, 'Devorador de Terra', 'Restaura HP quando atingido por um movimento do tipo Terrestre.');
+INSERT INTO abilities (id, name, description) VALUES (60, 'Efeito Esporo', 'Contato pode envenenar ou causar paralisia ou sono.');
+INSERT INTO abilities (id, name, description) VALUES (61, 'Surto Elétrico', 'O Pokémon cria um Terreno Elétrico quando entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (62, 'Eletromorfose', 'Dobra o poder do próximo movimento do tipo Elétrico quando atingido por um ataque.');
+INSERT INTO abilities (id, name, description) VALUES (63, 'Encarnar Aspecto', 'Aumenta Ataque/Defesa/Def. Esp./Velocidade dependendo da forma.');
+INSERT INTO abilities (id, name, description) VALUES (64, 'Saída de Emergência', 'Troca quando o HP cai abaixo de 50%.');
+INSERT INTO abilities (id, name, description) VALUES (65, 'Aura Feérica', 'Aumenta o poder de movimentos do tipo Fada para todos os Pokémon em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (66, 'Filtro', 'Reduz o dano de ataques super eficazes.');
+INSERT INTO abilities (id, name, description) VALUES (67, 'Corpo Flamejante', 'Contato com o Pokémon pode queimar o atacante.');
+INSERT INTO abilities (id, name, description) VALUES (68, 'Impulso Flamejante', 'Aumenta o poder de ataques especiais quando queimado.');
+INSERT INTO abilities (id, name, description) VALUES (69, 'Absorver Fogo', 'Aumenta o poder de movimentos do tipo Fogo se for atingido por um.');
+INSERT INTO abilities (id, name, description) VALUES (70, 'Dádiva Floral', 'Aumenta o poder dos Pokémon da equipe quando está ensolarado.');
+INSERT INTO abilities (id, name, description) VALUES (71, 'Véu Floral', 'Impede a redução dos atributos de Pokémon aliados do tipo Planta.');
+INSERT INTO abilities (id, name, description) VALUES (72, 'Fofo', 'Reduz pela metade o dano de movimentos de contato, mas dobra o dano de movimentos do tipo Fogo.');
+INSERT INTO abilities (id, name, description) VALUES (73, 'Previsão', 'Castform se transforma com o clima.');
+INSERT INTO abilities (id, name, description) VALUES (74, 'Prevenir', 'Determina quais movimentos um oponente possui.');
+INSERT INTO abilities (id, name, description) VALUES (75, 'Guarda Amiga', 'Reduz o dano causado aos aliados.');
+INSERT INTO abilities (id, name, description) VALUES (76, 'Revistar', 'O Pokémon pode verificar o item segurado por um oponente.');
+INSERT INTO abilities (id, name, description) VALUES (77, 'Corpo Metálico Completo', 'Impede que outros Pokémon reduzam seus atributos.');
+INSERT INTO abilities (id, name, description) VALUES (78, 'Casaco de Pelo', 'Reduz o dano de movimentos físicos.');
+INSERT INTO abilities (id, name, description) VALUES (79, 'Asas Vendaval', 'Dá prioridade a movimentos do tipo Voador.');
+INSERT INTO abilities (id, name, description) VALUES (80, 'Galvanizar', 'Movimentos do tipo Normal tornam-se do tipo Elétrico e seu poder é aumentado.');
+INSERT INTO abilities (id, name, description) VALUES (81, 'Gula', 'Incentiva o uso antecipado de uma Berry segurada.');
+INSERT INTO abilities (id, name, description) VALUES (82, 'Bom como Ouro', 'Concede imunidade a movimentos de status.');
+INSERT INTO abilities (id, name, description) VALUES (83, 'Gosmento', 'Contato com o Pokémon reduz a Velocidade do atacante.');
+INSERT INTO abilities (id, name, description) VALUES (84, 'Táticas de Gorila', 'Aumenta o Ataque do Pokémon, mas só permite o uso do primeiro movimento selecionado.');
+INSERT INTO abilities (id, name, description) VALUES (85, 'Pelagem de Grama', 'Aumenta a Defesa em Terreno Gramado.');
+INSERT INTO abilities (id, name, description) VALUES (86, 'Surto Gramado', 'O Pokémon cria um Terreno Gramado quando entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (87, 'Relincho Sinistro', 'Aumenta o Ataque Especial após nocautear um Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (88, 'Cão de Guarda', 'Aumenta o Ataque se intimidado e impede ser forçado a trocar.');
+INSERT INTO abilities (id, name, description) VALUES (89, 'Míssil Engolido', 'Retorna com uma presa na boca após usar Surf ou Dive.');
+INSERT INTO abilities (id, name, description) VALUES (90, 'Tripas', 'Aumenta o Ataque se houver um problema de status.');
+INSERT INTO abilities (id, name, description) VALUES (91, 'Motor Hadrônico', 'Cria um Terreno Elétrico ao entrar em batalha e aumenta o Ataque Especial enquanto ativo.');
+INSERT INTO abilities (id, name, description) VALUES (92, 'Colheita', 'Pode criar outra Berry após uma ser usada.');
+INSERT INTO abilities (id, name, description) VALUES (93, 'Curandeiro', 'Pode curar as condições de status de um aliado.');
+INSERT INTO abilities (id, name, description) VALUES (94, 'À Prova de Calor', 'Enfraquece o poder de movimentos do tipo Fogo.');
+INSERT INTO abilities (id, name, description) VALUES (95, 'Metal Pesado', 'Dobra o peso do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (96, 'Coletar Mel', 'O Pokémon pode coletar Mel de algum lugar.');
+INSERT INTO abilities (id, name, description) VALUES (97, 'Hospitalidade', 'Restaura parcialmente o HP de um aliado quando ele entra em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (98, 'Poder Enorme', 'Aumenta o Ataque do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (99, 'Interruptor de Fome', 'Muda de forma a cada turno.');
+INSERT INTO abilities (id, name, description) VALUES (100, 'Agitação', 'Aumenta o Ataque, mas reduz a precisão.');
+INSERT INTO abilities (id, name, description) VALUES (101, 'Hidratação', 'Cura problemas de status se estiver chovendo.');
+INSERT INTO abilities (id, name, description) VALUES (102, 'Cortador Hiper', 'Impede que outros Pokémon reduzam seu Ataque.');
+INSERT INTO abilities (id, name, description) VALUES (103, 'Corpo de Gelo', 'O Pokémon recupera HP gradualmente em uma tempestade de granizo.');
+INSERT INTO abilities (id, name, description) VALUES (104, 'Face de Gelo', 'Evita dano de movimentos Físicos por um turno.');
+INSERT INTO abilities (id, name, description) VALUES (105, 'Escamas de Gelo', 'Reduz pela metade o dano de movimentos Especiais.');
+INSERT INTO abilities (id, name, description) VALUES (106, 'Iluminar', 'Aumenta a probabilidade de encontrar Pokémon selvagens.');
+INSERT INTO abilities (id, name, description) VALUES (107, 'Ilusão', 'Entra em batalha disfarçado como o último Pokémon da equipe.');
+INSERT INTO abilities (id, name, description) VALUES (108, 'Imunidade', 'Impede que o Pokémon seja envenenado.');
+INSERT INTO abilities (id, name, description) VALUES (109, 'Impostor', 'Transforma-se no Pokémon que está enfrentando.');
+INSERT INTO abilities (id, name, description) VALUES (110, 'Infiltrador', 'Passa pela barreira do oponente e ataca.');
+INSERT INTO abilities (id, name, description) VALUES (111, 'Entranhas Expostas', 'Causa dano ao desmaiar.');
+INSERT INTO abilities (id, name, description) VALUES (112, 'Foco Interno', 'O Pokémon é protegido contra recuo (flinch).');
+INSERT INTO abilities (id, name, description) VALUES (113, 'Insônia', 'Impede que o Pokémon adormeça.');
+INSERT INTO abilities (id, name, description) VALUES (114, 'Intimidação', 'Reduz o Ataque do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (115, 'Espada Intrépida', 'Aumenta o Ataque em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (116, 'Farpas de Ferro', 'Inflige dano ao Pokémon em contato.');
+INSERT INTO abilities (id, name, description) VALUES (117, 'Punho de Ferro', 'Aumenta o poder de movimentos de soco.');
+INSERT INTO abilities (id, name, description) VALUES (118, 'Justificado', 'Aumenta o Ataque quando atingido por um movimento do tipo Sombrio.');
+INSERT INTO abilities (id, name, description) VALUES (119, 'Olhar Aguçado', 'Impede que outros Pokémon reduzam sua precisão.');
+INSERT INTO abilities (id, name, description) VALUES (120, 'Desajeitado', 'O Pokémon não pode usar nenhum item segurado.');
+INSERT INTO abilities (id, name, description) VALUES (121, 'Defesa de Folha', 'Previne problemas de status sob tempo ensolarado.');
+INSERT INTO abilities (id, name, description) VALUES (122, 'Levitar', 'Concede imunidade a movimentos do tipo Terrestre.');
+INSERT INTO abilities (id, name, description) VALUES (123, 'Líbero', 'Muda o tipo do Pokémon para o do seu último movimento usado.');
+INSERT INTO abilities (id, name, description) VALUES (124, 'Metal Leve', 'Reduz pela metade o peso do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (125, 'Para-raios', 'Atrai todos os movimentos do tipo Elétrico para aumentar o At. Esp.');
+INSERT INTO abilities (id, name, description) VALUES (126, 'Flexível', 'O Pokémon é protegido contra paralisia.');
+INSERT INTO abilities (id, name, description) VALUES (127, 'Aroma Persistente', 'Contato muda a Habilidade do atacante para Aroma Persistente.');
+INSERT INTO abilities (id, name, description) VALUES (128, 'Lodo Líquido', 'Causa dano a atacantes que usam qualquer movimento de drenagem.');
+INSERT INTO abilities (id, name, description) VALUES (129, 'Voz Líquida', 'Todos os movimentos baseados em som tornam-se do tipo Água.');
+INSERT INTO abilities (id, name, description) VALUES (130, 'Longo Alcance', 'O Pokémon usa seus movimentos sem fazer contato com o alvo.');
+INSERT INTO abilities (id, name, description) VALUES (131, 'Salto Mágico', 'Reflete movimentos que alteram o status.');
+INSERT INTO abilities (id, name, description) VALUES (132, 'Guarda Mágica', 'Protege o Pokémon de dano indireto.');
+INSERT INTO abilities (id, name, description) VALUES (133, 'Mágico', 'O Pokémon rouba o item segurado de um Pokémon que atinge com um movimento.');
+INSERT INTO abilities (id, name, description) VALUES (134, 'Armadura Magma', 'Impede que o Pokémon seja congelado.');
+INSERT INTO abilities (id, name, description) VALUES (135, 'Atração Magnética', 'Impede Pokémon do tipo Aço de escapar.');
+INSERT INTO abilities (id, name, description) VALUES (136, 'Escama Milagrosa', 'Aumenta a Defesa se houver um problema de status.');
+INSERT INTO abilities (id, name, description) VALUES (137, 'Mega Lançador', 'Aumenta o poder de movimentos de aura e pulso.');
+INSERT INTO abilities (id, name, description) VALUES (138, 'Implacável', 'Os ataques do Pokémon tornam-se acertos críticos se o alvo estiver envenenado.');
+INSERT INTO abilities (id, name, description) VALUES (139, 'Mimetismo', 'Muda o tipo dependendo do terreno.');
+INSERT INTO abilities (id, name, description) VALUES (140, 'Olho da Mente', 'Ignora a Evasão do oponente e permite que ataques do tipo Normal e Lutador atinjam Fantasmas.');
+INSERT INTO abilities (id, name, description) VALUES (141, 'Menos', 'Aumenta o At. Esp. se outro Pokémon tiver Mais ou Menos.');
+INSERT INTO abilities (id, name, description) VALUES (142, 'Armadura Espelhada', 'Reflete quaisquer efeitos de redução de atributos.');
+INSERT INTO abilities (id, name, description) VALUES (143, 'Surto Nebuloso', 'O Pokémon cria um Terreno Nebuloso quando entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (144, 'Quebra-molde', 'Movimentos podem ser usados independentemente das Habilidades.');
+INSERT INTO abilities (id, name, description) VALUES (145, 'Temperamental', 'Aumenta um atributo e reduz outro.');
+INSERT INTO abilities (id, name, description) VALUES (146, 'Motor Drive', 'Aumenta a Velocidade se atingido por um movimento do tipo Elétrico.');
+INSERT INTO abilities (id, name, description) VALUES (147, 'Autoestima', 'Aumenta o Ataque após nocautear qualquer Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (148, 'Multiescamas', 'Reduz o dano quando o HP está cheio.');
+INSERT INTO abilities (id, name, description) VALUES (149, 'Multitipo', 'Muda o tipo para corresponder à Placa segurada.');
+INSERT INTO abilities (id, name, description) VALUES (150, 'Múmia', 'Contato com este Pokémon espalha esta Habilidade.');
+INSERT INTO abilities (id, name, description) VALUES (151, 'Poder Micelial', 'Movimentos de status atacam por último, mas não são afetados pela habilidade do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (152, 'Cura Natural', 'Todos os problemas de status são curados quando ele é trocado.');
+INSERT INTO abilities (id, name, description) VALUES (153, 'Neuroforça', 'Aumenta o poder de movimentos que são super eficazes.');
+INSERT INTO abilities (id, name, description) VALUES (154, 'Gás Neutralizante', 'Neutraliza as habilidades de todos os Pokémon em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (155, 'Sem Guarda', 'Garante que os ataques pelo ou contra o Pokémon acertem.');
+INSERT INTO abilities (id, name, description) VALUES (156, 'Normalizar', 'Todos os movimentos do Pokémon tornam-se do tipo Normal.');
+INSERT INTO abilities (id, name, description) VALUES (157, 'Indiferente', 'Impede que se apaixone.');
+INSERT INTO abilities (id, name, description) VALUES (158, 'Oportunista', 'Copia os aumentos de atributos do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (159, 'Pulso de Oricalco', 'Torna a luz solar forte ao entrar em batalha e aumenta o Ataque enquanto ativo.');
+INSERT INTO abilities (id, name, description) VALUES (160, 'Casaco Protetor', 'Protege o Pokémon de dano climático.');
+INSERT INTO abilities (id, name, description) VALUES (161, 'Supercrescimento', 'Aumenta o poder de movimentos do tipo Planta em apuros.');
+INSERT INTO abilities (id, name, description) VALUES (162, 'Ritmo Próprio', 'Impede que o Pokémon fique confuso.');
+INSERT INTO abilities (id, name, description) VALUES (163, 'Laço Parental', 'Permite que o Pokémon ataque duas vezes.');
+INSERT INTO abilities (id, name, description) VALUES (164, 'Véu Pastel', 'Impede que o Pokémon e seus aliados sejam envenenados.');
+INSERT INTO abilities (id, name, description) VALUES (165, 'Corpo Perecível', 'Quando atingido por um movimento de contato direto, o Pokémon e o atacante desmaiarão após três turnos, a menos que saiam da batalha.');
+INSERT INTO abilities (id, name, description) VALUES (166, 'Batedor de Carteira', 'Rouba um item quando atingido por outro Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (167, 'Coleta', 'O Pokémon pode pegar itens.');
+INSERT INTO abilities (id, name, description) VALUES (168, 'Pele Feérica', 'Transforma movimentos do tipo Normal em movimentos do tipo Fada e aumenta ligeiramente seu poder.');
+INSERT INTO abilities (id, name, description) VALUES (169, 'Mais', 'Aumenta o At. Esp. se outro Pokémon tiver Mais ou Menos.');
+INSERT INTO abilities (id, name, description) VALUES (170, 'Cura Venenosa', 'Restaura HP se o Pokémon estiver envenenado.');
+INSERT INTO abilities (id, name, description) VALUES (171, 'Ponto Venenoso', 'Contato com o Pokémon pode envenenar o atacante.');
+INSERT INTO abilities (id, name, description) VALUES (172, 'Marionetista Venenoso', 'Pokémon envenenados também ficam confusos.');
+INSERT INTO abilities (id, name, description) VALUES (173, 'Toque Venenoso', 'Pode envenenar alvos quando um Pokémon faz contato.');
+INSERT INTO abilities (id, name, description) VALUES (174, 'Construção de Poder', 'Muda de forma quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (175, 'Poder da Alquimia', 'O Pokémon copia a Habilidade de um aliado derrotado.');
+INSERT INTO abilities (id, name, description) VALUES (176, 'Ponto de Poder', 'Apenas estar perto do Pokémon aumenta o poder dos movimentos.');
+INSERT INTO abilities (id, name, description) VALUES (177, 'Zombeteiro', 'Dá prioridade a um movimento de status.');
+INSERT INTO abilities (id, name, description) VALUES (178, 'Pressão', 'O Pokémon aumenta o uso de PP do oponente.');
+INSERT INTO abilities (id, name, description) VALUES (179, 'Mar Primordial', 'Faz chover intensamente quando a habilidade é ativada.');
+INSERT INTO abilities (id, name, description) VALUES (180, 'Armadura Prisma', 'Reduz o dano de ataques super eficazes.');
+INSERT INTO abilities (id, name, description) VALUES (181, 'Cauda de Hélice', 'Ignora movimentos e habilidades que atraem movimentos.');
+INSERT INTO abilities (id, name, description) VALUES (182, 'Mutante', 'Muda o tipo do Pokémon para o do seu último movimento usado.');
+INSERT INTO abilities (id, name, description) VALUES (183, 'Protossíntese', 'Aumenta o atributo mais alto sob luz solar forte, ou se estiver segurando Energia Impulsionadora.');
+INSERT INTO abilities (id, name, description) VALUES (184, 'Surto Psíquico', 'O Pokémon cria um Terreno Psíquico quando entra em uma batalha.');
+INSERT INTO abilities (id, name, description) VALUES (185, 'Punk Rock', 'Aumenta movimentos baseados em som e reduz pela metade o dano dos mesmos movimentos.');
+INSERT INTO abilities (id, name, description) VALUES (186, 'Poder Puro', 'Aumenta o Ataque do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (187, 'Sal Purificador', 'Protege de condições de status e reduz pela metade o dano de movimentos do tipo Fantasma.');
+INSERT INTO abilities (id, name, description) VALUES (188, 'Motor Quark', 'Aumenta o atributo mais alto em Terreno Elétrico, ou se estiver segurando Energia Impulsionadora.');
+INSERT INTO abilities (id, name, description) VALUES (189, 'Majestade Real', 'Impede o uso de movimentos de prioridade.');
+INSERT INTO abilities (id, name, description) VALUES (190, 'Saque Rápido', 'O Pokémon pode atacar primeiro ocasionalmente.');
+INSERT INTO abilities (id, name, description) VALUES (191, 'Pés Rápidos', 'Aumenta a Velocidade se houver um problema de status.');
+INSERT INTO abilities (id, name, description) VALUES (192, 'Prato de Chuva', 'O Pokémon recupera HP gradualmente na chuva.');
+INSERT INTO abilities (id, name, description) VALUES (193, 'Assustado', 'Movimentos do tipo Inseto, Fantasma ou Sombrio o assustam e aumentam sua Velocidade.');
+INSERT INTO abilities (id, name, description) VALUES (194, 'Receptor', 'Herda a habilidade de um aliado quando ele desmaia.');
+INSERT INTO abilities (id, name, description) VALUES (195, 'Imprudente', 'Aumenta o poder de movimentos que causam dano de recuo.');
+INSERT INTO abilities (id, name, description) VALUES (196, 'Refrigerar', 'Transforma movimentos do tipo Normal em movimentos do tipo Gelo e aumenta ligeiramente seu poder.');
+INSERT INTO abilities (id, name, description) VALUES (197, 'Regenerador', 'Restaura um pouco de HP quando retirado da batalha.');
+INSERT INTO abilities (id, name, description) VALUES (198, 'Amadurecer', 'Dobra o efeito das berries.');
+INSERT INTO abilities (id, name, description) VALUES (199, 'Rivalidade', 'Causa mais dano a um Pokémon do mesmo gênero.');
+INSERT INTO abilities (id, name, description) VALUES (200, 'Sistema RKS', 'Muda o tipo dependendo do item segurado.');
+INSERT INTO abilities (id, name, description) VALUES (201, 'Cabeça de Pedra', 'Protege o Pokémon de dano de recuo.');
+INSERT INTO abilities (id, name, description) VALUES (202, 'Carga Rochosa', 'Aumenta o poder de movimentos do tipo Pedra.');
+INSERT INTO abilities (id, name, description) VALUES (203, 'Pele Áspera', 'Inflige dano ao atacante em contato.');
+INSERT INTO abilities (id, name, description) VALUES (204, 'Fugir', 'Permite uma fuga certeira de Pokémon selvagens.');
+INSERT INTO abilities (id, name, description) VALUES (205, 'Força da Areia', 'Aumenta o poder de certos movimentos em uma tempestade de areia.');
+INSERT INTO abilities (id, name, description) VALUES (206, 'Ímpeto da Areia', 'Aumenta a Velocidade do Pokémon em uma tempestade de areia.');
+INSERT INTO abilities (id, name, description) VALUES (207, 'Cuspir Areia', 'Cria uma tempestade de areia quando atingido por um ataque.');
+INSERT INTO abilities (id, name, description) VALUES (208, 'Corrente de Areia', 'O Pokémon invoca uma tempestade de areia em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (209, 'Véu de Areia', 'Aumenta a evasão do Pokémon em uma tempestade de areia.');
+INSERT INTO abilities (id, name, description) VALUES (210, 'Absorver Seiva', 'Aumenta o Ataque quando atingido por um movimento do tipo Planta.');
+INSERT INTO abilities (id, name, description) VALUES (211, 'Escolaridade', 'Muda Wishiwashi para a Forma Escolar.');
+INSERT INTO abilities (id, name, description) VALUES (212, 'Intrépido', 'Permite que movimentos atinjam Pokémon do tipo Fantasma.');
+INSERT INTO abilities (id, name, description) VALUES (213, 'Limpador de Tela', 'Anula os efeitos de Tela de Luz, Refletor e Véu de Aurora.');
+INSERT INTO abilities (id, name, description) VALUES (214, 'Semeador', 'Transforma o solo em Terreno Gramado quando o Pokémon é atingido por um ataque.');
+INSERT INTO abilities (id, name, description) VALUES (215, 'Graça Serena', 'Aumenta a probabilidade de efeitos adicionais aparecerem.');
+INSERT INTO abilities (id, name, description) VALUES (216, 'Escudo Sombrio', 'Reduz o dano quando o HP está cheio.');
+INSERT INTO abilities (id, name, description) VALUES (217, 'Marca Sombria', 'Impede o oponente de escapar.');
+INSERT INTO abilities (id, name, description) VALUES (218, 'Nitidez', 'Aumenta o poder de movimentos cortantes.');
+INSERT INTO abilities (id, name, description) VALUES (219, 'Troca de Pele', 'O Pokémon pode curar seus próprios problemas de status.');
+INSERT INTO abilities (id, name, description) VALUES (220, 'Força Bruta', 'Remove efeitos adicionais para aumentar o dano do movimento.');
+INSERT INTO abilities (id, name, description) VALUES (221, 'Armadura de Concha', 'O Pokémon é protegido contra acertos críticos.');
+INSERT INTO abilities (id, name, description) VALUES (222, 'Pó de Escudo', 'Bloqueia os efeitos adicionais dos ataques recebidos.');
+INSERT INTO abilities (id, name, description) VALUES (223, 'Escudos Baixos', 'Muda os atributos quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (224, 'Simples', 'Dobra todas as mudanças de atributos.');
+INSERT INTO abilities (id, name, description) VALUES (225, 'Elo de Habilidade', 'Aumenta a frequência de movimentos de múltiplos acertos.');
+INSERT INTO abilities (id, name, description) VALUES (226, 'Início Lento', 'Reduz temporariamente pela metade o Ataque e a Velocidade.');
+INSERT INTO abilities (id, name, description) VALUES (227, 'Ímpeto na Neve', 'Aumenta a Velocidade do Pokémon em uma tempestade de granizo.');
+INSERT INTO abilities (id, name, description) VALUES (228, 'Franco Atirador', 'Aumenta o poder dos movimentos se eles se tornarem acertos críticos.');
+INSERT INTO abilities (id, name, description) VALUES (229, 'Manto de Neve', 'Aumenta a evasão em uma tempestade de granizo.');
+INSERT INTO abilities (id, name, description) VALUES (230, 'Alerta de Neve', 'O Pokémon invoca uma tempestade de granizo em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (231, 'Poder Solar', 'Sob luz solar, o At. Esp. é aumentado, mas o HP diminui.');
+INSERT INTO abilities (id, name, description) VALUES (232, 'Rocha Sólida', 'Reduz o dano de ataques super eficazes.');
+INSERT INTO abilities (id, name, description) VALUES (233, 'Coração Anímico', 'Aumenta o Ataque Especial quando outro Pokémon desmaia.');
+INSERT INTO abilities (id, name, description) VALUES (234, 'À Prova de Som', 'Concede imunidade a movimentos baseados em som.');
+INSERT INTO abilities (id, name, description) VALUES (235, 'Aumento de Velocidade', 'Sua Velocidade é gradualmente aumentada.');
+INSERT INTO abilities (id, name, description) VALUES (236, 'Tocaia', 'Causa dano em dobro a Pokémon que entram em campo.');
+INSERT INTO abilities (id, name, description) VALUES (237, 'Parado', 'O Pokémon se move depois de todos os outros Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (238, 'Firme', 'Ignora movimentos e habilidades que atraem movimentos.');
+INSERT INTO abilities (id, name, description) VALUES (239, 'Vigor', 'Aumenta a Defesa quando atacado.');
+INSERT INTO abilities (id, name, description) VALUES (240, 'Mudança de Postura', 'Muda de forma dependendo dos movimentos usados.');
+INSERT INTO abilities (id, name, description) VALUES (241, 'Estático', 'Contato com o Pokémon pode causar paralisia.');
+INSERT INTO abilities (id, name, description) VALUES (242, 'Inabalável', 'Aumenta a Velocidade cada vez que o Pokémon recua (flinch).');
+INSERT INTO abilities (id, name, description) VALUES (243, 'Motor a Vapor', 'Aumenta drasticamente a Velocidade quando atingido por um movimento do tipo Fogo ou Água.');
+INSERT INTO abilities (id, name, description) VALUES (244, 'Trabalhador do Aço', 'Aumenta o poder de movimentos do tipo Aço.');
+INSERT INTO abilities (id, name, description) VALUES (245, 'Espírito de Aço', 'Aumenta o poder dos movimentos do tipo Aço dos Pokémon aliados.');
+INSERT INTO abilities (id, name, description) VALUES (246, 'Mau Cheiro', 'O mau cheiro pode fazer o alvo recuar (flinch).');
+INSERT INTO abilities (id, name, description) VALUES (247, 'Aperto Pegajoso', 'Protege o Pokémon contra roubo de item.');
+INSERT INTO abilities (id, name, description) VALUES (248, 'Drenagem Torrencial', 'Atrai todos os movimentos do tipo Água para aumentar o At. Esp.');
+INSERT INTO abilities (id, name, description) VALUES (249, 'Mandíbula Forte', 'Aumenta o poder de movimentos de mordida.');
+INSERT INTO abilities (id, name, description) VALUES (250, 'Robustez', 'Não pode ser nocauteado com um único golpe.');
+INSERT INTO abilities (id, name, description) VALUES (251, 'Ventosas', 'Nega todos os movimentos que forçam a troca.');
+INSERT INTO abilities (id, name, description) VALUES (252, 'Super Sorte', 'Aumenta as taxas de acerto crítico dos movimentos.');
+INSERT INTO abilities (id, name, description) VALUES (253, 'Xarope Superdoce', 'Reduz a Evasão do oponente ao entrar em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (254, 'Suserano Supremo', 'Ataque e Ataque Especial são aumentados para cada Pokémon da equipe que foi derrotado.');
+INSERT INTO abilities (id, name, description) VALUES (255, 'Surfista Elétrico', 'Dobra a Velocidade durante o Terreno Elétrico.');
+INSERT INTO abilities (id, name, description) VALUES (256, 'Enxame', 'Aumenta o poder de movimentos do tipo Inseto em apuros.');
+INSERT INTO abilities (id, name, description) VALUES (257, 'Véu Doce', 'Impede que o Pokémon e aliados adormeçam.');
+INSERT INTO abilities (id, name, description) VALUES (258, 'Nado Rápido', 'Aumenta a Velocidade do Pokémon na chuva.');
+INSERT INTO abilities (id, name, description) VALUES (259, 'Espada da Ruína', 'Reduz o Ataque de todos os Pokémon, exceto o próprio.');
+INSERT INTO abilities (id, name, description) VALUES (260, 'Simbiose', 'O Pokémon pode passar um item para um aliado.');
+INSERT INTO abilities (id, name, description) VALUES (261, 'Sincronizar', 'Passa uma queimadura, veneno ou paralisia para o oponente.');
+INSERT INTO abilities (id, name, description) VALUES (262, 'Tábuas da Ruína', 'Reduz o Ataque de todos os Pokémon, exceto o próprio.');
+INSERT INTO abilities (id, name, description) VALUES (263, 'Pés Emaranhados', 'Aumenta a evasão se o Pokémon estiver confuso.');
+INSERT INTO abilities (id, name, description) VALUES (264, 'Cabelo Emaranhado', 'Contato com o Pokémon reduz a Velocidade do atacante.');
+INSERT INTO abilities (id, name, description) VALUES (265, 'Técnico', 'Aumenta o poder dos movimentos mais fracos do Pokémon.');
+INSERT INTO abilities (id, name, description) VALUES (266, 'Telepatia', 'Antecipa o ataque de um aliado e o desvia.');
+INSERT INTO abilities (id, name, description) VALUES (267, 'Carapaça Tera', 'Movimentos não são muito eficazes quando o HP está cheio.');
+INSERT INTO abilities (id, name, description) VALUES (268, 'Mudança Tera', 'Transforma-se na Forma Terastal em batalha.');
+INSERT INTO abilities (id, name, description) VALUES (269, 'Teraforma Zero', 'Elimina todos os efeitos de clima e terreno.');
+INSERT INTO abilities (id, name, description) VALUES (270, 'Teravolt', 'Movimentos podem ser usados independentemente das Habilidades.');
+INSERT INTO abilities (id, name, description) VALUES (271, 'Troca Térmica', 'Aumenta o Ataque quando atingido por um movimento do tipo Fogo. Não pode ser queimado.');
+INSERT INTO abilities (id, name, description) VALUES (272, 'Gordura Espessa', 'Aumenta a resistência a movimentos dos tipos Fogo e Gelo.');
+INSERT INTO abilities (id, name, description) VALUES (273, 'Lente Tingida', 'Aumenta o poder de movimentos “não muito eficazes”.');
+INSERT INTO abilities (id, name, description) VALUES (274, 'Torrente', 'Aumenta o poder de movimentos do tipo Água em apuros.');
+INSERT INTO abilities (id, name, description) VALUES (275, 'Garras Resistentes', 'Aumenta o poder de movimentos de contato.');
+INSERT INTO abilities (id, name, description) VALUES (276, 'Impulso Tóxico', 'Aumenta o poder de ataques físicos quando envenenado.');
+INSERT INTO abilities (id, name, description) VALUES (277, 'Corrente Tóxica', 'Pode causar envenenamento grave.');
+INSERT INTO abilities (id, name, description) VALUES (278, 'Detritos Tóxicos', 'Espalha espinhos venenosos aos pés da equipe adversária quando o Pokémon sofre dano de movimentos físicos.');
+INSERT INTO abilities (id, name, description) VALUES (279, 'Rastrear', 'O Pokémon copia a Habilidade de um oponente.');
+INSERT INTO abilities (id, name, description) VALUES (280, 'Transistor', 'Aumenta o poder de movimentos do tipo Elétrico.');
+INSERT INTO abilities (id, name, description) VALUES (281, 'Triagem', 'Dá prioridade a movimentos restauradores.');
+INSERT INTO abilities (id, name, description) VALUES (282, 'Vadiagem', 'O Pokémon não pode atacar em turnos consecutivos.');
+INSERT INTO abilities (id, name, description) VALUES (283, 'Turbochama', 'Movimentos podem ser usados independentemente das Habilidades.');
+INSERT INTO abilities (id, name, description) VALUES (284, 'Inconsciente', 'Ignora quaisquer mudanças de atributos no Pokémon adversário.');
+INSERT INTO abilities (id, name, description) VALUES (285, 'Desimpedir', 'Aumenta a Velocidade se um item segurado for usado.');
+INSERT INTO abilities (id, name, description) VALUES (286, 'Nervosismo', 'Deixa o oponente nervoso e incapaz de comer Berries.');
+INSERT INTO abilities (id, name, description) VALUES (287, 'Punho Invisível', 'Movimentos de contato podem atingir através de Proteger/Detectar.');
+INSERT INTO abilities (id, name, description) VALUES (288, 'Vaso da Ruína', 'Reduz o Ataque Especial de todos os Pokémon, exceto o próprio.');
+INSERT INTO abilities (id, name, description) VALUES (289, 'Estrela da Vitória', 'Aumenta a precisão de seus aliados e de si mesmo.');
+INSERT INTO abilities (id, name, description) VALUES (290, 'Espírito Vital', 'Impede que o Pokémon adormeça.');
+INSERT INTO abilities (id, name, description) VALUES (291, 'Absorver Voltagem', 'Restaura HP se atingido por um movimento do tipo Elétrico.');
+INSERT INTO abilities (id, name, description) VALUES (292, 'Espírito Errante', 'Troca habilidades com oponentes em contato.');
+INSERT INTO abilities (id, name, description) VALUES (293, 'Absorver Água', 'Restaura HP se atingido por um movimento do tipo Água.');
+INSERT INTO abilities (id, name, description) VALUES (294, 'Bolha d''Água', 'Reduz pela metade o dano de movimentos do tipo Fogo, dobra o poder dos movimentos do tipo Água usados e previne queimaduras.');
+INSERT INTO abilities (id, name, description) VALUES (295, 'Compactação Aquática', 'Aumenta acentuadamente a Defesa quando atingido por um movimento do tipo Água.');
+INSERT INTO abilities (id, name, description) VALUES (296, 'Véu d''Água', 'Impede que o Pokémon sofra queimaduras.');
+INSERT INTO abilities (id, name, description) VALUES (297, 'Armadura Fraca', 'Ataques físicos reduzem a Defesa e aumentam a Velocidade.');
+INSERT INTO abilities (id, name, description) VALUES (298, 'Corpo Bem Assado', 'Imune a movimentos do tipo Fogo, e a Defesa é acentuadamente aumentada.');
+INSERT INTO abilities (id, name, description) VALUES (299, 'Fumaça Branca', 'Impede que outros Pokémon reduzam seus atributos.');
+INSERT INTO abilities (id, name, description) VALUES (300, 'Retirada Estratégica', 'Troca quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (301, 'Poder Eólico', 'Dobra o poder do próximo movimento do tipo Elétrico usado, quando atingido por um movimento de vento.');
+INSERT INTO abilities (id, name, description) VALUES (302, 'Cavaleiro do Vento', 'Não sofre dano de movimentos de vento e aumenta o Ataque se atingido por um.');
+INSERT INTO abilities (id, name, description) VALUES (303, 'Superguarda', 'Apenas movimentos super eficazes acertarão.');
+INSERT INTO abilities (id, name, description) VALUES (304, 'Pele Maravilha', 'Faz com que movimentos que alteram o status tenham maior probabilidade de errar.');
+INSERT INTO abilities (id, name, description) VALUES (305, 'Modo Zen', 'Muda de forma quando o HP cai abaixo da metade.');
+INSERT INTO abilities (id, name, description) VALUES (306, 'Zero a Herói', 'Transforma-se em sua Forma Herói ao ser trocado.');
 
--- Dados para evolution_chains
-INSERT INTO evolution_chains (id, chain) VALUES
-(1, {'pokemon': {'id': 1, 'name': 'Bulbasaur'}, 'evolutions_to': [{'pokemon': {'id': 2, 'name': 'Ivysaur'}, 'condition': {'type': 'level_up', 'value': 16, 'description': 'Nível 16'}, 'evolutions_to': [{'pokemon': {'id': 3, 'name': 'Venusaur'}, 'condition': {'type': 'level_up', 'value': 32, 'description': 'Nível 32'}, 'evolutions_to': [{'pokemon': {'id': 4, 'name': 'Mega Venusaur'}, 'condition': {'type': 'mega_evolution', 'description': 'Mega Evolução'}, 'evolutions_to': []}]}]}]}),
-(2, {'pokemon': {'id': 5, 'name': 'Charmander'}, 'evolutions_to': [{'pokemon': {'id': 6, 'name': 'Charmeleon'}, 'condition': {'type': 'level_up', 'value': 16, 'description': 'Nível 16'}, 'evolutions_to': [{'pokemon': {'id': 7, 'name': 'Charizard'}, 'condition': {'type': 'level_up', 'value': 36, 'description': 'Nível 36'}, 'evolutions_to': [{'pokemon': {'id': 8, 'name': 'Mega Charizard X'}, 'condition': {'type': 'mega_evolution', 'description': 'Mega Evolução'}, 'evolutions_to': []}, {'pokemon': {'id': 9, 'name': 'Mega Charizard Y'}, 'condition': {'type': 'mega_evolution', 'description': 'Mega Evolução'}, 'evolutions_to': []}]}]}]}),
-(3, {'pokemon': {'id': 10, 'name': 'Squirtle'}, 'evolutions_to': [{'pokemon': {'id': 11, 'name': 'Wartortle'}, 'condition': {'type': 'level_up', 'value': 16, 'description': 'Nível 16'}, 'evolutions_to': [{'pokemon': {'id': 12, 'name': 'Blastoise'}, 'condition': {'type': 'level_up', 'value': 36, 'description': 'Nível 36'}, 'evolutions_to': [{'pokemon': {'id': 13, 'name': 'Mega Blastoise'}, 'condition': {'type': 'mega_evolution', 'description': 'Mega Evolução'}, 'evolutions_to': []}]}]}]}),
-(4, {'pokemon': {'id': 14, 'name': 'Caterpie'}, 'evolutions_to': [{'pokemon': {'id': 15, 'name': 'Metapod'}, 'condition': {'type': 'level_up', 'value': 7, 'description': 'Nível 7'}, 'evolutions_to': [{'pokemon': {'id': 16, 'name': 'Butterfree'}, 'condition': {'type': 'level_up', 'value': 10, 'description': 'Nível 10'}, 'evolutions_to': []}]}]}),
-(5, {'pokemon': {'id': 17, 'name': 'Weedle'}, 'evolutions_to': [{'pokemon': {'id': 18, 'name': 'Kakuna'}, 'condition': {'type': 'level_up', 'value': 7, 'description': 'Nível 7'}, 'evolutions_to': [{'pokemon': {'id': 19, 'name': 'Beedrill'}, 'condition': {'type': 'level_up', 'value': 10, 'description': 'Nível 10'}, 'evolutions_to': [{'pokemon': {'id': 20, 'name': 'Mega Beedrill'}, 'condition': {'type': 'mega_evolution', 'description': 'Mega Evolução'}, 'evolutions_to': []}]}]}]}),
-(6, {'pokemon': {'id': 21, 'name': 'Pidgey'}, 'evolutions_to': [{'pokemon': {'id': 22, 'name': 'Pidgeotto'}, 'condition': {'type': 'level_up', 'value': 18, 'description': 'Nível 18'}, 'evolutions_to': [{'pokemon': {'id': 23, 'name': 'Pidgeot'}, 'condition': {'type': 'level_up', 'value': 36, 'description': 'Nível 36'}, 'evolutions_to': []}]}]}),
-(10, {'pokemon': {'id': 172, 'name': 'Pichu'}, 'evolutions_to': [{'pokemon': {'id': 25, 'name': 'Pikachu'}, 'condition': {'type': 'friendship', 'value': 'high', 'description': 'Alta Amizade'}, 'evolutions_to': [{'pokemon': {'id': 26, 'name': 'Raichu'}, 'condition': {'type': 'item_use', 'value': 'Thunder Stone', 'description': 'Usar Pedra Trovão (fora de Alola)'}, 'evolutions_to': []}, {'pokemon': {'id': 26, 'name': 'Alolan Raichu'}, 'condition': {'type': 'item_use', 'value': 'Thunder Stone', 'description': 'Usar Pedra Trovão (em Alola)'}, 'evolutions_to': []}]}]});
+-- Dados da tabela: species (origem: 06_species.json)
+INSERT INTO species (id, name) VALUES (1, 'Bulbasaur');
+INSERT INTO species (id, name) VALUES (2, 'Ivysaur');
+INSERT INTO species (id, name) VALUES (3, 'Venusaur');
+INSERT INTO species (id, name) VALUES (4, 'Charmander');
+INSERT INTO species (id, name) VALUES (5, 'Charmeleon');
+INSERT INTO species (id, name) VALUES (6, 'Charizard');
+INSERT INTO species (id, name) VALUES (7, 'Squirtle');
+INSERT INTO species (id, name) VALUES (8, 'Wartortle');
+INSERT INTO species (id, name) VALUES (9, 'Blastoise');
+INSERT INTO species (id, name) VALUES (10, 'Caterpie');
+INSERT INTO species (id, name) VALUES (11, 'Metapod');
+INSERT INTO species (id, name) VALUES (12, 'Butterfree');
+INSERT INTO species (id, name) VALUES (13, 'Weedle');
+INSERT INTO species (id, name) VALUES (14, 'Kakuna');
+INSERT INTO species (id, name) VALUES (15, 'Beedrill');
+INSERT INTO species (id, name) VALUES (16, 'Pidgey');
+INSERT INTO species (id, name) VALUES (17, 'Pidgeotto');
+INSERT INTO species (id, name) VALUES (18, 'Pidgeot');
+INSERT INTO species (id, name) VALUES (19, 'Rattata');
+INSERT INTO species (id, name) VALUES (20, 'Raticate');
+INSERT INTO species (id, name) VALUES (21, 'Spearow');
+INSERT INTO species (id, name) VALUES (22, 'Fearow');
+INSERT INTO species (id, name) VALUES (23, 'Ekans');
+INSERT INTO species (id, name) VALUES (24, 'Arbok');
+INSERT INTO species (id, name) VALUES (25, 'Pikachu');
+INSERT INTO species (id, name) VALUES (26, 'Raichu');
+INSERT INTO species (id, name) VALUES (27, 'Sandshrew');
+INSERT INTO species (id, name) VALUES (28, 'Sandslash');
+INSERT INTO species (id, name) VALUES (29, 'Nidoran♀');
+INSERT INTO species (id, name) VALUES (30, 'Nidorina');
+INSERT INTO species (id, name) VALUES (31, 'Nidoqueen');
+INSERT INTO species (id, name) VALUES (32, 'Nidoran♂');
+INSERT INTO species (id, name) VALUES (33, 'Nidorino');
+INSERT INTO species (id, name) VALUES (34, 'Nidoking');
+INSERT INTO species (id, name) VALUES (35, 'Clefairy');
+INSERT INTO species (id, name) VALUES (36, 'Clefable');
+INSERT INTO species (id, name) VALUES (37, 'Vulpix');
+INSERT INTO species (id, name) VALUES (38, 'Ninetales');
+INSERT INTO species (id, name) VALUES (39, 'Jigglypuff');
+INSERT INTO species (id, name) VALUES (40, 'Wigglytuff');
+INSERT INTO species (id, name) VALUES (41, 'Zubat');
+INSERT INTO species (id, name) VALUES (42, 'Golbat');
+INSERT INTO species (id, name) VALUES (43, 'Oddish');
+INSERT INTO species (id, name) VALUES (44, 'Gloom');
+INSERT INTO species (id, name) VALUES (45, 'Vileplume');
+INSERT INTO species (id, name) VALUES (46, 'Paras');
+INSERT INTO species (id, name) VALUES (47, 'Parasect');
+INSERT INTO species (id, name) VALUES (48, 'Venonat');
+INSERT INTO species (id, name) VALUES (49, 'Venomoth');
+INSERT INTO species (id, name) VALUES (50, 'Diglett');
+INSERT INTO species (id, name) VALUES (51, 'Dugtrio');
+INSERT INTO species (id, name) VALUES (52, 'Meowth');
+INSERT INTO species (id, name) VALUES (53, 'Persian');
+INSERT INTO species (id, name) VALUES (54, 'Psyduck');
+INSERT INTO species (id, name) VALUES (55, 'Golduck');
+INSERT INTO species (id, name) VALUES (56, 'Mankey');
+INSERT INTO species (id, name) VALUES (57, 'Primeape');
+INSERT INTO species (id, name) VALUES (58, 'Growlithe');
+INSERT INTO species (id, name) VALUES (59, 'Growlithe Hisuian Form');
+INSERT INTO species (id, name) VALUES (60, 'Arcanine');
+INSERT INTO species (id, name) VALUES (61, 'Poliwag');
+INSERT INTO species (id, name) VALUES (62, 'Poliwhirl');
+INSERT INTO species (id, name) VALUES (63, 'Poliwrath');
+INSERT INTO species (id, name) VALUES (64, 'Abra');
+INSERT INTO species (id, name) VALUES (65, 'Kadabra');
+INSERT INTO species (id, name) VALUES (66, 'Alakazam');
+INSERT INTO species (id, name) VALUES (67, 'Machop');
+INSERT INTO species (id, name) VALUES (68, 'Machoke');
+INSERT INTO species (id, name) VALUES (69, 'Machamp');
+INSERT INTO species (id, name) VALUES (70, 'Bellsprout');
+INSERT INTO species (id, name) VALUES (71, 'Weepinbell');
+INSERT INTO species (id, name) VALUES (72, 'Victreebel');
+INSERT INTO species (id, name) VALUES (73, 'Tentacool');
+INSERT INTO species (id, name) VALUES (74, 'Tentacruel');
+INSERT INTO species (id, name) VALUES (75, 'Geodude');
+INSERT INTO species (id, name) VALUES (76, 'Graveler');
+INSERT INTO species (id, name) VALUES (77, 'Golem');
+INSERT INTO species (id, name) VALUES (78, 'Ponyta');
+INSERT INTO species (id, name) VALUES (79, 'Ponyta Galarian Form');
+INSERT INTO species (id, name) VALUES (80, 'Rapidash');
+INSERT INTO species (id, name) VALUES (81, 'Rapidash Galarian Form');
+INSERT INTO species (id, name) VALUES (82, 'Slowpoke');
+INSERT INTO species (id, name) VALUES (83, 'Slowbro');
+INSERT INTO species (id, name) VALUES (84, 'Magnemite');
+INSERT INTO species (id, name) VALUES (85, 'Magneton');
+INSERT INTO species (id, name) VALUES (86, 'Farfetch''d');
+INSERT INTO species (id, name) VALUES (87, 'Doduo');
+INSERT INTO species (id, name) VALUES (88, 'Dodrio');
+INSERT INTO species (id, name) VALUES (89, 'Seel');
+INSERT INTO species (id, name) VALUES (90, 'Dewgong');
+INSERT INTO species (id, name) VALUES (91, 'Grimer');
+INSERT INTO species (id, name) VALUES (92, 'Muk');
+INSERT INTO species (id, name) VALUES (93, 'Shellder');
+INSERT INTO species (id, name) VALUES (94, 'Cloyster');
+INSERT INTO species (id, name) VALUES (95, 'Gastly');
+INSERT INTO species (id, name) VALUES (96, 'Haunter');
+INSERT INTO species (id, name) VALUES (97, 'Gengar');
+INSERT INTO species (id, name) VALUES (98, 'Onix');
+INSERT INTO species (id, name) VALUES (99, 'Drowzee');
+INSERT INTO species (id, name) VALUES (100, 'Hypno');
+INSERT INTO species (id, name) VALUES (101, 'Krabby');
+INSERT INTO species (id, name) VALUES (102, 'Kingler');
+INSERT INTO species (id, name) VALUES (103, 'Voltorb');
+INSERT INTO species (id, name) VALUES (104, 'Voltorb Hisuian Form');
+INSERT INTO species (id, name) VALUES (105, 'Electrode');
+INSERT INTO species (id, name) VALUES (106, 'Electrode Hisuian Form');
+INSERT INTO species (id, name) VALUES (107, 'Exeggcute');
+INSERT INTO species (id, name) VALUES (108, 'Exeggutor');
+INSERT INTO species (id, name) VALUES (109, 'Cubone');
+INSERT INTO species (id, name) VALUES (110, 'Marowak');
+INSERT INTO species (id, name) VALUES (111, 'Hitmonlee');
+INSERT INTO species (id, name) VALUES (112, 'Hitmonchan');
+INSERT INTO species (id, name) VALUES (113, 'Lickitung');
+INSERT INTO species (id, name) VALUES (114, 'Koffing');
+INSERT INTO species (id, name) VALUES (115, 'Weezing');
+INSERT INTO species (id, name) VALUES (116, 'Rhyhorn');
+INSERT INTO species (id, name) VALUES (117, 'Rhydon');
+INSERT INTO species (id, name) VALUES (118, 'Chansey');
+INSERT INTO species (id, name) VALUES (119, 'Tangela');
+INSERT INTO species (id, name) VALUES (120, 'Kangaskhan');
+INSERT INTO species (id, name) VALUES (121, 'Horsea');
+INSERT INTO species (id, name) VALUES (122, 'Seadra');
+INSERT INTO species (id, name) VALUES (123, 'Goldeen');
+INSERT INTO species (id, name) VALUES (124, 'Seaking');
+INSERT INTO species (id, name) VALUES (125, 'Staryu');
+INSERT INTO species (id, name) VALUES (126, 'Starmie');
+INSERT INTO species (id, name) VALUES (127, 'Mr. Mime');
+INSERT INTO species (id, name) VALUES (128, 'Mr. Mime Galarian Form');
+INSERT INTO species (id, name) VALUES (129, 'Scyther');
+INSERT INTO species (id, name) VALUES (130, 'Jynx');
+INSERT INTO species (id, name) VALUES (131, 'Electabuzz');
+INSERT INTO species (id, name) VALUES (132, 'Magmar');
+INSERT INTO species (id, name) VALUES (133, 'Pinsir');
+INSERT INTO species (id, name) VALUES (134, 'Tauros');
+INSERT INTO species (id, name) VALUES (135, 'Magikarp');
+INSERT INTO species (id, name) VALUES (136, 'Gyarados');
+INSERT INTO species (id, name) VALUES (137, 'Lapras');
+INSERT INTO species (id, name) VALUES (138, 'Ditto');
+INSERT INTO species (id, name) VALUES (139, 'Eevee');
+INSERT INTO species (id, name) VALUES (140, 'Vaporeon');
+INSERT INTO species (id, name) VALUES (141, 'Jolteon');
+INSERT INTO species (id, name) VALUES (142, 'Flareon');
+INSERT INTO species (id, name) VALUES (143, 'Porygon');
+INSERT INTO species (id, name) VALUES (144, 'Omanyte');
+INSERT INTO species (id, name) VALUES (145, 'Omastar');
+INSERT INTO species (id, name) VALUES (146, 'Kabuto');
+INSERT INTO species (id, name) VALUES (147, 'Kabutops');
+INSERT INTO species (id, name) VALUES (148, 'Aerodactyl');
+INSERT INTO species (id, name) VALUES (149, 'Snorlax');
+INSERT INTO species (id, name) VALUES (150, 'Articuno');
+INSERT INTO species (id, name) VALUES (151, 'Articuno Galarian Form');
+INSERT INTO species (id, name) VALUES (152, 'Zapdos');
+INSERT INTO species (id, name) VALUES (153, 'Zapdos Galarian Form');
+INSERT INTO species (id, name) VALUES (154, 'Moltres');
+INSERT INTO species (id, name) VALUES (155, 'Moltres Galarian Form');
+INSERT INTO species (id, name) VALUES (156, 'Dratini');
+INSERT INTO species (id, name) VALUES (157, 'Dragonair');
+INSERT INTO species (id, name) VALUES (158, 'Dragonite');
+INSERT INTO species (id, name) VALUES (159, 'Mewtwo');
+INSERT INTO species (id, name) VALUES (160, 'Mew');
+INSERT INTO species (id, name) VALUES (161, 'Chikorita');
+INSERT INTO species (id, name) VALUES (162, 'Bayleef');
+INSERT INTO species (id, name) VALUES (163, 'Meganium');
+INSERT INTO species (id, name) VALUES (164, 'Cyndaquil');
+INSERT INTO species (id, name) VALUES (165, 'Quilava');
+INSERT INTO species (id, name) VALUES (166, 'Typhlosion');
+INSERT INTO species (id, name) VALUES (167, 'Typhlosion Hisuian Form');
+INSERT INTO species (id, name) VALUES (168, 'Totodile');
+INSERT INTO species (id, name) VALUES (169, 'Croconaw');
+INSERT INTO species (id, name) VALUES (170, 'Feraligatr');
+INSERT INTO species (id, name) VALUES (171, 'Sentret');
+INSERT INTO species (id, name) VALUES (172, 'Furret');
+INSERT INTO species (id, name) VALUES (173, 'Hoothoot');
+INSERT INTO species (id, name) VALUES (174, 'Noctowl');
+INSERT INTO species (id, name) VALUES (175, 'Ledyba');
+INSERT INTO species (id, name) VALUES (176, 'Ledian');
+INSERT INTO species (id, name) VALUES (177, 'Spinarak');
+INSERT INTO species (id, name) VALUES (178, 'Ariados');
+INSERT INTO species (id, name) VALUES (179, 'Crobat');
+INSERT INTO species (id, name) VALUES (180, 'Chinchou');
+INSERT INTO species (id, name) VALUES (181, 'Lanturn');
+INSERT INTO species (id, name) VALUES (182, 'Pichu');
+INSERT INTO species (id, name) VALUES (183, 'Cleffa');
+INSERT INTO species (id, name) VALUES (184, 'Igglybuff');
+INSERT INTO species (id, name) VALUES (185, 'Togepi');
+INSERT INTO species (id, name) VALUES (186, 'Togetic');
+INSERT INTO species (id, name) VALUES (187, 'Natu');
+INSERT INTO species (id, name) VALUES (188, 'Xatu');
+INSERT INTO species (id, name) VALUES (189, 'Mareep');
+INSERT INTO species (id, name) VALUES (190, 'Flaaffy');
+INSERT INTO species (id, name) VALUES (191, 'Ampharos');
+INSERT INTO species (id, name) VALUES (192, 'Bellossom');
+INSERT INTO species (id, name) VALUES (193, 'Marill');
+INSERT INTO species (id, name) VALUES (194, 'Azumarill');
+INSERT INTO species (id, name) VALUES (195, 'Sudowoodo');
+INSERT INTO species (id, name) VALUES (196, 'Politoed');
+INSERT INTO species (id, name) VALUES (197, 'Hoppip');
+INSERT INTO species (id, name) VALUES (198, 'Skiploom');
+INSERT INTO species (id, name) VALUES (199, 'Jumpluff');
+INSERT INTO species (id, name) VALUES (200, 'Aipom');
+INSERT INTO species (id, name) VALUES (201, 'Sunkern');
+INSERT INTO species (id, name) VALUES (202, 'Sunflora');
+INSERT INTO species (id, name) VALUES (203, 'Yanma');
+INSERT INTO species (id, name) VALUES (204, 'Wooper');
+INSERT INTO species (id, name) VALUES (205, 'Wooper Paldean Form');
+INSERT INTO species (id, name) VALUES (206, 'Quagsire');
+INSERT INTO species (id, name) VALUES (207, 'Espeon');
+INSERT INTO species (id, name) VALUES (208, 'Umbreon');
+INSERT INTO species (id, name) VALUES (209, 'Murkrow');
+INSERT INTO species (id, name) VALUES (210, 'Slowking');
+INSERT INTO species (id, name) VALUES (211, 'Slowking Galarian Form');
+INSERT INTO species (id, name) VALUES (212, 'Misdreavus');
+INSERT INTO species (id, name) VALUES (213, 'Unown');
+INSERT INTO species (id, name) VALUES (214, 'Wobbuffet');
+INSERT INTO species (id, name) VALUES (215, 'Girafarig');
+INSERT INTO species (id, name) VALUES (216, 'Pineco');
+INSERT INTO species (id, name) VALUES (217, 'Forretress');
+INSERT INTO species (id, name) VALUES (218, 'Dunsparce');
+INSERT INTO species (id, name) VALUES (219, 'Gligar');
+INSERT INTO species (id, name) VALUES (220, 'Steelix');
+INSERT INTO species (id, name) VALUES (221, 'Snubbull');
+INSERT INTO species (id, name) VALUES (222, 'Granbull');
+INSERT INTO species (id, name) VALUES (223, 'Qwilfish');
+INSERT INTO species (id, name) VALUES (224, 'Scizor');
+INSERT INTO species (id, name) VALUES (225, 'Shuckle');
+INSERT INTO species (id, name) VALUES (226, 'Heracross');
+INSERT INTO species (id, name) VALUES (227, 'Sneasel');
+INSERT INTO species (id, name) VALUES (228, 'Teddiursa');
+INSERT INTO species (id, name) VALUES (229, 'Ursaring');
+INSERT INTO species (id, name) VALUES (230, 'Slugma');
+INSERT INTO species (id, name) VALUES (231, 'Magcargo');
+INSERT INTO species (id, name) VALUES (232, 'Swinub');
+INSERT INTO species (id, name) VALUES (233, 'Piloswine');
+INSERT INTO species (id, name) VALUES (234, 'Corsola');
+INSERT INTO species (id, name) VALUES (235, 'Remoraid');
+INSERT INTO species (id, name) VALUES (236, 'Octillery');
+INSERT INTO species (id, name) VALUES (237, 'Delibird');
+INSERT INTO species (id, name) VALUES (238, 'Mantine');
+INSERT INTO species (id, name) VALUES (239, 'Skarmory');
+INSERT INTO species (id, name) VALUES (240, 'Houndour');
+INSERT INTO species (id, name) VALUES (241, 'Houndoom');
+INSERT INTO species (id, name) VALUES (242, 'Kingdra');
+INSERT INTO species (id, name) VALUES (243, 'Phanpy');
+INSERT INTO species (id, name) VALUES (244, 'Donphan');
+INSERT INTO species (id, name) VALUES (245, 'Porygon2');
+INSERT INTO species (id, name) VALUES (246, 'Stantler');
+INSERT INTO species (id, name) VALUES (247, 'Smeargle');
+INSERT INTO species (id, name) VALUES (248, 'Tyrogue');
+INSERT INTO species (id, name) VALUES (249, 'Hitmontop');
+INSERT INTO species (id, name) VALUES (250, 'Smoochum');
+INSERT INTO species (id, name) VALUES (251, 'Elekid');
+INSERT INTO species (id, name) VALUES (252, 'Magby');
+INSERT INTO species (id, name) VALUES (253, 'Miltank');
+INSERT INTO species (id, name) VALUES (254, 'Blissey');
+INSERT INTO species (id, name) VALUES (255, 'Raikou');
+INSERT INTO species (id, name) VALUES (256, 'Entei');
+INSERT INTO species (id, name) VALUES (257, 'Suicune');
+INSERT INTO species (id, name) VALUES (258, 'Larvitar');
+INSERT INTO species (id, name) VALUES (259, 'Pupitar');
+INSERT INTO species (id, name) VALUES (260, 'Tyranitar');
+INSERT INTO species (id, name) VALUES (261, 'Lugia');
+INSERT INTO species (id, name) VALUES (262, 'Ho-Oh');
+INSERT INTO species (id, name) VALUES (263, 'Celebi');
+INSERT INTO species (id, name) VALUES (264, 'Treecko');
+INSERT INTO species (id, name) VALUES (265, 'Grovyle');
+INSERT INTO species (id, name) VALUES (266, 'Sceptile');
+INSERT INTO species (id, name) VALUES (267, 'Torchic');
+INSERT INTO species (id, name) VALUES (268, 'Combusken');
+INSERT INTO species (id, name) VALUES (269, 'Blaziken');
+INSERT INTO species (id, name) VALUES (270, 'Mudkip');
+INSERT INTO species (id, name) VALUES (271, 'Marshtomp');
+INSERT INTO species (id, name) VALUES (272, 'Swampert');
+INSERT INTO species (id, name) VALUES (273, 'Poochyena');
+INSERT INTO species (id, name) VALUES (274, 'Mightyena');
+INSERT INTO species (id, name) VALUES (275, 'Zigzagoon');
+INSERT INTO species (id, name) VALUES (276, 'Linoone');
+INSERT INTO species (id, name) VALUES (277, 'Wurmple');
+INSERT INTO species (id, name) VALUES (278, 'Silcoon');
+INSERT INTO species (id, name) VALUES (279, 'Beautifly');
+INSERT INTO species (id, name) VALUES (280, 'Cascoon');
+INSERT INTO species (id, name) VALUES (281, 'Dustox');
+INSERT INTO species (id, name) VALUES (282, 'Lotad');
+INSERT INTO species (id, name) VALUES (283, 'Lombre');
+INSERT INTO species (id, name) VALUES (284, 'Ludicolo');
+INSERT INTO species (id, name) VALUES (285, 'Seedot');
+INSERT INTO species (id, name) VALUES (286, 'Nuzleaf');
+INSERT INTO species (id, name) VALUES (287, 'Shiftry');
+INSERT INTO species (id, name) VALUES (288, 'Taillow');
+INSERT INTO species (id, name) VALUES (289, 'Swellow');
+INSERT INTO species (id, name) VALUES (290, 'Wingull');
+INSERT INTO species (id, name) VALUES (291, 'Pelipper');
+INSERT INTO species (id, name) VALUES (292, 'Ralts');
+INSERT INTO species (id, name) VALUES (293, 'Kirlia');
+INSERT INTO species (id, name) VALUES (294, 'Gardevoir');
+INSERT INTO species (id, name) VALUES (295, 'Surskit');
+INSERT INTO species (id, name) VALUES (296, 'Masquerain');
+INSERT INTO species (id, name) VALUES (297, 'Shroomish');
+INSERT INTO species (id, name) VALUES (298, 'Breloom');
+INSERT INTO species (id, name) VALUES (299, 'Slakoth');
+INSERT INTO species (id, name) VALUES (300, 'Vigoroth');
+INSERT INTO species (id, name) VALUES (301, 'Slaking');
+INSERT INTO species (id, name) VALUES (302, 'Nincada');
+INSERT INTO species (id, name) VALUES (303, 'Ninjask');
+INSERT INTO species (id, name) VALUES (304, 'Shedinja');
+INSERT INTO species (id, name) VALUES (305, 'Whismur');
+INSERT INTO species (id, name) VALUES (306, 'Loudred');
+INSERT INTO species (id, name) VALUES (307, 'Exploud');
+INSERT INTO species (id, name) VALUES (308, 'Makuhita');
+INSERT INTO species (id, name) VALUES (309, 'Hariyama');
+INSERT INTO species (id, name) VALUES (310, 'Azurill');
+INSERT INTO species (id, name) VALUES (311, 'Nosepass');
+INSERT INTO species (id, name) VALUES (312, 'Skitty');
+INSERT INTO species (id, name) VALUES (313, 'Delcatty');
+INSERT INTO species (id, name) VALUES (314, 'Sableye');
+INSERT INTO species (id, name) VALUES (315, 'Mawile');
+INSERT INTO species (id, name) VALUES (316, 'Aron');
+INSERT INTO species (id, name) VALUES (317, 'Lairon');
+INSERT INTO species (id, name) VALUES (318, 'Aggron');
+INSERT INTO species (id, name) VALUES (319, 'Meditite');
+INSERT INTO species (id, name) VALUES (320, 'Medicham');
+INSERT INTO species (id, name) VALUES (321, 'Electrike');
+INSERT INTO species (id, name) VALUES (322, 'Manectric');
+INSERT INTO species (id, name) VALUES (323, 'Plusle');
+INSERT INTO species (id, name) VALUES (324, 'Minun');
+INSERT INTO species (id, name) VALUES (325, 'Volbeat');
+INSERT INTO species (id, name) VALUES (326, 'Illumise');
+INSERT INTO species (id, name) VALUES (327, 'Roselia');
+INSERT INTO species (id, name) VALUES (328, 'Gulpin');
+INSERT INTO species (id, name) VALUES (329, 'Swalot');
+INSERT INTO species (id, name) VALUES (330, 'Carvanha');
+INSERT INTO species (id, name) VALUES (331, 'Sharpedo');
+INSERT INTO species (id, name) VALUES (332, 'Wailmer');
+INSERT INTO species (id, name) VALUES (333, 'Wailord');
+INSERT INTO species (id, name) VALUES (334, 'Numel');
+INSERT INTO species (id, name) VALUES (335, 'Camerupt');
+INSERT INTO species (id, name) VALUES (336, 'Torkoal');
+INSERT INTO species (id, name) VALUES (337, 'Spoink');
+INSERT INTO species (id, name) VALUES (338, 'Grumpig');
+INSERT INTO species (id, name) VALUES (339, 'Spinda');
+INSERT INTO species (id, name) VALUES (340, 'Trapinch');
+INSERT INTO species (id, name) VALUES (341, 'Vibrava');
+INSERT INTO species (id, name) VALUES (342, 'Flygon');
+INSERT INTO species (id, name) VALUES (343, 'Cacnea');
+INSERT INTO species (id, name) VALUES (344, 'Cacturne');
+INSERT INTO species (id, name) VALUES (345, 'Swablu');
+INSERT INTO species (id, name) VALUES (346, 'Altaria');
+INSERT INTO species (id, name) VALUES (347, 'Zangoose');
+INSERT INTO species (id, name) VALUES (348, 'Seviper');
+INSERT INTO species (id, name) VALUES (349, 'Lunatone');
+INSERT INTO species (id, name) VALUES (350, 'Solrock');
+INSERT INTO species (id, name) VALUES (351, 'Barboach');
+INSERT INTO species (id, name) VALUES (352, 'Whiscash');
+INSERT INTO species (id, name) VALUES (353, 'Corphish');
+INSERT INTO species (id, name) VALUES (354, 'Crawdaunt');
+INSERT INTO species (id, name) VALUES (355, 'Baltoy');
+INSERT INTO species (id, name) VALUES (356, 'Claydol');
+INSERT INTO species (id, name) VALUES (357, 'Lileep');
+INSERT INTO species (id, name) VALUES (358, 'Cradily');
+INSERT INTO species (id, name) VALUES (359, 'Anorith');
+INSERT INTO species (id, name) VALUES (360, 'Armaldo');
+INSERT INTO species (id, name) VALUES (361, 'Feebas');
+INSERT INTO species (id, name) VALUES (362, 'Milotic');
+INSERT INTO species (id, name) VALUES (363, 'Castform');
+INSERT INTO species (id, name) VALUES (364, 'Kecleon');
+INSERT INTO species (id, name) VALUES (365, 'Shuppet');
+INSERT INTO species (id, name) VALUES (366, 'Banette');
+INSERT INTO species (id, name) VALUES (367, 'Duskull');
+INSERT INTO species (id, name) VALUES (368, 'Dusclops');
+INSERT INTO species (id, name) VALUES (369, 'Tropius');
+INSERT INTO species (id, name) VALUES (370, 'Chimecho');
+INSERT INTO species (id, name) VALUES (371, 'Absol');
+INSERT INTO species (id, name) VALUES (372, 'Wynaut');
+INSERT INTO species (id, name) VALUES (373, 'Snorunt');
+INSERT INTO species (id, name) VALUES (374, 'Glalie');
+INSERT INTO species (id, name) VALUES (375, 'Spheal');
+INSERT INTO species (id, name) VALUES (376, 'Sealeo');
+INSERT INTO species (id, name) VALUES (377, 'Walrein');
+INSERT INTO species (id, name) VALUES (378, 'Clamperl');
+INSERT INTO species (id, name) VALUES (379, 'Huntail');
+INSERT INTO species (id, name) VALUES (380, 'Gorebyss');
+INSERT INTO species (id, name) VALUES (381, 'Relicanth');
+INSERT INTO species (id, name) VALUES (382, 'Luvdisc');
+INSERT INTO species (id, name) VALUES (383, 'Bagon');
+INSERT INTO species (id, name) VALUES (384, 'Shelgon');
+INSERT INTO species (id, name) VALUES (385, 'Salamence');
+INSERT INTO species (id, name) VALUES (386, 'Beldum');
+INSERT INTO species (id, name) VALUES (387, 'Metang');
+INSERT INTO species (id, name) VALUES (388, 'Metagross');
+INSERT INTO species (id, name) VALUES (389, 'Regirock');
+INSERT INTO species (id, name) VALUES (390, 'Regice');
+INSERT INTO species (id, name) VALUES (391, 'Registeel');
+INSERT INTO species (id, name) VALUES (392, 'Latias');
+INSERT INTO species (id, name) VALUES (393, 'Latios');
+INSERT INTO species (id, name) VALUES (394, 'Kyogre');
+INSERT INTO species (id, name) VALUES (395, 'Groudon');
+INSERT INTO species (id, name) VALUES (396, 'Rayquaza');
+INSERT INTO species (id, name) VALUES (397, 'Jirachi');
+INSERT INTO species (id, name) VALUES (398, 'Deoxys');
+INSERT INTO species (id, name) VALUES (399, 'Turtwig');
+INSERT INTO species (id, name) VALUES (400, 'Grotle');
+INSERT INTO species (id, name) VALUES (401, 'Torterra');
+INSERT INTO species (id, name) VALUES (402, 'Chimchar');
+INSERT INTO species (id, name) VALUES (403, 'Monferno');
+INSERT INTO species (id, name) VALUES (404, 'Infernape');
+INSERT INTO species (id, name) VALUES (405, 'Piplup');
+INSERT INTO species (id, name) VALUES (406, 'Prinplup');
+INSERT INTO species (id, name) VALUES (407, 'Empoleon');
+INSERT INTO species (id, name) VALUES (408, 'Starly');
+INSERT INTO species (id, name) VALUES (409, 'Staravia');
+INSERT INTO species (id, name) VALUES (410, 'Staraptor');
+INSERT INTO species (id, name) VALUES (411, 'Bidoof');
+INSERT INTO species (id, name) VALUES (412, 'Bibarel');
+INSERT INTO species (id, name) VALUES (413, 'Kricketot');
+INSERT INTO species (id, name) VALUES (414, 'Kricketune');
+INSERT INTO species (id, name) VALUES (415, 'Shinx');
+INSERT INTO species (id, name) VALUES (416, 'Luxio');
+INSERT INTO species (id, name) VALUES (417, 'Luxray');
+INSERT INTO species (id, name) VALUES (418, 'Budew');
+INSERT INTO species (id, name) VALUES (419, 'Roserade');
+INSERT INTO species (id, name) VALUES (420, 'Cranidos');
+INSERT INTO species (id, name) VALUES (421, 'Rampardos');
+INSERT INTO species (id, name) VALUES (422, 'Shieldon');
+INSERT INTO species (id, name) VALUES (423, 'Bastiodon');
+INSERT INTO species (id, name) VALUES (424, 'Burmy');
+INSERT INTO species (id, name) VALUES (425, 'Wormadam');
+INSERT INTO species (id, name) VALUES (426, 'Mothim');
+INSERT INTO species (id, name) VALUES (427, 'Combee');
+INSERT INTO species (id, name) VALUES (428, 'Vespiquen');
+INSERT INTO species (id, name) VALUES (429, 'Pachirisu');
+INSERT INTO species (id, name) VALUES (430, 'Buizel');
+INSERT INTO species (id, name) VALUES (431, 'Floatzel');
+INSERT INTO species (id, name) VALUES (432, 'Cherubi');
+INSERT INTO species (id, name) VALUES (433, 'Cherrim');
+INSERT INTO species (id, name) VALUES (434, 'Shellos');
+INSERT INTO species (id, name) VALUES (435, 'Gastrodon');
+INSERT INTO species (id, name) VALUES (436, 'Ambipom');
+INSERT INTO species (id, name) VALUES (437, 'Drifloon');
+INSERT INTO species (id, name) VALUES (438, 'Drifblim');
+INSERT INTO species (id, name) VALUES (439, 'Buneary');
+INSERT INTO species (id, name) VALUES (440, 'Lopunny');
+INSERT INTO species (id, name) VALUES (441, 'Mismagius');
+INSERT INTO species (id, name) VALUES (442, 'Honchkrow');
+INSERT INTO species (id, name) VALUES (443, 'Glameow');
+INSERT INTO species (id, name) VALUES (444, 'Purugly');
+INSERT INTO species (id, name) VALUES (445, 'Chingling');
+INSERT INTO species (id, name) VALUES (446, 'Stunky');
+INSERT INTO species (id, name) VALUES (447, 'Skuntank');
+INSERT INTO species (id, name) VALUES (448, 'Bronzor');
+INSERT INTO species (id, name) VALUES (449, 'Bronzong');
+INSERT INTO species (id, name) VALUES (450, 'Bonsly');
+INSERT INTO species (id, name) VALUES (451, 'Mime Jr.');
+INSERT INTO species (id, name) VALUES (452, 'Happiny');
+INSERT INTO species (id, name) VALUES (453, 'Chatot');
+INSERT INTO species (id, name) VALUES (454, 'Spiritomb');
+INSERT INTO species (id, name) VALUES (455, 'Gible');
+INSERT INTO species (id, name) VALUES (456, 'Gabite');
+INSERT INTO species (id, name) VALUES (457, 'Garchomp');
+INSERT INTO species (id, name) VALUES (458, 'Munchlax');
+INSERT INTO species (id, name) VALUES (459, 'Riolu');
+INSERT INTO species (id, name) VALUES (460, 'Lucario');
+INSERT INTO species (id, name) VALUES (461, 'Hippopotas');
+INSERT INTO species (id, name) VALUES (462, 'Hippowdon');
+INSERT INTO species (id, name) VALUES (463, 'Skorupi');
+INSERT INTO species (id, name) VALUES (464, 'Drapion');
+INSERT INTO species (id, name) VALUES (465, 'Croagunk');
+INSERT INTO species (id, name) VALUES (466, 'Toxicroak');
+INSERT INTO species (id, name) VALUES (467, 'Carnivine');
+INSERT INTO species (id, name) VALUES (468, 'Finneon');
+INSERT INTO species (id, name) VALUES (469, 'Lumineon');
+INSERT INTO species (id, name) VALUES (470, 'Mantyke');
+INSERT INTO species (id, name) VALUES (471, 'Snover');
+INSERT INTO species (id, name) VALUES (472, 'Abomasnow');
+INSERT INTO species (id, name) VALUES (473, 'Weavile');
+INSERT INTO species (id, name) VALUES (474, 'Magnezone');
+INSERT INTO species (id, name) VALUES (475, 'Lickilicky');
+INSERT INTO species (id, name) VALUES (476, 'Rhyperior');
+INSERT INTO species (id, name) VALUES (477, 'Tangrowth');
+INSERT INTO species (id, name) VALUES (478, 'Electivire');
+INSERT INTO species (id, name) VALUES (479, 'Magmortar');
+INSERT INTO species (id, name) VALUES (480, 'Togekiss');
+INSERT INTO species (id, name) VALUES (481, 'Yanmega');
+INSERT INTO species (id, name) VALUES (482, 'Leafeon');
+INSERT INTO species (id, name) VALUES (483, 'Glaceon');
+INSERT INTO species (id, name) VALUES (484, 'Gliscor');
+INSERT INTO species (id, name) VALUES (485, 'Mamoswine');
+INSERT INTO species (id, name) VALUES (486, 'Porygon-Z');
+INSERT INTO species (id, name) VALUES (487, 'Gallade');
+INSERT INTO species (id, name) VALUES (488, 'Probopass');
+INSERT INTO species (id, name) VALUES (489, 'Dusknoir');
+INSERT INTO species (id, name) VALUES (490, 'Froslass');
+INSERT INTO species (id, name) VALUES (491, 'Rotom');
+INSERT INTO species (id, name) VALUES (492, 'Uxie');
+INSERT INTO species (id, name) VALUES (493, 'Mesprit');
+INSERT INTO species (id, name) VALUES (494, 'Azelf');
+INSERT INTO species (id, name) VALUES (495, 'Dialga');
+INSERT INTO species (id, name) VALUES (496, 'Palkia');
+INSERT INTO species (id, name) VALUES (497, 'Heatran');
+INSERT INTO species (id, name) VALUES (498, 'Regigigas');
+INSERT INTO species (id, name) VALUES (499, 'Giratina');
+INSERT INTO species (id, name) VALUES (500, 'Cresselia');
+INSERT INTO species (id, name) VALUES (501, 'Phione');
+INSERT INTO species (id, name) VALUES (502, 'Manaphy');
+INSERT INTO species (id, name) VALUES (503, 'Darkrai');
+INSERT INTO species (id, name) VALUES (504, 'Shaymin');
+INSERT INTO species (id, name) VALUES (505, 'Arceus');
+INSERT INTO species (id, name) VALUES (506, 'Victini');
+INSERT INTO species (id, name) VALUES (507, 'Snivy');
+INSERT INTO species (id, name) VALUES (508, 'Servine');
+INSERT INTO species (id, name) VALUES (509, 'Serperior');
+INSERT INTO species (id, name) VALUES (510, 'Tepig');
+INSERT INTO species (id, name) VALUES (511, 'Pignite');
+INSERT INTO species (id, name) VALUES (512, 'Emboar');
+INSERT INTO species (id, name) VALUES (513, 'Oshawott');
+INSERT INTO species (id, name) VALUES (514, 'Dewott');
+INSERT INTO species (id, name) VALUES (515, 'Samurott');
+INSERT INTO species (id, name) VALUES (516, 'Patrat');
+INSERT INTO species (id, name) VALUES (517, 'Watchog');
+INSERT INTO species (id, name) VALUES (518, 'Lillipup');
+INSERT INTO species (id, name) VALUES (519, 'Herdier');
+INSERT INTO species (id, name) VALUES (520, 'Stoutland');
+INSERT INTO species (id, name) VALUES (521, 'Purrloin');
+INSERT INTO species (id, name) VALUES (522, 'Liepard');
+INSERT INTO species (id, name) VALUES (523, 'Pansage');
+INSERT INTO species (id, name) VALUES (524, 'Simisage');
+INSERT INTO species (id, name) VALUES (525, 'Pansear');
+INSERT INTO species (id, name) VALUES (526, 'Simisear');
+INSERT INTO species (id, name) VALUES (527, 'Panpour');
+INSERT INTO species (id, name) VALUES (528, 'Simipour');
+INSERT INTO species (id, name) VALUES (529, 'Munna');
+INSERT INTO species (id, name) VALUES (530, 'Musharna');
+INSERT INTO species (id, name) VALUES (531, 'Pidove');
+INSERT INTO species (id, name) VALUES (532, 'Tranquill');
+INSERT INTO species (id, name) VALUES (533, 'Unfezant');
+INSERT INTO species (id, name) VALUES (534, 'Blitzle');
+INSERT INTO species (id, name) VALUES (535, 'Zebstrika');
+INSERT INTO species (id, name) VALUES (536, 'Roggenrola');
+INSERT INTO species (id, name) VALUES (537, 'Boldore');
+INSERT INTO species (id, name) VALUES (538, 'Gigalith');
+INSERT INTO species (id, name) VALUES (539, 'Woobat');
+INSERT INTO species (id, name) VALUES (540, 'Swoobat');
+INSERT INTO species (id, name) VALUES (541, 'Drilbur');
+INSERT INTO species (id, name) VALUES (542, 'Excadrill');
+INSERT INTO species (id, name) VALUES (543, 'Audino');
+INSERT INTO species (id, name) VALUES (544, 'Timburr');
+INSERT INTO species (id, name) VALUES (545, 'Gurdurr');
+INSERT INTO species (id, name) VALUES (546, 'Conkeldurr');
+INSERT INTO species (id, name) VALUES (547, 'Tympole');
+INSERT INTO species (id, name) VALUES (548, 'Palpitoad');
+INSERT INTO species (id, name) VALUES (549, 'Seismitoad');
+INSERT INTO species (id, name) VALUES (550, 'Throh');
+INSERT INTO species (id, name) VALUES (551, 'Sawk');
+INSERT INTO species (id, name) VALUES (552, 'Sewaddle');
+INSERT INTO species (id, name) VALUES (553, 'Swadloon');
+INSERT INTO species (id, name) VALUES (554, 'Leavanny');
+INSERT INTO species (id, name) VALUES (555, 'Venipede');
+INSERT INTO species (id, name) VALUES (556, 'Whirlipede');
+INSERT INTO species (id, name) VALUES (557, 'Scolipede');
+INSERT INTO species (id, name) VALUES (558, 'Cottonee');
+INSERT INTO species (id, name) VALUES (559, 'Whimsicott');
+INSERT INTO species (id, name) VALUES (560, 'Petilil');
+INSERT INTO species (id, name) VALUES (561, 'Lilligant');
+INSERT INTO species (id, name) VALUES (562, 'Lilligant Hisuian Form');
+INSERT INTO species (id, name) VALUES (563, 'Basculin');
+INSERT INTO species (id, name) VALUES (564, 'Basculin White-Striped Form');
+INSERT INTO species (id, name) VALUES (565, 'Sandile');
+INSERT INTO species (id, name) VALUES (566, 'Krokorok');
+INSERT INTO species (id, name) VALUES (567, 'Krookodile');
+INSERT INTO species (id, name) VALUES (568, 'Darumaka');
+INSERT INTO species (id, name) VALUES (569, 'Darmanitan');
+INSERT INTO species (id, name) VALUES (570, 'Darmanitan Galarian Form');
+INSERT INTO species (id, name) VALUES (571, 'Darmanitan Galarian Form Zen Mode');
+INSERT INTO species (id, name) VALUES (572, 'Maractus');
+INSERT INTO species (id, name) VALUES (573, 'Dwebble');
+INSERT INTO species (id, name) VALUES (574, 'Crustle');
+INSERT INTO species (id, name) VALUES (575, 'Scraggy');
+INSERT INTO species (id, name) VALUES (576, 'Scrafty');
+INSERT INTO species (id, name) VALUES (577, 'Sigilyph');
+INSERT INTO species (id, name) VALUES (578, 'Yamask');
+INSERT INTO species (id, name) VALUES (579, 'Cofagrigus');
+INSERT INTO species (id, name) VALUES (580, 'Tirtouga');
+INSERT INTO species (id, name) VALUES (581, 'Carracosta');
+INSERT INTO species (id, name) VALUES (582, 'Archen');
+INSERT INTO species (id, name) VALUES (583, 'Archeops');
+INSERT INTO species (id, name) VALUES (584, 'Trubbish');
+INSERT INTO species (id, name) VALUES (585, 'Garbodor');
+INSERT INTO species (id, name) VALUES (586, 'Zorua');
+INSERT INTO species (id, name) VALUES (587, 'Zorua Hisuian Form');
+INSERT INTO species (id, name) VALUES (588, 'Zoroark');
+INSERT INTO species (id, name) VALUES (589, 'Zoroark Hisuian Form');
+INSERT INTO species (id, name) VALUES (590, 'Minccino');
+INSERT INTO species (id, name) VALUES (591, 'Cinccino');
+INSERT INTO species (id, name) VALUES (592, 'Gothita');
+INSERT INTO species (id, name) VALUES (593, 'Gothorita');
+INSERT INTO species (id, name) VALUES (594, 'Gothitelle');
+INSERT INTO species (id, name) VALUES (595, 'Solosis');
+INSERT INTO species (id, name) VALUES (596, 'Duosion');
+INSERT INTO species (id, name) VALUES (597, 'Reuniclus');
+INSERT INTO species (id, name) VALUES (598, 'Ducklett');
+INSERT INTO species (id, name) VALUES (599, 'Swanna');
+INSERT INTO species (id, name) VALUES (600, 'Vanillite');
+INSERT INTO species (id, name) VALUES (601, 'Vanillish');
+INSERT INTO species (id, name) VALUES (602, 'Vanilluxe');
+INSERT INTO species (id, name) VALUES (603, 'Deerling');
+INSERT INTO species (id, name) VALUES (604, 'Sawsbuck');
+INSERT INTO species (id, name) VALUES (605, 'Emolga');
+INSERT INTO species (id, name) VALUES (606, 'Karrablast');
+INSERT INTO species (id, name) VALUES (607, 'Escavalier');
+INSERT INTO species (id, name) VALUES (608, 'Foongus');
+INSERT INTO species (id, name) VALUES (609, 'Amoonguss');
+INSERT INTO species (id, name) VALUES (610, 'Frillish');
+INSERT INTO species (id, name) VALUES (611, 'Jellicent');
+INSERT INTO species (id, name) VALUES (612, 'Alomomola');
+INSERT INTO species (id, name) VALUES (613, 'Joltik');
+INSERT INTO species (id, name) VALUES (614, 'Galvantula');
+INSERT INTO species (id, name) VALUES (615, 'Ferroseed');
+INSERT INTO species (id, name) VALUES (616, 'Ferrothorn');
+INSERT INTO species (id, name) VALUES (617, 'Klink');
+INSERT INTO species (id, name) VALUES (618, 'Klang');
+INSERT INTO species (id, name) VALUES (619, 'Klinklang');
+INSERT INTO species (id, name) VALUES (620, 'Tynamo');
 
--- Dados para weaknesses
-INSERT INTO weaknesses (id, pokemon_id, pokemon_name, weaknesses) VALUES
-(1, 1, 'Bulbasaur', ['Fogo', 'Gelo', 'Psíquico', 'Voador']),
-(2, 2, 'Ivysaur', ['Fogo', 'Gelo', 'Voador']),
-(3, 3, 'Venusaur', ['Fogo', 'Gelo', 'Psíquico', 'Voador']),
-(4, 4, 'Mega Venusaur', ['Fogo', 'Gelo', 'Psíquico', 'Voador']),
-(5, 5, 'Charmander', ['Água', 'Pedra', 'Terrestre']),
-(6, 6, 'Charmeleon', ['Água', 'Pedra', 'Terrestre']),
-(7, 7, 'Charizard', ['Água', 'Elétrico', 'Pedra']),
-(8, 8, 'Mega Charizard X', ['Dragão', 'Pedra', 'Terrestre']),
-(9, 9, 'Mega Charizard Y', ['Água', 'Elétrico', 'Pedra']),
-(10, 10, 'Squirtle', ['Elétrico', 'Planta']),
-(11, 11, 'Wartortle', ['Elétrico', 'Planta']),
-(12, 12, 'Blastoise', ['Elétrico', 'Planta']),
-(13, 13, 'Mega Blastoise', ['Elétrico', 'Planta']),
-(14, 14, 'Caterpie', ['Fogo', 'Pedra', 'Voador']),
-(15, 15, 'Metapod', ['Fogo', 'Pedra', 'Voador']),
-(16, 16, 'Butterfree', ['Elétrico', 'Fogo', 'Gelo', 'Pedra', 'Voador']),
-(17, 17, 'Weedle', ['Fogo', 'Pedra', 'Psíquico', 'Voador']),
-(18, 18, 'Kakuna', ['Fogo', 'Pedra', 'Psíquico', 'Voador']),
-(19, 13, 'Beedrill', ['Fogo', 'Pedra', 'Psíquico', 'Voador']),
-(20, 14, 'Mega Beedrill', ['Fogo', 'Pedra', 'Psíquico', 'Voador']);
+-- Dados da tabela: stats (origem: 07_stats.json)
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (1, 318, 45, 49, 49, 65, 65, 45);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (2, 405, 60, 62, 63, 80, 80, 60);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (3, 525, 80, 82, 83, 100, 100, 80);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (4, 625, 80, 100, 123, 122, 120, 80);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (5, 309, 39, 52, 43, 60, 50, 65);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (6, 405, 58, 64, 58, 80, 65, 80);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (7, 534, 78, 84, 78, 109, 85, 100);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (8, 634, 78, 130, 111, 130, 85, 100);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (9, 634, 78, 104, 78, 159, 115, 100);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (10, 314, 44, 48, 65, 50, 64, 43);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (11, 405, 59, 63, 80, 65, 80, 58);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (12, 530, 79, 83, 100, 85, 105, 78);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (13, 630, 79, 103, 120, 135, 115, 78);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (14, 195, 45, 30, 35, 20, 20, 45);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (15, 205, 50, 20, 55, 25, 25, 30);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (16, 395, 60, 45, 50, 90, 80, 70);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (17, 195, 40, 35, 30, 20, 20, 50);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (18, 205, 45, 25, 50, 25, 25, 35);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (19, 395, 65, 90, 40, 45, 80, 75);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (20, 495, 65, 150, 40, 15, 80, 145);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (21, 525, 80, 82, 83, 100, 100, 80);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (22, 534, 78, 84, 78, 109, 85, 100);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (23, 530, 79, 83, 100, 85, 105, 78);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (24, 485, 90, 85, 50, 95, 85, 110);
+INSERT INTO stats (id, total, hp, attack, defense, sp_atk, sp_def, speed) VALUES (25, 320, 35, 55, 40, 50, 50, 90);
 
--- Dados para pokemon
-INSERT INTO pokemon (id, number, name, description, height, weight, stats_id, generation_id, species_id, region_id, evolution_chain_id, gender, gender_rate_value, egg_cycles, egg_group_ids, type_ids, abilities, sprites) VALUES
-(1, '0001', 'Bulbasaur', 'Por um tempo após seu nascimento, ele usa os nutrientes armazenados na semente em suas costas para crescer.', 0.7, 6.9, 1, 1, 1, 1, 1, {'male': 87.5, 'female': 12.5}, 1, 20, [7, 10], [5, 8], [{'ability_id': 65, 'is_hidden': False}, {'ability_id': 66, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/1.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/1.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/1.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/1.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/1.gif', 'front_shiny_female': None}}}),
-(2, '0002', 'Ivysaur', 'Quando o bulbo nas suas costas fica grande, parece que ele perde a capacidade de ficar de pé sobre duas pernas.', 1.0, 13.0, 2, 1, 2, 1, 1, {'male': 87.5, 'female': 12.5}, 1, 20, [7, 10], [5, 8], [{'ability_id': 65, 'is_hidden': False}, {'ability_id': 66, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/2.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/2.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/2.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/2.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/2.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/2.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/2.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/2.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/2.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/2.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/2.gif', 'front_shiny_female': None}}}),
-(3, '0003', 'Venusaur', 'A flor nas suas costas floresce quando absorve a luz solar. A floração libera um aroma que acalma as emoções das pessoas.', 2.0, 100.0, 3, 1, 3, 1, 1, {'male': 87.5, 'female': 12.5}, 1, 20, [7, 10], [5, 8], [{'ability_id': 65, 'is_hidden': False}, {'ability_id': 66, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/3.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/3.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/3.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/3.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/3.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/3.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/3.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/3.gif', 'front_shiny_female': None}}}),
-(4, '0003', 'Mega Venusaur', 'A flor nas suas costas floresce quando absorve a luz solar. A floração libera um aroma que acalma as emoções das pessoas.', 2.4, 155.5, 4, 6, 3, 1, 1, {'male': 87.5, 'female': 12.5}, 1, 20, [7, 10], [5, 8], [{'ability_id': 169, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3-mega.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/3-mega.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3-mega.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3-mega.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/3.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/3.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/3.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/3.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/3.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/3.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/3.gif', 'front_shiny_female': None}}}),
-(5, '0004', 'Charmander', 'A chama na ponta da sua cauda indica a sua força vital. Se estiver saudável, a chama arde vigorosamente.', 0.6, 8.5, 5, 1, 4, 1, 2, {'male': 87.5, 'female': 12.5}, 1, 20, [3, 5], [2], [{'ability_id': 66, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/4.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/4.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/4.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/4.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/4.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/4.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/4.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/4.gif', 'front_shiny_female': None}}}),
-(6, '0005', 'Charmeleon', 'Ele ataca implacavelmente usando suas garras afiadas. Seus inimigos recuam diante do brilho de suas garras.', 1.1, 19.0, 6, 1, 5, 1, 2, {'male': 87.5, 'female': 12.5}, 1, 20, [3, 5], [2], [{'ability_id': 66, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/5.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/5.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/5.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/5.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/5.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/5.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/5.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/5.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/5.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/5.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/5.gif', 'front_shiny_female': None}}}),
-(7, '0006', 'Charizard', 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', 1.7, 90.5, 7, 1, 6, 1, 2, {'male': 87.5, 'female': 12.5}, 1, 20, [3, 5], [2, 10], [{'ability_id': 66, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif', 'front_shiny_female': None}}}),
-(8, '0006', 'Mega Charizard X', 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', 1.7, 110.5, 8, 6, 6, 1, 2, {'male': 87.5, 'female': 12.5}, 1, 20, [3, 5], [2, 16], [{'ability_id': 154, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6-mega-x.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6-mega-x.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6-mega-x.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6-mega-x.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif', 'front_shiny_female': None}}}),
-(9, '0006', 'Mega Charizard Y', 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', 1.7, 100.5, 9, 6, 6, 1, 2, {'male': 87.5, 'female': 12.5}, 1, 20, [3, 5], [2, 10], [{'ability_id': 174, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6-mega-y.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6-mega-y.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6-mega-y.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6-mega-y.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif', 'front_shiny_female': None}}}),
-(10, '0007', 'Squirtle', 'Quando retrai seu longo pescoço para dentro de sua concha, ele jorra água com força prodigiosa.', 0.5, 9.0, 10, 1, 7, 1, 3, {'male': 87.5, 'female': 12.5}, 1, 20, [11, 13], [3], [{'ability_id': 67, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/7.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/7.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/7.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/7.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/7.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/7.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/7.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/7.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/7.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/7.gif', 'front_shiny_female': None}}}),
-(11, '0008', 'Wartortle', 'Sua cauda grande e peluda é um símbolo de longevidade, tornando-o popular entre as pessoas idosas.', 1.0, 22.5, 11, 1, 8, 1, 3, {'male': 87.5, 'female': 12.5}, 1, 20, [11, 13], [3], [{'ability_id': 67, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/8.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/8.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/8.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/8.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/8.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/8.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/8.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/8.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/8.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/8.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/8.gif', 'front_shiny_female': None}}}),
-(12, '0009', 'Blastoise', 'Seus jatos de água que se projetam de sua concha possuem um poder de impacto que pode perfurar até mesmo o aço mais grosso.', 1.6, 85.5, 12, 1, 9, 1, 3, {'male': 87.5, 'female': 12.5}, 1, 20, [11, 13], [3], [{'ability_id': 67, 'is_hidden': True}, {'ability_id': 189, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/9.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/9.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/9.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/9.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/9.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/9.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/9.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/9.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/9.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/9.gif', 'front_shiny_female': None}}}),
-(13, '0009', 'Mega Blastoise', 'Seus jatos de água que se projetam de sua concha possuem um poder de impacto que pode perfurar até mesmo o aço mais grosso.', 1.6, 101.1, 13, 6, 9, 1, 3, {'male': 87.5, 'female': 12.5}, 1, 20, [11, 13], [3], [{'ability_id': 186, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/9-mega.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/9-mega.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9-mega.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/9-mega.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/9.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/9.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/9.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/9.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/9.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/9.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/9.gif', 'front_shiny_female': None}}}),
-(14, '0010', 'Caterpie', 'Para se proteger, ele libera um cheiro horrível de suas antenas. Tem um apetite voraz.', 0.3, 2.9, 14, 1, 10, 1, 4, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [7], [{'ability_id': 50, 'is_hidden': False}, {'ability_id': 51, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/10.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/10.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/10.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/10.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/10.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/10.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/10.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/10.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/10.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/10.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/10.gif', 'front_shiny_female': None}}}),
-(15, '0011', 'Metapod', 'Seu corpo é envolto em uma casca dura como aço. Ele se prepara para sua evolução dentro da casca.', 0.7, 9.9, 15, 1, 11, 1, 4, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [7], [{'ability_id': 64, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/11.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/11.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/11.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/11.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/11.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/11.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/11.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/11.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/11.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/11.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/11.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/11.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/11.gif', 'front_shiny_female': None}}}),
-(16, '0012', 'Butterfree', 'Adora o néctar das flores. Ele pode localizar flores que possuem até mesmo a menor quantidade de pólen.', 1.1, 32.0, 16, 1, 12, 1, 4, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [7, 10], [{'ability_id': 46, 'is_hidden': False}, {'ability_id': 47, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/12.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/12.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/12.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/12.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/12.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/12.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/12.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/12.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/12.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/12.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/12.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/12.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/12.gif', 'front_shiny_female': None}}}),
-(17, '0013', 'Weedle', 'Seu sentido de olfato é incrivelmente aguçado. Ele consegue identificar seus tipos favoritos de folhas em milhas de distância.', 0.3, 3.2, 17, 1, 13, 1, 5, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [2, 8], [{'ability_id': 50, 'is_hidden': False}, {'ability_id': 51, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/13.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/13.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/13.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/13.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/13.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/13.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/13.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/13.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/13.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/13.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/13.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/13.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/13.gif', 'front_shiny_female': None}}}),
-(18, '0014', 'Kakuna', 'Ele fica quase imóvel enquanto se agarra a uma árvore, aguardando sua evolução. A temperatura do corpo fica alta.', 0.6, 10.0, 18, 1, 14, 1, 5, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [7, 8], [{'ability_id': 61, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/14.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/14.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/14.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/14.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/14.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/14.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/14.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/14.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/14.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/14.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/14.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/14.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/14.gif', 'front_shiny_female': None}}}),
-(19, '0015', 'Beedrill', 'Tem três grandes ferrões venenosos, um em cada braço e um na cauda. Eles são usados para atacar seus inimigos sem parar.', 1.0, 29.5, 19, 1, 15, 1, 5, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [2, 8], [{'ability_id': 61, 'is_hidden': False}, {'ability_id': 62, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/15.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/15.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/15.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/15.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/15.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/15.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/15.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/15.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/15.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/15.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/15.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/15.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/15.gif', 'front_shiny_female': None}}}),
-(20, '0015', 'Mega Beedrill', 'Tem três grandes ferrões venenosos, um em cada braço e um na cauda. Eles são usados para atacar seus inimigos sem parar.', 1.4, 40.5, 20, 6, 15, 1, 5, {'male': 50.0, 'female': 50.0}, 1, 15, [2], [2, 8], [{'ability_id': 1, 'is_hidden': False}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/15-mega.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/15-mega.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/15-mega.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/15-mega.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/15.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/15.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/15.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/15.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/15.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/15.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/15.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/15.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/15.gif', 'front_shiny_female': None}}}),
-(21, '0016', 'Pidgey', 'É dócil e prefere evitar brigas. No entanto, se for provocado, ele revida vigorosamente.', 0.3, 1.8, 21, 1, 16, 1, 6, {'male': 50.0, 'female': 50.0}, 1, 15, [6, 1], [1, 10], [{'ability_id': 190, 'is_hidden': False}, {'ability_id': 43, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/16.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/16.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/16.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/16.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/16.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/16.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/16.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/16.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/16.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/16.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/16.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/16.gif', 'front_shiny_female': None}}}),
-(22, '0017', 'Pidgeotto', 'Este Pokémon é um protetor feroz de seu vasto território. Ele bica impiedosamente qualquer intruso.', 1.1, 30.0, 22, 1, 17, 1, 6, {'male': 50.0, 'female': 50.0}, 1, 15, [6, 1], [1, 10], [{'ability_id': 190, 'is_hidden': False}, {'ability_id': 43, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/17.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/17.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/17.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/17.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/17.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/17.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/17.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/17.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/17.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/17.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/17.gif', 'front_shiny_female': None}}}),
-(23, '0018', 'Pidgeot', 'Com suas asas magníficas, ele pode voar a velocidades Mach 2. É temido por todos os inimigos.', 1.5, 39.5, 23, 1, 18, 1, 6, {'male': 50.0, 'female': 50.0}, 1, 15, [6, 1], [1, 10], [{'ability_id': 190, 'is_hidden': False}, {'ability_id': 43, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/18.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/18.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/18.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/18.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/18.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/18.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/18.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/18.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/18.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/18.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/18.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/18.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/18.gif', 'front_shiny_female': None}}}),
-(24, '0026', 'Raichu', 'Se sua bolsa elétrica for sobrecarregada, ele libera eletricidade. Pode até eletrocutar a si mesmo, então é bom ter cuidado.', 0.8, 30.0, 24, 1, 26, 1, 10, {'male': 50.0, 'female': 50.0}, 1, 10, [5, 4], [4], [{'ability_id': 18, 'is_hidden': False}, {'ability_id': 19, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/26.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/26.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/26.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/26.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/26.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/26.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/26.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/26.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/26.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/26.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/26.gif', 'front_shiny_female': None}}}),
-(25, '0025', 'Pikachu', 'Este Pokémon tem bolsas elétricas nas bochechas. Elas parecem carregar eletricidade durante a noite enquanto ele dorme.', 0.4, 6.0, 25, 1, 25, 1, 10, {'male': 50.0, 'female': 50.0}, 1, 10, [5, 4], [4], [{'ability_id': 18, 'is_hidden': False}, {'ability_id': 19, 'is_hidden': True}], {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/25.png', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png', 'front_shiny_female': None, 'other': {'dream_world': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg', 'front_female': None}, 'home': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/25.png', 'front_shiny_female': None}, 'official-artwork': {'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png', 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/25.png'}, 'showdown': {'back_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/25.gif', 'back_female': None, 'back_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/25.gif', 'back_shiny_female': None, 'front_default': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif', 'front_female': None, 'front_shiny': 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/25.gif', 'front_shiny_female': None}}});
+-- Dados da tabela: evolution_chains (origem: 08_evolution_chains.json)
+INSERT INTO evolution_chains (id, chain_data) VALUES (1, '{"pokemon": {"id": 1, "name": "Bulbasaur"}, "evolutions_to": [{"pokemon": {"id": 2, "name": "Ivysaur"}, "condition": {"type": "level_up", "value": 16, "description": "Nível 16"}, "evolutions_to": [{"pokemon": {"id": 3, "name": "Venusaur"}, "condition": {"type": "level_up", "value": 32, "description": "Nível 32"}, "evolutions_to": [{"pokemon": {"id": 4, "name": "Mega Venusaur"}, "condition": {"type": "mega_evolution", "description": "Mega Evolução"}, "evolutions_to": []}]}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (2, '{"pokemon": {"id": 5, "name": "Charmander"}, "evolutions_to": [{"pokemon": {"id": 6, "name": "Charmeleon"}, "condition": {"type": "level_up", "value": 16, "description": "Nível 16"}, "evolutions_to": [{"pokemon": {"id": 7, "name": "Charizard"}, "condition": {"type": "level_up", "value": 36, "description": "Nível 36"}, "evolutions_to": [{"pokemon": {"id": 8, "name": "Mega Charizard X"}, "condition": {"type": "mega_evolution", "description": "Mega Evolução"}, "evolutions_to": []}, {"pokemon": {"id": 9, "name": "Mega Charizard Y"}, "condition": {"type": "mega_evolution", "description": "Mega Evolução"}, "evolutions_to": []}]}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (3, '{"pokemon": {"id": 10, "name": "Squirtle"}, "evolutions_to": [{"pokemon": {"id": 11, "name": "Wartortle"}, "condition": {"type": "level_up", "value": 16, "description": "Nível 16"}, "evolutions_to": [{"pokemon": {"id": 12, "name": "Blastoise"}, "condition": {"type": "level_up", "value": 36, "description": "Nível 36"}, "evolutions_to": [{"pokemon": {"id": 13, "name": "Mega Blastoise"}, "condition": {"type": "mega_evolution", "description": "Mega Evolução"}, "evolutions_to": []}]}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (4, '{"pokemon": {"id": 14, "name": "Caterpie"}, "evolutions_to": [{"pokemon": {"id": 15, "name": "Metapod"}, "condition": {"type": "level_up", "value": 7, "description": "Nível 7"}, "evolutions_to": [{"pokemon": {"id": 16, "name": "Butterfree"}, "condition": {"type": "level_up", "value": 10, "description": "Nível 10"}, "evolutions_to": []}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (5, '{"pokemon": {"id": 17, "name": "Weedle"}, "evolutions_to": [{"pokemon": {"id": 18, "name": "Kakuna"}, "condition": {"type": "level_up", "value": 7, "description": "Nível 7"}, "evolutions_to": [{"pokemon": {"id": 19, "name": "Beedrill"}, "condition": {"type": "level_up", "value": 10, "description": "Nível 10"}, "evolutions_to": [{"pokemon": {"id": 20, "name": "Mega Beedrill"}, "condition": {"type": "mega_evolution", "description": "Mega Evolução"}, "evolutions_to": []}]}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (6, '{"pokemon": {"id": 21, "name": "Pidgey"}, "evolutions_to": [{"pokemon": {"id": 22, "name": "Pidgeotto"}, "condition": {"type": "level_up", "value": 18, "description": "Nível 18"}, "evolutions_to": [{"pokemon": {"id": 23, "name": "Pidgeot"}, "condition": {"type": "level_up", "value": 36, "description": "Nível 36"}, "evolutions_to": []}]}]}');
+INSERT INTO evolution_chains (id, chain_data) VALUES (10, '{"pokemon": {"id": 172, "name": "Pichu"}, "evolutions_to": [{"pokemon": {"id": 25, "name": "Pikachu"}, "condition": {"type": "friendship", "value": "high", "description": "Alta Amizade"}, "evolutions_to": [{"pokemon": {"id": 26, "name": "Raichu"}, "condition": {"type": "item_use", "value": "Thunder Stone", "description": "Usar Pedra Trovão (fora de Alola)"}, "evolutions_to": []}, {"pokemon": {"id": 26, "name": "Alolan Raichu"}, "condition": {"type": "item_use", "value": "Thunder Stone", "description": "Usar Pedra Trovão (em Alola)"}, "evolutions_to": []}]}]}');
 
-COMMIT;
+-- Dados da tabela: pokemons (origem: 09_pokemon.json)
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (1, '0001', 'Bulbasaur', 0.7, 6.9, 'Por um tempo após seu nascimento, ele usa os nutrientes armazenados na semente em suas costas para crescer.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/1.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/1.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/1.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/1.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/1.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/1.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/1.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/1.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/1.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/1.gif", "front_shiny_female": null}}}', 1, 20, 1, 1, 1, 1, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (1, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (1, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (1, 65, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (1, 66, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (1, 7);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (1, 10);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (2, '0002', 'Ivysaur', 1.0, 13.0, 'Quando o bulbo nas suas costas fica grande, parece que ele perde a capacidade de ficar de pé sobre duas pernas.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/2.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/2.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/2.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/2.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/2.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/2.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/2.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/2.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/2.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/2.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/2.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/2.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/2.gif", "front_shiny_female": null}}}', 1, 20, 2, 1, 2, 1, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (2, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (2, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (2, 65, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (2, 66, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (2, 7);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (2, 10);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (3, '0003', 'Venusaur', 2.0, 100.0, 'A flor nas suas costas floresce quando absorve a luz solar. A floração libera um aroma que acalma as emoções das pessoas.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/3.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/3.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/3.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/3.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/3.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/3.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/3.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/3.gif", "front_shiny_female": null}}}', 1, 20, 3, 1, 3, 1, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (3, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (3, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (3, 65, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (3, 66, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (3, 7);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (3, 10);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (4, '0003', 'Mega Venusaur', 2.4, 155.5, 'A flor nas suas costas floresce quando absorve a luz solar. A floração libera um aroma que acalma as emoções das pessoas.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/3-mega.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/3-mega.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/3-mega.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/3-mega.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/3.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/3.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/3.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/3.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/3.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/3.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/3.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/3.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/3.gif", "front_shiny_female": null}}}', 1, 20, 4, 6, 3, 1, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (4, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (4, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (4, 169, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (4, 7);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (4, 10);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (5, '0004', 'Charmander', 0.6, 8.5, 'A chama na ponta da sua cauda indica a sua força vital. Se estiver saudável, a chama arde vigorosamente.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/4.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/4.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/4.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/4.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/4.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/4.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/4.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/4.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/4.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/4.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/4.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/4.gif", "front_shiny_female": null}}}', 1, 20, 5, 1, 4, 1, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (5, 2);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (5, 66, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (5, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (5, 3);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (5, 5);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (6, '0005', 'Charmeleon', 1.1, 19.0, 'Ele ataca implacavelmente usando suas garras afiadas. Seus inimigos recuam diante do brilho de suas garras.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/5.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/5.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/5.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/5.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/5.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/5.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/5.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/5.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/5.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/5.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/5.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/5.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/5.gif", "front_shiny_female": null}}}', 1, 20, 6, 1, 5, 1, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (6, 2);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (6, 66, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (6, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (6, 3);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (6, 5);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (7, '0006', 'Charizard', 1.7, 90.5, 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif", "front_shiny_female": null}}}', 1, 20, 7, 1, 6, 1, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (7, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (7, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (7, 66, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (7, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (7, 3);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (7, 5);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (8, '0006', 'Mega Charizard X', 1.7, 110.5, 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6-mega-x.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6-mega-x.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6-mega-x.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6-mega-x.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif", "front_shiny_female": null}}}', 1, 20, 8, 6, 6, 1, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (8, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (8, 16);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (8, 154, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (8, 3);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (8, 5);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (9, '0006', 'Mega Charizard Y', 1.7, 100.5, 'Charizard voa pelo céu em busca de oponentes fortes. Ele cospe fogo tão quente que derrete qualquer coisa.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/6-mega-y.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/6-mega-y.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/6-mega-y.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/6-mega-y.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/6.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/6.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/6.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/6.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/6.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/6.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/6.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/6.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/6.gif", "front_shiny_female": null}}}', 1, 20, 9, 6, 6, 1, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (9, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (9, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (9, 174, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (9, 3);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (9, 5);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (10, '0007', 'Squirtle', 0.5, 9.0, 'Quando retrai seu longo pescoço para dentro de sua concha, ele jorra água com força prodigiosa.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/7.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/7.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/7.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/7.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/7.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/7.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/7.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/7.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/7.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/7.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/7.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/7.gif", "front_shiny_female": null}}}', 1, 20, 10, 1, 7, 1, 3);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (10, 3);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (10, 67, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (10, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (10, 11);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (10, 13);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (11, '0008', 'Wartortle', 1.0, 22.5, 'Sua cauda grande e peluda é um símbolo de longevidade, tornando-o popular entre as pessoas idosas.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/8.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/8.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/8.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/8.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/8.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/8.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/8.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/8.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/8.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/8.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/8.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/8.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/8.gif", "front_shiny_female": null}}}', 1, 20, 11, 1, 8, 1, 3);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (11, 3);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (11, 67, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (11, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (11, 11);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (11, 13);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (12, '0009', 'Blastoise', 1.6, 85.5, 'Seus jatos de água que se projetam de sua concha possuem um poder de impacto que pode perfurar até mesmo o aço mais grosso.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/9.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/9.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/9.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/9.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/9.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/9.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/9.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/9.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/9.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/9.gif", "front_shiny_female": null}}}', 1, 20, 12, 1, 9, 1, 3);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (12, 3);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (12, 67, True);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (12, 189, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (12, 11);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (12, 13);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (13, '0009', 'Mega Blastoise', 1.6, 101.1, 'Seus jatos de água que se projetam de sua concha possuem um poder de impacto que pode perfurar até mesmo o aço mais grosso.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/9-mega.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/9-mega.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/9-mega.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/9-mega.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/9.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/9.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/9.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/9.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/9.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/9.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/9.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/9.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/9.gif", "front_shiny_female": null}}}', 1, 20, 13, 6, 9, 1, 3);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (13, 3);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (13, 186, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (13, 11);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (13, 13);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (14, '0010', 'Caterpie', 0.3, 2.9, 'Para se proteger, ele libera um cheiro horrível de suas antenas. Tem um apetite voraz.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/10.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/10.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/10.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/10.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/10.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/10.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/10.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/10.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/10.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/10.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/10.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/10.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/10.gif", "front_shiny_female": null}}}', 1, 15, 14, 1, 10, 1, 4);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (14, 7);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (14, 50, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (14, 51, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (14, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (15, '0011', 'Metapod', 0.7, 9.9, 'Seu corpo é envolto em uma casca dura como aço. Ele se prepara para sua evolução dentro da casca.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/11.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/11.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/11.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/11.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/11.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/11.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/11.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/11.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/11.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/11.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/11.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/11.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/11.gif", "front_shiny_female": null}}}', 1, 15, 15, 1, 11, 1, 4);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (15, 7);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (15, 64, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (15, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (16, '0012', 'Butterfree', 1.1, 32.0, 'Adora o néctar das flores. Ele pode localizar flores que possuem até mesmo a menor quantidade de pólen.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/12.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/12.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/12.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/12.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/12.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/12.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/12.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/12.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/12.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/12.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/12.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/12.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/12.gif", "front_shiny_female": null}}}', 1, 15, 16, 1, 12, 1, 4);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (16, 7);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (16, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (16, 46, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (16, 47, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (16, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (17, '0013', 'Weedle', 0.3, 3.2, 'Seu sentido de olfato é incrivelmente aguçado. Ele consegue identificar seus tipos favoritos de folhas em milhas de distância.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/13.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/13.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/13.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/13.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/13.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/13.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/13.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/13.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/13.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/13.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/13.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/13.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/13.gif", "front_shiny_female": null}}}', 1, 15, 17, 1, 13, 1, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (17, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (17, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (17, 50, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (17, 51, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (17, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (18, '0014', 'Kakuna', 0.6, 10.0, 'Ele fica quase imóvel enquanto se agarra a uma árvore, aguardando sua evolução. A temperatura do corpo fica alta.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/14.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/14.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/14.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/14.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/14.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/14.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/14.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/14.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/14.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/14.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/14.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/14.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/14.gif", "front_shiny_female": null}}}', 1, 15, 18, 1, 14, 1, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (18, 7);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (18, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (18, 61, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (18, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (19, '0015', 'Beedrill', 1.0, 29.5, 'Tem três grandes ferrões venenosos, um em cada braço e um na cauda. Eles são usados para atacar seus inimigos sem parar.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/15.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/15.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/15.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/15.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/15.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/15.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/15.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/15.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/15.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/15.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/15.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/15.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/15.gif", "front_shiny_female": null}}}', 1, 15, 19, 1, 15, 1, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (19, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (19, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (19, 61, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (19, 62, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (19, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (20, '0015', 'Mega Beedrill', 1.4, 40.5, 'Tem três grandes ferrões venenosos, um em cada braço e um na cauda. Eles são usados para atacar seus inimigos sem parar.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/15-mega.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/15-mega.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/15-mega.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/15-mega.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/15.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/15.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/15.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/15.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/15.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/15.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/15.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/15.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/15.gif", "front_shiny_female": null}}}', 1, 15, 20, 6, 15, 1, 5);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (20, 2);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (20, 8);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (20, 1, False);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (20, 2);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (21, '0016', 'Pidgey', 0.3, 1.8, 'É dócil e prefere evitar brigas. No entanto, se for provocado, ele revida vigorosamente.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/16.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/16.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/16.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/16.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/16.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/16.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/16.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/16.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/16.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/16.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/16.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/16.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/16.gif", "front_shiny_female": null}}}', 1, 15, 21, 1, 16, 1, 6);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (21, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (21, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (21, 190, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (21, 43, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (21, 6);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (21, 1);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (22, '0017', 'Pidgeotto', 1.1, 30.0, 'Este Pokémon é um protetor feroz de seu vasto território. Ele bica impiedosamente qualquer intruso.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/17.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/17.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/17.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/17.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/17.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/17.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/17.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/17.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/17.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/17.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/17.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/17.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/17.gif", "front_shiny_female": null}}}', 1, 15, 22, 1, 17, 1, 6);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (22, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (22, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (22, 190, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (22, 43, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (22, 6);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (22, 1);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (23, '0018', 'Pidgeot', 1.5, 39.5, 'Com suas asas magníficas, ele pode voar a velocidades Mach 2. É temido por todos os inimigos.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/18.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/18.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/18.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/18.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/18.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/18.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/18.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/18.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/18.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/18.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/18.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/18.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/18.gif", "front_shiny_female": null}}}', 1, 15, 23, 1, 18, 1, 6);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (23, 1);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (23, 10);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (23, 190, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (23, 43, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (23, 6);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (23, 1);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (24, '0026', 'Raichu', 0.8, 30.0, 'Se sua bolsa elétrica for sobrecarregada, ele libera eletricidade. Pode até eletrocutar a si mesmo, então é bom ter cuidado.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/26.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/26.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/26.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/26.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/26.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/26.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/26.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/26.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/26.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/26.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/26.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/26.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/26.gif", "front_shiny_female": null}}}', 1, 10, 24, 1, 26, 1, 10);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (24, 4);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (24, 18, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (24, 19, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (24, 5);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (24, 4);
+INSERT INTO pokemons (id, number, name, height, weight, description, sprites, gender_rate_value, egg_cycles, stats_id, generation_id, species_id, region_id, evolution_chain_id) VALUES (25, '0025', 'Pikachu', 0.4, 6.0, 'Este Pokémon tem bolsas elétricas nas bochechas. Elas parecem carregar eletricidade durante a noite enquanto ele dorme.', '{"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/25.png", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/back/shiny/25.png", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/25.png", "front_shiny_female": null, "other": {"dream_world": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg", "front_female": null}, "home": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/25.png", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/shiny/25.png", "front_shiny_female": null}, "official-artwork": {"front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png", "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/shiny/25.png"}, "showdown": {"back_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/25.gif", "back_female": null, "back_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/shiny/25.gif", "back_shiny_female": null, "front_default": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/25.gif", "front_female": null, "front_shiny": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/shiny/25.gif", "front_shiny_female": null}}}', 1, 10, 25, 1, 25, 1, 10);
+INSERT INTO pokemon_types (pokemon_id, type_id) VALUES (25, 4);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (25, 18, False);
+INSERT INTO pokemon_abilities (pokemon_id, ability_id, is_hidden) VALUES (25, 19, True);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (25, 5);
+INSERT INTO pokemon_egg_groups (pokemon_id, egg_group_id) VALUES (25, 4);
+
+-- Dados da tabela: pokemon_weaknesses (origem: 10_weaknesses.json)
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (1, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (1, 6);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (1, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (1, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (2, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (2, 6);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (2, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (3, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (3, 6);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (3, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (3, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (4, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (4, 6);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (4, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (4, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (5, 3);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (5, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (5, 9);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (6, 3);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (6, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (6, 9);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (7, 3);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (7, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (7, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (8, 15);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (8, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (8, 9);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (9, 3);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (9, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (9, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (10, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (11, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (12, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (13, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (14, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (14, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (14, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (15, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (15, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (15, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (16, 4);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (16, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (16, 6);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (16, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (16, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (17, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (17, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (17, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (17, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (18, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (18, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (18, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (18, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (13, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (13, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (13, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (13, 10);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (20, 2);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (20, 13);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (20, 11);
+INSERT INTO pokemon_weaknesses (pokemon_id, type_id) VALUES (20, 10);
+
+-- Fim da carga de dados
+-- Resumo: 10 arquivos processados com sucesso, 0 com erro
