@@ -2,7 +2,77 @@
   <img width="300" src="docs/assets/icons/bff.png" />
 </p>
 <p align="center">
-  <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
+  <img src="https://sonarcloud.io/api/proje```
+pokedex-bff/
+├── docs/                    # 📚 ## 🛠️ **Comandos de Desenvolvimento**
+
+### **🐳 Docker & Database**
+
+#### **Linux/macOS** 🐧🍎
+```bash
+# Ambiente completo
+make up                  # Sobe banco + aplicação
+make down               # Para tudo
+make restart            # Reinicia tudo
+
+# Apenas banco
+make db-only-up         # Sobe apenas PostgreSQL
+make db-only-down       # Para apenas banco
+make db-only-restart    # Reinicia banco
+
+# Dados e validação
+make generate-sql-data  # Gera SQL dos JSONs
+make validate-db        # Valida banco e dados
+make db-info           # Info de conexão
+```
+
+#### **Windows** 🪟
+### 🪟 **Usuários Windows**
+> 📖 **Para instruções detalhadas no Windows, consulte**: [**Guia Windows**](docs/WINDOWS_GUIDE.md)
+
+```cmd
+# Scripts Batch (.bat)
+scripts\windows\setup.bat           # Verificar dependências
+scripts\windows\generate-data.bat   # Gerar dados SQL
+scripts\windows\start-db.bat        # Subir banco
+scripts\windows\start-app.bat       # Subir aplicação
+scripts\windows\validate-db.bat     # Validar banco
+scripts\windows\stop.bat            # Parar tudo
+scripts\windows\logs.bat            # Ver logs
+scripts\windows\test.bat            # Executar testes
+scripts\windows\build.bat           # Build da aplicação
+
+# PowerShell (.ps1) 
+.\scripts\powershell\Setup.ps1          # Verificar dependências
+.\scripts\powershell\Generate-Data.ps1   # Gerar dados
+.\scripts\powershell\Start-Database.ps1  # Subir banco
+
+# Comandos diretos Docker
+docker compose -f docker\docker-compose.dev.yml up -d     # Subir
+docker compose -f docker\docker-compose.dev.yml down      # Parar
+docker compose -f docker\docker-compose.dev.yml logs -f   # Logs
+│   ├── architecture/        # 🏗️ Clean Architecture docs
+│   ├── database/           # 🗄️ Database schema e migrations
+│   ├── development/        # 🚀 Development guides
+│   ├── ai/                # 🤖 AI development guidelines
+│   ├── api/               # 📡 API documentation
+│   └── assets/            # 🎨 Icons, schemas, Postman
+├── scripts/                # 🔧 Scripts multiplataforma
+│   ├── windows/            # 🪟 Scripts .bat para Windows
+│   ├── powershell/         # 🪟 Scripts .ps1 para PowerShell
+│   ├── json_to_sql.py      # 🐍 Gerador SQL Python
+│   └── check_db.py         # 🐍 Validador banco Python
+├── src/main/kotlin/com/pokedex/bff/
+│   ├── domain/            # 💎 Core business logic
+│   │   ├── entities/      # Business entities
+│   │   ├── valueobjects/  # Value objects with validation
+│   │   └── repositories/  # Repository interfaces
+│   ├── application/       # 🎯 Use cases & application logic
+│   │   ├── ports/         # Input/Output ports
+│   │   ├── usecases/      # Specific use cases
+│   │   └── adapters/      # Port implementations
+│   ├── infrastructure/    # 🔧 Technical implementations
+│   │   ├── adapters/      # Repository & external adaptersoject=lucabelezal_pokedex-bff&metric=alert_status" />
   <img src=https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=coverage />
   <img src="https://img.shields.io/badge/status-active-brightgreen" />
   <img src="https://img.shields.io/badge/version-1.0.0-blue" />
@@ -37,12 +107,22 @@
 * [**Technologies**](docs/TECHNOLOGIES.md) - _Kotlin, Spring Boot, PostgreSQL, etc._
 * [**Context**](docs/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
 
+### 🪟 **Windows**
+* [**Windows Guide**](docs/WINDOWS_GUIDE.md) - _Guia completo com 4 opções para Windows_
+* [**Windows Make Setup**](docs/WINDOWS_MAKE_SETUP.md) - _Como instalar make no Windows_
 
 ---
 
 ## 🛠️ **Setup Rápido**
 
 ### **🚀 Início Rápido**
+```bash
+# 1. Verificar dependências
+make check-deps
+
+### **🚀 Início Rápido**
+
+#### **Linux/macOS** 🐧🍎
 ```bash
 # 1. Verificar dependências
 make check-deps
@@ -55,6 +135,76 @@ make up
 
 # 4. Validar funcionamento
 make validate-db
+```
+
+#### **Windows** 🪟
+
+**Opção 1 - Instalar Make** ⭐ (Mesmos comandos)
+```bash
+# 1. Instalar make via Chocolatey (como Admin)
+choco install make
+
+# 2. Usar comandos normais igual Linux/macOS
+make check-deps
+make generate-sql-data
+make up
+make validate-db
+```
+
+**Opção 2 - Scripts Batch (.bat)**
+```cmd
+# 1. Verificar dependências
+scripts\windows\setup.bat
+
+# 2. Gerar dados SQL  
+scripts\windows\generate-data.bat
+
+# 3. Subir banco
+scripts\windows\start-db.bat
+
+# 4. Validar funcionamento
+scripts\windows\validate-db.bat
+
+# 5. Subir aplicação completa
+scripts\windows\start-app.bat
+```
+
+**Opção 3 - PowerShell (.ps1)**
+```powershell
+# 1. Verificar dependências
+.\scripts\powershell\Setup.ps1
+
+# 2. Gerar dados SQL
+.\scripts\powershell\Generate-Data.ps1
+
+# 3. Subir e validar
+.\scripts\powershell\Start-Database.ps1
+.\scripts\powershell\Validate-Database.ps1
+```
+
+**Opção 4 - Comandos Diretos**
+
+# 2. Gerar dados SQL
+.\scripts\powershell\Generate-Data.ps1
+
+# 3. Subir e validar
+.\scripts\powershell\Start-Database.ps1
+.\scripts\powershell\Validate-Database.ps1
+```
+
+**Opção 3 - Comandos Diretos**
+```cmd
+# Gerar dados
+python scripts\json_to_sql.py
+
+# Subir banco
+docker compose -f docker\docker-compose.dev.yml up -d db
+
+# Validar banco  
+python scripts\check_db.py
+
+# Subir aplicação
+docker compose -f docker\docker-compose.dev.yml up -d
 ```
 
 ### **🏗️ Arquitetura Implementada**
@@ -131,6 +281,8 @@ make db-info           # Info de conexão
 ```
 
 ### **🧪 Testes e Qualidade**
+
+#### **Linux/macOS** 🐧🍎
 ```bash
 # Testes
 ./gradlew test                    # Unit tests
@@ -142,9 +294,46 @@ make db-info           # Info de conexão
 ./gradlew check                  # All quality checks
 ```
 
+#### **Windows** 🪟
+```cmd
+# Testes (usando scripts)
+scripts\windows\test.bat         # Executar todos os testes
+
+# Testes (comandos diretos)
+gradlew.bat test                 # Unit tests
+gradlew.bat integrationTest      # Integration tests
+gradlew.bat testReport          # Relatório de cobertura
+
+# Code quality
+gradlew.bat detekt              # Static analysis
+gradlew.bat check               # All quality checks
+```
+
 ### **📦 Build e Deploy**
+
+#### **Linux/macOS** 🐧🍎
 ```bash
 # Local build
+./gradlew build                  # Build completo
+./gradlew bootRun               # Run local
+
+# Docker
+docker build -t pokedex-bff .   # Build image
+docker run -p 8080:8080 pokedex-bff  # Run container
+```
+
+#### **Windows** 🪟
+```cmd
+# Build (usando scripts)
+scripts\windows\build.bat       # Build completo
+
+# Build (comandos diretos)  
+gradlew.bat build               # Build completo
+gradlew.bat bootRun             # Run local
+
+# Docker
+docker build -t pokedex-bff .  # Build image
+docker run -p 8080:8080 pokedex-bff  # Run container
 ./gradlew build                  # Build completo
 ./gradlew bootRun               # Run local
 
