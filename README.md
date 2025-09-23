@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" src="doc/icons/bff.png" />
+  <img width="300" src="docs/icons/bff.png" />
 </p>
 <p align="center">
   <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
