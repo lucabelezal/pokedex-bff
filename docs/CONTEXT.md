@@ -260,11 +260,11 @@ class PokemonControllerTest {
 
 ## 💻 Comandos Principais
 
-### 🏗️ **Comandos de Arquitetura**
+### 🔧 Comandos de Desenvolvimento
 
 ```bash
 # Compilação e verificação
-./gradlew compileKotlin      # Verifica estrutura Clean Architecture
+./gradlew compileKotlin      # Verifica estrutura MVC
 ./gradlew test              # Executa testes unitários e integração
 ./gradlew build             # Build completo com validações
 
@@ -290,10 +290,10 @@ make db-info              # Informações de conexão
 # Validação
 make validate-db          # Executa: tools/database/validate_database.py
 
-# Testes da nova arquitetura
-./gradlew test --tests "*UseCase*"           # Testes de Use Cases
-./gradlew test --tests "*ValueObject*"       # Testes de Value Objects  
-./gradlew test --tests "*Adapter*"           # Testes de Adaptadores
+# Testes da arquitetura MVC
+./gradlew test --tests "*Service*"           # Testes de Services
+./gradlew test --tests "*Controller*"        # Testes de Controllers
+./gradlew test --tests "*Repository*"        # Testes de Repositories
 ```
 
 ### 🌐 Compatibilidade Multiplataforma
@@ -308,13 +308,13 @@ O projeto é **totalmente compatível** com:
 
 ### 📊 Status da Validação
 
-- ✅ **Clean Architecture Avançada**: Ports & Adapters implementados com separação total
-- ✅ **Separação de Responsabilidades**: Interface/implementação completamente separadas
-- ✅ **Value Objects**: Domínio rico com `PokemonId` e `PokemonNumber` 
-- ✅ **Use Cases Específicos**: `GetPaginatedPokemonsUseCase` com responsabilidade única
-- ✅ **Testabilidade**: Testes unitários puros sem dependências de infraestrutura
-- ✅ **Inversão de Dependência**: Controllers usam apenas interfaces
-- ✅ **Compilação**: Zero erros após refatoração avançada
+- ✅ **MVC Estruturado**: Arquitetura simplificada com 3 camadas principais
+- ✅ **SOLID Principles**: Aplicação consistente dos princípios SOLID
+- ✅ **Separation of Concerns**: Controllers thin, Services específicos, Repositories simples
+- ✅ **Rich Entities**: Modelos com comportamentos e validações integradas
+- ✅ **Testabilidade**: Testes diretos sem complexidade excessiva
+- ✅ **Dependency Inversion**: Services dependem de interfaces de repository
+- ✅ **Compilação**: Zero erros após simplificação arquitetural
 - ✅ **Estrutura**: 13 tabelas criadas
 - ✅ **Dados**: 1223+ registros inseridos (incluindo correções de gender fields)
 - ✅ **Integridade**: 0 problemas encontrados
@@ -369,34 +369,34 @@ volumes:
 
 ---
 
-## 🎯 Benefícios da Refatoração Avançada
+## 🎯 Benefícios da Simplificação Arquitetural
 
-### 🏗️ **Arquiteturais (Clean Architecture + Ports & Adapters)**
-- ✅ **Testabilidade Total**: Use Cases testáveis unitariamente sem infraestrutura
-- ✅ **Inversão de Dependência**: Controllers usam interfaces, não implementações
-- ✅ **Single Responsibility**: Cada Use Case tem uma responsabilidade específica
-- ✅ **Domain-Driven Design**: Value Objects ricos com comportamentos de negócio
-- ✅ **Hexagonal Architecture**: Portas/adaptadores para entrada e saída
-- ✅ **Baixo Acoplamento**: Camadas comunicam apenas via interfaces
-- ✅ **Flexibilidade**: Fácil substituição de implementações
+### 🏗️ **Arquiteturais (MVC Estruturado)**
+- ✅ **Simplicidade**: 3 camadas claras e objetivas
+- ✅ **Manutenibilidade**: Código direto sem abstrações desnecessárias
+- ✅ **Compreensibilidade**: Qualquer desenvolvedor entende rapidamente
+- ✅ **SOLID Principles**: Aplicação consistente sem complexidade excessiva
+- ✅ **Rich Entities**: Modelos com comportamentos integrados
+- ✅ **Dependency Inversion**: Services dependem de interfaces de repository
+- ✅ **Flexibilidade**: Mudanças rápidas sem overhead arquitetural
 
 ### 🧹 **Organizacionais e Técnicas**
-- ✅ **Separação Total**: Interface/implementação em arquivos distintos
-- ✅ **Domain Purity**: Zero dependências externas no domínio
-- ✅ **Use Cases Específicos**: Lógica de negócio bem encapsulada
-- ✅ **Estrutura Consistente**: Nomenclatura e organização padronizadas
-- ✅ **Testes Abrangentes**: Cobertura de Value Objects e Use Cases
-- ✅ **Manutenibilidade**: Código mais limpo e organizazdo
+- ✅ **Controllers Thin**: Apenas coordenação e validação básica
+- ✅ **Services Específicos**: Business logic concentrada e clara
+- ✅ **Repositories Simples**: Acesso a dados sem complexity overhead
+- ✅ **Estrutura Clara**: Nomenclatura e organização diretas
+- ✅ **Testes Práticos**: Unit e Integration tests sem mock excessivo
+- ✅ **Desenvolvimento Ágil**: Ciclo de feedback rápido
 
 ### 📈 **Métricas de Melhoria**
 
-| Aspecto | Antes | Depois |
-|---------|-------|--------|
-| **Acoplamento** | Alto (interface+impl juntos) | Baixo (separação total) |
-| **Testabilidade** | Difícil (depende de Spring) | Fácil (mocks simples) |
-| **Domínio** | Anêmico | Rico (Value Objects) |
-| **Responsabilidades** | Misturadas | Separação clara |
-| **Inversão de Dependência** | Parcial | Total |
+| Aspecto | Hexagonal (Complexo) | MVC (Simplificado) |
+|---------|---------------------|-------------------|
+| **Curva de Aprendizado** | Alta (abstrações) | Baixa (direta) |
+| **Velocidade de Dev** | Lenta (muitas camadas) | Rápida (3 camadas) |
+| **Manutenibilidade** | Difícil (abstrações) | Fácil (código direto) |
+| **Testabilidade** | Complex (mock excessivo) | Prática (testes diretos) |
+| **Simplicidade** | Baixa | Alta |
 
 ---
 
@@ -408,23 +408,39 @@ volumes:
 3. **Specifications**: Adicionar especificações para consultas avançadas
 4. **More Value Objects**: `PokemonType`, `PokemonStats`, `Height`, `Weight`
 
-### 🧪 **Testes Abrangentes**
-1. **Integration Tests**: Testes de adaptadores com banco H2
-2. **Contract Tests**: Validação de interfaces entre camadas
-3. **Architecture Tests**: ArchUnit para validar regras arquiteturais
-4. **Performance Tests**: Benchmarks de Use Cases
+### 🧪 **Testes Simplificados**
+1. **Unit Tests**: Testes diretos de Services sem mock excessivo
+2. **Integration Tests**: Testes completos Controller → Repository
+3. **Repository Tests**: Validação de queries e persistência
+4. **API Tests**: Testes de endpoints com MockMvc
 
 ### 📚 **Documentação Técnica**
-1. **ADRs**: Architectural Decision Records das escolhas feitas
-2. **API Documentation**: Swagger com exemplos da nova estrutura
-3. **Developer Guide**: Guia para adicionar novos Use Cases
-4. **Testing Guide**: Estratégias de teste para cada camada
+1. **MVC Guide**: Guia prático de implementação MVC
+2. **API Documentation**: Swagger com exemplos da estrutura simplificada
+3. **Service Patterns**: Padrões para Services de domínio
+4. **Testing Strategy**: Estratégias de teste pragmáticas
 
 ---
 
-> 💡 **Nota**: A refatoração avançada estabelece uma **base sólida e profissional** para desenvolvimento futuro, seguindo rigorosamente os princípios de Clean Architecture, Hexagonal Architecture, e Domain-Driven Design. O código agora é altamente testável, manutenível e evolutivo.
+## 🚀 Próximos Passos
+
+### 🔄 **Evolução Arquitetural**
+1. **Code Refactoring**: Implementar MVC estruturado no código atual
+2. **Service Layer**: Consolidar business logic em Services específicos
+3. **Repository Pattern**: Simplificar acesso a dados com interfaces claras
+4. **Rich Entities**: Adicionar comportamentos aos modelos Pokemon
+
+### 📚 **Documentação de Suporte**
+1. **Implementation Guide**: Guia para implementar MVC estruturado
+2. **Service Patterns**: Padrões para Services de domínio
+3. **Testing Strategy**: Estratégias de teste simplificadas
+4. **Code Examples**: Exemplos práticos de cada camada MVC
 
 ---
 
-*Documento atualizado após refatoração Clean Architecture avançada com Ports & Adapters - 23/09/2025*
+> 💡 **Nota**: A simplificação arquitetural estabelece uma **base prática e eficiente** para desenvolvimento futuro, seguindo princípios MVC com SOLID aplicado de forma pragmática. O código agora prioriza simplicidade, velocidade de desenvolvimento e manutenibilidade.
+
+---
+
+*Documento atualizado após simplificação arquitetural de Clean Architecture + Hexagonal para MVC Estruturado - Janeiro 2025*
 
