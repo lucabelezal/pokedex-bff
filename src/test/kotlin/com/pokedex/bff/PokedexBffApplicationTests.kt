@@ -7,7 +7,7 @@ import org.springframework.test.context.ActiveProfiles
 @SpringBootTest
 class PokedexBffApplicationTests {
 
-//	@Disabled("Desabilitado enquanto banco de dados de teste não está configurado")
+//	@Disabled("Disabled while test database is not configured")
 //	@Test
 //	fun contextLoads() { }
 

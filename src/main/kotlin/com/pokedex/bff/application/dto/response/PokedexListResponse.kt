@@ -2,17 +2,17 @@ package com.pokedex.bff.application.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "Resposta da lista paginada da Pokedex")
+@Schema(description = "Paginated Pokedex list response")
 data class PokedexListResponse(
-    @Schema(description = "Informações da página atual")
+    @Schema(description = "Current page information")
     val pageInfo: PageInfoDto,
 
-    @Schema(description = "Dados da busca atual")
+    @Schema(description = "Current search data")
     val search: SearchDto,
 
-    @Schema(description = "Filtros aplicados (lista genérica)", example = "[]")
+    @Schema(description = "Applied filters (generic list)", example = "[]")
     val filters: List<Any>,
 
-    @Schema(description = "Lista de Pokemons")
+    @Schema(description = "List of Pokemons")
     val pokemons: List<PokemonDto>
 )

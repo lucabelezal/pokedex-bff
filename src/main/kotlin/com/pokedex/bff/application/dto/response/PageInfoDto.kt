@@ -2,17 +2,17 @@ package com.pokedex.bff.application.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "Informações da página na resposta")
+@Schema(description = "Page information in the response")
 data class PageInfoDto(
-    @Schema(description = "Página atual", example = "0")
+    @Schema(description = "Current page", example = "0")
     val currentPage: Int,
 
-    @Schema(description = "Número total de páginas", example = "15")
+    @Schema(description = "Total number of pages", example = "15")
     val totalPages: Int,
 
-    @Schema(description = "Número total de elementos", example = "151")
+    @Schema(description = "Total number of elements", example = "151")
     val totalElements: Long,
 
-    @Schema(description = "Se existe próxima página", example = "true")
+    @Schema(description = "Whether there is a next page", example = "true")
     val hasNext: Boolean
 )

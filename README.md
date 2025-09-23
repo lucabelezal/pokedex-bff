@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" src="doc/icons/bff.png" />
+  <img width="300" src="docs/assets/icons/bff.png" />
 </p>
 <p align="center">
   <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
@@ -9,111 +9,195 @@
   <img src="https://img.shields.io/badge/license-Apache%202.0-orange" />
 </p>
 
-## 📚 Sumário
+## 📚 Documentação
 
-Aqui estão as seções importantes para explorar o **Pokedex BFF**:
+### 🏗️ **Arquitetura**
+* [**Clean Architecture**](docs/architecture/CLEAN_ARCHITECTURE.md) - _Implementação detalhada com Hexagonal Architecture_
+* [**Arquitetura do Sistema**](docs/architecture/ARCHITECTURE.md) - _Camadas, responsabilidades e organização_
 
-* 📖 [**Visão Geral**](doc/OVERVIEW.md)  
-  _Contexto geral e objetivos do projeto._
+### 🗄️ **Banco de Dados**
+* [**Database**](docs/database/DATABASE.md) - _Modelagem e estrutura PostgreSQL_
+* [**Schema**](docs/database/SCHEMA.md) - _Scripts e diagramas do banco_
+* [**Data Sources**](docs/database/DATA_SOURCES.md) - _Origens dos dados utilizados_
 
-* 🌐 [**Fontes de Dados**](doc/DATA_SOURCES.md)  
-  _Descrição das origens dos dados utilizados._
+### 🚀 **Desenvolvimento**
+* [**Getting Started**](docs/GETTING_STARTED.md) - _Guia de instalação e execução_
+* [**Style Guide**](docs/development/STYLE_GUIDE.md) - _Padrões de código e code review_
+* [**Pokédex App**](docs/development/POKEDEX_APP.md) - _Design e interação front-end_
 
-* 🎨 [**Pokédex / Pokémon App (Design)**](doc/POKEDEX_APP.md)  
-  _Visão de como o front interage com o BFF._
+### � **AI Development**
+* [**AI Prompt Template**](docs/ai/PROMPT_TEMPLATE.md) - _Templates para desenvolvimento assistido por IA_
+* [**Development Guide**](docs/ai/DEVELOPMENT_GUIDE.md) - _Guias para usar IA mantendo Clean Architecture_
 
-* 🗄️ [**Informações do Banco de Dados (PostgreSQL)**](doc/DATABASE.md)  
-  _Modelagem e estrutura da base de dados._
+### � **API**
+* [**Swagger Documentation**](docs/api/SWAGGER.md) - _Endpoints e contratos REST_
 
-* 🧰 [**Tecnologias e Softwares Utilizados**](doc/TECHNOLOGIES.md)  
-  _Kotlin, Spring Boot, PostgreSQL, Swagger, etc._
+### 📋 **Geral**
+* [**Overview**](docs/OVERVIEW.md) - _Contexto geral e objetivos do projeto_
+* [**Technologies**](docs/TECHNOLOGIES.md) - _Kotlin, Spring Boot, PostgreSQL, etc._
+* [**Context**](docs/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
 
-* 🚀 [**Como Começar**](doc/GETTING_STARTED.md)  
-  _Guia de instalação e execução local._
-
-* 📘 [**Documentação da API (Swagger)**](doc/SWAGGER.md)  
-  _Endpoints e contratos REST expostos._
-
-* 🏗️ [**Arquitetura do Sistema**](doc/ARCHITECTURE.md)  
-  _Camadas, responsabilidades e organização._
 
 ---
 
-## 🛠️ Setup de Desenvolvimento e Estrutura do Projeto
+## 🛠️ **Setup Rápido**
 
-### 📂 Estrutura de Arquivos
+### **🚀 Início Rápido**
+```bash
+# 1. Verificar dependências
+make check-deps
 
-O projeto está organizado para facilitar o desenvolvimento e manutenção:
+# 2. Gerar dados SQL
+make generate-sql-data
+
+# 3. Subir banco + aplicação
+make up
+
+# 4. Validar funcionamento
+make validate-db
+```
+
+### **🏗️ Arquitetura Implementada**
+
+O projeto utiliza **Clean Architecture** + **Hexagonal Architecture**:
+
+```
+🏗️ Clean Architecture Layers:
+├── � Domain Layer (Entities, Value Objects, Repository Interfaces)
+├── 🎯 Application Layer (Use Cases, Ports, DTOs)
+├── 🔧 Infrastructure Layer (Adapters, JPA, External APIs)
+└── 🌐 Interface Layer (REST Controllers, GraphQL, etc.)
+
+🔌 Ports & Adapters Pattern:
+├── Input Ports: PokedexUseCases, PokemonUseCases
+├── Output Ports: PokemonRepository, ExternalApiPort
+├── Input Adapters: PokedexUseCasesAdapter, Controllers
+└── Output Adapters: PokemonRepositoryAdapter, ExternalApiAdapter
+```
+
+**Principais Implementações**:
+- ✅ **Value Objects**: `PokemonId`, `PokemonNumber` com validações
+- ✅ **Use Cases**: `GetPaginatedPokemonsUseCase`, `SearchPokemonByNameUseCase`
+- ✅ **Ports & Adapters**: Interfaces e implementações separadas
+- ✅ **Domain-First**: Lógica de negócio protegida em domain layer
+
+### **📂 Estrutura do Projeto**
 
 ```
 pokedex-bff/
-├── data/               # 📊 Dados fonte
-│   └── json/          # Arquivos JSON numerados (01-10)
-├── database/          # 🗄️ Scripts de banco
-│   ├── schema/        # DDL - estrutura das tabelas
-│   ├── seeds/         # DML - dados iniciais gerados
-│   └── migrations/    # Scripts de migração
-├── tools/             # 🔧 Ferramentas de desenvolvimento
-│   └── database/      # Scripts Python para banco
-└── docker/            # 🐳 Configurações Docker
+├── docs/                    # 📚 Documentação organizada
+│   ├── architecture/        # 🏗️ Clean Architecture docs
+│   ├── database/           # 🗄️ Database schema e migrations
+│   ├── development/        # 🚀 Development guides
+│   ├── ai/                # 🤖 AI development guidelines
+│   ├── api/               # 📡 API documentation
+│   └── assets/            # 🎨 Icons, schemas, Postman
+├── src/main/kotlin/com/pokedex/bff/
+│   ├── domain/            # 💎 Core business logic
+│   │   ├── entities/      # Business entities
+│   │   ├── valueobjects/  # Value objects with validation
+│   │   └── repositories/  # Repository interfaces
+│   ├── application/       # 🎯 Use cases & application logic
+│   │   ├── ports/         # Input/Output ports
+│   │   ├── usecases/      # Specific use cases
+│   │   └── adapters/      # Port implementations
+│   ├── infrastructure/    # 🔧 Technical implementations
+│   │   ├── adapters/      # Repository & external adapters
+│   │   ├── persistence/   # JPA entities & repos
+│   │   └── configurations/ # Spring configurations
+│   └── interfaces/        # 🌐 External interfaces
+│       └── rest/          # REST controllers & DTOs
+
 ```
 
-### 🚀 Como Iniciar o Desenvolvimento
+## �️ **Comandos de Desenvolvimento**
 
-#### 0. ⚡ Verificar Dependências (PRIMEIRO PASSO)
-Antes de começar, verifique se todas as dependências estão instaladas:
-```sh
-make check-deps
-```
-- **O que verifica**: Python 3.7+, Docker, Docker Compose, Make, psycopg2
-- **Compatibilidade**: Linux (Debian/Ubuntu), macOS, Windows (WSL/Git Bash)
-- **Se algo faltar**: O script mostra instruções de instalação específicas para seu sistema
+### **🐳 Docker & Database**
+```bash
+# Ambiente completo
+make up                  # Sobe banco + aplicação
+make down               # Para tudo
+make restart            # Reinicia tudo
 
-#### 1. Gerar dados SQL dos JSONs
-Converte os arquivos JSON numerados em comandos SQL:
-```sh
-make generate-sql-data
-```
-- **O que faz**: Lê os 10 arquivos JSON em sequência e gera `database/seeds/init-data.sql`
-- **Script**: `tools/database/generate_sql_from_json.py`
+# Apenas banco
+make db-only-up         # Sobe apenas PostgreSQL
+make db-only-down       # Para apenas banco
+make db-only-restart    # Reinicia banco
 
-#### 2. Subir banco de desenvolvimento
-Inicia apenas o banco PostgreSQL com dados:
-```sh
-make db-only-up
-```
-- **O que faz**: Executa schema, popula dados e disponibiliza banco em `localhost:5434`
-- **Quando usar**: Para desenvolvimento focado no banco ou testes de dados
-
-#### 3. Validar banco
-Verifica se todas as tabelas e dados foram carregados corretamente:
-```sh
-make validate-db
-```
-- **O que faz**: Conecta ao banco e valida 13 tabelas esperadas com contagem de registros
-- **Script**: `tools/database/validate_database.py`
-
-#### 4. Gerenciar banco
-```sh
-make db-only-restart    # Reinicia banco com dados atualizados
-make db-only-down       # Para o banco
-make db-info           # Exibe informações de conexão
+# Dados e validação
+make generate-sql-data  # Gera SQL dos JSONs
+make validate-db        # Valida banco e dados
+make db-info           # Info de conexão
 ```
 
-### 📊 Sequência de Criação dos Dados
+### **🧪 Testes e Qualidade**
+```bash
+# Testes
+./gradlew test                    # Unit tests
+./gradlew integrationTest         # Integration tests
+./gradlew testReport             # Relatório de cobertura
 
-Os arquivos JSON seguem uma **ordem específica** para respeitar dependências de chaves estrangeiras:
+# Code quality
+./gradlew detekt                 # Static analysis
+./gradlew check                  # All quality checks
+```
 
-1. `01_region.json` → Regiões base
-2. `02_type.json` → Tipos de Pokémon  
-3. `03_egg_group.json` → Grupos de ovos
-4. `04_generation.json` → Gerações
-5. `05_ability.json` → Habilidades
-6. `06_species.json` → Espécies (depende de regiões/gerações)
-7. `07_stats.json` → Estatísticas
-8. `08_evolution_chains.json` → Cadeias evolutivas
-9. `09_pokemon.json` → Pokémons (depende de species/abilities/stats)
-10. `10_weaknesses.json` → Fraquezas (depende de pokémons)
+### **📦 Build e Deploy**
+```bash
+# Local build
+./gradlew build                  # Build completo
+./gradlew bootRun               # Run local
+
+# Docker
+docker build -t pokedex-bff .   # Build image
+docker run -p 8080:8080 pokedex-bff  # Run container
+```
+
+## 🤖 **AI-Assisted Development**
+
+Este projeto oferece **guidelines específicas para desenvolvimento assistido por IA** mantendo a **Clean Architecture**:
+
+### **📋 Templates para IA**
+- [**Prompt Template**](docs/ai/PROMPT_TEMPLATE.md) - Template completo para solicitações
+- [**Development Guide**](docs/ai/DEVELOPMENT_GUIDE.md) - Guias para usar IA corretamente
+
+### **🎯 Princípios para IA**
+1. **Domain-First**: Sempre começar pelo domain layer
+2. **Ports & Adapters**: Manter separação clara de responsabilidades  
+3. **Value Objects**: Criar VOs ricos com validações
+4. **Specific Use Cases**: Evitar services genéricos
+5. **Test-Driven**: Incluir testes unitários sempre
+
+### **⚠️ Cuidados com IA**
+- ❌ Não permitir que IA misture camadas
+- ❌ Não aceitar anotações JPA em domain entities
+- ❌ Não criar use cases genéricos
+- ✅ Sempre revisar código gerado seguindo [Style Guide](docs/development/STYLE_GUIDE.md)
+
+## 📊 **Status do Projeto**
+
+### **✅ Clean Architecture Implementada**
+- [x] **Domain Layer**: Entities, Value Objects, Repository interfaces
+- [x] **Application Layer**: Use Cases específicos, Ports & Adapters
+- [x] **Infrastructure Layer**: JPA adapters, External service adapters
+- [x] **Interface Layer**: REST controllers thin e focados
+
+### **✅ Value Objects Ricos**
+- [x] `PokemonId` com validações de range
+- [x] `PokemonNumber` com formatação e validações
+- [x] Testes unitários para todos Value Objects
+
+### **✅ Use Cases Específicos**
+- [x] `GetPaginatedPokemonsUseCase` 
+- [x] `SearchPokemonByNameUseCase`
+- [x] `GetPokemonByIdUseCase`
+- [x] Testes unitários com mocks
+
+### **🔄 Em Desenvolvimento**
+- [ ] Event-driven architecture com Domain Events
+- [ ] CQRS implementation para queries complexas
+- [ ] Circuit breaker para external APIs
+- [ ] Observability com OpenTelemetry
 
 ---
 

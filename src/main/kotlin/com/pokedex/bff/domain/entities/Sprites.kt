@@ -19,4 +19,4 @@ data class OtherSprites(
     val showdown: String? = null
 )
 
-// Outras classes auxiliares (OtherSprites, etc.) devem ser migradas conforme necessidade.
+// Other auxiliary classes (OtherSprites, etc.) should be migrated as needed.
