@@ -257,7 +257,7 @@ pokedex-bff/
 ├── src/main/kotlin/com/pokedex/bff/
 │   ├── controller/         # 🌐 REST Controllers
 │   ├── service/            # 🎯 Business Logic
-│   ├── repository/         # 🗄️ Data Access
+│   ├── repositories/       # 🗄️ Data Access
 │   ├── entity/             # 📊 JPA Entities
 │   ├── dto/                # 📄 Data Transfer Objects
 │   ├── config/             # ⚙️ Configurations

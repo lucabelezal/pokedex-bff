@@ -8,7 +8,6 @@ import com.pokedex.bff.application.dto.response.PokemonImageElementDto
 import com.pokedex.bff.application.dto.response.PokemonTypeDto
 import com.pokedex.bff.application.dto.response.SearchDto
 import com.pokedex.bff.domain.repositories.PokemonRepository
-import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -40,8 +39,7 @@ class GetPaginatedPokemonsUseCase(
     fun execute(page: Int, size: Int): PokedexListResponse {
         validatePaginationParameters(page, size)
         
-        val pageable = PageRequest.of(page, size)
-        val pageResult = pokemonRepository.findAll(pageable)
+        val pageResult = pokemonRepository.findAll(page, size)
 
         val pokemons: List<PokemonDto> = pageResult.content.map { pokemon ->
             val formattedNumber = formatPokemonNumber(pokemon.number)
@@ -51,7 +49,7 @@ class GetPaginatedPokemonsUseCase(
                 number = formattedNumber,
                 name = pokemon.name,
                 image = PokemonImageDto(
-                    url = pokemon.sprites?.other?.home?.frontDefault ?: "",
+                    url = pokemon.sprites?.other?.home ?: "",
                     element = PokemonImageElementDto(
                         color = mainType?.color ?: DEFAULT_TYPE_COLOR,
                         type = mainType?.name?.uppercase() ?: DEFAULT_TYPE_NAME
@@ -88,12 +86,12 @@ class GetPaginatedPokemonsUseCase(
         }
     }
 
-    private fun createPageInfo(pageResult: org.springframework.data.domain.Page<*>): PageInfoDto {
+    private fun createPageInfo(pageResult: com.pokedex.bff.domain.common.Page<*>): PageInfoDto {
         return PageInfoDto(
-            currentPage = pageResult.number,
+            currentPage = pageResult.pageNumber,
             totalPages = pageResult.totalPages,
             totalElements = pageResult.totalElements,
-            hasNext = pageResult.hasNext()
+            hasNext = pageResult.hasNext
         )
     }
 

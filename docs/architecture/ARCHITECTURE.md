@@ -208,7 +208,7 @@ interface PokemonRepository {
 
 1. **Cliente Externo** faz requisição GET para `interfaces/controllers/PokemonController`
 2. **Controller** valida parâmetros e chama `application/usecase/BuscarPokemonUseCase`
-3. **Use Case** usa interface `domain/repository/PokemonRepository` para buscar dados
+3. **Use Case** usa interface `domain/repositories/PokemonRepository` para buscar dados
 4. **Repository Implementation** (`infrastructure/repository/JpaPokemonRepository`) executa consulta
 5. **JPA Entity** (`infrastructure/persistence/entities/PokemonEntity`) é convertida para **Domain Entity** (`domain/entities/Pokemon`)
 6. **Domain Entity** é convertida para **DTO** (`application/dto/response/PokemonDto`)

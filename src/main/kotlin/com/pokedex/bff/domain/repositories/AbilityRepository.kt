@@ -1,6 +1,11 @@
 package com.pokedex.bff.domain.repositories
 
-import com.pokedex.bff.infrastructure.persistence.entities.AbilityEntity
-import org.springframework.data.jpa.repository.JpaRepository
+import com.pokedex.bff.domain.entities.Ability
 
-interface AbilityRepository : JpaRepository<AbilityEntity, Long>
+interface AbilityRepository {
+    fun findById(id: Long): Ability?
+    fun findAll(): List<Ability>
+    fun save(ability: Ability): Ability
+    fun deleteById(id: Long)
+    fun existsById(id: Long): Boolean
+}
