@@ -365,6 +365,51 @@ Este projeto oferece **guidelines específicas para desenvolvimento assistido po
 - **Throughput**: >1000 req/s em ambiente de teste
 - **Memory Usage**: <512MB heap em produção
 
+## 🔄 **CI/CD & GitHub Actions**
+
+### **🚀 Workflows Automatizados**
+- ✅ **Feature CI**: Executa apenas com Pull Request aberto
+- ✅ **Main CI/CD**: Deploy automático para produção
+- ✅ **SonarQube**: Análise de qualidade semanal/manual
+- ✅ **Conventional Commits**: Validação obrigatória de naming
+
+### **📊 Otimizado para 300 min/mês**
+```bash
+# Estimativa mensal (GitHub Actions):
+Feature PRs: ~20 × 10 min = 200 min
+Main pushes: ~8 × 18 min = 144 min  
+SonarQube: ~4 × 15 min = 60 min
+TOTAL: ~280 min ✅ (dentro do limite)
+```
+
+### **🎯 Branch Naming Convention**
+```bash
+# ✅ Aceitos (conventional commits):
+feat/add-pokemon-search        # Nova funcionalidade
+fix/authentication-bug         # Correção de bug
+docs/update-readme            # Documentação
+refactor/clean-architecture   # Refatoração
+test/add-integration-tests    # Testes
+ci/optimize-workflows         # CI/CD
+chore/update-dependencies     # Manutenção
+
+# ❌ Rejeitados:
+pokemon-search               # Sem prefixo
+bug-fix                     # Formato incorreto
+random-branch-name          # Não segue padrão
+```
+
+### **📖 Documentação CI/CD**
+- **[Guia Completo](docs/ci/README.md)**: Documentação detalhada dos workflows
+- **[Guia de Migração](docs/ci/MIGRATION.md)**: Processo de migração dos workflows
+- **[Validação](docs/ci/validate-workflows.sh)**: Script para testar workflows localmente
+
+### **🔧 Validação Local**
+```bash
+# Validar workflows antes do commit
+./docs/ci/validate-workflows.sh
+```
+
 ## 🤝 **Contribuindo**
 
 ### **📋 Pré-requisitos**
