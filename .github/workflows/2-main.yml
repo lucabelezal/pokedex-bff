@@ -1,63 +1,41 @@
 name: "2 - Main CI/CD"
 
 on:
-  pull_request:
-    types: [closed]
-    branches:
-      - main
   push:
-    branches:
-      - 'main'
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
+      - '.gitignore'
+      - 'LICENSE'
 
 jobs:
-  deploy:
-    if: github.event.pull_request.merged == true
+  # Job principal que usa o workflow compartilhado
+  cicd:
+    uses: ./.github/workflows/shared-ci.yml
+    with:
+      run-sonar: true
+      run-deployment: true
+      environment: 'production'
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
+      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
+
+  # Notificação de deploy (opcional)
+  notify:
+    needs: cicd
+    if: always()
     runs-on: ubuntu-latest
+    timeout-minutes: 2
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Set up JDK 21
-        uses: actions/setup-java@v3
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-
-      - name: Cache Gradle packages
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x ./gradlew
-
-      - name: Run lint and tests
-        run: ./gradlew test jacocoTestReport
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./build/reports/jacoco/test/jacocoTestReport.xml
-
-      # - name: SonarCloud Scan
-      #   uses: sonarsource/sonarqube-scan-action@v5.0.0
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      #   with:
-      #     args: >
-      #       -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY }}
-      #       -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION }}
-      #       -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
-
-      - name: Build and deploy
+      - name: 📢 Deployment notification
         run: |
-          ./gradlew build
-          # Adicionar aqui os passos de deploy
-          echo "Deploying to production..."
+          if [ "${{ needs.cicd.result }}" == "success" ]; then
+            echo "✅ Deployment to production completed successfully!"
+            echo "📦 Application deployed at: $(date)"
+          else
+            echo "❌ Deployment failed!"
+            echo "🔍 Check the logs for more details"
+          fi
