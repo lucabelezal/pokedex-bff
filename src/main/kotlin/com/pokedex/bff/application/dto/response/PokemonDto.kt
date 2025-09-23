@@ -2,7 +2,7 @@ package com.pokedex.bff.application.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "Dados de um Pokemon")
+@Schema(description = "Pokemon data")
 data class PokemonDto(
     @Schema(description = "Número do Pokemon", example = "025")
     val number: String,

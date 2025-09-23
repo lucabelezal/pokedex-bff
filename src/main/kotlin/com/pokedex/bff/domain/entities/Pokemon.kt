@@ -1,6 +1,6 @@
 package com.pokedex.bff.domain.entities
 
-// Versão pura da entidade Pokemon, sem anotações JPA/framework
+// Pure Pokemon entity version, without JPA/framework annotations
 
 data class Pokemon(
     val id: Long,

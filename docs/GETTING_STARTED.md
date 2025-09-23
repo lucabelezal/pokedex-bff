@@ -4,32 +4,50 @@ Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente
 
 ## Arquitetura do Projeto
 
-Este projeto implementa **Clean Architecture** com uma separação clara de responsabilidades:
+Este projeto implementa **Clean Architecture + Ports & Adapters (Hexagonal Architecture)** com separação total de responsabilidades e alta testabilidade:
 
-### Estrutura das Camadas
+### Nova Estrutura das Camadas (Setembro 2025)
 
 ```
 src/main/kotlin/com/pokedex/bff/
-├── domain/                 # Camada de Domínio
-│   └── entities/          # Entidades puras de negócio
-├── application/           # Camada de Aplicação  
-│   └── usecase/          # Casos de uso da aplicação
-├── infrastructure/        # Camada de Infraestrutura
-│   └── persistence/      # Persistência de dados
-│       └── entities/     # Entidades JPA/Hibernate
-└── interfaces/           # Camada de Interface
-    ├── controllers/      # Controllers REST
-    └── dto/             # Data Transfer Objects
-        └── sprites/     # DTOs para dados JSON complexos
+├── domain/                         # 🎯 DOMÍNIO PURO
+│   ├── entities/                   # Entidades de negócio (sem anotações)
+│   ├── valueobjects/              # ✅ Value Objects ricos (PokemonId, PokemonNumber)
+│   ├── repositories/              # Interfaces de repositório (contratos)
+│   └── exceptions/                # Exceções de domínio
+│
+├── application/                    # 🎯 CASOS DE USO
+│   ├── ports/                     # ✅ Portas (Hexagonal Architecture)
+│   │   ├── input/                 # Contratos de entrada (PokedexUseCases)
+│   │   └── output/                # Contratos de saída
+│   ├── usecases/                  # ✅ Use Cases específicos
+│   │   ├── pokemon/               # FetchPokemonByIdUseCase
+│   │   └── pokedex/               # GetPaginatedPokemonsUseCase
+│   ├── dto/                       # DTOs de aplicação
+│   └── mappers/                   # Mapeadores entre camadas
+│
+├── infrastructure/                 # 🔧 DETALHES TÉCNICOS
+│   ├── adapters/                  # ✅ Adaptadores (implementam portas)
+│   ├── persistence/
+│   │   ├── entities/              # Entidades JPA (com anotações)
+│   │   ├── repositories/          # Implementações JPA
+│   │   └── mappers/               # Mappers JPA ↔ Domain
+│   └── configurations/            # Configurações Spring Boot
+│
+└── interfaces/                     # 🌐 INTERFACE DO USUÁRIO
+    ├── controllers/               # ✅ Controllers REST (usam apenas portas)
+    ├── dto/                       # DTOs da API REST
+    └── validators/                # Validadores de entrada
 ```
 
-### Princípios Fundamentais
+### ✅ Princípios Implementados
 
-- **Entidades de Domínio**: Conceitos puros de negócio sem dependências externas
-- **Casos de Uso**: Lógica de aplicação que orquestra as entidades
-- **Entidades JPA**: Mapeamento objeto-relacional isolado na infraestrutura
-- **DTOs**: Serialização/deserialização isolada na camada de interface
-- **Inversão de Dependência**: Camadas internas não dependem de camadas externas
+- **Domain Purity**: Zero dependências externas no domínio
+- **Ports & Adapters**: Interfaces para entrada/saída, implementadas por adaptadores
+- **Use Cases Específicos**: Cada caso de uso tem responsabilidade única
+- **Value Objects Ricos**: Encapsulam validações e comportamentos (`PokemonId`, `PokemonNumber`)
+- **Inversão Total**: Controllers dependem de interfaces, não implementações
+- **Alta Testabilidade**: Use Cases testáveis unitariamente com mocks simples
 
 ## Configuração do Ambiente
 

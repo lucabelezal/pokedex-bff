@@ -15,7 +15,7 @@ class OpenApiConfiguration {
             Info()
                 .title("Pokédex BFF API")
                 .version("1.0.0")
-                .description("Documentação OpenAPI da Pokédex BFF")
+                .description("Pokédex BFF OpenAPI Documentation")
         )
 
     @Bean

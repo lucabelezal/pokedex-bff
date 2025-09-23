@@ -2,7 +2,7 @@ package com.pokedex.bff.application.dto.response
 
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(description = "Informações da imagem do Pokemon")
+@Schema(description = "Pokemon image information")
 data class PokemonImageDto(
     @Schema(
         description = "URL da imagem do Pokemon",

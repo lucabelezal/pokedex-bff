@@ -21,7 +21,7 @@ class JpaPokemonRepository(
             .toList()
 }
 
-// Função de extensão para converter PokemonEntity em Pokemon do domínio
+// Extension function to convert PokemonEntity to domain Pokemon
 fun PokemonEntity.toDomain(): Pokemon = Pokemon(
     id = this.id,
     number = this.number,
@@ -29,19 +29,19 @@ fun PokemonEntity.toDomain(): Pokemon = Pokemon(
     height = this.height,
     weight = this.weight,
     description = this.description,
-    sprites = null, // Mapear conforme necessário
+    sprites = null, // Map as needed
     genderRateValue = this.genderRateValue,
     genderMale = this.genderMale,
     genderFemale = this.genderFemale,
     eggCycles = this.eggCycles,
-    stats = null, // Mapear conforme necessário
-    generation = null, // Mapear conforme necessário
-    species = null, // Mapear conforme necessário
-    region = null, // Mapear conforme necessário
-    evolutionChain = null, // Mapear conforme necessário
-    types = emptySet(), // Mapear conforme necessário
-    abilities = emptySet(), // Mapear conforme necessário
-    eggGroups = emptySet(), // Mapear conforme necessário
-    weaknesses = emptySet() // Mapear conforme necessário
+    stats = null, // Map as needed
+    generation = null, // Map as needed
+    species = null, // Map as needed
+    region = null, // Map as needed
+    evolutionChain = null, // Map as needed
+    types = emptySet(), // Map as needed
+    abilities = emptySet(), // Map as needed
+    eggGroups = emptySet(), // Map as needed
+    weaknesses = emptySet() // Map as needed
 )
 

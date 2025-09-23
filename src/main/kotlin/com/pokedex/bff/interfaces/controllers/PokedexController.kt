@@ -1,6 +1,6 @@
 package com.pokedex.bff.interfaces.controllers
 
-import com.pokedex.bff.application.services.PokedexService
+import com.pokedex.bff.application.ports.input.PokedexUseCases
 import com.pokedex.bff.application.dto.response.PokedexListResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
@@ -17,29 +17,29 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/pokedex")
-@Tag(name = "Pokedex", description = "Operações relacionadas à Pokedex")
+@Tag(name = "Pokedex", description = "Pokedex related operations")
 class PokedexController(
-    private val pokemonService: PokedexService
+    private val pokedexUseCases: PokedexUseCases
 ) {
 
     @Operation(
-        summary = "Lista Pokemons com paginação",
-        description = "Retorna uma lista paginada de Pokemons.",
+        summary = "List Pokemons with pagination",
+        description = "Returns a paginated list of Pokemons.",
         responses = [
             ApiResponse(
                 responseCode = "200",
-                description = "Lista retornada com sucesso",
+                description = "List returned successfully",
                 content = [Content(schema = Schema(implementation = PokedexListResponse::class))]
             )
         ]
     )
     @GetMapping("/pokemons")
     fun getPokemons(
-        @Parameter(description = "Número da página (começando em 0)", example = "0", `in` = ParameterIn .QUERY)
+        @Parameter(description = "Page number (starting at 0)", example = "0", `in` = ParameterIn .QUERY)
         @RequestParam(defaultValue = "0") page: Int,
-        @Parameter(description = "Tamanho da página", example = "10", `in` = ParameterIn.QUERY)
+        @Parameter(description = "Page size", example = "10", `in` = ParameterIn.QUERY)
         @RequestParam(defaultValue = "10") size: Int
     ): ResponseEntity<PokedexListResponse> {
-        return ResponseEntity.ok(pokemonService.getPokemons(page, size))
+        return ResponseEntity.ok(pokedexUseCases.getPaginatedPokemons(page, size))
     }
 }
