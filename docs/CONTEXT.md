@@ -4,125 +4,124 @@
 
 ---
 
-## 🏗️ REFATORAÇÃO CLEAN ARCHITECTURE AVANÇADA (Setembro 2025)
+## 🏗️ REFATORAÇÃO ARQUITETURAL - MVC ESTRUTURADO (Setembro 2025)
 
-### 🎯 **Clean Architecture com Ports & Adapters Implementada**
+### 🎯 **Decisão: MVC Estruturado ao invés de Clean Architecture**
 
-O projeto foi **completamente refatorado** seguindo rigorosamente os princípios do **Clean Architecture** com implementação de **Ports & Adapters**, separação total de responsabilidades entre domínio e infraestrutura, e alta testabilidade.
+O projeto foi **analisado e simplificado** após identificar que a **Clean Architecture com Hexagonal** estava introduzindo **complexidade desnecessária** para um domínio relativamente simples como o Pokédx BFF.
 
-#### ✅ **NOVA ESTRUTURA (Clean Architecture + Ports & Adapters)**:
+#### ⚠️ **MUDANÇA ARQUITETURAL FUNDAMENTAL**
+
+**❌ Removido**: Clean Architecture + Hexagonal Architecture (complexidade excessiva)  
+**✅ Adotado**: **MVC Estruturado** com **Princípios SOLID**
+
+### 📚 **Documentação Atualizada**
+
+- 🆕 [**MVC Architecture**](architecture/ARCHITECTURE_COMPARISON.md) - Comparação Clean vs MVC
+- 🆕 [**Style Guide**](development/STYLE_GUIDE.md) - Padrões MVC atualizados  
+- 📄 [**Clean Architecture**](architecture/CLEAN_ARCHITECTURE.md) - Mantido para referência histórica
+
+### 🎯 **Nova Estrutura (MVC Estruturado)**:
+
 ```
 src/main/kotlin/com/pokedex/bff/
-├── domain/                         # 🎯 DOMÍNIO PURO (Core Business)
-│   ├── entities/                   # Entidades de domínio (sem anotações)
-│   ├── valueobjects/              # ✅ Value Objects com regras de negócio
-│   │   ├── PokemonId.kt           # IDs com validações e geração
-│   │   └── PokemonNumber.kt       # Números com formatação/validação
-│   ├── repositories/              # Interfaces de repositório (contratos)
-│   ├── services/                  # Serviços de domínio (futuro)
-│   └── exceptions/                # Exceções de domínio
+├── controller/                     # � REST Controllers (thin)
+│   ├── PokemonController.kt        # Endpoints de Pokemon
+│   ├── PokedexController.kt        # Endpoints de Pokedex
+│   └── TypeController.kt           # Endpoints de Types
 │
-├── application/                    # 🎯 CASOS DE USO (Orchestration)
-│   ├── ports/                     # ✅ Portas (Hexagonal Architecture)
-│   │   ├── input/                 # Portas de entrada (Use Case contracts)
-│   │   │   └── PokedexUseCases.kt # Interface para casos de uso
-│   │   └── output/                # Portas de saída (Repository contracts)
-│   ├── usecases/                  # ✅ Use Cases específicos
-│   │   ├── pokemon/               # Use cases de Pokemon
-│   │   │   └── FetchPokemonByIdUseCase.kt
-│   │   └── pokedex/               # Use cases de Pokedex
-│   │       └── GetPaginatedPokemonsUseCase.kt
-│   ├── dto/                       # DTOs de response/request
-│   └── mappers/                   # Mapeadores aplicação ↔ domínio
+├── service/                        # 🎯 Business Logic (específicos)
+│   ├── PokemonService.kt           # Lógica de Pokemon
+│   ├── PokemonSearchService.kt     # Busca especializada
+│   ├── PokedexService.kt           # Lógica de Pokedex
+│   └── ValidationService.kt        # Validações centralizadas
 │
-├── infrastructure/                 # 🔧 DETALHES TÉCNICOS
-│   ├── adapters/                  # ✅ Adaptadores (implementam portas)
-│   │   └── PokedexUseCasesAdapter.kt # Implementa PokedexUseCases
-│   ├── persistence/
-│   │   ├── entities/              # Entidades JPA (com anotações)
-│   │   ├── repositories/          # Implementações JPA dos repositórios
-│   │   └── mappers/               # Mappers JPA ↔ Domain
-│   ├── configurations/            # Configurações Spring Boot
-│   └── config/                    # Configurações de beans/use cases
+├── repository/                     # 🗄️ Data Access (simples)
+│   ├── PokemonRepository.kt        # Interface de Pokemon
+│   ├── TypeRepository.kt           # Interface de Types
+│   └── SpeciesRepository.kt        # Interface de Species
 │
-├── interfaces/                     # 🌐 INTERFACE DO USUÁRIO
-│   ├── controllers/               # ✅ Controllers REST (usa apenas portas)
-│   │   └── PokedexController.kt   # Refatorado para usar PokedexUseCases
-│   ├── dto/                       # DTOs da API REST
-│   └── validators/                # Validadores de entrada
+├── entity/                         # 📊 JPA Entities (com comportamentos)
+│   ├── Pokemon.kt                  # Entity rica com métodos
+│   ├── Type.kt                     # Entity com validações
+│   └── Species.kt                  # Entity com comportamentos
 │
-└── shared/                        # 🤝 COMPARTILHADO
-    ├── exceptions/                # Exceções globais
-    ├── utils/                     # Utilitários
-    └── constants/                 # Constantes
+├── dto/                           # � Data Transfer Objects
+│   ├── request/                   # DTOs de entrada
+│   └── response/                  # DTOs de saída
+│
+├── config/                        # ⚙️ Configurations
+│   ├── DatabaseConfig.kt          # Configuração DB
+│   └── WebConfig.kt               # Configuração Web
+│
+└── exception/                     # ❌ Exception Handling
+    ├── PokemonNotFoundException.kt # Exceções específicas
+    └── GlobalExceptionHandler.kt  # Handler global
 ```
+### 🔄 **Refatoração Arquitetural Implementada**
 
-### 🔄 **Refatoração de Separação de Responsabilidades Implementada**
+| Aspecto | Clean Architecture (Removida) | MVC Estruturado (Atual) | Benefício |
+|---------|--------------------------------|--------------------------|-----------|
+| **Complexidade** | 4+ camadas + Ports & Adapters | 3 camadas principais | **Simplicidade** e facilidade de entendimento |
+| **Services** | Use Cases específicos complexos | Services focados e específicos | **Pragmatismo** sem over-engineering |
+| **Controllers** | Dependem de portas/interfaces | Dependem de services diretos | **Clareza** no fluxo de dados |
+| **Entities** | Domain entities puras + JPA entities | Entities JPA ricas com comportamentos | **Consolidação** sem duplicação |
+| **Testabilidade** | Testes puros com mocks complexos | Testes diretos com mocks simples | **Produtividade** nos testes |
+| **Domínio** | Value Objects elaborados | Entities com validações e comportamentos | **Equilíbrio** entre simplicidade e riqueza |
 
-| Aspecto | Antes (22/09) | Depois (23/09) | Benefício |
-|---------|---------------|----------------|-----------|
-| **Interface/Implementação** | `PokedexService` + `PokedexServiceImpl` no mesmo arquivo | Separados: `PokedexUseCases` → `GetPaginatedPokemonsUseCase` → `PokedexUseCasesAdapter` | Inversão de dependência correta |
-| **Use Cases** | Application Services genéricos | Use Cases específicos com responsabilidade única | Single Responsibility Principle |
-| **Ports & Adapters** | Dependência direta de repositories | Portas de entrada/saída com adaptadores | Hexagonal Architecture |
-| **Value Objects** | Entities anêmicas | Value Objects ricos (`PokemonId`, `PokemonNumber`) | Domain-Driven Design |
-| **Testabilidade** | Testes dependem de Spring context | Testes unitários puros com mocks simples | Testabilidade isolada |
-| **Domínio** | Misturado com infraestrutura | Completamente puro, sem dependências externas | Domain purity |
+### 📁 **Implementações MVC Estruturado**
 
-### 📁 **Implementações Concretas Criadas**
-
-#### ✅ **Value Objects (Domain Rich)**
+#### ✅ **Controllers Thin (Apenas Coordenação)**
 ```kotlin
-// PokemonId.kt - Validações de negócio
-@JvmInline
-value class PokemonId(val value: Long) {
-    fun isGeneration1(): Boolean = value in 1L..151L
-    fun getGeneration(): Int = when(value) { /* regras */ }
-}
-
-// PokemonNumber.kt - Formatação e validação
-@JvmInline 
-value class PokemonNumber(val value: String) {
-    fun formatForDisplay(): String = value.padStart(3, '0')
-    fun toDisplayString(): String = "Nº${formatForDisplay()}"
-}
-```
-
-#### ✅ **Use Case Específico**
-```kotlin
-// GetPaginatedPokemonsUseCase.kt
-@Component
-class GetPaginatedPokemonsUseCase(
-    private val pokemonRepository: PokemonRepository // Interface do domínio
+// PokemonController.kt - Coordenação simples
+@RestController
+@RequestMapping("/api/v1/pokemons")
+class PokemonController(
+    private val pokemonService: PokemonService
 ) {
-    fun execute(page: Int, size: Int): PokedexListResponse {
-        validatePaginationParameters(page, size)
-        // Lógica de negócio pura
-        return formatPokemonList(...)
+    @GetMapping("/{id}")
+    fun getPokemon(@PathVariable id: Long): ResponseEntity<PokemonResponse> {
+        val pokemon = pokemonService.findById(id)
+        return ResponseEntity.ok(pokemon)
     }
 }
 ```
 
-#### ✅ **Ports & Adapters**
+#### ✅ **Services Específicos (Business Logic)**
 ```kotlin
-// PokedexUseCases.kt (Porta de Entrada)
-interface PokedexUseCases {
-    fun getPaginatedPokemons(page: Int, size: Int): PokedexListResponse
-}
-
-// PokedexUseCasesAdapter.kt (Adaptador)
+// PokemonService.kt - Lógica de negócio focada
 @Service
-class PokedexUseCasesAdapter(
-    private val getPaginatedPokemonsUseCase: GetPaginatedPokemonsUseCase
-) : PokedexUseCases
+class PokemonService(
+    private val pokemonRepository: PokemonRepository,
+    private val validationService: ValidationService
+) {
+    fun findById(id: Long): PokemonResponse {
+        validationService.validatePokemonId(id)
+        val pokemon = pokemonRepository.findById(id)
+            ?: throw PokemonNotFoundException("Pokemon with ID $id not found")
+        return PokemonResponse.from(pokemon)
+    }
+}
 ```
 
-#### ✅ **Controller Refatorado**
+#### ✅ **Entities Rica (Domain Models)**
 ```kotlin
-// PokedexController.kt (usa apenas interfaces)
-@RestController
-class PokedexController(
-    private val pokedexUseCases: PokedexUseCases // ← Interface, não implementação
-)
+// Pokemon.kt - Entity com comportamentos
+@Entity
+@Table(name = "pokemons")
+data class Pokemon(
+    @Id val id: Long,
+    val name: String,
+    val number: String,
+    val height: Int,
+    val weight: Int
+) {
+    // Comportamentos de domínio
+    fun isLegendary(): Boolean = id in 144..151
+    fun formatNumber(): String = number.padStart(3, '0')
+    fun getBMI(): Double = weight.toDouble() / (height.toDouble() / 100).pow(2)
+    fun isGeneration1(): Boolean = id <= 151
+}
 ```
 
 ### 📁 **Estrutura de Dados Organizada**
