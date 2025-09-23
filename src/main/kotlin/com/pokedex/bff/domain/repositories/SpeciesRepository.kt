@@ -1,6 +1,11 @@
 package com.pokedex.bff.domain.repositories
 
-import com.pokedex.bff.infrastructure.persistence.entities.SpeciesEntity
-import org.springframework.data.jpa.repository.JpaRepository
+import com.pokedex.bff.domain.entities.Species
 
-interface SpeciesRepository : JpaRepository<SpeciesEntity, Long>
+interface SpeciesRepository {
+    fun findById(id: Long): Species?
+    fun findAll(): List<Species>
+    fun save(species: Species): Species
+    fun deleteById(id: Long)
+    fun existsById(id: Long): Boolean
+}
