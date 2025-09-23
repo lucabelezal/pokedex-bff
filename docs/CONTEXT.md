@@ -143,61 +143,93 @@ pokedex-bff/
 
 ## 🔄 Estrutura e Fluxo de Dados
 
-### 🏛️ **Princípios Clean Architecture + Ports & Adapters**
+### 🏛️ **Princípios MVC Estruturado**
 
-1. **Regra de Dependência**: `Interfaces → Application → Domain ← Infrastructure`
-2. **Domain Puro**: Zero dependências externas, apenas regras de negócio
-3. **Ports & Adapters**: Interfaces para entrada/saída, implementadas por adaptadores
-4. **Use Cases Específicos**: Cada caso de uso tem responsabilidade única
-5. **Value Objects Ricos**: Encapsulam validações e comportamentos de domínio
-6. **Inversão Total**: Controllers dependem de interfaces, não implementações
+1. **Separation of Concerns**: `Controller → Service → Repository → Entity`
+2. **Single Responsibility**: Cada service tem responsabilidade única
+3. **Dependency Inversion**: Services dependem de interfaces de repository
+4. **Thin Controllers**: Controllers apenas coordenam, não contêm lógica
+5. **Rich Entities**: Entities com comportamentos e validações
+6. **SOLID Principles**: Aplicação consistente dos princípios SOLID
 
-### 🎯 **Fluxo de Dependências (Implementado)**
+### 🎯 **Fluxo de Dependências MVC**
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   INTERFACES    │───▶│   APPLICATION    │───▶│     DOMAIN      │
+│   CONTROLLER    │───▶│     SERVICE      │───▶│   REPOSITORY    │
 │                 │    │                  │    │                 │
-│ PokedexController│    │ PokedexUseCases  │    │ PokemonRepository│
+│ PokemonController│    │ PokemonService   │    │PokemonRepository│
 │      ↓          │    │       ↓          │    │ (interface)     │
-│ usa interface   │    │ GetPaginated...  │    │ Value Objects   │
-│ PokedexUseCases │    │    UseCase       │    │ Domain Entities │
+│ thin, apenas    │    │ business logic   │    │ data access     │
+│ coordenação     │    │ validações       │    │ simples         │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
-         ↑                       ↑                       ↑
-         │                       │                       │
-┌─────────────────┐              │              ┌─────────────────┐
-│ INFRASTRUCTURE  │──────────────┘              │ INFRASTRUCTURE  │
-│                 │                             │                 │
-│PokedexUseCases  │                             │ JpaPokemon...   │
-│   Adapter       │                             │ RepositoryImpl  │
-│ (implementação) │                             │ (implementação) │
-└─────────────────┘                             └─────────────────┘
+                                ↓                       ↑
+                       ┌──────────────────┐              │
+                       │     ENTITY       │              │
+                       │                  │              │
+                       │ Pokemon.kt       │              │
+                       │ (rich entity)    │              │
+                       │ comportamentos   │              │
+                       └──────────────────┘              │
+                                ↑                       │
+                       ┌──────────────────┐              │
+                       │ INFRASTRUCTURE   │──────────────┘
+                       │                  │
+                       │ JpaPokemon...    │
+                       │ RepositoryImpl   │
+                       │ (implementação)  │
+                       └──────────────────┘
 ```
 
-### ✅ **Testabilidade Implementada**
+### ✅ **Testabilidade Simplificada**
 
-#### **Testes Unitários de Value Objects**
+#### **Testes de Service (Principais)**
 ```kotlin
-@Test
-fun `should format pokemon number correctly`() {
-    val pokemonNumber = PokemonNumber("25")
-    assertThat(pokemonNumber.formatForDisplay()).isEqualTo("025")
+@ExtendWith(MockitoExtension::class)
+class PokemonServiceTest {
+    @Mock
+    private lateinit var pokemonRepository: PokemonRepository
+    
+    @InjectMocks
+    private lateinit var pokemonService: PokemonService
+    
+    @Test
+    fun `should return pokemon when found by id`() {
+        // Given
+        val pokemon = Pokemon(1L, "Pikachu", "025", 40, 60)
+        `when`(pokemonRepository.findById(1L)).thenReturn(pokemon)
+        
+        // When
+        val result = pokemonService.findById(1L)
+        
+        // Then
+        assertThat(result.name).isEqualTo("Pikachu")
+        verify(pokemonRepository).findById(1L)
+    }
 }
 ```
 
-#### **Testes Unitários de Use Cases (com Mocks)**
+#### **Testes de Controller (Integração)**
 ```kotlin
-@Test
-fun `should return paginated pokemon list when valid parameters`() {
-    // Given
-    every { pokemonRepository.findAll(any()) } returns mockPage
+@WebMvcTest(PokemonController::class)
+class PokemonControllerTest {
+    @Autowired
+    private lateinit var mockMvc: MockMvc
     
-    // When
-    val result = useCase.execute(0, 10)
+    @MockBean
+    private lateinit var pokemonService: PokemonService
     
-    // Then
-    assertThat(result.pokemons).hasSize(1)
-    verify(exactly = 1) { pokemonRepository.findAll(any()) }
+    @Test
+    fun `should return pokemon when valid id`() {
+        // Given
+        val response = PokemonResponse(1L, "Pikachu", "025")
+        `when`(pokemonService.findById(1L)).thenReturn(response)
+        
+        // When & Then
+        mockMvc.perform(get("/api/v1/pokemons/1"))
+            .andExpected(status().isOk)
+            .andExpected(jsonPath("$.name").value("Pikachu"))
+    }
 }
 ```
 
