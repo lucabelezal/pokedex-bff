@@ -448,3 +448,49 @@ Esta **Clean Architecture pura** é:
 - **👥 Acessível**: Qualquer dev consegue entender
 
 **Resultado**: Arquitetura **limpa**, **simples** e **eficaz** que resolve os problemas reais do projeto sem complexidade desnecessária.
+
+---
+
+## 📦 **Value Objects vs DTOs na Clean Architecture**
+
+### **🤔 Decisão Importante: Quando usar cada um?**
+
+A Clean Architecture frequentemente usa **Value Objects** para conceitos de domínio, mas nem sempre isso é a melhor escolha. Para uma análise completa de **quando usar Value Objects vs DTOs**, consulte:
+
+**📖 [Value Objects vs DTOs - Guia de Decisão](VALUE_OBJECTS_VS_DTOS.md)**
+
+### **🎯 Resumo para Pokédx BFF:**
+
+#### **📦 Value Objects (Clean Architecture)**
+```kotlin
+// ✅ Quando o domínio é COMPLEXO
+value class Money(val amount: Double, val currency: String) {
+    fun convertTo(newCurrency: String): Money { /* lógica complexa */ }
+    fun applyTax(rate: Double): Money { /* cálculos específicos */ }
+    fun formatForDisplay(): String { /* formatação rica */ }
+}
+```
+
+#### **📄 DTOs (MVC Estruturado)**  
+```kotlin
+// ✅ Quando o domínio é SIMPLES (como Pokédx)
+data class PokemonResponse(
+    val number: String,  // "#025" - formatado no DTO
+    val name: String,
+    val types: List<String>
+) {
+    companion object {
+        fun from(pokemon: Pokemon): PokemonResponse { /* conversão simples */ }
+    }
+}
+```
+
+### **🎯 Recomendação Final:**
+
+Para o **Pokédx BFF**, que é um projeto de **domínio simples** focado em **APIs REST**:
+
+- **❌ Value Objects**: Over-engineering para domínio simples
+- **✅ DTOs**: Apropriados para transferência e formatação
+- **✅ MVC Estruturado**: Mais alinhado com a realidade do projeto
+
+**📖 Consulte o [guia completo](VALUE_OBJECTS_VS_DTOS.md) para análise detalhada com exemplos práticos.**
