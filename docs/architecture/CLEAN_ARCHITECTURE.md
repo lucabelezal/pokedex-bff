@@ -2,9 +2,25 @@
 
 ## 🎯 **Visão Geral**
 
-Este documento detalha a **implementação de Clean Architecture** no projeto Pokédex BFF, seguindo os princípios de **Robert C. Martin** combinados com **Hexagonal Architecture** de **Alistair Cockburn**.
+Este documento detalha a **implementação de Clean Architecture** no projeto Pokédex BFF, seguindo os princípios de **Robert C. Martin**.
 
-## 🏗️ **Princípios Fundamentais**
+## ⚠️ **IMPORTANTE - DECISÃO ARQUITETURAL**
+
+Após análise, decidimos **simplificar a arquitetura**:
+
+### **📚 Documentos Atualizados**
+- 🆕 [**Clean Architecture Pura**](CLEAN_ARCHITECTURE_PURE.md) - Versão simplificada sem Hexagonal
+- 🆕 [**Comparação Arquitetural**](ARCHITECTURE_COMPARISON.md) - Clean vs MVC
+- 📄 Este documento mantido para **referência histórica**
+
+### **🎯 Recomendação Atual**
+Para o **Pokédex BFF**, recomendamos **MVC bem estruturado** ao invés de Clean Architecture complexa.
+
+**Motivo**: Domínio simples não justifica a complexidade adicional da Clean Architecture.
+
+---
+
+## 🏗️ **Princípios Fundamentais (Referência)**
 
 ### **1. Dependency Rule (Regra de Dependência)**
 

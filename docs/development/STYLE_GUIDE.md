@@ -2,76 +2,140 @@
 
 ## 🎯 **Visão Geral**
 
-Este guia estabelece **padrões de código** e **critérios de code review** para o projeto Pokédex BFF, seguindo **Clean Architecture**, **SOLID principles** e **Domain-Driven Design**.
+Este guia estabelece **padrões de código** e **critérios de code review** para o projeto Pokédex BFF, seguindo **MVC bem estruturado** com **SOLID principles**.
+
+## ⚠️ **DECISÃO ARQUITETURAL**
+
+Mudamos de **Clean Architecture** para **MVC estruturado** para maior simplicidade e produtividade.
+
+📖 **Consulte**: [Comparação Arquitetural](../architecture/ARCHITECTURE_COMPARISON.md)
 
 ## 🏗️ **Princípios Arquiteturais**
 
-### **1. Clean Architecture + Hexagonal Architecture**
+### **1. MVC Bem Estruturado**
 
 #### ✅ **OBRIGATÓRIO**
 ```kotlin
-// ✅ Domain Entity (Pura)
+// ✅ Entity com comportamento
+@Entity
 data class Pokemon(
-    val id: PokemonId,           // Value Object
-    val number: PokemonNumber,   // Value Object
-    val name: String
+    @Id val id: Long,
+    val name: String,
+    val number: String
 ) {
-    // Apenas lógica de negócio
-    fun isValid(): Boolean = name.isNotBlank()
+    // Lógica de negócio na entity
+    fun isLegendary(): Boolean = id in 144..151
+    fun formatNumber(): String = number.padStart(3, '0')
 }
 
-// ✅ Use Case específico
-@Component
-class SearchPokemonByTypeUseCase(
-    private val pokemonRepository: PokemonRepository // Interface
+// ✅ Service com lógica centralizada
+@Service
+class PokemonService(
+    private val repository: PokemonRepository,
+    private val validator: PokemonValidator
 ) {
-    fun execute(type: String): List<Pokemon> {
-        require(type.isNotBlank()) { "Type cannot be blank" }
-        return pokemonRepository.findByType(type)
+    fun getPokemon(id: Long): PokemonResponse {
+        validator.validateId(id)
+        val pokemon = repository.findById(id)
+            ?: throw PokemonNotFoundException()
+        return PokemonResponse.from(pokemon)
     }
+}
+
+// ✅ Controller thin (apenas coordenação)
+@RestController
+class PokemonController(private val service: PokemonService) {
+    @GetMapping("/{id}")
+    fun getPokemon(@PathVariable id: Long) = service.getPokemon(id)
 }
 ```
 
 #### ❌ **PROIBIDO**
 ```kotlin
-// ❌ Entity com anotações JPA no domain
+// ❌ Entity anêmica (sem comportamento)
 @Entity
-data class Pokemon(
-    @Id val id: Long,  // ❌ Anotação JPA no domain
-    val name: String
-)
+data class Pokemon(@Id val id: Long, val name: String)
 
-// ❌ Use Case genérico
+// ❌ Controller gordo (com lógica)
+@RestController
+class PokemonController(private val repository: PokemonRepository) {
+    @GetMapping("/{id}")
+    fun getPokemon(@PathVariable id: Long): Pokemon {
+        if (id <= 0) throw IllegalArgumentException() // ❌ Validação no controller
+        return repository.findById(id) ?: throw RuntimeException() // ❌ Lógica no controller
+    }
+}
+
+// ❌ Service genérico demais
 @Service
-class PokemonService {  // ❌ Muito genérico
+class DataService {  // ❌ Muito genérico
     fun doEverything() { ... }  // ❌ Múltiplas responsabilidades
 }
 ```
 
-### **2. Separação de Camadas**
+### **2. SOLID Principles**
 
-#### ✅ **Estrutura Correta**
+#### ✅ **Single Responsibility**
+```kotlin
+// ✅ Uma responsabilidade por classe
+@Service
+class PokemonSearchService(private val repository: PokemonRepository) {
+    fun searchByName(name: String): List<Pokemon> = repository.findByNameContaining(name)
+}
+
+@Service  
+class PokemonValidationService {
+    fun validatePokemon(pokemon: Pokemon): ValidationResult = ...
+}
 ```
-domain/
-├── entities/          # Entidades puras
-├── valueobjects/     # Value Objects com validações
-├── repositories/     # Interfaces de persistência
-└── exceptions/       # Exceções de domínio
 
-application/
-├── ports/input/      # Contratos de entrada
-├── usecases/         # Use Cases específicos
-└── dto/              # DTOs de aplicação
+#### ✅ **Open/Closed**
+```kotlin
+// ✅ Extensível via estratégia
+interface SearchStrategy {
+    fun search(criteria: String): List<Pokemon>
+}
 
-infrastructure/
-├── adapters/         # Implementam portas
-├── persistence/      # JPA entities e repos
-└── configurations/   # Configs Spring
+@Component
+class NameSearchStrategy : SearchStrategy { ... }
 
-interfaces/
-├── controllers/      # REST controllers
-└── dto/              # DTOs da API
+@Component  
+class TypeSearchStrategy : SearchStrategy { ... }
 ```
+
+#### ✅ **Dependency Inversion**
+```kotlin
+// ✅ Service depende de abstração
+@Service
+class PokemonService(
+    private val repository: PokemonRepository  // Interface
+) { ... }
+
+// ✅ Implementação não importada no service
+@Repository
+class JpaPokemonRepository : PokemonRepository { ... }
+```
+
+### **3. Estrutura de Camadas MVC**
+
+#### ✅ **Estrutura Simplificada**
+```
+src/main/kotlin/com/pokedex/bff/
+├── controller/       # REST Controllers
+├── service/          # Business Logic
+├── repository/       # Data Access
+├── entity/           # JPA Entities
+├── dto/              # Data Transfer Objects
+├── config/           # Configurations
+└── exception/        # Exception Handling
+```
+
+#### ✅ **Responsabilidades por Camada**
+- **Controller**: Coordenação e mapeamento HTTP
+- **Service**: Lógica de negócio e orquestração
+- **Repository**: Acesso a dados
+- **Entity**: Modelo de dados com comportamentos
+- **DTO**: Transferência de dados entre camadas
 
 ## 🔧 **Padrões de Código**
 
@@ -79,40 +143,38 @@ interfaces/
 
 #### ✅ **Padrões Corretos**
 ```kotlin
-// Value Objects
-@JvmInline
-value class PokemonId(val value: Long)
-value class PokemonNumber(val value: String)
+// Services específicos
+@Service
+class PokemonSearchService
+class PokemonValidationService
+class PokedexManagementService
 
-// Use Cases específicos
-class FetchPokemonByIdUseCase
-class SearchPokemonByTypeUseCase
-class GetPaginatedPokemonsUseCase
+// Controllers organizados
+@RestController
+class PokemonController
+class PokedexController
+class TypeController
 
-// Ports (interfaces)
-interface PokemonUseCases
-interface PokedexUseCases
-
-// Adapters
-class PokemonUseCasesAdapter
-class PokemonRepositoryAdapter
+// Repositories focados
+interface PokemonRepository
+interface TypeRepository
 ```
 
 #### ❌ **Nomenclatura Incorreta**
 ```kotlin
 // ❌ Genérico demais
-class PokemonService
-class DataService
-class Helper
+class PokemonService  // Muito genérico
+class DataService    // O que faz?
+class Helper        // Vago
 
 // ❌ Não específico
-class ProcessUseCase
-class HandleRequest
+class ProcessService
+class HandleController
 ```
 
-### **2. Value Objects**
+### **2. Value Objects (Opcionais)**
 
-#### ✅ **Implementação Correta**
+#### ✅ **Implementação com Validação**
 ```kotlin
 @JvmInline
 value class PokemonId(val value: Long) {
@@ -129,157 +191,180 @@ value class PokemonId(val value: Long) {
 }
 ```
 
-#### ❌ **Implementação Incorreta**
+#### ❌ **Primitive Obsession**
 ```kotlin
-// ❌ Sem validações
-data class PokemonId(val value: Long)
+// ❌ Usar primitivos sem validação
+fun searchPokemon(id: Long) { ... }  // Sem validação
 
-// ❌ Primitive obsession
-fun searchPokemon(id: Long) { ... }  // Deveria usar PokemonId
-```
-
-### **3. Use Cases**
-
-#### ✅ **Use Case Bem Definido**
-```kotlin
-@Component
-class GetPaginatedPokemonsUseCase(
-    private val pokemonRepository: PokemonRepository
-) {
-    fun execute(page: Int, size: Int): PokedexListResponse {
-        validatePaginationParameters(page, size)
-        
-        val pageable = PageRequest.of(page, size)
-        val pokemons = pokemonRepository.findAll(pageable)
-        
-        return formatToResponse(pokemons)
-    }
-    
-    private fun validatePaginationParameters(page: Int, size: Int) {
-        require(page >= 0) { "Page must be non-negative" }
-        require(size > 0) { "Size must be positive" }
-        require(size <= 100) { "Size cannot exceed 100" }
-    }
-    
-    private fun formatToResponse(pokemons: Page<Pokemon>): PokedexListResponse {
-        // Lógica de formatação específica
-    }
+// ❌ Validação espalhada
+fun getPokemon(id: Long) {
+    if (id <= 0) throw Exception()  // Repetido em todo lugar
 }
 ```
 
-#### ❌ **Use Case Mal Definido**
+### **3. Services Bem Definidos**
+
+#### ✅ **Service Focado**
+```kotlin
+@Service
+class PokemonSearchService(
+    private val pokemonRepository: PokemonRepository
+) {
+    fun searchByName(name: String): List<Pokemon> {
+        validateSearchTerm(name)
+        return pokemonRepository.findByNameContaining(name)
+    }
+    
+    fun searchByType(type: String): List<Pokemon> {
+        validateType(type)
+        return pokemonRepository.findByType(type)
+    }
+    
+    private fun validateSearchTerm(term: String) {
+        require(term.isNotBlank()) { "Search term cannot be blank" }
+        require(term.length >= 2) { "Search term too short" }
+    }
+}
+#### ❌ **Service Mal Definido**
 ```kotlin
 // ❌ Múltiplas responsabilidades
 @Service
 class PokemonService {
     fun getPokemons() { ... }
     fun searchPokemons() { ... }
-    fun createPokemon() { ... }  // ❌ CRUD genérico
-    fun sendEmail() { ... }      // ❌ Responsabilidade não relacionada
+    fun createPokemon() { ... }    // ❌ CRUD genérico
+    fun sendEmail() { ... }        // ❌ Responsabilidade não relacionada
+    fun processPayment() { ... }   // ❌ Não é responsabilidade do Pokemon
 }
 ```
 
-### **4. Controllers**
+### **4. Controllers Thin**
 
 #### ✅ **Controller Correto**
 ```kotlin
 @RestController
-@RequestMapping("/api/v1/pokedex")
-class PokedexController(
-    private val pokedexUseCases: PokedexUseCases  // ← Interface
+@RequestMapping("/api/v1/pokemons")
+class PokemonController(
+    private val pokemonService: PokemonService  // Service Interface
 ) {
-    @GetMapping("/pokemons")
-    fun getPokemons(
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
-    ): ResponseEntity<PokedexListResponse> {
-        val result = pokedexUseCases.getPaginatedPokemons(page, size)
-        return ResponseEntity.ok(result)
+    @GetMapping("/{id}")
+    fun getPokemon(@PathVariable id: Long): ResponseEntity<PokemonResponse> {
+        val pokemon = pokemonService.findById(id)
+        return ResponseEntity.ok(pokemon)
+    }
+    
+    @GetMapping
+    fun searchPokemons(
+        @RequestParam(required = false) name: String?,
+        @RequestParam(required = false) type: String?
+    ): ResponseEntity<List<PokemonResponse>> {
+        val pokemons = when {
+            name != null -> pokemonService.searchByName(name)
+            type != null -> pokemonService.searchByType(type)
+            else -> pokemonService.findAll()
+        }
+        return ResponseEntity.ok(pokemons)
     }
 }
 ```
 
 #### ❌ **Controller Incorreto**
 ```kotlin
-// ❌ Dependência de implementação
+// ❌ Controller gordo com lógica
 @RestController
 class PokemonController(
-    private val pokemonService: PokemonServiceImpl  // ❌ Implementação
+    private val repository: PokemonRepository  // ❌ Acesso direto ao repository
 ) {
-    @GetMapping
-    fun getAll() {  // ❌ Sem validação, sem tipagem específica
-        return pokemonService.doEverything()  // ❌ Método genérico
-    }
-}
-```
-
+    @GetMapping("/{id}")
+    fun getPokemon(@PathVariable id: Long): Pokemon {
+        // ❌ Validação no controller
+        if (id <= 0) throw IllegalArgumentException("Invalid ID")
+        
+        // ❌ Lógica de negócio no controller
+        val pokemon = repository.findById(id) ?: throw NotFoundException()
+        
+        // ❌ Formatação no controller
+        if (pokemon.name.contains("legendary")) {
+            pokemon.type = "legendary"
+        }
+        
+        return pokemon
 ## 🧪 **Padrões de Teste**
 
-### **1. Testes de Value Objects**
+### **1. Testes de Service**
 
-#### ✅ **Testes Corretos**
+#### ✅ **Testes com Mocks**
 ```kotlin
-class PokemonNumberTest {
+@ExtendWith(MockitoExtension::class)
+class PokemonServiceTest {
+    @Mock
+    private lateinit var pokemonRepository: PokemonRepository
+    
+    @InjectMocks
+    private lateinit var pokemonService: PokemonService
+    
     @Test
-    fun `should format number correctly`() {
+    fun `should return pokemon when found by id`() {
         // Given
-        val pokemonNumber = PokemonNumber("25")
+        val pokemonId = 1L
+        val expectedPokemon = Pokemon(pokemonId, "Pikachu", "025")
+        `when`(pokemonRepository.findById(pokemonId)).thenReturn(expectedPokemon)
         
         // When
-        val formatted = pokemonNumber.formatForDisplay()
+        val result = pokemonService.findById(pokemonId)
         
         // Then
-        assertThat(formatted).isEqualTo("025")
+        assertThat(result).isEqualTo(expectedPokemon)
+        verify(pokemonRepository).findById(pokemonId)
     }
     
     @Test
-    fun `should throw exception for invalid number`() {
+    fun `should throw exception when pokemon not found`() {
+        // Given
+        val pokemonId = 999L
+        `when`(pokemonRepository.findById(pokemonId)).thenReturn(null)
+        
         // When & Then
-        assertThrows<IllegalArgumentException> {
-            PokemonNumber("")
+        assertThrows<PokemonNotFoundException> {
+            pokemonService.findById(pokemonId)
         }
     }
 }
 ```
 
-### **2. Testes de Use Cases**
+### **2. Testes de Controller**
 
-#### ✅ **Testes com Mocks**
+#### ✅ **Testes de Integração**
 ```kotlin
-class GetPaginatedPokemonsUseCaseTest {
-    @Mock
-    private lateinit var pokemonRepository: PokemonRepository
+@WebMvcTest(PokemonController::class)
+class PokemonControllerTest {
+    @Autowired
+    private lateinit var mockMvc: MockMvc
     
-    private lateinit var useCase: GetPaginatedPokemonsUseCase
-    
-    @BeforeEach
-    fun setup() {
-        useCase = GetPaginatedPokemonsUseCase(pokemonRepository)
-    }
+    @MockBean
+    private lateinit var pokemonService: PokemonService
     
     @Test
-    fun `should return paginated list when valid parameters`() {
+    fun `should return pokemon when valid id`() {
         // Given
-        val mockPage = PageImpl(listOf(createMockPokemon()))
-        every { pokemonRepository.findAll(any<Pageable>()) } returns mockPage
+        val pokemon = Pokemon(1L, "Pikachu", "025")
+        `when`(pokemonService.findById(1L)).thenReturn(pokemon)
         
-        // When
-        val result = useCase.execute(0, 10)
-        
-        // Then
-        assertThat(result.pokemons).hasSize(1)
-        verify { pokemonRepository.findAll(any<Pageable>()) }
+        // When & Then
+        mockMvc.perform(get("/api/v1/pokemons/1"))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.name").value("Pikachu"))
+            .andExpect(jsonPath("$.number").value("025"))
     }
 }
-```
-
 ## 📋 **Checklist de Code Review**
 
-### **🏗️ Arquitetura**
-- [ ] Segue Clean Architecture rigorosamente?
-- [ ] Mantém separação domain/infrastructure?
-- [ ] Usa Ports & Adapters corretamente?
-- [ ] Evita dependências circulares?
+### **🏗️ Arquitetura MVC**
+- [ ] Controllers thin (apenas coordenação)?
+- [ ] Services focados e específicos?
+- [ ] Repositories simples (acesso a dados)?
+- [ ] Entities com comportamentos?
+- [ ] DTOs para transferência de dados?
 
 ### **💎 SOLID Principles**
 - [ ] **S** - Single Responsibility: Uma responsabilidade por classe?
@@ -288,22 +373,22 @@ class GetPaginatedPokemonsUseCaseTest {
 - [ ] **I** - Interface Segregation: Interfaces específicas?
 - [ ] **D** - Dependency Inversion: Depende de abstrações?
 
-### **🎯 Domain-Driven Design**
-- [ ] Value Objects para conceitos importantes?
+### **🎯 Qualidade de Código**
+- [ ] Value Objects para conceitos importantes? (opcional)
 - [ ] Entities ricas em comportamento?
-- [ ] Linguagem ubíqua consistente?
-- [ ] Validações no domínio?
+- [ ] Validações centralizadas nos services?
+- [ ] Tratamento de exceções adequado?
 
 ### **🧪 Testabilidade**
-- [ ] Testes unitários para Value Objects?
-- [ ] Testes unitários para Use Cases?
+- [ ] Testes unitários para services?
+- [ ] Testes de integração para controllers?
 - [ ] Mocks para dependências externas?
 - [ ] Cobertura de casos extremos?
 
 ### **📝 Código Limpo**
 - [ ] Nomenclatura clara e específica?
 - [ ] Métodos pequenos e focados?
-- [ ] Sem primitive obsession?
+- [ ] Sem primitive obsession excessiva?
 - [ ] Tratamento de erros adequado?
 
 ### **🔧 Padrões Kotlin/Spring**
@@ -315,27 +400,27 @@ class GetPaginatedPokemonsUseCaseTest {
 ## ⚠️ **Red Flags**
 
 ### **❌ Violações Críticas**
-- Anotações JPA em domain entities
-- Use Cases genéricos ou com múltiplas responsabilidades
-- Controllers dependendo de implementações
-- Domain dependendo de infrastructure
-- Absence de testes unitários
+- Controllers gordos com lógica de negócio
+- Services genéricos demais ou com múltiplas responsabilidades
+- Entities anêmicas (apenas getters/setters)
+- Acesso direto a repositories nos controllers
+- Ausência de testes unitários
 
 ### **⚠️ Code Smells**
 - Classes com mais de 200 linhas
 - Métodos com mais de 20 linhas
 - Mais de 3 parâmetros em métodos
-- Primitive obsession (usar String ao invés de Value Object)
+- Primitive obsession excessiva
 - Comentários explicando código ruim
 
 ## 🚀 **Padrões de Excelência**
 
 ### **🏆 Código Exemplar**
-- Value Objects ricos com validações
-- Use Cases específicos e testáveis
-- Separação total domain/infrastructure
-- Testes abrangentes e claros
-- Documentação pragmática
+- Services específicos e bem testados
+- Controllers thin que apenas coordenam
+- Entities com comportamentos relevantes
+- Validações centralizadas e reutilizáveis
+- Documentação pragmática e útil
 - Nomenclatura expressiva
 
 ### **🌟 Bonus Points**
