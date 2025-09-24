@@ -426,6 +426,55 @@ Em uma arquitetura que aplica DIP, o fluxo de controle (quem chama quem) é o op
 #### Abstrações vs. Concretos
 Tudo que é concreto (frameworks, drivers, APIs externas) é volátil e muda com frequência. Abstrações (interfaces) são estáveis e mudam pouco. O DIP protege seu sistema de mudanças externas.
 
+### Visualização da Inversão de Dependência
+
+O diagrama abaixo ilustra como o DIP inverte as dependências: módulos de alto nível (Domínio) definem abstrações (interfaces), e os módulos de baixo nível (Infraestrutura) implementam essas abstrações. As setas mostram a direção das dependências de código-fonte, que sempre apontam para o domínio.
+
+```mermaid
+graph TD
+    subgraph "Alto Nível (Domínio)"
+        PokemonService[PokemonService]
+        IPokemonRepo["`**Interface**
+        PokemonRepository`"]
+    end
+    
+    subgraph "Baixo Nível (Infraestrutura)" 
+        JpaRepo["`**Implementação**
+        JpaPokemonRepository`"]
+        ApiRepo["`**Implementação**
+        ApiPokemonRepository`"]
+        Database[(Banco de Dados)]
+        ExternalAPI([API Externa])
+    end
+    
+    %% Dependências de código-fonte (todas apontam para o domínio)
+    PokemonService -.-> IPokemonRepo
+    JpaRepo -.-> IPokemonRepo
+    ApiRepo -.-> IPokemonRepo
+    
+    %% Dependências de runtime (fluxo de controle)
+    JpaRepo --> Database
+    ApiRepo --> ExternalAPI
+    
+    %% Styling
+    classDef domain fill:#e1f5fe,stroke:#01579b,stroke-width:2px
+    classDef interface fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef concrete fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef external fill:#f1f8e9,stroke:#33691e,stroke-width:2px
+    
+    class PokemonService domain
+    class IPokemonRepo interface
+    class JpaRepo,ApiRepo concrete
+    class Database,ExternalAPI external
+```
+
+**Como interpretar o diagrama:**
+- **Setas tracejadas (--→):** Dependências de código-fonte (quem importa/referencia quem)
+- **Setas sólidas (→):** Fluxo de controle em runtime (quem chama quem)
+- **Alto Nível (Domínio):** Define as regras de negócio e as interfaces necessárias
+- **Baixo Nível (Infraestrutura):** Implementa as interfaces definidas pelo domínio
+- **Inversão:** O domínio não conhece detalhes de implementação, mas os detalhes implementam contratos do domínio
+
 ### Exemplo real de violação do DIP
 Imagine um serviço de domínio que instancia diretamente um repositório concreto:
 ```kotlin
