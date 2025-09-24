@@ -416,6 +416,25 @@ O ISP vale para código, APIs, contratos de microserviços e até integrações 
 
 **Definição:** Módulos de alto nível (regras de negócio, domínio) não devem depender de módulos de baixo nível (detalhes, frameworks, UI, banco, etc). Ambos devem depender de abstrações (interfaces).
 
+### Visualização da Inversão de Dependência
+
+```
+Antes (Violação do DIP):
+[Alto Nível] --> [Baixo Nível]
+
+Depois (Aplicando DIP):
+[Alto Nível] --> [Abstração]
+                      ^
+                      |
+              [Baixo Nível]
+```
+
+**Como interpretar o diagrama:**
+- **Antes:** Módulos de alto nível dependem diretamente de implementações concretas (baixo nível)
+- **Depois:** Ambos os módulos dependem de uma abstração (interface), invertendo a direção da dependência
+- A seta `-->` indica "depende de"
+- O módulo de baixo nível agora implementa a abstração definida pelo alto nível
+
 ### DIP e a Arquitetura Limpa
 
 O DIP é o coração da Clean Architecture: todas as dependências devem apontar para o domínio (o centro). O domínio não sabe nada sobre UI, frameworks, banco, mensageria, etc. Isso garante que as regras de negócio sejam estáveis, testáveis e independentes de detalhes voláteis.
