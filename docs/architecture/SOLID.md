@@ -435,6 +435,13 @@ class PokemonService {
     fun get(id: Long) = repository.findById(id)
 }
 ```
+ 
+#### Visualização da Inversão de Dependência
+
+Antes (Violação do DIP):
+```
+[Alto Nível] --> [Baixo Nível]
+```
 Se precisar trocar a persistência (de banco para API, por exemplo), é preciso alterar o domínio, quebrando testes e regras de negócio.
 
 #### Como corrigir (aplicando DIP)
@@ -451,6 +458,20 @@ class PokemonService(private val repository: PokemonRepository) {
 // Em produção, injete a implementação concreta via construtor ou DI
 val service = PokemonService(JpaPokemonRepository())
 ```
+ 
+Depois (Aplicando DIP):
+```
+[Alto Nível] --> [Abstração]
+                     ^
+                     |
+             [Baixo Nível]
+```
+
+**Como interpretar o diagrama:**
+- **Antes:** Módulos de alto nível dependem diretamente de implementações concretas (baixo nível)
+- **Depois:** Ambos os módulos dependem de uma abstração (interface), invertendo a direção da dependência
+- A seta `-->` indica "depende de"
+- O módulo de baixo nível agora implementa a abstração definida pelo alto nível
 Agora, o domínio não sabe nada sobre detalhes de persistência. Você pode trocar a implementação sem tocar nas regras de negócio.
 
 ### Consequências de violar o DIP
