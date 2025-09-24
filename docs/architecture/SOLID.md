@@ -465,6 +465,39 @@ O DIP permite criar arquiteturas de plug-in: o domínio é o "core" estável, e 
 ### Gerenciamento de Instâncias
 Criar instâncias de classes concretas dentro do domínio viola o DIP. Use injeção de dependência (DI), fábricas (Factory/Abstract Factory) ou frameworks de DI para garantir que o domínio só conheça interfaces.
 
+### Visualização do Conceito DIP
+
+O diagrama abaixo ilustra como a Inversão de Dependência funciona na prática:
+
+```
+┌─────────────────┐
+│   Alto Nível    │
+│  (PokemonService)│ ──────┐
+└─────────────────┘       │
+                          ▼
+                   ┌─────────────────┐
+                   │   Abstração     │
+                   │(PokemonRepository)│
+                   │   (interface)   │
+                   └─────────────────┘
+                          ▲
+                          │
+┌─────────────────┐       │
+│  Baixo Nível    │ ──────┘
+│(JpaPokemonRepo) │
+└─────────────────┘
+```
+
+**Como interpretar o diagrama:**
+- **Alto Nível** (PokemonService): Contém as regras de negócio e lógica da aplicação
+- **Abstração** (PokemonRepository): Interface que define o contrato de persistência
+- **Baixo Nível** (JpaPokemonRepo): Implementação concreta que lida com detalhes técnicos
+
+As setas mostram que **ambos os módulos dependem da abstração**, não um do outro diretamente. Isso permite:
+- Trocar implementações sem afetar as regras de negócio
+- Testar o serviço com mocks da interface
+- Manter o domínio independente de frameworks
+
 **Resumo:**
 - O DIP é o pilar da Clean Architecture: dependências sempre apontam para o domínio.
 - Facilita testes, manutenção, evolução e migração tecnológica.
