@@ -453,6 +453,54 @@ val service = PokemonService(JpaPokemonRepository())
 ```
 Agora, o domínio não sabe nada sobre detalhes de persistência. Você pode trocar a implementação sem tocar nas regras de negócio.
 
+### Visualização do DIP: Arquitetura com Inversão de Dependência
+
+O diagrama abaixo ilustra como o DIP é aplicado no contexto do Pokémon BFF, mostrando as dependências apontando para abstrações:
+
+```mermaid
+classDiagram
+    class PokemonService {
+        <<Application Layer>>
+        -repository: PokemonRepository
+        +get(id: Long): Pokemon?
+    }
+    
+    class PokemonRepository {
+        <<Interface>>
+        +findById(id: Long): Pokemon?
+        +findAll(): List~Pokemon~
+        +save(pokemon: Pokemon): Pokemon
+        +deleteById(id: Long): void
+    }
+    
+    class JpaPokemonRepository {
+        <<Infrastructure Layer>>
+        -springDataRepository: SpringDataPokemonRepository
+        +findById(id: Long): Pokemon?
+        +findAll(): List~Pokemon~
+        +save(pokemon: Pokemon): Pokemon
+        +deleteById(id: Long): void
+    }
+    
+    %% Dependências seguindo o DIP
+    PokemonService --> PokemonRepository : depende da abstração
+    JpaPokemonRepository ..|> PokemonRepository : implementa
+    
+    %% Nota: Seta sólida = dependência
+    %% Seta tracejada = implementação
+```
+
+#### Como interpretar o diagrama
+
+- **Seta sólida (→)**: Representa dependência direta. `PokemonService` depende da interface `PokemonRepository`, não da implementação concreta.
+- **Seta tracejada com triângulo (⋯|>)**: Representa implementação/realização. `JpaPokemonRepository` implementa a interface `PokemonRepository`.
+- **Camadas**: 
+  - `PokemonService` está na camada de aplicação (alto nível)
+  - `PokemonRepository` é uma abstração definida no domínio
+  - `JpaPokemonRepository` está na camada de infraestrutura (baixo nível)
+
+**Princípio aplicado**: O módulo de alto nível (`PokemonService`) não depende do módulo de baixo nível (`JpaPokemonRepository`). Ambos dependem da abstração (`PokemonRepository`). Isso permite substituir facilmente a implementação de persistência sem afetar a lógica de negócio.
+
 ### Consequências de violar o DIP
 - O domínio fica acoplado a frameworks, bancos, APIs, dificultando testes e evolução.
 - Mudanças em detalhes obrigam a alterar regras de negócio.
