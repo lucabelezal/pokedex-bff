@@ -47,14 +47,14 @@ dependencies {
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 
-	// CSV
-	implementation("org.apache.commons:commons-csv:1.10.0")
-
 	// Swagger/OpenAPI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
 	// Dev Tools
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	// H2 Database for testing only
+	testRuntimeOnly("com.h2database:h2")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {

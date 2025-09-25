@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SpringDataPokemonAbilityRepository : JpaRepository<PokemonAbilityEntity, Long> {
-    fun findByPokemonEntityId(pokemonId: Long): List<PokemonAbilityEntity>
+    fun findByPokemonId(pokemonId: Long): List<PokemonAbilityEntity>
 }
