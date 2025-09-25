@@ -10,8 +10,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import org.springframework.data.domain.PageImpl
-import org.springframework.data.domain.PageRequest
 
 /**
  * Unit tests for GetPaginatedPokemonsUseCase
@@ -25,7 +23,7 @@ class GetPaginatedPokemonsUseCaseTest {
     private lateinit var useCase: GetPaginatedPokemonsUseCase
 
     @BeforeEach
-    fun setup() {
+    fun setUp() {
         useCase = GetPaginatedPokemonsUseCase(pokemonRepository)
     }
 
@@ -33,8 +31,7 @@ class GetPaginatedPokemonsUseCaseTest {
     fun `should return paginated pokemon list when valid parameters`() {
         // Given
         val page = 0
-        val size = 10
-        val expectedPageable = PageRequest.of(page, size)
+        val size = 5
         
         val mockPokemon = createMockPokemon(
             id = 1L,
@@ -43,8 +40,18 @@ class GetPaginatedPokemonsUseCaseTest {
             types = listOf(createMockType("grass", "#78C850"))
         )
         
-        val mockPage = PageImpl(listOf(mockPokemon), expectedPageable, 1)
-        every { pokemonRepository.findAll(expectedPageable) } returns mockPage
+        val mockPage = com.pokedex.bff.domain.common.Page(
+            content = listOf(mockPokemon),
+            pageNumber = page,
+            pageSize = size,
+            totalElements = 1,
+            totalPages = 1,
+            isFirst = true,
+            isLast = true,
+            hasNext = false,
+            hasPrevious = false
+        )
+        every { pokemonRepository.findAll(page, size) } returns mockPage
 
         // When
         val result = useCase.execute(page, size)
@@ -64,8 +71,11 @@ class GetPaginatedPokemonsUseCaseTest {
         assertThat(pokemon.types.first().name).isEqualTo("grass")
         assertThat(pokemon.image.element.type).isEqualTo("GRASS")
         assertThat(pokemon.image.element.color).isEqualTo("#78C850")
+        assertThat(pokemon.image.pokemon.id).isEqualTo(1L)
+        assertThat(pokemon.image.pokemon.name).isEqualTo("bulbasaur")
+        assertThat(pokemon.image.pokemon.url).isEqualTo("https://example.com/pokemon/1.png")
 
-        verify(exactly = 1) { pokemonRepository.findAll(expectedPageable) }
+        verify(exactly = 1) { pokemonRepository.findAll(page, size) }
     }
 
     @Test
@@ -73,7 +83,6 @@ class GetPaginatedPokemonsUseCaseTest {
         // Given
         val page = 0
         val size = 10
-        val expectedPageable = PageRequest.of(page, size)
         
         val mockPokemon = createMockPokemon(
             id = 1L,
@@ -82,15 +91,26 @@ class GetPaginatedPokemonsUseCaseTest {
             types = emptyList()
         )
         
-        val mockPage = PageImpl(listOf(mockPokemon), expectedPageable, 1)
-        every { pokemonRepository.findAll(expectedPageable) } returns mockPage
+        val mockPage = com.pokedex.bff.domain.common.Page(
+            content = listOf(mockPokemon),
+            pageNumber = page,
+            pageSize = size,
+            totalElements = 1,
+            totalPages = 1,
+            isFirst = true,
+            isLast = true,
+            hasNext = false,
+            hasPrevious = false
+        )
+        every { pokemonRepository.findAll(page, size) } returns mockPage
 
         // When
         val result = useCase.execute(page, size)
 
         // Then
         val pokemon = result.pokemons.first()
-        assertThat(pokemon.number).isEqualTo("NºUNK")
+        assertThat(pokemon.number).isEqualTo("Nº???")
+        assertThat(pokemon.name).isEqualTo("MissingNo")
         assertThat(pokemon.image.element.type).isEqualTo("UNKNOWN")
         assertThat(pokemon.image.element.color).isEqualTo("#CCCCCC")
     }
@@ -100,7 +120,6 @@ class GetPaginatedPokemonsUseCaseTest {
         // Given
         val page = 0
         val size = 10
-        val expectedPageable = PageRequest.of(page, size)
         
         val mockPokemon = createMockPokemon(
             id = 1L,
@@ -109,8 +128,18 @@ class GetPaginatedPokemonsUseCaseTest {
             types = emptyList() // no types
         )
         
-        val mockPage = PageImpl(listOf(mockPokemon), expectedPageable, 1)
-        every { pokemonRepository.findAll(expectedPageable) } returns mockPage
+        val mockPage = com.pokedex.bff.domain.common.Page(
+            content = listOf(mockPokemon),
+            pageNumber = page,
+            pageSize = size,
+            totalElements = 1,
+            totalPages = 1,
+            isFirst = true,
+            isLast = true,
+            hasNext = false,
+            hasPrevious = false
+        )
+        every { pokemonRepository.findAll(page, size) } returns mockPage
 
         // When
         val result = useCase.execute(page, size)
@@ -124,44 +153,29 @@ class GetPaginatedPokemonsUseCaseTest {
 
     @Test
     fun `should throw exception when page is negative`() {
-        // Given
-        val invalidPage = -1
-        val size = 10
-
-        // When & Then
+        // Given & When & Then
         val exception = assertThrows<IllegalArgumentException> {
-            useCase.execute(invalidPage, size)
+            useCase.execute(-1, 10)
         }
-        
-        assertThat(exception.message).isEqualTo("Page number must be non-negative")
+        assertThat(exception.message).contains("Page number cannot be negative")
     }
 
     @Test
     fun `should throw exception when size is zero or negative`() {
-        // Given
-        val page = 0
-        val invalidSize = 0
-
-        // When & Then
+        // Given & When & Then
         val exception = assertThrows<IllegalArgumentException> {
-            useCase.execute(page, invalidSize)
+            useCase.execute(0, 0)
         }
-        
-        assertThat(exception.message).isEqualTo("Page size must be positive")
+        assertThat(exception.message).contains("Page size must be greater than zero")
     }
 
     @Test
     fun `should throw exception when size exceeds maximum`() {
-        // Given
-        val page = 0
-        val excessiveSize = 101 // MAX_PAGE_SIZE is 100
-
-        // When & Then
+        // Given & When & Then
         val exception = assertThrows<IllegalArgumentException> {
-            useCase.execute(page, excessiveSize)
+            useCase.execute(0, 101)
         }
-        
-        assertThat(exception.message).isEqualTo("Page size cannot exceed 100")
+        assertThat(exception.message).contains("Page size cannot exceed 100")
     }
 
     @Test
@@ -169,10 +183,19 @@ class GetPaginatedPokemonsUseCaseTest {
         // Given
         val page = 0
         val size = 10
-        val expectedPageable = PageRequest.of(page, size)
         
-        val emptyPage = PageImpl<Pokemon>(emptyList(), expectedPageable, 0)
-        every { pokemonRepository.findAll(expectedPageable) } returns emptyPage
+        val emptyPage = com.pokedex.bff.domain.common.Page<Pokemon>(
+            content = emptyList(),
+            pageNumber = page,
+            pageSize = size,
+            totalElements = 0,
+            totalPages = 1,
+            isFirst = true,
+            isLast = true,
+            hasNext = false,
+            hasPrevious = false
+        )
+        every { pokemonRepository.findAll(page, size) } returns emptyPage
 
         // When
         val result = useCase.execute(page, size)
@@ -193,8 +216,14 @@ class GetPaginatedPokemonsUseCaseTest {
         every { this@mockk.id } returns id
         every { this@mockk.number } returns number
         every { this@mockk.name } returns name
-        every { this@mockk.types } returns types
-        every { sprites?.other?.home?.frontDefault } returns "https://example.com/pokemon/$id.png"
+        every { this@mockk.types } returns types.toSet()
+        every { sprites } returns mockk {
+            every { other } returns mockk {
+                every { home } returns mockk {
+                    every { frontDefault } returns "https://example.com/pokemon/$id.png"
+                }
+            }
+        }
     }
 
     private fun createMockType(name: String, color: String): Type = mockk {

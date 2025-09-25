@@ -1,12 +1,21 @@
 package com.pokedex.bff.application.ports.input
 
 import com.pokedex.bff.application.dto.response.PokedexListResponse
+import com.pokedex.bff.domain.entities.Pokemon
 
 /**
- * Port for Pokedex-related use cases
- * Defines the contract for fetching Pokemon lists with pagination
+ * Port for Pokemon-related use cases
+ * Defines the contract for all Pokemon operations including individual fetch and paginated lists
  */
-interface PokedexUseCases {
+interface PokemonUseCases {
+    
+    /**
+     * Fetches a single Pokemon by its ID
+     * 
+     * @param id the Pokemon ID
+     * @return the Pokemon or null if not found
+     */
+    fun findById(id: Long): Pokemon?
     
     /**
      * Fetches a paginated list of Pokemon for the Pokedex

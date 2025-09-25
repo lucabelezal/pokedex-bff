@@ -9,16 +9,57 @@ DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>
 DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
 
 # ==============================================================================
-# Comandos PHONY  
+# Funções Helper para Verificação do Banco
 # ==============================================================================
-.PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report generate-sql-data validate-db check-deps install-db-deps db-only-up db-only-down db-only-restart db-only-clean db-only-shell db-info \
-		dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell clean-docker \
-		dev-up dev-down db-refresh bff-only dev-status dev-logs
 
-# ==============================================================================
-# Ajuda
-# ==============================================================================
+
+# Verifica especificamente se o banco isolado (porta 5434) está rodando
+check-isolated-database:
+	@if ! $(DOCKER_CMD) ps | grep -q "pokedx-bff-db-standalone"; then \
+		echo "⚠️  BANCO ISOLADO NÃO DETECTADO (porta 5434)"; \
+		echo "   Este comando requer o banco isolado."; \
+		echo ""; \
+		echo "🚀 Deseja subir o banco isolado agora? (Y/n)"; \
+		read confirm; \
+		case "$$confirm" in \
+			[nN]|[nN][oO]) \
+				echo "❌ Operação cancelada. Para subir o banco isolado:"; \
+				echo "   make db-only-up"; \
+				exit 1; \
+				;; \
+			*) \
+				echo "📦 Subindo banco isolado..."; \
+				$(MAKE) db-only-up; \
+				;; \
+		esac \
+	else \
+		echo "✅ Banco isolado detectado - prosseguindo..."; \
+	fi
+
+# Verifica se o ambiente de desenvolvimento completo está rodando
+check-dev-database:
+	@if ! $(DOCKER_CMD) ps | grep -q "pokedex-bff-db-dev"; then \
+		echo "⚠️  BANCO DE DESENVOLVIMENTO NÃO DETECTADO"; \
+		echo "   Este comando requer o ambiente de desenvolvimento."; \
+		echo ""; \
+		echo "🚀 Deseja subir o ambiente de desenvolvimento agora? (Y/n)"; \
+		read confirm; \
+		case "$$confirm" in \
+			[nN]|[nN][oO]) \
+				echo "❌ Operação cancelada. Para subir o ambiente de dev:"; \
+				echo "   make dev-db-up"; \
+				exit 1; \
+				;; \
+			*) \
+				echo "📦 Subindo ambiente de desenvolvimento..."; \
+				$(MAKE) dev-db-up; \
+				;; \
+		esac \
+	else \
+		echo "✅ Ambiente de desenvolvimento detectado - prosseguindo..."; \
+	fi
+
+
 help:
 	@echo "==================================================================="
 	@echo "                 Comandos do Makefile para Pokedex BFF             "
@@ -46,12 +87,12 @@ help:
 	@echo ""
 	@echo "🏗️  BUILD E EXECUÇÃO:"
 	@echo "  make clean-bff              - Executa './gradlew clean'."
-	@echo "  make run-bff                - Executa apenas o BFF (requer banco ativo)."
+	@echo "  make run-bff                - Executa o BFF (verifica/sobe banco automaticamente)."
 	@echo ""
 	@echo "📊 SQL E DADOS:"
 	@echo "  make generate-sql-data      - Gera init-data.sql a partir dos JSONs."
 	@echo "  make install-db-deps        - Instala dependências Python para validação do banco."
-	@echo "  make validate-db            - Valida estrutura e dados do banco (requer banco ativo)."
+	@echo "  make validate-db            - Valida estrutura e dados (verifica/sobe banco automaticamente)."
 	@echo ""
 	@echo "🧪 TESTES:"
 	@echo "  make test                   - Roda todos os testes e gera o relatório JaCoCo."
@@ -64,13 +105,13 @@ help:
 	@echo "  make deep-clean-gradle      - Limpa caches e artefatos do Gradle."
 	@echo ""
 	@echo "📚 DOCUMENTAÇÃO:"
-	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
+	@echo "  make open-swagger           - Abre Swagger (verifica/sobe banco e BFF automaticamente)."
 	@echo ""
 	@echo "⚡ COMANDOS OTIMIZADOS:"
 	@echo "  make dev-up                 - Inicia ambiente completo (banco + BFF)."
 	@echo "  make dev-down               - Para ambiente de desenvolvimento."
 	@echo "  make db-refresh             - Atualiza dados do banco (recria com dados frescos)."
-	@echo "  make bff-only               - Executa apenas BFF (requer banco ativo)."
+	@echo "  make bff-only               - Executa apenas BFF (verifica/sobe banco automaticamente)."
 	@echo "  make dev-status             - Mostra status dos serviços."
 	@echo "  make dev-logs               - Exibe logs em tempo real."
 	@echo ""
@@ -81,13 +122,32 @@ help:
 	@echo "  4. make dev-status          (verifica se tudo está ok)"
 	@echo "==================================================================="
 
+# ============================================================================== 
+# Variáveis de Configuração
+# ==============================================================================
+	@echo "  4. make dev-status          (verifica se tudo está ok)"
+	@echo "==================================================================="
+
+# ==============================================================================
+# Variáveis de Configuração
+# ==============================================================================
+	@echo "  4. make dev-status          (verifica se tudo está ok)"
+	@echo "==================================================================="
+
 # ==============================================================================
 # Documentação da API (Swagger)
 # ==============================================================================
 SWAGGER_URL = http://localhost:8080/swagger-ui/index.html
 
-open-swagger:
-	@echo "--- Abrindo Swagger UI no navegador: $(SWAGGER_URL) ---"
+open-swagger: check-database
+	@echo "🚀 Verificando se o BFF está rodando..."
+	@if ! curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "⚠️  BFF não está rodando. Iniciando..."; \
+		$(MAKE) run-bff & \
+		echo "⏳ Aguardando BFF inicializar..."; \
+		sleep 15; \
+	fi
+	@echo "📖 Abrindo Swagger UI no navegador: $(SWAGGER_URL)"
 	@if command -v xdg-open > /dev/null; then \
 		xdg-open $(SWAGGER_URL); \
 	elif command -v open > /dev/null; then \
@@ -132,15 +192,8 @@ db-refresh:
 
 bff-only:
 	@echo "🏗️  EXECUTANDO APENAS O BFF..."
-	@echo "   💡 Certifique-se de que o banco está rodando (make db-only-up)"
-	@if $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
-		echo "✅ Banco detectado - iniciando BFF..."; \
-		$(MAKE) run-bff; \
-	else \
-		echo "❌ Banco não encontrado! Execute primeiro:"; \
-		echo "   make db-only-up"; \
-		exit 1; \
-	fi
+	@$(MAKE) check-database
+	@$(MAKE) run-bff
 
 dev-status:
 	@echo "📊 STATUS DO AMBIENTE DE DESENVOLVIMENTO:"
@@ -178,47 +231,30 @@ clean-bff:
 	@echo "--- Limpando o projeto BFF (gradle clean) ---"
 	./gradlew clean
 
-run-bff:
-	@echo "🔄 Iniciando o BFF (requer banco ativo)..."
+run-bff: check-database
+	@echo "🔄 Iniciando o BFF..."
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
+
+
+
 # ==============================================================================
-# Testes e JaCoCo
+# Variáveis de Configuração
+# ==============================================================================
+DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
+JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
+
+# Detecção automática dos comandos Docker
+DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>/dev/null || echo "docker")
+DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
+
+# ==============================================================================
+# Funções Helper para Verificação do Banco
 # ==============================================================================
 
-test: clean-bff
-	@echo "--- Rodando todos os testes e gerando relatório JaCoCo ---"
-	./gradlew clean test jacocoTestReport
-	@echo "Relatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
-
-test-class: clean-bff
-ifeq ($(CLASS),)
-	@echo "ERRO: Para rodar testes de uma classe específica, use: make test-class CLASS=<NomeDaClasseTeste>"
-	@exit 1
-else
-	@echo "--- Rodando testes da classe $(CLASS) e gerando relatório JaCoCo ---"
-	./gradlew clean test --tests "*$(CLASS)*" jacocoTestReport
-	@echo "Relocatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
-endif
-
-open-jacoco-report:
-	@echo "--- Abrindo relatório JaCoCo HTML no navegador: $(JACOCO_REPORT_PATH) ---"
-	@if [ ! -f "$(JACOCO_REPORT_PATH)" ]; then \
-		echo "ERRO: Relatório JaCoCo não encontrado em $(JACOCO_REPORT_PATH). Certifique-se de ter rodado os testes primeiro."; \
-		exit 1; \
-	fi
-	@if command -v xdg-open > /dev/null; then \
-		xdg-open $(JACOCO_REPORT_PATH); \
-	elif command -v open > /dev/null; then \
-		open $(JACOCO_REPORT_PATH); \
-	elif command -v start > /dev/null; then \
-		start $(JACOCO_REPORT_PATH); \
-	else \
-		echo "Não foi possível detectar um comando para abrir URLs/arquivos automaticamente."; \
-		echo "Por favor, abra manualmente: $(JACOCO_REPORT_PATH); \
-	fi
+# Verifica se o banco está rodando e oferece para subir se não estiver
+check-database:
+	@if ! $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
 
 # ==============================================================================
 # Verificação de Dependências e Geração de Dados SQL
@@ -247,7 +283,7 @@ install-db-deps:
 # Valida estrutura e dados do banco de dados
 # Uso: make validate-db
 # Requer: banco ativo (use db-only-up primeiro) e dependências (use install-db-deps primeiro)
-validate-db:
+validate-db: check-database
 	@echo "🔍 Validando estrutura e dados do banco..."
 	python3 tools/database/validate_database.py
 	@echo "✅ Validação concluída!"
@@ -281,7 +317,7 @@ db-only-clean:
 	@echo "✅ Banco isolado removido"
 
 # Abre shell psql no banco isolado
-db-only-shell:
+db-only-shell: check-isolated-database
 	@echo "🔄 Conectando ao banco isolado..."
 	PGPASSWORD=postgres psql -h localhost -U postgres -p 5434 -d pokedex_dev_db
 
@@ -423,7 +459,7 @@ dev-db-clean:
 
 # Abre um shell psql no banco de dev
 # Uso: make dev-db-shell
-dev-db-shell:
+dev-db-shell: check-dev-database
 	@echo "🔄 Conectando ao banco de desenvolvimento..."
 	PGPASSWORD=postgres psql -h localhost -U postgres -p 5434 -d pokedex_dev_db
 
