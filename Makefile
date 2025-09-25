@@ -1,65 +1,16 @@
-# ==============================================================================
+# ============================================================================== 
+# Alvo padrão: exibir help
+# ============================================================================== 
+.DEFAULT_GOAL := help
+
+# ============================================================================== 
 # Variáveis de Configuração
 # ==============================================================================
 DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
 JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 
-# Detecção automática dos comandos Docker
-DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>/dev/null || echo "docker")
-DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
 
-# ==============================================================================
-# Funções Helper para Verificação do Banco
-# ==============================================================================
-
-
-# Verifica especificamente se o banco isolado (porta 5434) está rodando
-check-isolated-database:
-	@if ! $(DOCKER_CMD) ps | grep -q "pokedx-bff-db-standalone"; then \
-		echo "⚠️  BANCO ISOLADO NÃO DETECTADO (porta 5434)"; \
-		echo "   Este comando requer o banco isolado."; \
-		echo ""; \
-		echo "🚀 Deseja subir o banco isolado agora? (Y/n)"; \
-		read confirm; \
-		case "$$confirm" in \
-			[nN]|[nN][oO]) \
-				echo "❌ Operação cancelada. Para subir o banco isolado:"; \
-				echo "   make db-only-up"; \
-				exit 1; \
-				;; \
-			*) \
-				echo "📦 Subindo banco isolado..."; \
-				$(MAKE) db-only-up; \
-				;; \
-		esac \
-	else \
-		echo "✅ Banco isolado detectado - prosseguindo..."; \
-	fi
-
-# Verifica se o ambiente de desenvolvimento completo está rodando
-check-dev-database:
-	@if ! $(DOCKER_CMD) ps | grep -q "pokedex-bff-db-dev"; then \
-		echo "⚠️  BANCO DE DESENVOLVIMENTO NÃO DETECTADO"; \
-		echo "   Este comando requer o ambiente de desenvolvimento."; \
-		echo ""; \
-		echo "🚀 Deseja subir o ambiente de desenvolvimento agora? (Y/n)"; \
-		read confirm; \
-		case "$$confirm" in \
-			[nN]|[nN][oO]) \
-				echo "❌ Operação cancelada. Para subir o ambiente de dev:"; \
-				echo "   make dev-db-up"; \
-				exit 1; \
-				;; \
-			*) \
-				echo "📦 Subindo ambiente de desenvolvimento..."; \
-				$(MAKE) dev-db-up; \
-				;; \
-		esac \
-	else \
-		echo "✅ Ambiente de desenvolvimento detectado - prosseguindo..."; \
-	fi
-
-
+# Makefile mínimo: apenas help
 help:
 	@echo "==================================================================="
 	@echo "                 Comandos do Makefile para Pokedex BFF             "
@@ -69,7 +20,7 @@ help:
 	@echo "🔧 CONFIGURAÇÃO INICIAL:"
 	@echo "  make check-deps             - Verifica se todas as dependências estão instaladas."
 	@echo "  make dev-setup              - Configura e inicia o ambiente (Linux/macOS)."
-	@echo "  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
+	@echo "  make dev-setup-for-windows  - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
 	@echo ""
 	@echo "🗄️  BANCO DE DADOS (Isolado):"
 	@echo "  make db-only-up             - Sobe APENAS o banco com dados pré-carregados."
@@ -122,18 +73,6 @@ help:
 	@echo "  4. make dev-status          (verifica se tudo está ok)"
 	@echo "==================================================================="
 
-# ============================================================================== 
-# Variáveis de Configuração
-# ==============================================================================
-	@echo "  4. make dev-status          (verifica se tudo está ok)"
-	@echo "==================================================================="
-
-# ==============================================================================
-# Variáveis de Configuração
-# ==============================================================================
-	@echo "  4. make dev-status          (verifica se tudo está ok)"
-	@echo "==================================================================="
-
 # ==============================================================================
 # Documentação da API (Swagger)
 # ==============================================================================
@@ -178,6 +117,11 @@ dev-down:
 	@echo "✅ Ambiente de desenvolvimento parado."
 
 db-refresh:
+# ============================================================================== 
+# Jacoco
+# ==============================================================================
+jacoco-report:
+	@if [ -f $(JACOCO_REPORT_PATH) ]; then \
 	@echo "🔄 ATUALIZANDO DADOS DO BANCO..."
 	@echo "   ⚠️  Isso irá recriar o banco com dados frescos!"
 	@read -p "Tem certeza? (y/N): " confirm; \
@@ -235,9 +179,6 @@ run-bff: check-database
 	@echo "🔄 Iniciando o BFF..."
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
-
-
-
 # ==============================================================================
 # Variáveis de Configuração
 # ==============================================================================
@@ -255,6 +196,19 @@ DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py d
 # Verifica se o banco está rodando e oferece para subir se não estiver
 check-database:
 	@if ! $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "⚠️  Banco de dados não está rodando."; \
+		read -p "Deseja subir o banco agora? (y/N): " confirm; \
+		if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
+			$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db; \
+			echo "⏳ Aguardando banco inicializar..."; \
+			sleep 5; \
+		else \
+			echo "❌ Operação cancelada. O banco é necessário para continuar."; \
+			exit 1; \
+		fi; \
+	else \
+		echo "✅ Banco de dados já está rodando."; \
+	fi
 
 # ==============================================================================
 # Verificação de Dependências e Geração de Dados SQL
