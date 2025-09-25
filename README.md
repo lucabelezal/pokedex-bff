@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" src="docs/assets/icons/bff.png" />
+  <img width="300" src="doc/assets/icons/bff.png" />
 </p>
 <p align="center">
   <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
@@ -19,7 +19,7 @@
 
 ```
 pokedex-bff/
-├── docs/                    # 📚 Documentação técnica
+├── doc/                    # 📚 Documentação técnica
 │   ├── architecture/        # Decisões arquiteturais
 │   ├── development/         # Guias de desenvolvimento
 │   ├── deployment/          # Deploy e infraestrutura
@@ -56,7 +56,7 @@ make db-info           # Info de conexão
 ```
 
 #### **Windows** 🪟
-> 📖 **Para instruções detalhadas no Windows, consulte**: [**Guia Windows**](docs/WINDOWS_GUIDE.md)
+> 📖 **Para instruções detalhadas no Windows, consulte**: [**Guia Windows**](doc/WINDOWS_GUIDE.md)
 
 ```cmd
 # Scripts Batch (.bat)
@@ -100,40 +100,40 @@ docker compose -f docker\docker-compose.dev.yml logs -f   # Logs
 O projeto utiliza **MVC estruturado** com **princípios SOLID**:
 
 📖 **Documentação Arquitetural**:
-- [**Comparação Arquitetural**](docs/architecture/ARCHITECTURE_COMPARISON.md) - Clean vs MVC
-- [**Guia de Estilo**](docs/development/STYLE_GUIDE.md) - Padrões de código
-- [**Visão Geral**](docs/OVERVIEW.md) - Documentação completa
+- [**Comparação Arquitetural**](doc/architecture/ARCHITECTURE_COMPARISON.md) - Clean vs MVC
+- [**Guia de Estilo**](doc/development/STYLE_GUIDE.md) - Padrões de código
+- [**Visão Geral**](doc/OVERVIEW.md) - Documentação completa
 
 ## 📚 **Documentação**
 
 ### 🏗️ **Arquitetura** 
-* [**MVC Architecture**](docs/architecture/ARCHITECTURE_COMPARISON.md) - _Comparação Clean vs MVC e implementação_
+* [**MVC Architecture**](doc/architecture/ARCHITECTURE_COMPARISON.md) - _Comparação Clean vs MVC e implementação_
 
 ### 🗄️ **Banco de Dados**
-* [**Database**](docs/database/DATABASE.md) - _Modelagem e estrutura PostgreSQL_
-* [**Schema**](docs/database/SCHEMA.md) - _Scripts e diagramas do banco_
-* [**Data Sources**](docs/database/DATA_SOURCES.md) - _Origens dos dados utilizados_
+* [**Database**](doc/database/DATABASE.md) - _Modelagem e estrutura PostgreSQL_
+* [**Schema**](doc/database/SCHEMA.md) - _Scripts e diagramas do banco_
+* [**Data Sources**](doc/database/DATA_SOURCES.md) - _Origens dos dados utilizados_
 
 ### 🚀 **Desenvolvimento**
-* [**Getting Started**](docs/GETTING_STARTED.md) - _Guia de instalação e execução_
-* [**Style Guide**](docs/development/STYLE_GUIDE.md) - _Padrões de código e code review_
-* [**Pokédex App**](docs/development/POKEDEX_APP.md) - _Design e interação front-end_
+* [**Getting Started**](doc/GETTING_STARTED.md) - _Guia de instalação e execução_
+* [**Style Guide**](doc/development/STYLE_GUIDE.md) - _Padrões de código e code review_
+* [**Pokédex App**](doc/development/POKEDEX_APP.md) - _Design e interação front-end_
 
 ### 🤖 **AI Development**
-* [**AI Prompt Template**](docs/ai/PROMPT_TEMPLATE.md) - _Templates para desenvolvimento assistido por IA_
-* [**Development Guide**](docs/ai/DEVELOPMENT_GUIDE.md) - _Guias para usar IA mantendo padrões MVC_
+* [**AI Prompt Template**](doc/ai/PROMPT_TEMPLATE.md) - _Templates para desenvolvimento assistido por IA_
+* [**Development Guide**](doc/ai/DEVELOPMENT_GUIDE.md) - _Guias para usar IA mantendo padrões MVC_
 
 ### 📡 **API**
-* [**Swagger Documentation**](docs/api/SWAGGER.md) - _Endpoints e contratos REST_
+* [**Swagger Documentation**](doc/api/SWAGGER.md) - _Endpoints e contratos REST_
 
 ### 📋 **Geral**
-* [**Overview**](docs/OVERVIEW.md) - _Contexto geral e objetivos do projeto_
-* [**Technologies**](docs/TECHNOLOGIES.md) - _Kotlin, Spring Boot, PostgreSQL, etc._
-* [**Context**](docs/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
+* [**Overview**](doc/OVERVIEW.md) - _Contexto geral e objetivos do projeto_
+* [**Technologies**](doc/TECHNOLOGIES.md) - _Kotlin, Spring Boot, PostgreSQL, etc._
+* [**Context**](doc/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
 
 ### 🪟 **Windows**
-* [**Windows Guide**](docs/WINDOWS_GUIDE.md) - _Guia completo com 4 opções para Windows_
-* [**Windows Make Setup**](docs/WINDOWS_MAKE_SETUP.md) - _Como instalar make no Windows_
+* [**Windows Guide**](doc/WINDOWS_GUIDE.md) - _Guia completo com 4 opções para Windows_
+* [**Windows Make Setup**](doc/WINDOWS_MAKE_SETUP.md) - _Como instalar make no Windows_
 
 ---
 
@@ -242,7 +242,7 @@ O projeto utiliza **MVC estruturado** com **princípios SOLID**:
 
 ```
 pokedex-bff/
-├── docs/                    # 📚 Documentação organizada
+├── doc/                    # 📚 Documentação organizada
 │   ├── architecture/        # 🏗️ Documentação arquitetural
 │   ├── database/           # 🗄️ Database schema e migrations
 │   ├── development/        # 🚀 Development guides
@@ -316,8 +316,8 @@ docker run -p 8080:8080 pokedex-bff  # Run container
 Este projeto oferece **guidelines específicas para desenvolvimento assistido por IA** mantendo **padrões MVC estruturados**:
 
 ### **📋 Templates para IA**
-- [**Prompt Template**](docs/ai/PROMPT_TEMPLATE.md) - Template completo para solicitações
-- [**Development Guide**](docs/ai/DEVELOPMENT_GUIDE.md) - Guias para usar IA corretamente
+- [**Prompt Template**](doc/ai/PROMPT_TEMPLATE.md) - Template completo para solicitações
+- [**Development Guide**](doc/ai/DEVELOPMENT_GUIDE.md) - Guias para usar IA corretamente
 
 ### **🎯 Princípios para IA**
 1. **Service-First**: Sempre começar pelos services de negócio
@@ -330,7 +330,7 @@ Este projeto oferece **guidelines específicas para desenvolvimento assistido po
 - ❌ Não permitir controllers gordos com lógica de negócio
 - ❌ Não aceitar services genéricos demais
 - ❌ Não criar repositories que fazem mais que acesso a dados
-- ✅ Sempre revisar código gerado seguindo [Style Guide](docs/development/STYLE_GUIDE.md)
+- ✅ Sempre revisar código gerado seguindo [Style Guide](doc/development/STYLE_GUIDE.md)
 
 ## 📊 **Status do Projeto**
 
@@ -387,7 +387,7 @@ TOTAL: ~280 min ✅ (dentro do limite)
 # ✅ Aceitos (conventional commits):
 feat/add-pokemon-search        # Nova funcionalidade
 fix/authentication-bug         # Correção de bug
-docs/update-readme            # Documentação
+doc/update-readme            # Documentação
 refactor/clean-architecture   # Refatoração
 test/add-integration-tests    # Testes
 ci/optimize-workflows         # CI/CD
@@ -400,14 +400,14 @@ random-branch-name          # Não segue padrão
 ```
 
 ### **📖 Documentação CI/CD**
-- **[Guia Completo](docs/ci/README.md)**: Documentação detalhada dos workflows
-- **[Guia de Migração](docs/ci/MIGRATION.md)**: Processo de migração dos workflows
-- **[Validação](docs/ci/validate-workflows.sh)**: Script para testar workflows localmente
+- **[Guia Completo](doc/ci/README.md)**: Documentação detalhada dos workflows
+- **[Guia de Migração](doc/ci/MIGRATION.md)**: Processo de migração dos workflows
+- **[Validação](doc/ci/validate-workflows.sh)**: Script para testar workflows localmente
 
 ### **🔧 Validação Local**
 ```bash
 # Validar workflows antes do commit
-./docs/ci/validate-workflows.sh
+./doc/ci/validate-workflows.sh
 ```
 
 ## 🤝 **Contribuindo**
@@ -425,7 +425,7 @@ random-branch-name          # Não segue padrão
 5. Crie Pull Request
 
 ### **📝 Padrões**
-- Seguir [Style Guide](docs/development/STYLE_GUIDE.md)
+- Seguir [Style Guide](doc/development/STYLE_GUIDE.md)
 - Incluir testes para novas funcionalidades
 - Manter cobertura >80%
 - Validar com `./gradlew check`
@@ -437,9 +437,9 @@ Este projeto está licenciado sob a **Apache License 2.0** - veja o arquivo [LIC
 ## 📞 **Suporte**
 
 ### **📚 Documentação**
-- [**Visão Geral Completa**](docs/OVERVIEW.md)
-- [**Getting Started**](docs/GETTING_STARTED.md)
-- [**Troubleshooting**](docs/TROUBLESHOOTING.md)
+- [**Visão Geral Completa**](doc/OVERVIEW.md)
+- [**Getting Started**](doc/GETTING_STARTED.md)
+- [**Troubleshooting**](doc/TROUBLESHOOTING.md)
 
 ### **🐛 Issues**
 Encontrou um bug? [Abra uma issue](https://github.com/lucabelezal/pokedex-bff/issues)

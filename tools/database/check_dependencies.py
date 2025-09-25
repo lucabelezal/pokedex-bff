@@ -32,28 +32,72 @@ def check_python() -> Tuple[bool, str]:
 
 def check_docker() -> Tuple[bool, str]:
     """Verifica se Docker está instalado e funcionando."""
-    success, output = run_command("docker --version")
-    if not success:
-        return False, "Docker não encontrado"
+    # Locais comuns onde Docker pode estar instalado
+    docker_paths = [
+        "docker",  # No PATH
+        "/usr/local/bin/docker",  # Instalação padrão
+        "/Applications/Docker.app/Contents/Resources/bin/docker",  # Docker Desktop no macOS
+        "/usr/bin/docker"  # Linux
+    ]
+    
+    docker_cmd = None
+    version_output = None
+    
+    # Procura Docker em diferentes locais
+    for path in docker_paths:
+        if path == "docker":
+            success, output = run_command("docker --version")
+        else:
+            success, output = run_command(f"{path} --version")
+        
+        if success:
+            docker_cmd = path
+            version_output = output
+            break
+    
+    if not docker_cmd:
+        return False, "Docker não encontrado. Instale o Docker Desktop ou adicione Docker ao PATH"
     
     # Verifica se Docker daemon está rodando
-    success_ping, _ = run_command("docker info")
+    info_cmd = f"{docker_cmd} info" if docker_cmd != "docker" else "docker info"
+    success_ping, _ = run_command(info_cmd)
     if not success_ping:
-        return False, f"{output} (daemon não está rodando)"
+        return False, f"{version_output} (Docker Desktop não está rodando - abra o Docker Desktop e aguarde inicializar)"
     
-    return True, output
+    return True, version_output
 
 def check_docker_compose() -> Tuple[bool, str]:
     """Verifica se Docker Compose está instalado."""
+    # Locais comuns onde Docker pode estar instalado
+    docker_paths = [
+        "docker",  # No PATH
+        "/usr/local/bin/docker",  # Instalação padrão
+        "/Applications/Docker.app/Contents/Resources/bin/docker",  # Docker Desktop no macOS
+        "/usr/bin/docker"  # Linux
+    ]
+    
     # Primeiro tenta docker compose (versão nova)
-    success, output = run_command("docker compose version")
-    if success:
-        return True, output
+    for docker_path in docker_paths:
+        if docker_path == "docker":
+            success, output = run_command("docker compose version")
+        else:
+            success, output = run_command(f"{docker_path} compose version")
+        
+        if success:
+            return True, output
     
     # Fallback para docker-compose (versão legacy)
-    success, output = run_command("docker-compose --version")
-    if success:
-        return True, output
+    docker_compose_paths = [
+        "docker-compose",  # No PATH
+        "/usr/local/bin/docker-compose",  # Instalação padrão
+        "/Applications/Docker.app/Contents/Resources/bin/docker-compose",  # Docker Desktop no macOS
+        "/usr/bin/docker-compose"  # Linux
+    ]
+    
+    for path in docker_compose_paths:
+        success, output = run_command(f"{path} --version")
+        if success:
+            return True, output
     
     return False, "Docker Compose não encontrado"
 
@@ -74,8 +118,6 @@ def check_psycopg2() -> Tuple[bool, str]:
 
 def get_installation_instructions() -> Dict[str, Dict[str, str]]:
     """Retorna instruções de instalação para cada sistema operacional."""
-    system = platform.system().lower()
-    
     instructions = {
         "python": {
             "linux": "sudo apt update && sudo apt install python3 python3-pip",
@@ -106,56 +148,104 @@ def get_installation_instructions() -> Dict[str, Dict[str, str]]:
     
     return instructions
 
-def main():
-    """Função principal para verificar todas as dependências."""
-    print("🔍 VERIFICADOR DE DEPENDÊNCIAS - POKÉDX BFF")
-    print("=" * 60)
-    
-    system = platform.system()
-    print(f"🖥️  Sistema Operacional: {system} {platform.release()}")
-    print("=" * 60)
-    
-    checks = [
-        ("Python 3.7+", check_python),
+def run_essential_checks():
+    """Executa verificações de dependências essenciais."""
+    essential_checks = [
         ("Docker", check_docker),
-        ("Docker Compose", check_docker_compose),
         ("Make", check_make),
-        ("psycopg2 (Python)", check_psycopg2)
+        ("Python3", check_python)
     ]
     
     results = []
     all_ok = True
     
-    for name, check_func in checks:
-        success, message = check_func()
-        status = "✅" if success else "❌"
-        results.append((name, success, message))
-        print(f"{status} {name:20} | {message}")
-        if not success:
+    print("\n� DEPENDÊNCIAS ESSENCIAIS:")
+    print("-" * 40)
+    
+    for name, check_func in essential_checks:
+        try:
+            success, message = check_func()
+            results.append((name, success, message))
+            status = "✅" if success else "❌"
+            print(f"{status} {name}: {message}")
+            if not success:
+                all_ok = False
+        except Exception as e:
+            results.append((name, False, f"Erro na verificação: {str(e)}"))
+            print(f"❌ {name}: Erro na verificação: {str(e)}")
             all_ok = False
     
+    return results, all_ok
+
+
+def run_optional_checks():
+    """Executa verificações de dependências opcionais."""
+    optional_checks = [
+        ("psycopg2 (Python)", check_psycopg2)
+    ]
+    
+    results = []
+    
+    print("\n🔧 DEPENDÊNCIAS OPCIONAIS:")
+    print("-" * 40)
+    
+    for name, check_func in optional_checks:
+        try:
+            success, message = check_func()
+            results.append((name, success, message))
+            status = "✅" if success else "⚠️"
+            print(f"{status} {name}: {message}")
+            if not success:
+                print("   💡 Esta dependência é opcional para comandos básicos")
+        except Exception as e:
+            results.append((name, False, f"Erro na verificação: {str(e)}"))
+            print(f"⚠️ {name}: Erro na verificação: {str(e)}")
+            print("   💡 Esta dependência é opcional para comandos básicos")
+    
+    return results
+
+
+def print_installation_instructions(results, system):
+    """Imprime instruções de instalação para dependências ausentes."""
+    instructions = get_installation_instructions()
+    system_key = system.lower()
+    
+    print("\n📋 INSTRUÇÕES DE INSTALAÇÃO:")
+    print("-" * 60)
+    
+    for name, success, message in results:
+        if not success and name != "psycopg2 (Python)":  # Skip optional deps
+            tool_key = name.lower().split()[0]
+            if tool_key in instructions and system_key in instructions[tool_key]:
+                print(f"\n🔧 {name}:")
+                print(f"   {instructions[tool_key][system_key]}")
+    
+    print("\n💡 DICA: Após instalar, execute novamente 'make check-deps'")
+
+
+def main():
+    """Executa todas as verificações de dependências."""
+    print("🔍 VERIFICANDO DEPENDÊNCIAS DO PROJETO...")
     print("=" * 60)
     
+    system = platform.system()
+    
+    # Executar verificações
+    essential_results, all_ok = run_essential_checks()
+    optional_results = run_optional_checks()
+    
+    # Combinar resultados
+    all_results = essential_results + optional_results
+    
+    print("\n" + "=" * 60)
+    
     if all_ok:
-        print("🎉 TODAS AS DEPENDÊNCIAS ESTÃO INSTALADAS!")
+        print("\n🎉 DEPENDÊNCIAS ESSENCIAIS OK!")
         print("   Você pode executar os comandos de desenvolvimento.")
         return 0
     else:
-        print("⚠️  DEPENDÊNCIAS FALTANDO ENCONTRADAS!")
-        print("\n📋 INSTRUÇÕES DE INSTALAÇÃO:")
-        print("-" * 60)
-        
-        instructions = get_installation_instructions()
-        system_key = system.lower()
-        
-        for name, success, message in results:
-            if not success:
-                tool_key = name.lower().split()[0]
-                if tool_key in instructions and system_key in instructions[tool_key]:
-                    print(f"\n🔧 {name}:")
-                    print(f"   {instructions[tool_key][system_key]}")
-        
-        print(f"\n💡 DICA: Após instalar, execute novamente 'make check-deps'")
+        print("\n❌ ALGUMAS DEPENDÊNCIAS ESSENCIAIS ESTÃO AUSENTES!")
+        print_installation_instructions(all_results, system)
         return 1
 
 if __name__ == "__main__":

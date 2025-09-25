@@ -1,4 +1,4 @@
-package com.pokedex.bff.application.usecase
+package com.pokedex.bff.application.usecases
 
 import com.pokedex.bff.domain.entities.Pokemon
 import com.pokedex.bff.domain.repositories.PokemonRepository

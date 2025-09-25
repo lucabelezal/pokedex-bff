@@ -7,8 +7,8 @@ Este guia estabelece as **normas e melhores práticas** para usar ferramentas de
 ## 📋 **Normas Obrigatórias**
 
 ### **1. Template Padrão**
-- ✅ **SEMPRE** use o template em `docs/ai/PROMPT_TEMPLATE.md`
-- ✅ **SEMPRE** referencie `docs/CONTEXT.md` no prompt
+- ✅ **SEMPRE** use o template em `doc/ai/PROMPT_TEMPLATE.md`
+- ✅ **SEMPRE** referencie `doc/CONTEXT.md` no prompt
 - ✅ **SEMPRE** especifique restrições arquiteturais
 
 ### **2. Contexto Arquitetural**
@@ -17,7 +17,7 @@ Este guia estabelece as **normas e melhores práticas** para usar ferramentas de
 - ✅ Cite princípios SOLID aplicáveis
 
 ### **3. Validação Obrigatória**
-- ✅ Revisar código gerado contra `docs/development/STYLE_GUIDE.md`
+- ✅ Revisar código gerado contra `doc/development/STYLE_GUIDE.md`
 - ✅ Verificar separação domain/infrastructure
 - ✅ Executar `./gradlew build` e `./gradlew test`
 - ✅ Atualizar documentação se necessário
@@ -95,13 +95,13 @@ Este guia estabelece as **normas e melhores práticas** para usar ferramentas de
 ### **1. Preparação (5 min)**
 ```bash
 # 1. Ler contexto atual
-cat docs/CONTEXT.md
+cat doc/CONTEXT.md
 
 # 2. Verificar style guide
-cat docs/development/STYLE_GUIDE.md
+cat doc/development/STYLE_GUIDE.md
 
 # 3. Preparar template
-cp docs/ai/PROMPT_TEMPLATE.md /tmp/my_prompt.md
+cp doc/ai/PROMPT_TEMPLATE.md /tmp/my_prompt.md
 ```
 
 ### **2. Elaboração do Prompt (10 min)**

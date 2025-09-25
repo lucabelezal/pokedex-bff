@@ -40,7 +40,7 @@ src/main/kotlin/com/pokedex/bff/domain/
 - `REPOSITORY_MIGRATION_PLAN.md` → Status atualizado para CONCLUÍDA
 - `doc/ARCHITECTURE.md` → Referências corrigidas
 - `README.md` → Estrutura atualizada
-- Documentações em `docs/` → Já estava corretas
+- Documentações em `doc/` → Já estava corretas
 
 ## 🔄 Arquivos Processados
 
@@ -58,9 +58,9 @@ import com.pokedex.bff.domain.repositories.*
 
 ### **Documentação (4 arquivos)**
 - ✅ `REPOSITORY_MIGRATION_PLAN.md` 
-- ✅ `docs/architecture/ARCHITECTURE.md`
+- ✅ `doc/architecture/ARCHITECTURE.md`
 - ✅ `README.md`
-- ✅ `docs/development/MIGRATION_SUMMARY.md` (este arquivo)
+- ✅ `doc/development/MIGRATION_SUMMARY.md` (este arquivo)
 
 ## 🎉 Benefícios Alcançados
 

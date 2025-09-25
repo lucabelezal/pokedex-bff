@@ -1,6 +1,6 @@
 package com.pokedex.bff.interfaces.controllers
 
-import com.pokedex.bff.application.usecase.FetchPokemonUseCase
+import com.pokedex.bff.application.usecases.FetchPokemonUseCase
 import com.pokedex.bff.interfaces.dto.PokemonDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
