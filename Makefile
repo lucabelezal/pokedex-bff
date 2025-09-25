@@ -4,12 +4,17 @@
 DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
 JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 
+# Detecção automática dos comandos Docker
+DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>/dev/null || echo "docker")
+DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
+
 # ==============================================================================
 # Comandos PHONY  
 # ==============================================================================
 .PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
 		test test-class open-jacoco-report generate-sql-data validate-db check-deps install-db-deps db-only-up db-only-down db-only-restart db-only-clean db-only-shell db-info \
-		dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell clean-docker
+		dev-db-up dev-db-down dev-db-clean dev-db-shell prod-up prod-down prod-clean prod-shell clean-docker \
+		dev-up dev-down db-refresh bff-only dev-status dev-logs
 
 # ==============================================================================
 # Ajuda
@@ -61,10 +66,19 @@ help:
 	@echo "📚 DOCUMENTAÇÃO:"
 	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
 	@echo ""
+	@echo "⚡ COMANDOS OTIMIZADOS:"
+	@echo "  make dev-up                 - Inicia ambiente completo (banco + BFF)."
+	@echo "  make dev-down               - Para ambiente de desenvolvimento."
+	@echo "  make db-refresh             - Atualiza dados do banco (recria com dados frescos)."
+	@echo "  make bff-only               - Executa apenas BFF (requer banco ativo)."
+	@echo "  make dev-status             - Mostra status dos serviços."
+	@echo "  make dev-logs               - Exibe logs em tempo real."
+	@echo ""
 	@echo "💡 FLUXO RECOMENDADO:"
-	@echo "  1. make db-only-up          (testa o banco isoladamente)"
-	@echo "  2. make dev-db-up           (sobe ambiente completo para desenvolvimento)"
+	@echo "  1. make check-deps          (verifica dependências)"
+	@echo "  2. make dev-up              (sobe ambiente completo)"
 	@echo "  3. make test                (executa testes)"
+	@echo "  4. make dev-status          (verifica se tudo está ok)"
 	@echo "==================================================================="
 
 # ==============================================================================
@@ -84,6 +98,68 @@ open-swagger:
 		echo "Não foi possível detectar um comando para abrir URLs automaticamente."; \
 		echo "Por favor, abra manualmente: $(SWAGGER_URL)"; \
 	fi
+
+# ==============================================================================
+# Comandos de Desenvolvimento Otimizados
+# ==============================================================================
+
+dev-up:
+	@echo "🚀 INICIANDO AMBIENTE DE DESENVOLVIMENTO COMPLETO..."
+	@echo "   📦 Subindo banco + BFF com recarga automática"
+	@$(MAKE) check-deps
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db
+	@echo "⏳ Aguardando banco ficar disponível..."
+	@sleep 5
+	@$(MAKE) run-bff
+
+dev-down:
+	@echo "🛑 PARANDO AMBIENTE DE DESENVOLVIMENTO..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) down
+	@echo "✅ Ambiente de desenvolvimento parado."
+
+db-refresh:
+	@echo "🔄 ATUALIZANDO DADOS DO BANCO..."
+	@echo "   ⚠️  Isso irá recriar o banco com dados frescos!"
+	@read -p "Tem certeza? (y/N): " confirm; \
+	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
+		$(MAKE) db-only-clean; \
+		$(MAKE) generate-sql-data; \
+		$(MAKE) db-only-up; \
+		echo "✅ Banco atualizado com dados frescos!"; \
+	else \
+		echo "❌ Operação cancelada."; \
+	fi
+
+bff-only:
+	@echo "🏗️  EXECUTANDO APENAS O BFF..."
+	@echo "   💡 Certifique-se de que o banco está rodando (make db-only-up)"
+	@if $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "✅ Banco detectado - iniciando BFF..."; \
+		$(MAKE) run-bff; \
+	else \
+		echo "❌ Banco não encontrado! Execute primeiro:"; \
+		echo "   make db-only-up"; \
+		exit 1; \
+	fi
+
+dev-status:
+	@echo "📊 STATUS DO AMBIENTE DE DESENVOLVIMENTO:"
+	@echo "----------------------------------------"
+	@if $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "✅ Banco: RODANDO"; \
+	else \
+		echo "❌ Banco: PARADO"; \
+	fi
+	@if curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "✅ BFF: RODANDO (http://localhost:8080)"; \
+	else \
+		echo "❌ BFF: PARADO"; \
+	fi
+	@echo "----------------------------------------"
+
+dev-logs:
+	@echo "📋 LOGS DO AMBIENTE DE DESENVOLVIMENTO:"
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) logs -f
 
 # ======================================================================
 # Comandos Legados (manter compatibilidade)
@@ -183,17 +259,17 @@ validate-db:
 # Sobe apenas o banco com dados pré-carregados (teste isolado)
 db-only-up: generate-sql-data
 	@echo "🔄 Subindo banco de dados isolado..."
-	docker compose -f docker/docker-compose.db-only.yml up -d
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml up -d
 	@echo "⏳ Aguardando inicialização do banco..."
 	@sleep 10
 	@echo "📋 Verificando logs de inicialização:"
-	docker compose -f docker/docker-compose.db-only.yml logs db
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml logs db
 	@echo "✅ Banco isolado disponível em localhost:5434"
 
 # Para o banco isolado
 db-only-down:
 	@echo "🔄 Parando banco isolado..."
-	docker compose -f docker/docker-compose.db-only.yml down
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml down
 
 # Reinicia o banco isolado
 db-only-restart: db-only-down db-only-up
@@ -201,7 +277,7 @@ db-only-restart: db-only-down db-only-up
 # Remove banco isolado e volumes
 db-only-clean:
 	@echo "🔄 Removendo banco isolado e volumes..."
-	docker compose -f docker/docker-compose.db-only.yml down -v --remove-orphans
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml down -v --remove-orphans
 	@echo "✅ Banco isolado removido"
 
 # Abre shell psql no banco isolado
@@ -247,10 +323,11 @@ db-info:
 
 dev-setup:
 	@echo "🔄 Iniciando setup de desenvolvimento..."
+	@$(MAKE) check-deps
 	@echo "📊 Gerando dados SQL..."
 	python3 tools/database/generate_sql_from_json.py
 	@echo "🔄 Subindo banco de dados..."
-	docker compose -f docker/docker-compose.dev.yml up -d db
+	$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db
 	@echo "⏳ Aguardando banco inicializar..."
 	@sleep 10
 	@echo "🔄 Iniciando BFF..."

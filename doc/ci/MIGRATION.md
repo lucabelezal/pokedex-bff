@@ -263,7 +263,7 @@ git push origin feat/test-new-workflows
 # ✅ ACEITO (conventional commits):
 feat/add-pokemon-search
 fix/authentication-bug  
-docs/update-readme
+doc/update-readme
 refactor/clean-architecture
 test/add-integration-tests
 ci/optimize-workflows

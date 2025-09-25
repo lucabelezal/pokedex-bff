@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 🔧 Script de Validação dos Workflows GitHub Actions
-# Uso: ./docs/ci/validate-workflows.sh
+# Uso: ./doc/ci/validate-workflows.sh
 
 set -e
 
@@ -34,7 +34,7 @@ error() {
 # Verifica se estamos no diretório correto
 if [ ! -d ".github/workflows" ]; then
     error "Diretório .github/workflows não encontrado!"
-    error "Execute este script na raiz do projeto: ./docs/ci/validate-workflows.sh"
+    error "Execute este script na raiz do projeto: ./doc/ci/validate-workflows.sh"
     exit 1
 fi
 

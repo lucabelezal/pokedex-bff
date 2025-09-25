@@ -419,7 +419,7 @@ Os workflows GitHub Actions foram **completamente refatorados** seguindo as espe
 ├── 2-main.yml             # 🚀 CI/CD para main com deploy (40 linhas)
 └── 3-sonar.yml            # 🔍 SonarQube otimizado (85 linhas)
 
-docs/ci/
+doc/ci/
 ├── README.md              # 📖 Documentação completa dos workflows
 ├── MIGRATION.md           # 📋 Guia de migração detalhado
 └── validate-workflows.sh  # 🔧 Script de validação executável
@@ -433,7 +433,7 @@ docs/ci/
 ```yaml
 # ✅ Trigger: pull_request apenas para main
 # ✅ Validação: Branch deve seguir conventional commits
-# ✅ Tipos aceitos: feat/, fix/, docs/, refactor/, test/, ci/, chore/
+# ✅ Tipos aceitos: feat/, fix/, doc/, refactor/, test/, ci/, chore/
 ```
 
 #### 3. **2-main.yml - CI/CD apenas para main**
@@ -464,7 +464,7 @@ TOTAL: 280 min ✅ (dentro do limite)
 # ✅ Aceitos (conventional commits):
 feat/add-pokemon-search        # Nova funcionalidade
 fix/authentication-bug         # Correção de bug
-docs/update-readme            # Documentação
+doc/update-readme            # Documentação
 refactor/clean-architecture   # Refatoração
 test/add-integration-tests    # Testes
 ci/optimize-workflows         # CI/CD
@@ -493,7 +493,7 @@ SONAR_ORGANIZATION=lucabelezal       # Organização
 ### 🔧 **Validação Local**
 ```bash
 # Validar workflows antes do commit
-./docs/ci/validate-workflows.sh
+./doc/ci/validate-workflows.sh
 
 # Resultado esperado:
 ✅ Todos os workflows validados com sucesso!

@@ -242,7 +242,7 @@ Para usar os mesmos comandos em todas as plataformas:
    make validate-db
    ```
 
-📖 **Guia completo**: [Windows Make Setup](docs/WINDOWS_MAKE_SETUP.md)
+📖 **Guia completo**: [Windows Make Setup](doc/WINDOWS_MAKE_SETUP.md)
 ```
 
 ---
