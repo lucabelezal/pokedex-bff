@@ -117,8 +117,8 @@ sonarqube {
 		property("sonar.projectKey", "lucabelezal_pokedex-bff")
 		property("sonar.organization", "skeleton")
 		property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get().asFile}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.junit.reportPaths", "${layout.buildDirectory.get().asFile}/test-results/test")
 	}
 }
 
@@ -128,7 +128,7 @@ ktlint {
 }
 
 detekt {
-    config = files("$rootDir/config/detekt/detekt.yml")
+    config.from(files("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
 }
 
