@@ -6,3 +6,4 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface SpringDataAbilityRepository : JpaRepository<AbilityEntity, Long>
+

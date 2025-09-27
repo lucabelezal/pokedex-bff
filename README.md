@@ -129,7 +129,7 @@ O projeto utiliza **MVC estruturado** com **princípios SOLID**:
 ### 📋 **Geral**
 * [**Overview**](doc/OVERVIEW.md) - _Contexto geral e objetivos do projeto_
 * [**Technologies**](doc/TECHNOLOGIES.md) - _Kotlin, Spring Boot, PostgreSQL, etc._
-* [**Context**](doc/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
+* [**Context**](doc/ai/CONTEXT.md) - _Contexto completo do projeto e arquitetura_
 
 ### 🪟 **Windows**
 * [**Windows Guide**](doc/WINDOWS_GUIDE.md) - _Guia completo com 4 opções para Windows_

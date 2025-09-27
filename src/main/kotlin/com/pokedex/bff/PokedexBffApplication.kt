@@ -6,6 +6,8 @@ import org.springframework.boot.runApplication
 @SpringBootApplication
 class PokedexBffApplication
 
-fun main(args: Array<String>) {
-	runApplication<PokedexBffApplication>(*args)
+fun main() {
+    // Start the Spring Boot application without forwarding CLI args.
+    // This avoids using the spread operator which Detekt flags.
+    runApplication<PokedexBffApplication>()
 }

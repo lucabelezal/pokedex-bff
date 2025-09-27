@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional
 
 /**
  * Use case for retrieving paginated Pokemon list for Pokedex display
- * 
+ *
  * This use case orchestrates the business logic for fetching Pokemon data,
  * formatting it for display, and providing pagination information.
  */
@@ -24,21 +24,20 @@ class GetPaginatedPokemonsUseCase(
 
     /**
      * Executes the use case to get a paginated list of Pokemon
-     * 
+    *
      * Business rules:
      * - Format Pokemon number as "Nº{number}" or "NºUNK" if unknown
      * - Use main type (first type) for image element styling
      * - Provide default colors if type color is missing
      * - Include pagination metadata
-     * 
+    *
      * @param page the page number (zero-based)
      * @param size the number of Pokemon per page
      * @return formatted Pokemon list with pagination info
      */
     @Transactional(readOnly = true)
     fun execute(page: Int, size: Int): PokedexListResponse {
-        validatePaginationParameters(page, size)
-        
+    validatePaginationParameters(page, size)
         val pageResult = pokemonRepository.findAll(page, size)
 
         val pokemons: List<PokemonDto> = pageResult.content.map { pokemon ->
@@ -67,14 +66,14 @@ class GetPaginatedPokemonsUseCase(
         return PokedexListResponse(
             pageInfo = createPageInfo(pageResult),
             search = SearchDto(placeholder = "Search Pokémon..."),
-            filters = emptyList(), // TODO: Implement filtering logic in separate use case
+            filters = emptyList(),
             pokemons = pokemons
         )
     }
 
     private fun validatePaginationParameters(page: Int, size: Int) {
-        require(page >= 0) { "Page number must be non-negative" }
-        require(size > 0) { "Page size must be positive" }
+        require(page >= 0) { "Page number cannot be negative" }
+        require(size > 0) { "Page size must be greater than zero" }
         require(size <= MAX_PAGE_SIZE) { "Page size cannot exceed $MAX_PAGE_SIZE" }
     }
 

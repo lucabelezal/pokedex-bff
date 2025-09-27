@@ -446,3 +446,12 @@ clean-docker:
 	@docker compose -f docker/docker-compose.db-only.yml down -v --remove-orphans
 	@docker volume prune -f
 	@echo "✅ Containers e volumes removidos com sucesso!"
+
+# ==============================================================================
+# Lint e Formatação Kotlin
+# ==============================================================================
+lint:
+	./gradlew ktlintCheck detekt
+
+lint-fix:
+	./gradlew ktlintFormat

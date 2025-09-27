@@ -10,3 +10,4 @@ import org.springframework.stereotype.Repository
 interface SpringDataPokemonRepository : JpaRepository<PokemonEntity, Long> {
     override fun findAll(pageable: Pageable): Page<PokemonEntity>
 }
+

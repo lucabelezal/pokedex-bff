@@ -6,7 +6,7 @@ import org.junit.jupiter.api.assertThrows
 
 /**
  * Unit tests for PokemonNumber value object
- * 
+ *
  * Demonstrates testing pure domain logic without any infrastructure dependencies.
  * These tests focus on business rules and value object behavior.
  */
@@ -97,7 +97,7 @@ class PokemonNumberTest {
         val exception = assertThrows<IllegalArgumentException> {
             PokemonNumber("")
         }
-        
+
         assertThat(exception.message).isEqualTo("Pokemon number cannot be blank")
     }
 
@@ -107,7 +107,7 @@ class PokemonNumberTest {
         val exception = assertThrows<IllegalArgumentException> {
             PokemonNumber("abc")
         }
-        
+
         assertThat(exception.message).contains("Pokemon number must be 3-4 digits")
     }
 
@@ -117,7 +117,7 @@ class PokemonNumberTest {
         val exception = assertThrows<IllegalArgumentException> {
             PokemonNumber.fromInt(-1)
         }
-        
+
         assertThat(exception.message).contains("Pokemon number must be positive")
     }
 
@@ -127,7 +127,7 @@ class PokemonNumberTest {
         val exception = assertThrows<IllegalArgumentException> {
             PokemonNumber.fromInt(0)
         }
-        
+
         assertThat(exception.message).contains("Pokemon number must be positive")
     }
 

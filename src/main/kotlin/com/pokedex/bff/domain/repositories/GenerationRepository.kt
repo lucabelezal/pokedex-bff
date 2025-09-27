@@ -1,3 +1,4 @@
+
 package com.pokedex.bff.domain.repositories
 
 import com.pokedex.bff.domain.entities.Generation
