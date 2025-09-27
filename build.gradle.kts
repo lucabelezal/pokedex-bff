@@ -11,6 +11,10 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+
+	// Static Analysis
+	id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+	id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "com.pokedex"
@@ -116,4 +120,26 @@ sonarqube {
         property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
 	}
+}
+
+ktlint {
+    version.set("1.2.1")
+    outputToConsole.set(true)
+}
+
+detekt {
+    config = files("$rootDir/config/detekt/detekt.yml")
+    buildUponDefaultConfig = true
+}
+
+// Temporarily disable detekt tasks while refactoring and stabilizing the codebase.
+// Enable again by removing or commenting the block below.
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+	enabled = false
+}
+
+// Temporarily disable ktlint tasks while refactoring and stabilizing the codebase.
+// This disables tasks like ktlintCheck and ktlintFormat. Remove or comment to re-enable.
+tasks.matching { it.name.startsWith("ktlint") }.configureEach {
+    enabled = false
 }

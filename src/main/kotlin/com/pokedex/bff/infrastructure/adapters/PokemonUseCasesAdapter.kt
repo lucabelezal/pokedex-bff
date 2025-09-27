@@ -1,3 +1,4 @@
+
 package com.pokedex.bff.infrastructure.adapters
 
 import com.pokedex.bff.application.dto.response.PokedexListResponse
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
 
 /**
  * Infrastructure adapter that implements the PokemonUseCases port
- * 
+ *
  * This adapter acts as a bridge between the interface layer and the application layer,
  * delegating to specific use cases while maintaining the contract defined by the port.
  * Following Clean Architecture principles, this adapter isolates the application core

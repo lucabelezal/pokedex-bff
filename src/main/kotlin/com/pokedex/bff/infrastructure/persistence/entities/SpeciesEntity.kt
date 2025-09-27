@@ -13,7 +13,7 @@ data class SpeciesEntity(
     var id: Long = 0,
 
     @Column(name = "pokemon_number")
-    var pokemon_number: String? = null,
+    var pokemonNumber: String? = null,
 
     @Column(name = "name")
     var name: String = "",

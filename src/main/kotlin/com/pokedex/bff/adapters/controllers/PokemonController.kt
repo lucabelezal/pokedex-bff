@@ -1,8 +1,8 @@
-package com.pokedex.bff.interfaces.controllers
+package com.pokedex.bff.adapters.controllers
 
 import com.pokedex.bff.application.ports.input.PokemonUseCases
 import com.pokedex.bff.application.dto.response.PokedexListResponse
-import com.pokedex.bff.interfaces.dto.PokemonDto
+import com.pokedex.bff.application.dto.response.PokemonDto
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -46,23 +46,23 @@ class PokemonController(
     @GetMapping
     fun getPokemons(
         @Parameter(
-            description = "Page number (starting at 0)", 
-            example = "0", 
+            description = "Page number (starting at 0)",
+            example = "0",
             `in` = ParameterIn.QUERY
         )
-        @RequestParam(defaultValue = "0") 
+    @RequestParam(defaultValue = "0")
         @Min(0, message = "Page number must be non-negative")
         page: Int,
         
         @Parameter(
-            description = "Page size (max 100)", 
-            example = "10", 
+            description = "Page size (max 100)",
+            example = "10",
             `in` = ParameterIn.QUERY
         )
-        @RequestParam(defaultValue = "10") 
-        @Min(1, message = "Page size must be positive")
-        @Max(100, message = "Page size cannot exceed 100")
-        size: Int
+    @RequestParam(defaultValue = "10")
+    @Min(1, message = "Page size must be positive")
+    @Max(MAX_PAGE_SIZE, message = "Page size cannot exceed $MAX_PAGE_SIZE")
+    size: Int
     ): ResponseEntity<PokedexListResponse> {
         return ResponseEntity.ok(pokemonUseCases.getPaginatedPokemons(page, size))
     }
@@ -92,3 +92,8 @@ class PokemonController(
             ?: ResponseEntity.notFound().build()
     }
 }
+
+private const val MAX_PAGE_SIZE: Long = 100L
+
+
+

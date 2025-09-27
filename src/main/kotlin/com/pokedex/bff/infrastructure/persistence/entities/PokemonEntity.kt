@@ -1,6 +1,6 @@
 package com.pokedex.bff.infrastructure.persistence.entities
 
-import com.pokedex.bff.interfaces.dto.sprites.SpritesDto
+import com.pokedex.bff.application.dto.response.SpritesDto
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
