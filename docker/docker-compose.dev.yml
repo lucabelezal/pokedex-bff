@@ -40,6 +40,7 @@ services:
         condition: service_healthy  # Aguarda o banco estar pronto antes de iniciar
     ports:
       - "8081:8080"  # Porta local 8081 para evitar conflito com prod
+    entrypoint: ["sh", "-c", "while ! nc -z db 5432; do echo 'Waiting for database...'; sleep 2; done; java -jar app.jar"]
 
 volumes:
   pokedex-bff-data:
