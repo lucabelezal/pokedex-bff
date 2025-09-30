@@ -159,7 +159,7 @@ def run_essential_checks():
     results = []
     all_ok = True
     
-    print("\n� DEPENDÊNCIAS ESSENCIAIS:")
+    print("\n🛠️  DEPENDÊNCIAS ESSENCIAIS:")
     print("-" * 40)
     
     for name, check_func in essential_checks:
