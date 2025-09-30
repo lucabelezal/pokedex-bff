@@ -1,4 +1,17 @@
 # ============================================================================== 
+# Utilitário: Matar processo na porta 8080
+# ============================================================================== 
+kill-port-8080:
+	@echo "🔎 Verificando processo na porta 8080..."
+	@if lsof -i :8080 | grep LISTEN; then \
+		PID=$$(lsof -ti :8080); \
+		echo "⚠️  Processo encontrado na porta 8080: PID=$$PID"; \
+		kill -9 $$PID; \
+		echo "✅ Processo na porta 8080 finalizado."; \
+	else \
+		echo "✅ Nenhum processo escutando na porta 8080."; \
+	fi
+# ============================================================================== 
 # Alvo padrão: exibir help
 # ============================================================================== 
 .DEFAULT_GOAL := help
@@ -111,6 +124,7 @@ open-swagger: check-database
 # ==============================================================================
 
 dev-up:
+	@$(MAKE) kill-port-8080
 	@echo "🚀 INICIANDO AMBIENTE DE DESENVOLVIMENTO COMPLETO..."
 	@echo "   📦 Subindo banco + BFF com recarga automática"
 	@$(MAKE) check-deps

@@ -2,6 +2,5 @@ package com.pokedex.bff.adapters.input.web.dto.request
 
 data class CreatePokemonWebRequest(
     val name: String,
-    val type: String,
-    val level: Int
+    val type: String
 )

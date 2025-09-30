@@ -1,15 +1,19 @@
 package com.pokedex.bff.adapters.output.persistence.entity
 
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+
+import jakarta.persistence.*
 
 @Entity
-@Table(name = "pokemon")
+@Table(name = "pokemons")
 data class PokemonJpaEntity(
     @Id
-    val id: String,
+    val id: Long,
     val name: String,
-    val type: String,
-    val level: Int
+    @ManyToMany
+    @JoinTable(
+        name = "pokemon_types",
+        joinColumns = [JoinColumn(name = "pokemon_id")],
+        inverseJoinColumns = [JoinColumn(name = "type_id")]
+    )
+    val types: Set<TypeJpaEntity> = emptySet()
 )
