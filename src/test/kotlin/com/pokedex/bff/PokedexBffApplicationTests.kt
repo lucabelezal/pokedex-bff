@@ -1,12 +1,14 @@
 package com.pokedex.bff
 
+import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 
+@ActiveProfiles("test")
 @SpringBootTest
 class PokedexBffApplicationTests {
-
-//	@Disabled("Disabled while test database is not configured")
-//	@Test
-//	fun contextLoads() { }
-
+    @Test
+    fun contextLoads() {
+        // Testa se o contexto Spring Boot carrega sem erros
+    }
 }

@@ -4,50 +4,23 @@ Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente
 
 ## Arquitetura do Projeto
 
-Este projeto implementa **Clean Architecture + Ports & Adapters (Hexagonal Architecture)** com separação total de responsabilidades e alta testabilidade:
+Este projeto implementa **DDD + Clean Architecture** com separação total de responsabilidades e alta testabilidade:
 
-### Nova Estrutura das Camadas (Setembro 2025)
+### Estrutura das Camadas (Setembro 2025)
 
 ```
 src/main/kotlin/com/pokedex/bff/
-├── domain/                         # 🎯 DOMÍNIO PURO
-│   ├── entities/                   # Entidades de negócio (sem anotações)
-│   ├── valueobjects/              # ✅ Value Objects ricos (PokemonId, PokemonNumber)
-│   ├── repositories/              # Interfaces de repositório (contratos)
-│   └── exceptions/                # Exceções de domínio
-│
-├── application/                    # 🎯 CASOS DE USO
-│   ├── ports/                     # ✅ Portas (Hexagonal Architecture)
-│   │   ├── input/                 # Contratos de entrada (PokedexUseCases)
-│   │   └── output/                # Contratos de saída
-│   ├── usecases/                  # ✅ Use Cases específicos
-│   │   ├── pokemon/               # FetchPokemonByIdUseCase
-│   │   └── pokedex/               # GetPaginatedPokemonsUseCase
-│   ├── dto/                       # DTOs de aplicação
-│   └── mappers/                   # Mapeadores entre camadas
-│
-├── infrastructure/                 # 🔧 DETALHES TÉCNICOS
-│   ├── adapters/                  # ✅ Adaptadores (implementam portas)
-│   ├── persistence/
-│   │   ├── entities/              # Entidades JPA (com anotações)
-│   │   ├── repositories/          # Implementações JPA
-│   │   └── mappers/               # Mappers JPA ↔ Domain
-│   └── configurations/            # Configurações Spring Boot
-│
-└── interfaces/                     # 🌐 INTERFACE DO USUÁRIO
-    ├── controllers/               # ✅ Controllers REST (usam apenas portas)
-    ├── dto/                       # DTOs da API REST
-    └── validators/                # Validadores de entrada
+├── domain/           # Núcleo do negócio (entidades, value objects, serviços, eventos, repositórios)
+├── application/      # Casos de uso, orquestração, DTOs
+├── adapters/         # Entrada (REST/controllers) e saída (persistência, integrações externas)
+├── infrastructure/   # Configurações técnicas, segurança, migrações
+└── tests/            # Testes automatizados
 ```
 
-### ✅ Princípios Implementados
-
-- **Domain Purity**: Zero dependências externas no domínio
-- **Ports & Adapters**: Interfaces para entrada/saída, implementadas por adaptadores
-- **Use Cases Específicos**: Cada caso de uso tem responsabilidade única
-- **Value Objects Ricos**: Encapsulam validações e comportamentos (`PokemonId`, `PokemonNumber`)
-- **Inversão Total**: Controllers dependem de interfaces, não implementações
-- **Alta Testabilidade**: Use Cases testáveis unitariamente com mocks simples
+- **Domain**: Núcleo puro, sem dependências técnicas
+- **Application**: Casos de uso, coordenação de entidades
+- **Adapters**: Controllers, mappers, persistência, integrações
+- **Infrastructure**: Configurações, segurança, migrações
 
 ## Configuração do Ambiente
 
@@ -58,23 +31,16 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 * [Docker Desktop](https://www.docker.com/products/docker-desktop/) (inclui Docker e Docker Compose)
 * **GNU Make** (ou `make` no seu sistema, geralmente pré-instalado em sistemas Unix/Linux/macOS; para Windows, você pode usar WSL ou ferramentas como Chocolatey para instalar `make`).
 
-### Instalação e Configuração Rápida
+## Comandos Principais
 
-1.  **Clone o Repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/pokedex-bff.git](https://github.com/seu-usuario/pokedex-bff.git) # Substitua 'seu-usuario' e 'pokedex-bff'
-    cd pokedex-bff
-    ```
+```bash
+./gradlew bootRun           # Inicia aplicação
+./gradlew test              # Executa testes
+./gradlew build             # Build completo
+./gradlew bootJar           # Gera JAR executável
+```
 
-2.  **Configuração do Ambiente e Início (Recomendado):**
-    * Para uma configuração rápida e completa do ambiente de desenvolvimento (iniciar DB e carregar dados):
-        ```bash
-        make dev-setup
-        ```
-      Este comando cuidará de:
-        1.  Iniciar o contêiner PostgreSQL via Docker Compose.
-        2.  Aguardar o banco de dados estar pronto.
-        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados dos arquivos jsons na pasta resource.
+Consulte o README.md e os arquivos em `doc/` para mais detalhes sobre arquitetura, exemplos e guias de cada camada.
 
 ## Trabalhando com as Entidades
 

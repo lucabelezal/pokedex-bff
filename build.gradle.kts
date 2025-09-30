@@ -43,6 +43,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	// Kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -66,6 +67,10 @@ dependencies {
 	}
 	testImplementation(kotlin("test-junit5"))
 	testImplementation("io.mockk:mockk:1.13.10")
+	
+	springBoot {
+	    mainClass.set("com.pokedex.bff.PokedexBffApplicationKt")
+	}
 }
 
 allOpen {
