@@ -9,33 +9,62 @@
 O projeto Pokédex BFF adota **Clean Architecture (Uncle Bob)** com organização de código consolidada sob o namespace único `kotlin.com.pokedex.bff`. Durante a refatoração foram removidas pastas órfãs fora deste namespace (`/adapters`, `/application`, `/domain` na raiz de `kotlin/`) que continham versões duplicadas de entidades, use cases e controllers.
 
 ---
-## 🏗️ Arquitetura Final (Camadas)
+
+## 🏗️ Arquitetura Final (2025)
 ```
-com/pokedex/bff/
+src/main/kotlin/com/pokedex/bff/
   domain/
-    entities/        # Entidades ricas de domínio (sem anotações de framework)
-    repositories/    # Interfaces de repositório (contratos)
-    usecases/        # Interfaces de casos de uso (terminam com UseCase)
+    pokemon/
+      entities/         # Entidades ricas de domínio (ex: Pokemon.kt, Ability.kt)
+      valueobject/      # Value Objects (ex: PokemonNumber.kt, Experience.kt)
+      repository/       # Interfaces de repositório (ex: PokemonRepository.kt)
+      service/          # Serviços de domínio
+      event/ exception/ # Eventos e exceções de domínio
+    shared/             # Tipos utilitários, exceptions e value objects genéricos
   application/
-    interactors/     # Implementações concretas dos casos de uso (terminam com Interactor)
-    dto/response/    # DTOs e modelos de saída (presenters shape)
+    interactor/         # Implementações concretas dos casos de uso (ex: CreatePokemonInteractor.kt)
+    usecase/            # Interfaces de casos de uso (ex: CreatePokemonUseCase.kt)
+    dtos/
+      input/            # DTOs de entrada (ex: CreatePokemonInput.kt)
+      output/           # DTOs de saída (ex: PokemonOutput.kt)
   adapters/
-    controllers/     # Controllers REST (Spring) -> dependem só de interfaces de use case
-    gateways/        # Implementações de repositories + mapeamento infra <-> domínio
-      PokemonMapper.kt
+    input/
+      web/
+        controller/     # Controllers REST (ex: PokemonController.kt)
+        dto/ mapper/    # DTOs e mapeadores para entrada
+    output/
+      persistence/
+        entity/         # Entidades JPA (ex: PokemonJpaEntity.kt)
+        mapper/         # Mapeadores JPA <-> domínio (ex: PokemonPersistenceMapper.kt)
+        repository/     # Adapters de repositório (ex: PokemonRepositoryAdapter.kt)
+      external/
+        client/         # Clients HTTP externos (ex: PokeApiClient.kt)
+        mapper/         # Mapeadores de resposta externa
   infrastructure/
-    config/          # Beans / composição / providers
-    persistence/     # Entidades JPA + Spring Data Repositories
-  shared/            # (Opcional) utilidades ou cross-cutting (se necessário)
+    config/             # Beans, providers, configuração de DI (ex: UseCaseFactory.kt)
+    migration/          # Scripts de migração (ex: V1__Create_pokemon_table.sql)
+    security/           # Configuração de segurança (ex: SecurityConfig.kt)
 ```
 
 ### Fluxo de Dependências
-`infrastructure -> adapters -> application -> domain`
+`infrastructure → adapters → application → domain`
 - Nenhuma dependência reversa.
-- O **domínio** não conhece Spring, JPA ou DTOs.
+- O **domínio** não conhece frameworks, JPA, DTOs ou detalhes técnicos.
 - **Interactors** dependem apenas de interfaces do domínio.
 - **Controllers** só enxergam interfaces de use cases.
-- **Gateways** implementam interfaces de repositório e usam mappers para conversão.
+- **Adapters** implementam interfaces e fazem mapeamento entre camadas.
+
+### Exemplos de Componentes
+- **Entidade de Domínio:** `domain/pokemon/entities/Pokemon.kt`
+- **Value Object:** `domain/pokemon/valueobject/PokemonNumber.kt`
+- **Repositório:** `domain/pokemon/repository/PokemonRepository.kt`
+- **Use Case:** `application/usecase/CreatePokemonUseCase.kt`
+- **Interactor:** `application/interactor/CreatePokemonInteractor.kt`
+- **Controller:** `adapters/input/web/controller/PokemonController.kt`
+- **Entidade JPA:** `adapters/output/persistence/entity/PokemonJpaEntity.kt`
+- **Mapper:** `adapters/output/persistence/mapper/PokemonPersistenceMapper.kt`
+- **Client Externo:** `adapters/output/external/client/PokeApiClient.kt`
+- **Configuração:** `infrastructure/config/UseCaseFactory.kt`
 
 ---
 ## 🔄 Decisões Importantes
