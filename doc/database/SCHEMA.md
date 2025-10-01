@@ -1,10 +1,11 @@
 # Documentação do Esquema do Banco de Dados Pokémon
 
-Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL e está implementado seguindo os princípios da **Clean Architecture + Hexagonal Architecture**.
+Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL e está implementado seguindo os princípios da **Clean Architecture**.
+
 
 ## Contexto Arquitetural (Atualizado - Setembro 2025)
 
-O projeto utiliza **Clean Architecture + Ports & Adapters** com separação total entre domínio e infraestrutura:
+O projeto utiliza **Clean Architecture** com separação total entre domínio e infraestrutura:
 
 ### 🎯 **Separação Total de Responsabilidades**
 
@@ -15,6 +16,7 @@ O projeto utiliza **Clean Architecture + Ports & Adapters** com separação tota
 - **Repository Adapters** (`src/main/kotlin/com/pokedex/bff/infrastructure/persistence/repositories/`): Implementações que conectam JPA ao domínio
 - **Use Cases** (`src/main/kotlin/com/pokedex/bff/application/usecases/`): ✅ **Implementados** - Cases específicos com responsabilidade única
 - **Ports & Adapters** (`src/main/kotlin/com/pokedex/bff/application/ports/` + `infrastructure/adapters/`): ✅ **Implementados**
+
 
 ### ✅ **Benefícios da Separação**
 

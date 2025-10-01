@@ -28,7 +28,7 @@ python3 tools/database/check_dependencies.py
 ```
 
 **Recursos:**
-Compatível com Linux e macOS
+
 
 ### 📊 Gerador de SQL (`generate_sql_from_json.py`)
 

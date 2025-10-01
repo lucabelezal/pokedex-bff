@@ -53,17 +53,11 @@ make lint-fix
 
 ---
 
-## Makefile
-
-```makefile
-## Lint e formatação automática para Kotlin
-
 lint:
 	./gradlew ktlintCheck detekt
-
 lint-fix:
 	./gradlew ktlintFormat
-```
+
 
 ---
 
