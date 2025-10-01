@@ -1,4 +1,3 @@
-
 # CONTEXTO DO PROJETO POKÉDEX BFF
 
 > **IMPORTANTE:** Toda documentação Markdown (.md) criada para o projeto deve seguir estritamente os padrões, estrutura e convenções dos arquivos já existentes dentro da pasta `doc/`. **Antes de criar um novo .md, revise se já existe um arquivo ou subpasta adequada para o tema. Nunca duplique temas ou crie arquivos soltos fora do padrão.**
@@ -7,7 +6,7 @@
 
 ---
 ## 📌 Visão Geral
-O projeto Pokedéx BFF adota **Clean Architecture (Uncle Bob)** com organização de código consolidada sob o namespace único `kotlin.com.pokedex.bff`. Durante a refatoração foram removidas pastas órfãs fora deste namespace (`/adapters`, `/application`, `/domain` na raiz de `kotlin/`) que continham versões duplicadas de entidades, use cases e controllers.
+O projeto Pokédex BFF adota **Clean Architecture (Uncle Bob)** com organização de código consolidada sob o namespace único `kotlin.com.pokedex.bff`. Durante a refatoração foram removidas pastas órfãs fora deste namespace (`/adapters`, `/application`, `/domain` na raiz de `kotlin/`) que continham versões duplicadas de entidades, use cases e controllers.
 
 ---
 ## 🏗️ Arquitetura Final (Camadas)
@@ -73,7 +72,7 @@ PokemonMapperTest
 ```
 
 ---
-## 🚧 TODOs Técnicos (Backlog Interno)
+## 🛠️ TODOs Técnicos (Backlog Interno)
 | Categoria | Item | Prioridade |
 |-----------|------|------------|
 | Mapper | Completar `toEntityPartial` para todos os relacionamentos | Média |

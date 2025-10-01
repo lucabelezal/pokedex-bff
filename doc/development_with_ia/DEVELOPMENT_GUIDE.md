@@ -2,7 +2,7 @@
 
 ## 🤖 **Visão Geral**
 
-Este guia estabelece as **normas e melhores práticas** para usar ferramentas de IA (GitHub Copilot, ChatGPT, Claude, etc.) no desenvolvimento do projeto Pokédx BFF.
+Este guia estabelece as **normas e melhores práticas** para usar ferramentas de IA (GitHub Copilot, ChatGPT, Claude, etc.) no desenvolvimento do projeto Pokédex BFF.
 
 ## 📋 **Normas Obrigatórias**
 
@@ -73,7 +73,7 @@ Este guia estabelece as **normas e melhores práticas** para usar ferramentas de
 - Mudanças que quebram contratos
 - Alterações sem backup/versionamento
 
-## 🔧 **Ferramentas Recomendadas**
+## 🛠️ **Ferramentas Recomendadas**
 
 ### **GitHub Copilot**
 - ✅ **Ideal para**: Autocompletar seguindo padrões existentes

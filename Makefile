@@ -41,7 +41,7 @@ help:
 	@echo "🔧 CONFIGURAÇÃO INICIAL:"
 	@echo "  make check-deps             - Verifica se todas as dependências estão instaladas."
 	@echo "  make dev-setup              - Configura e inicia o ambiente (Linux/macOS)."
-	@echo "  make dev-setup-for-windows  - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
+
 	@echo ""
 	@echo "🗄️  BANCO DE DADOS (Isolado):"
 	@echo "  make db-only-up             - Sobe APENAS o banco com dados pré-carregados."
@@ -346,38 +346,7 @@ dev-setup:
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
-# Orquestração para Windows via Git Bash ou WSL
-# ==============================================================================
 
-# Comando para checar ambiente Windows e orientar instalação do Java e Gradle via Scoop
-check-windows-env:
-	@echo "Verificando Java e Gradle no Windows..."
-	@if ! command -v java > /dev/null 2>&1; then \
-		echo "Java não encontrado! Instale com:"; \
-		echo "  scoop bucket add java"; \
-		echo "  scoop install openjdk21"; \
-		exit 1; \
-	else \
-		echo "Java encontrado:"; java -version; \
-	fi
-	@if ! command -v gradle > /dev/null 2>&1; then \
-		echo "Gradle não encontrado! Instale com:"; \
-		echo "  scoop install gradle"; \
-		exit 1; \
-	else \
-		echo "Gradle encontrado:"; gradle --version; \
-	fi
-
-dev-setup-for-windows: check-windows-env
-	@echo "🔄 Iniciando setup para Windows..."
-	@echo "📊 Gerando dados SQL..."
-	python3 tools/database/generate_sql_from_json.py
-	@echo "🔄 Subindo banco de dados..."
-	docker compose -f docker/docker-compose.dev.yml up -d db
-	@echo "⏳ Aguardando banco inicializar..."
-	sleep 10
-	@echo "🔄 Iniciando BFF..."
-	gradlew.bat bootRun --args='--spring.profiles.active=dev'
 
 
 # ==============================================================================

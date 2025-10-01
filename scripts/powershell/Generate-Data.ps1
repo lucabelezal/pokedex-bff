@@ -1,7 +1,7 @@
 # ========================================
 # Generate SQL Data from JSON files
 # ========================================
-
+## Arquivo removido
 Write-Host ""
 Write-Host "================================" -ForegroundColor Cyan
 Write-Host "   Gerando dados SQL dos JSONs" -ForegroundColor Cyan

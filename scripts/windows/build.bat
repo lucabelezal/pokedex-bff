@@ -2,7 +2,7 @@
 REM ========================================
 REM Build Application
 REM ========================================
-
+REM Arquivo removido
 echo.
 echo ================================
 echo     Compilando Aplicacao
