@@ -104,3 +104,4 @@ Inclua qualquer detalhe, contexto, links de referência, ou limitações.
 > Foco em baixo acoplamento e testabilidade.
 
 ---
+
