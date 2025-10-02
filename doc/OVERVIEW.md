@@ -6,106 +6,22 @@ Este repositório contém o código-fonte do **Pokedex BFF (Backend For Frontend
 ## 🎯 Objetivos
 - Centralizar e transformar dados de múltiplas fontes, fornecendo uma API unificada
 - Garantir alta coesão e baixo acoplamento entre camadas
-- Domínio rico com regras de negócio explícitas
-- Testabilidade e evolução facilitadas por separação de responsabilidades
-
-src/main/kotlin/com/pokedex/bff/
-├── domain/           # Núcleo do negócio (entidades, value objects, serviços, eventos, repositórios)
-├── application/      # Casos de uso, orquestração, DTOs
-├── adapters/         # Entrada (REST/controllers) e saída (persistência, integrações externas)
-├── infrastructure/   # Configurações técnicas, segurança, migrações
-└── tests/            # Testes automatizados
-
 ## 🏗️ Arquitetura (2025)
-
-```
-src/main/kotlin/com/pokedex/bff/
-    domain/
-        pokemon/
-            entities/         # Entidades de domínio (ex: Pokemon.kt, Ability.kt)
-            valueobject/      # Value Objects (ex: PokemonNumber.kt, Experience.kt)
-            repository/       # Interfaces de repositório (ex: PokemonRepository.kt)
-        shared/             # Tipos utilitários, exceptions e value objects genéricos
     application/
-        interactor/         # Implementações dos casos de uso (ex: CreatePokemonInteractor.kt)
-        usecase/            # Interfaces de casos de uso (ex: CreatePokemonUseCase.kt)
-        dtos/
-            input/            # DTOs de entrada (ex: CreatePokemonInput.kt)
-            output/           # DTOs de saída (ex: PokemonOutput.kt)
-    adapters/
-        input/web/controller/ # Controllers REST (ex: PokemonController.kt)
-        output/persistence/entity/ # Entidades JPA (ex: PokemonJpaEntity.kt)
-        output/persistence/mapper/ # Mapeadores JPA <-> domínio
-    infrastructure/
-        config/             # Beans, providers, configuração de DI
-        migration/          # Scripts de migração
-        security/           # Configuração de segurança
+# Visão Geral
+
+Este repositório contém o código-fonte do **Pokedex BFF (Backend For Frontend)**, implementado com **DDD + Clean Architecture**. O serviço atua como camada intermediária entre fontes de dados externas sobre Pokémon e aplicações frontend, centralizando, transformando e expondo dados via API REST.
+
+## 🎯 Objetivos
+- Centralizar e transformar dados de múltiplas fontes, fornecendo uma API unificada
+- Garantir alta coesão e baixo acoplamento entre camadas
+- Domínio rico com regras de negócio explícitas (uso de agregados e value objects)
+- Testabilidade e evolução facilitadas por separação de responsabilidades
+- Isolamento de detalhes técnicos (banco, frameworks, Spring)
+
+## Estrutura de Pastas e Camadas
+
 ```
-
-- **Domain**: Núcleo puro, sem dependências técnicas/frameworks
-- **Application**: Casos de uso, coordenação de entidades
-- **Adapters**: Controllers, mappers, persistência, integrações
-- **Infrastructure**: Configurações, segurança, migrações
-
-
-## Exemplos de Implementação
-
-### Value Object
-```kotlin
-// domain/pokemon/valueobject/PokemonId.kt
-@JvmInline
-value class PokemonId(val value: String)
-```
-
-### Use Case & Interactor
-```kotlin
-// application/usecase/CreatePokemonUseCase.kt
-interface CreatePokemonUseCase {
-    fun execute(input: CreatePokemonInput): PokemonOutput
-    fun findAll(page: Int, size: Int): Page<Pokemon>
-}
-
-// application/interactor/CreatePokemonInteractor.kt
-class CreatePokemonInteractor(
-    private val pokemonRepository: PokemonRepository
-) : CreatePokemonUseCase {
-    override fun execute(input: CreatePokemonInput): PokemonOutput {
-        val pokemon = Pokemon(
-            id = 0L,
-            number = "000",
-            name = input.name,
-            height = 1.0,
-            weight = 1.0,
-            description = "Placeholder description",
-            sprites = null,
-            genderRateValue = 0,
-            genderMale = 0.5f,
-            genderFemale = 0.5f,
-            eggCycles = 10,
-            stats = null,
-            generation = null,
-            species = null,
-            region = null,
-            evolutionChain = null,
-            types = emptySet(),
-            abilities = emptySet(),
-            eggGroups = emptySet(),
-            weaknesses = emptySet()
-        )
-        pokemonRepository.save(pokemon)
-        return PokemonOutput.fromDomain(pokemon)
-    }
-
-    override fun findAll(page: Int, size: Int): Page<Pokemon> {
-        return pokemonRepository.findAll(page, size)
-    }
-}
-```
-
-### Adapter (Controller)
-```kotlin
-// adapters/input/web/controller/PokemonController.kt
-@RestController
 @RequestMapping("/api/v1/pokemons")
 class PokemonController(
     private val createPokemonUseCase: CreatePokemonUseCase,
@@ -123,6 +39,76 @@ class PokemonController(
     @GetMapping
     fun list(
         @RequestParam(defaultValue = "0") page: Int,
+```
+
+### Camadas e Responsabilidades
+- **Domain**: Núcleo puro, sem dependências técnicas/frameworks. Contém entidades, value objects, agregados e interfaces de repositório. Segue DDD para modelar o negócio.
+- **Application**: Casos de uso (interfaces e implementações), orquestração de entidades/agregados, DTOs. Não depende de frameworks.
+- **Adapters**: Controllers REST, mapeadores, adapters de persistência (implementam interfaces do domínio), integrações externas.
+- **Infrastructure**: Configurações técnicas, beans, providers, migrações, segurança. Isola detalhes como banco de dados e Spring.
+
+### Isolamento de Detalhes Técnicos
+O domínio não conhece detalhes de banco, frameworks ou Spring. As interfaces de repositório ficam no domínio; as implementações (adapters) estão fora, garantindo baixo acoplamento e alta testabilidade. O Spring é usado apenas para compor e injetar dependências.
+
+### DDD na Prática
+O projeto adota DDD especialmente na modelagem de agregados (ex: Pokémon, Trainer), value objects e repositórios. Cada agregado tem seu próprio pacote, mantendo alta coesão e clareza de limites.
+
+## Exemplos de Implementação
+
+### Value Object
+```kotlin
+// domain/pokemon/valueobject/PokemonId.kt
+@JvmInline
+value class PokemonId(val value: String)
+```
+
+### Interface e Adapter de Repositório
+```kotlin
+// domain/pokemon/repository/PokemonRepository.kt
+interface PokemonRepository {
+    fun save(pokemon: Pokemon): Pokemon
+    fun findById(id: String): Pokemon?
+    fun findAll(page: Int, size: Int): Page<Pokemon>
+}
+
+// adapters/output/persistence/repository/PokemonRepositoryAdapter.kt
+class PokemonRepositoryAdapter(...) : PokemonRepository {
+    // Implementação usando Spring Data JPA
+}
+```
+
+### Use Case & Interactor
+```kotlin
+// application/usecase/CreatePokemonUseCase.kt
+interface CreatePokemonUseCase {
+    fun execute(input: CreatePokemonInput): PokemonOutput
+    fun findAll(page: Int, size: Int): Page<Pokemon>
+}
+
+// application/interactor/CreatePokemonInteractor.kt
+class CreatePokemonInteractor(
+    private val pokemonRepository: PokemonRepository
+) : CreatePokemonUseCase {
+    override fun execute(input: CreatePokemonInput): PokemonOutput {
+        val pokemon = Pokemon(
+            // ...
+        )
+        pokemonRepository.save(pokemon)
+        return PokemonOutput.fromDomain(pokemon)
+    }
+
+    override fun findAll(page: Int, size: Int): Page<Pokemon> {
+        return pokemonRepository.findAll(page, size)
+    }
+}
+```
+
+## Referências
+
+- Martin, R. C. (2019). Arquitetura Limpa: O Guia do Artesão para Estrutura e Design de Software. Starlin Alta Editora e Consultoria Eireli.
+- Evans, E. (2004). Domain-Driven Design: Tackling Complexity in the Heart of Software. Addison-Wesley.
+
+> Para detalhes de configuração e exemplos de uso, consulte o GETTING_STARTED.md e os arquivos em doc/architecture/.
         @RequestParam(defaultValue = "10") size: Int
     ): PokemonRichPageResponse {
         val pageSize = size.coerceAtMost(100)
