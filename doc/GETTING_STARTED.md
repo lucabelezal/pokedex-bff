@@ -4,23 +4,34 @@ Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente
 
 ## Arquitetura do Projeto
 
-Este projeto implementa **DDD + Clean Architecture** com separação total de responsabilidades e alta testabilidade:
+Este projeto implementa **DDD + Clean Architecture** com separação clara de responsabilidades, isolamento de detalhes técnicos e foco em testabilidade e evolução.
 
-### Estrutura das Camadas (Setembro 2025)
+### Estrutura das Camadas
 
 ```
 src/main/kotlin/com/pokedex/bff/
-├── domain/           # Núcleo do negócio (entidades, value objects, serviços, eventos, repositórios)
-├── application/      # Casos de uso, orquestração, DTOs
+├── domain/           # Núcleo do negócio (entidades, value objects, agregados, repositórios)
+│   ├── pokemon/      # Agregado Pokémon: entidades, value objects, repositório
+│   ├── trainer/      # Agregado Trainer
+│   └── shared/       # Tipos utilitários, value objects e exceções genéricas
+├── application/      # Casos de uso (interfaces e implementações), DTOs
+│   ├── usecase/      # Interfaces de casos de uso
+│   ├── interactor/   # Implementações dos casos de uso
+│   └── dtos/         # DTOs de entrada/saída
 ├── adapters/         # Entrada (REST/controllers) e saída (persistência, integrações externas)
-├── infrastructure/   # Configurações técnicas, segurança, migrações
+│   ├── input/web/controller/           # Controllers REST
+│   └── output/persistence/repository/  # Adapters de persistência (implementam repositórios do domínio)
+├── infrastructure/   # Configurações técnicas, beans, migrações, segurança
+│   ├── config/       # Beans, providers, DI
+│   ├── migration/    # Scripts de migração
+│   └── security/     # Configuração de segurança
 └── tests/            # Testes automatizados
 ```
 
-- **Domain**: Núcleo puro, sem dependências técnicas
-- **Application**: Casos de uso, coordenação de entidades
-- **Adapters**: Controllers, mappers, persistência, integrações
-- **Infrastructure**: Configurações, segurança, migrações
+- **Domain**: Núcleo puro, sem dependências técnicas/frameworks. Contém entidades, value objects, agregados e interfaces de repositório.
+- **Application**: Casos de uso (interfaces e implementações), DTOs, orquestração de entidades/agregados.
+- **Adapters**: Controllers REST, mapeadores, adapters de persistência (implementam interfaces do domínio), integrações externas.
+- **Infrastructure**: Configurações técnicas, beans, providers, migrações, segurança. Isola detalhes como banco de dados e Spring.
 
 ## Configuração do Ambiente
 
