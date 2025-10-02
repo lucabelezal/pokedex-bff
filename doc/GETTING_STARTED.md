@@ -25,7 +25,7 @@ src/main/kotlin/com/pokedex/bff/
 │   ├── config/       # Beans, providers, DI
 │   ├── migration/    # Scripts de migração
 │   └── security/     # Configuração de segurança
-└── tests/            # Testes automatizados
+└── test/             # Testes automatizados (unitários, integração, etc.)
 ```
 
 - **Domain**: Núcleo puro, sem dependências técnicas/frameworks. Contém entidades, value objects, agregados e interfaces de repositório.
@@ -52,6 +52,23 @@ Certifique-se de ter as seguintes ferramentas instaladas:
 ```
 
 Consulte o README.md e os arquivos em `doc/` para mais detalhes sobre arquitetura, exemplos e guias de cada camada.
+
+
+## Estrutura de Testes
+
+Os testes ficam em `src/test/kotlin/com/pokedex/bff/` e podem ser organizados em subpastas para diferentes tipos:
+
+```
+src/test/kotlin/com/pokedex/bff/
+├── unit/           # Testes unitários (foco em classes isoladas)
+├── integration/    # Testes de integração (foco em integração entre camadas, banco, etc.)
+└── PokedexBffApplicationTests.kt  # Teste de contexto principal
+```
+
+**Boas práticas:**
+- Separe testes unitários e de integração para facilitar manutenção e execução.
+- Use nomes claros para as classes de teste e métodos.
+- Utilize mocks/stubs em testes unitários e recursos reais em integração.
 
 ## Trabalhando com as Entidades
 
