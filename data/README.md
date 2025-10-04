@@ -58,4 +58,3 @@ Todos os arquivos seguem o formato JSON padrão:
 
 - **Não altere** a numeração dos arquivos
 - **Mantenha** a estrutura JSON consistente
-- **Teste** sempre após mudanças com `make validate-db`

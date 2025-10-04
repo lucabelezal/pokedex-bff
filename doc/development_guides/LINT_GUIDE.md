@@ -53,17 +53,11 @@ make lint-fix
 
 ---
 
-## Makefile
-
-```makefile
-## Lint e formatação automática para Kotlin
-
 lint:
 	./gradlew ktlintCheck detekt
-
 lint-fix:
 	./gradlew ktlintFormat
-```
+
 
 ---
 
@@ -81,3 +75,4 @@ O arquivo de configuração Detekt está em `config/detekt/detekt.yml` e segue a
 ---
 
 **Dica:** Mantenha seu código sempre limpo e padronizado. Isso facilita code review, reduz bugs e acelera a evolução do projeto!
+

@@ -28,10 +28,7 @@ python3 tools/database/check_dependencies.py
 ```
 
 **Recursos:**
-- Verifica Python 3.7+, Docker, Docker Compose, Make, psycopg2
-- Compatível com Linux, macOS e Windows
-- Fornece instruções de instalação específicas por SO
-- Testa conectividade com Docker daemon
+
 
 ### 📊 Gerador de SQL (`generate_sql_from_json.py`)
 
