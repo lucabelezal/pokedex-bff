@@ -2,7 +2,7 @@ package com.pokedex.bff.adapters.input.web.controller
 
 import com.pokedex.bff.adapters.input.web.dto.response.PokemonRichPageResponse
 import com.pokedex.bff.adapters.input.web.mapper.PokemonRichWebMapper
-import com.pokedex.bff.application.usecase.CreatePokemonUseCase
+import com.pokedex.bff.application.port.input.CreatePokemonUseCase
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam

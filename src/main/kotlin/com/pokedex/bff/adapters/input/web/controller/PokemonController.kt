@@ -4,11 +4,15 @@ import com.pokedex.bff.adapters.input.web.dto.request.CreatePokemonWebRequest
 import com.pokedex.bff.adapters.input.web.dto.response.PokemonRichPageResponse
 import com.pokedex.bff.adapters.input.web.mapper.PokemonRichWebMapper
 import com.pokedex.bff.adapters.input.web.mapper.PokemonWebMapper
-import com.pokedex.bff.application.usecase.CreatePokemonUseCase
-import com.pokedex.bff.application.usecase.EvolvePokemonUseCase
-import com.pokedex.bff.application.usecase.BattleUseCase
+import com.pokedex.bff.application.port.input.CreatePokemonUseCase
+import com.pokedex.bff.application.port.input.EvolvePokemonUseCase
+import com.pokedex.bff.application.port.input.BattleUseCase
+import jakarta.validation.Valid
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.bind.annotation.RequestParam
 
 @RestController
 @RequestMapping("/api/v1/pokemons")
@@ -20,15 +24,16 @@ class PokemonController(
     private val webMapper: PokemonWebMapper
 ) {
     @PostMapping
-    fun create(@RequestBody request: CreatePokemonWebRequest) {
+    fun create(@Valid @RequestBody request: CreatePokemonWebRequest): ResponseEntity<Void> {
         val input = webMapper.toCreatePokemonInput(request)
         createPokemonUseCase.execute(input)
+        return ResponseEntity.status(HttpStatus.CREATED).build()
     }
 
     @GetMapping
     fun list(
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+        @RequestParam(defaultValue = "0") @Min(0) page: Int,
+        @RequestParam(defaultValue = "10") @Min(1) @Max(100) size: Int
     ): PokemonRichPageResponse {
         val pageSize = size.coerceAtMost(100)
         val pageResult = createPokemonUseCase.findAll(page, pageSize)

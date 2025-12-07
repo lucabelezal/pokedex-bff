@@ -14,7 +14,10 @@ class PokemonRichWebMapper {
             )
         }
         val mainType = pokemon.types.firstOrNull()
-        val imageUrl = pokemon.sprites?.other?.home ?: pokemon.sprites?.frontDefault ?: ""
+        val imageUrl = pokemon.sprites?.other?.home?.frontDefault 
+            ?: pokemon.sprites?.other?.officialArtwork?.frontDefault
+            ?: pokemon.sprites?.frontDefault 
+            ?: ""
         return PokemonRichWebResponse(
             number = "Nº" + (pokemon.number ?: pokemon.id.toString().padStart(3, '0')),
             name = pokemon.name,
