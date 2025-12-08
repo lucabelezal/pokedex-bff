@@ -34,10 +34,9 @@ data class Pokemon(
         weight?.let { require(it > 0) { "Weight must be positive" } }
     }
 
-    /**
-     * Verifica se o Pokémon é lendário baseado no ID (Gen 1: 144-151)
-     */
-    fun isLegendary(): Boolean = id in 144..151 || id in 243..251
+    // TODO: Adicionar campo 'is_legendary' no banco de dados (tabela species ou pokemons)
+    // A lógica de verificação por ID range é incorreta e não escalável.
+    // Legendary status deve ser uma propriedade persistida, não calculada.
 
     /**
      * Formata o número do Pokémon com padding de zeros (ex: 001, 025, 150)

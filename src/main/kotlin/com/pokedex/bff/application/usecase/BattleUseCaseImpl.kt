@@ -96,9 +96,10 @@ class BattleUseCaseImpl(
             appendLine()
             appendLine("🏆 WINNER: ${winner.name}!")
             
-            if (winner.isLegendary()) {
-                appendLine("(Legendary Pokémon dominates the battle!)")
-            }
+            // TODO: Restaurar quando campo is_legendary for adicionado ao banco de dados
+            // if (winner.isLegendary) {
+            //     appendLine("(Legendary Pokémon dominates the battle!)")
+            // }
         }
     }
     
