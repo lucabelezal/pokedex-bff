@@ -35,8 +35,7 @@ class PokemonController(
         @RequestParam(defaultValue = "0") @Min(0) page: Int,
         @RequestParam(defaultValue = "10") @Min(1) @Max(100) size: Int
     ): PokemonRichPageResponse {
-        val pageSize = size.coerceAtMost(100)
-        val pageResult = createPokemonUseCase.findAll(page, pageSize)
+        val pageResult = createPokemonUseCase.findAll(page, size)
         return richWebMapper.toRichPageResponse(
             pokemons = pageResult.content,
             totalElements = pageResult.totalElements,
