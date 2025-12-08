@@ -38,28 +38,40 @@ class BattleUseCaseImpl(
         val totalDamage2 = (power2 * typeEffectiveness2).toInt()
         
         // Determinar vencedor
-        val (winner, loser, winnerDamage, loserDamage) = if (totalDamage1 > totalDamage2) {
-            Tuple4(pokemon1, pokemon2, totalDamage1, totalDamage2)
-        } else if (totalDamage2 > totalDamage1) {
-            Tuple4(pokemon2, pokemon1, totalDamage2, totalDamage1)
-        } else {
-            // Empate: usar speed como desempate
-            if ((pokemon1.stats?.speed ?: 0) >= (pokemon2.stats?.speed ?: 0)) {
-                Tuple4(pokemon1, pokemon2, totalDamage1, totalDamage2)
-            } else {
-                Tuple4(pokemon2, pokemon1, totalDamage2, totalDamage1)
-            }
-        }
+        val outcome = determineBattleOutcome(pokemon1, pokemon2, totalDamage1, totalDamage2)
         
-        val summary = buildBattleSummary(winner, loser, winnerDamage, loserDamage)
+        val summary = buildBattleSummary(outcome.winner, outcome.loser, outcome.winnerDamage, outcome.loserDamage)
         
-        logger.info("Battle completed. Winner: {} ({})", winner.name, winner.id)
+        logger.info("Battle completed. Winner: {} ({})", outcome.winner.name, outcome.winner.id)
         
         return BattleResultOutput(
-            winnerId = winner.id.toString(),
-            loserId = loser.id.toString(),
+            winnerId = outcome.winner.id.toString(),
+            loserId = outcome.loser.id.toString(),
             summary = summary
         )
+    }
+    
+    /**
+     * Determina o resultado da batalha baseado no dano causado e speed como critério de desempate
+     */
+    private fun determineBattleOutcome(
+        pokemon1: Pokemon,
+        pokemon2: Pokemon,
+        damage1: Int,
+        damage2: Int
+    ): BattleOutcome {
+        return when {
+            damage1 > damage2 -> BattleOutcome(pokemon1, pokemon2, damage1, damage2)
+            damage2 > damage1 -> BattleOutcome(pokemon2, pokemon1, damage2, damage1)
+            else -> {
+                // Empate: usar speed como desempate
+                if ((pokemon1.stats?.speed ?: 0) >= (pokemon2.stats?.speed ?: 0)) {
+                    BattleOutcome(pokemon1, pokemon2, damage1, damage2)
+                } else {
+                    BattleOutcome(pokemon2, pokemon1, damage2, damage1)
+                }
+            }
+        }
     }
     
     /**
@@ -103,5 +115,13 @@ class BattleUseCaseImpl(
         }
     }
     
-    private data class Tuple4<A, B, C, D>(val first: A, val second: B, val third: C, val fourth: D)
+    /**
+     * Representa o resultado de uma batalha entre dois Pokémon
+     */
+    private data class BattleOutcome(
+        val winner: Pokemon,
+        val loser: Pokemon,
+        val winnerDamage: Int,
+        val loserDamage: Int
+    )
 }
