@@ -8,7 +8,8 @@ import jakarta.persistence.*
 @Table(name = "pokemons")
 data class PokemonJpaEntity(
     @Id
-    val id: Long,
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0L,
     
     @Column(length = 10)
     val number: String?,

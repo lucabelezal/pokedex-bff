@@ -27,8 +27,8 @@ class CreatePokemonUseCaseImpl(
             throw InvalidPokemonException("Pokemon name cannot be blank")
         }
         
-        // Gerar ID único (em produção, seria auto-incrementado pelo banco)
-        val newId = System.currentTimeMillis()
+        // ID será gerado automaticamente pelo banco de dados (@GeneratedValue)
+        val newId = 0L
         
         // Criar Pokémon com dados básicos
         // TODO: Em uma implementação completa, os tipos viriam do input ou de uma API externa
