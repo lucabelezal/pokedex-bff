@@ -141,42 +141,10 @@ class PokemonPersistenceMapper {
         )
 
     private fun toPokemonAbilityDomain(entity: PokemonAbilityJpaEntity): PokemonAbility {
-        // Avoid circular reference by not converting pokemon back
+        // Não inclui referência ao Pokemon para evitar ciclos circulares
+        // O Pokemon já contém Set<PokemonAbility>, então a relação é unidirecional
         return PokemonAbility(
             id = entity.id,
-            pokemon = Pokemon(
-                id = entity.pokemon.id,
-                number = entity.pokemon.number,
-                name = entity.pokemon.name,
-                height = entity.pokemon.height,
-                weight = entity.pokemon.weight,
-                description = entity.pokemon.description,
-                sprites = entity.pokemon.sprites,
-                genderRateValue = entity.pokemon.genderRateValue,
-                genderMale = entity.pokemon.genderMale,
-                genderFemale = entity.pokemon.genderFemale,
-                eggCycles = entity.pokemon.eggCycles,
-                stats = entity.pokemon.stats?.let {
-                    Stats(
-                        id = 0L,
-                        total = it.total,
-                        hp = it.hp,
-                        attack = it.attack,
-                        defense = it.defense,
-                        spAtk = it.spAtk,
-                        spDef = it.spDef,
-                        speed = it.speed
-                    )
-                },
-                generation = null,
-                species = null,
-                region = null,
-                evolutionChain = null,
-                types = emptySet(),
-                abilities = emptySet(),
-                eggGroups = emptySet(),
-                weaknesses = emptySet()
-            ),
             ability = Ability(
                 id = entity.ability.id,
                 name = entity.ability.name,
