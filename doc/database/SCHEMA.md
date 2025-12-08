@@ -1,58 +1,84 @@
 # Documentação do Esquema do Banco de Dados Pokémon
 
-Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados de destino é PostgreSQL e está implementado seguindo os princípios da **Clean Architecture**.
+Este documento descreve o esquema de banco de dados relacional para armazenar informações sobre Pokémon, suas características, evoluções, tipos, habilidades, regiões e grupos de ovos. O banco de dados é PostgreSQL com suporte a JSONB para dados complexos.
 
 
-## Contexto Arquitetural (Atualizado - Setembro 2025)
+## Contexto Arquitetural (Atualizado - Dezembro 2025)
 
-O projeto utiliza **Clean Architecture** com separação total entre domínio e infraestrutura:
+O projeto utiliza uma **arquitetura em camadas pragmática** com Spring Data JPA:
 
-### 🎯 **Separação Total de Responsabilidades**
+### 🎯 **Estrutura Atual**
 
-- **Domain Entities** (`src/main/kotlin/com/pokedex/bff/domain/entities/`): Entidades puras de negócio **sem dependências externas**
-- **Value Objects** (`src/main/kotlin/com/pokedex/bff/domain/valueobjects/`): ✅ **Implementados** - `PokemonId`, `PokemonNumber` com validações
-- **Domain Repositories** (`src/main/kotlin/com/pokedex/bff/domain/repositories/`): Interfaces que definem contratos de persistência
-- **JPA Entities** (`src/main/kotlin/com/pokedex/bff/infrastructure/persistence/entities/`): Mapeamento de tabelas **separado do domínio**
-- **Repository Adapters** (`src/main/kotlin/com/pokedex/bff/infrastructure/persistence/repositories/`): Implementações que conectam JPA ao domínio
-- **Use Cases** (`src/main/kotlin/com/pokedex/bff/application/usecases/`): ✅ **Implementados** - Cases específicos com responsabilidade única
-- **Ports & Adapters** (`src/main/kotlin/com/pokedex/bff/application/ports/` + `infrastructure/adapters/`): ✅ **Implementados**
+- **Domain Entities** (`src/main/kotlin/com/pokedex/bff/domain/entities/`): Entidades de negócio **com anotações JPA** (`@Entity`, `@Table`, `@Column`)
+- **Domain Repositories** (`src/main/kotlin/com/pokedex/bff/domain/repositories/`): Interfaces Spring Data JPA que estendem `JpaRepository`
+- **JSONB Converters** (`src/main/kotlin/com/pokedex/bff/infrastructure/converters/`): Conversores personalizados para tipos complexos (Sprites, EvolutionChainData)
+- **Application Layer** (`src/main/kotlin/com/pokedex/bff/application/`): Use cases e DTOs
+- **Web Layer** (`src/main/kotlin/com/pokedex/bff/web/`): Controllers REST e mappers
 
 
-### ✅ **Benefícios da Separação**
+### ✅ **Vantagens da Abordagem Pragmática**
 
-- **Domain Purity**: Zero dependências de frameworks no domínio
-- **Testabilidade**: Value Objects e Use Cases testáveis unitariamente
-- **Flexibilidade**: Troca de tecnologias sem afetar o domínio
-- **Inversão de Dependência**: Infraestrutura depende do domínio, não o contrário
+- **Simplicidade**: Menos código boilerplate, desenvolvimento mais rápido
+- **Spring Data**: Aproveitamento total do ecossistema Spring Boot
+- **Converters JSONB**: Deserialização automática de campos JSON complexos
+- **Testabilidade**: Testes de integração com @DataJpaTest
 
-### 🔄 **Mapeamento Domínio ↔ Infraestrutura**
+### 🔄 **Mapeamento JPA com Converters JSONB**
 
 ```kotlin
-// Domain Entity (Pura)
-data class Pokemon(
-    val id: PokemonId,           // ← Value Object
-    val number: PokemonNumber,   // ← Value Object  
-    val name: String,
-    // ... sem anotações JPA
-)
-
-// JPA Entity (Infraestrutura)
+// Domain Entity com JPA
 @Entity
 @Table(name = "pokemons")
-class PokemonJpaEntity(
-    @Id val id: Long,
-    @Column val number: String?,
-    @Column val name: String,
-    // ... anotações JPA/Hibernate
+data class Pokemon(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Long = 0,
+    
+    @Column(name = "number", length = 10)
+    val number: String? = null,
+    
+    @Column(name = "name", nullable = false)
+    val name: String = "",
+    
+    // Campo JSONB com converter personalizado
+    @Convert(converter = SpritesJsonConverter::class)
+    @Column(name = "sprites", columnDefinition = "jsonb")
+    val sprites: Sprites? = null,
+    
+    @Convert(converter = EvolutionChainDataConverter::class)
+    @Column(name = "evolution_chain", columnDefinition = "jsonb")
+    val evolutionChain: EvolutionChainData? = null
 )
 
-// Mapper (Infraestrutura → Domínio)
-class PokemonJpaMapper {
-    fun toDomain(jpa: PokemonJpaEntity): Pokemon {
-        return Pokemon(
-            id = PokemonId(jpa.id),
-            number = PokemonNumber.fromString(jpa.number),
-            name = jpa.name
+// Converter para deserializar JSON do DB
+@Converter
+class SpritesJsonConverter : AttributeConverter<Sprites?, String?> {
+    private val objectMapper = ObjectMapper().apply {
+        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    }
+    
+    override fun convertToEntityAttribute(json: String?): Sprites? {
+        return json?.let {
+            try {
+                objectMapper.readValue<SpritesDTO>(it).toDomain()
+            } catch (e: Exception) {
+                logger.error("Erro ao deserializar sprites: ${e.message}", e)
+                null // Fallback para evitar falhas em runtime
+            }
+        }
+    }
+    
+    // DTO com @JsonProperty para snake_case → camelCase
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private data class SpritesDTO(
+        @JsonProperty("front_default") val frontDefault: String?,
+        @JsonProperty("front_shiny") val frontShiny: String?,
+        val other: OtherSpritesDTO?
+    ) {
+        fun toDomain(): Sprites = Sprites(
+            frontDefault = frontDefault,
+            frontShiny = frontShiny,
+            other = other?.toDomain()
         )
     }
 }
@@ -78,70 +104,15 @@ As 13 tabelas são:
 12. `evolution_chains` (Contém detalhes da evolução em JSON)
 13. `pokemon_weaknesses` (Tabela de Junção)
 
-## Implementação Arquitetural (Clean Architecture)
+---
 
-### 🎯 **Separação Domain vs Infrastructure**
+## Detalhamento das Tabelas
 
-#### **Domain Entities (Puras)**
+### **Tabelas Principais**
+
+#### **1. Tabela `regions`**
 ```kotlin
-// domain/entities/Pokemon.kt - SEM dependências externas
-data class Pokemon(
-    val id: PokemonId,              // Value Object
-    val number: PokemonNumber,      // Value Object
-    val name: String,
-    val height: Int,
-    val weight: Int,
-    val types: List<Type>,
-    val stats: Stats,
-    val species: Species
-) {
-    // Apenas lógica de negócio
-    fun isValid(): Boolean = number.isValid() && name.isNotBlank()
-    fun getMainType(): Type = types.first()
-    fun hasType(type: Type): Boolean = types.contains(type)
-}
-```
-
-#### **JPA Entities (Infraestrutura)**
-```kotlin
-// infrastructure/persistence/entities/PokemonJpaEntity.kt
-@Entity
-@Table(name = "pokemons")
-data class PokemonJpaEntity(
-    @Id 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long = 0,
-
-    @Column(name = "number", length = 10)
-    val number: String? = null,
-
-    @Column(name = "name", nullable = false, length = 100)
-    val name: String = "",
-
-    @Column(name = "height")
-    val height: Int? = null,
-
-    @Column(name = "weight")
-    val weight: Int? = null,
-
-    // Relacionamentos JPA
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "species_id")
-    val species: SpeciesJpaEntity? = null,
-
-    @OneToMany(mappedBy = "pokemon", cascade = [CascadeType.ALL])
-    val stats: List<StatJpaEntity> = emptyList(),
-
-    // JSON para dados complexos
-    @Type(JsonType::class)
-    @Column(name = "sprites", columnDefinition = "jsonb")
-    val sprites: JsonNode? = null
-)
-```
-
-#### **Value Objects (Domain)**
-```kotlin
-// domain/valueobjects/PokemonId.kt - Rico em regras de negócio
+// domain/entities/Region.kt
 @JvmInline
 value class PokemonId(val value: Long) {
     init {
@@ -192,43 +163,7 @@ interface PokemonDomainRepository {
 }
 ```
 
-#### **Infrastructure Implementation**
-```kotlin
-// infrastructure/adapters/PokemonRepositoryAdapter.kt
-@Component
-class PokemonRepositoryAdapter(
-    private val jpaRepository: JpaPokemonRepository,
-    private val mapper: PokemonJpaMapper
-) : PokemonDomainRepository {
-
-    override fun findById(id: PokemonId): Pokemon? {
-        return jpaRepository.findById(id.value)
-            .map { mapper.toDomain(it) }
-            .orElse(null)
-    }
-
-    override fun findAll(page: Int, size: Int): List<Pokemon> {
-        val pageable = PageRequest.of(page, size)
-        return jpaRepository.findAll(pageable)
-            .content
-            .map { mapper.toDomain(it) }
-    }
-}
-```
-- **Regras**: Responsáveis apenas pelo mapeamento objeto-relacional
-
-#### DTOs de Interface (`interfaces/dto/`)
-- **Propósito**: Serialização/deserialização para comunicação externa
-- **Características**: Contêm anotações Jackson para JSON
-- **Subpacotes**:
-  - `sprites/`: DTOs para dados JSON complexos (ex: `SpritesDto.kt`, `OfficialArtworkSpritesDto.kt`)
-- **Regras**: Isolam preocupações de serialização da lógica de domínio
-
-### Campos JSON (sprites)
-Os campos `sprites` (JSONB) são mapeados através de DTOs especializados na camada de interface. Isso garante que:
-- A lógica de serialização não contamine as entidades de domínio
-- A estrutura JSON seja bem definida e tipada
-- Mudanças no formato de serialização não afetem a lógica de negócio
+---
 
 ## Entidades (Tabelas) e Seus Relacionamentos
 
