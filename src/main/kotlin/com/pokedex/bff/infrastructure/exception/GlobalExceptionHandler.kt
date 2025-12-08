@@ -191,7 +191,11 @@ class GlobalExceptionHandler {
             FieldError(
                 field = fieldError.field,
                 message = fieldError.defaultMessage ?: "Invalid value",
-                rejectedValue = fieldError.rejectedValue
+                rejectedValue = if (isDevelopmentMode() && !isSensitiveField(fieldError.field)) {
+                    fieldError.rejectedValue
+                } else {
+                    null // Omite em produção ou para campos sensíveis
+                }
             )
         }
         
@@ -205,6 +209,20 @@ class GlobalExceptionHandler {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
             .body(errorResponse)
+    }
+    
+    /**
+     * Verifica se o campo contém informações sensíveis que não devem ser expostas.
+     */
+    private fun isSensitiveField(fieldName: String): Boolean {
+        val sensitiveFields = setOf(
+            "password", "senha", "pass", "pwd",
+            "token", "apikey", "api_key", "secret",
+            "creditcard", "credit_card", "cvv", "cardnumber",
+            "ssn", "cpf", "rg",
+            "authorization", "bearer"
+        )
+        return sensitiveFields.any { fieldName.lowercase().contains(it) }
     }
 
     /**
