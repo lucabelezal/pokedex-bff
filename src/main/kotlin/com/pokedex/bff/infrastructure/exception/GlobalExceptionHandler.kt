@@ -38,7 +38,11 @@ class GlobalExceptionHandler {
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
         val cause = ex.undeclaredThrowable ?: ex.cause
-        logger.error("Undeclared throwable occurred", cause)
+        if (isDevelopmentMode()) {
+            logger.error("Undeclared throwable occurred", cause)
+        } else {
+            logger.error("Undeclared throwable occurred: {}", cause?.javaClass?.simpleName)
+        }
         
         // Tenta tratar a causa real se possível
         return when (cause) {
@@ -58,7 +62,11 @@ class GlobalExceptionHandler {
         ex: MismatchedInputException,
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
-        logger.error("JSON deserialization error: ${ex.message}", ex)
+        if (isDevelopmentMode()) {
+            logger.error("JSON deserialization error: ${ex.message}", ex)
+        } else {
+            logger.error("JSON deserialization error occurred", ex)
+        }
         
         val errorResponse = ErrorResponse(
             code = "DESERIALIZATION_ERROR",
@@ -156,7 +164,11 @@ class GlobalExceptionHandler {
         ex: Exception,
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
-        logger.warn("Invalid argument or state: {}", ex.message)
+        if (isDevelopmentMode()) {
+            logger.warn("Invalid argument or state: {}", ex.message)
+        } else {
+            logger.warn("Invalid argument or state occurred")
+        }
         
         val errorResponse = ErrorResponse(
             code = "INVALID_REQUEST",
@@ -185,7 +197,11 @@ class GlobalExceptionHandler {
         ex: MethodArgumentNotValidException,
         request: WebRequest
     ): ResponseEntity<ValidationErrorResponse> {
-        logger.warn("Validation error: {}", ex.message)
+        if (isDevelopmentMode()) {
+            logger.warn("Validation error: {}", ex.message)
+        } else {
+            logger.warn("Validation error occurred")
+        }
         
         val fieldErrors = ex.bindingResult.fieldErrors.map { fieldError ->
             FieldError(
@@ -243,7 +259,11 @@ class GlobalExceptionHandler {
         ex: Throwable,
         request: WebRequest
     ): ResponseEntity<ErrorResponse> {
-        logger.error("Unexpected error occurred", ex)
+        if (isDevelopmentMode()) {
+            logger.error("Unexpected error occurred", ex)
+        } else {
+            logger.error("Unexpected error occurred: {}", ex.javaClass.simpleName)
+        }
         
         val errorResponse = ErrorResponse(
             code = "INTERNAL_SERVER_ERROR",
