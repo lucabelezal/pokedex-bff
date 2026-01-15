@@ -7,7 +7,7 @@ Este script lê os arquivos JSON numerados de 01 a 10 e gera comandos SQL corres
 import json
 import os
 import sys
-from typing import Dict, Any, List, Optional
+from typing import Dict, Any, List
 from pathlib import Path
 
 # Mapeamento de arquivos JSON para nomes de tabelas

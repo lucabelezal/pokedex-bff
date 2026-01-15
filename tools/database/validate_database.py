@@ -11,7 +11,7 @@ Este script conecta ao banco PostgreSQL e verifica:
 
 import psycopg2
 import sys
-from typing import Dict, List, Tuple, Optional
+from typing import Dict, List
 from dataclasses import dataclass
 
 @dataclass
