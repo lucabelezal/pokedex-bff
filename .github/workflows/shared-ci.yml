@@ -7,6 +7,10 @@ on:
         required: false
         type: boolean
         default: false
+      run-codecov:
+        required: false
+        type: boolean
+        default: false
       run-deployment:
         required: false
         type: boolean
@@ -62,7 +66,7 @@ jobs:
         run: ./gradlew test jacocoTestReport --parallel --daemon --no-scan
 
       - name: 📊 Upload coverage to Codecov
-        if: secrets.CODECOV_TOKEN != ''
+        if: inputs.run-codecov
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -87,7 +91,7 @@ jobs:
   # Job 2: SonarQube Analysis (condicional)
   sonar-analysis:
     needs: build-and-test
-    if: inputs.run-sonar && secrets.SONAR_TOKEN != ''
+    if: inputs.run-sonar
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

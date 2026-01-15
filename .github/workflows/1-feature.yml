@@ -40,7 +40,8 @@ jobs:
     if: needs.validate-branch.outputs.should-run == 'true'
     uses: ./.github/workflows/shared-ci.yml
     with:
-      run-sonar: true
+      run-sonar: ${{ secrets.SONAR_TOKEN != '' }}
+      run-codecov: ${{ secrets.CODECOV_TOKEN != '' }}
       run-deployment: false
       environment: 'development'
     secrets:
