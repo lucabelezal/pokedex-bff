@@ -73,12 +73,25 @@ jobs:
             -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'lucabelezal' }} \
             -Dsonar.branch.name=${{ inputs.branch || github.ref_name }}
 
-      - name: 📊 SonarQube Quality Gate check
-        uses: sonarqube-quality-gate-action@master
+      - name: 📊 SonarQube Quality Gate check (via SonarCloud API)
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        continue-on-error: true
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}
+        run: |
+          if [ -z "${SONAR_TOKEN}" ]; then
+            echo "SONAR_TOKEN missing — skipping SonarQube quality gate check"
+            exit 0
+          fi
+          echo "Requesting SonarCloud quality gate for project: ${SONAR_PROJECT_KEY}"
+          RESPONSE=$(curl -s -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep -o '"status":"[^"]*"' | head -1 | sed -E 's/.*"status":"([^\"]*)".*/\1/')
+          echo "Quality gate status: $STATUS"
+          if [ "$STATUS" != "OK" ]; then
+            echo "Quality gate failed"
+            exit 1
+          fi
 
       - name: 📋 Analysis Summary
         run: |
