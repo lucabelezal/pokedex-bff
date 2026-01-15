@@ -65,8 +65,19 @@ jobs:
       - name: 🧪 Run tests with coverage
         run: ./gradlew test jacocoTestReport --parallel --daemon --no-scan
 
+      - name: 🔎 Check Codecov token
+        id: codecov-check
+        run: |
+          if [ -z "${CODECOV_TOKEN}" ]; then
+            echo "present=false" >> $GITHUB_OUTPUT
+          else
+            echo "present=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
       - name: 📊 Upload coverage to Codecov
-        if: inputs.run-codecov
+        if: inputs.run-codecov && steps.codecov-check.outputs.present == 'true'
         uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -95,6 +106,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: 🔎 Check Sonar token
+        id: sonar-check
+        run: |
+          if [ -z "${SONAR_TOKEN}" ]; then
+            echo "present=false" >> $GITHUB_OUTPUT
+          else
+            echo "present=true" >> $GITHUB_OUTPUT
+          fi
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+      - name: ⚠️ Skip Sonar if token missing
+        if: steps.sonar-check.outputs.present == 'false'
+        run: |
+          echo "SONAR_TOKEN not configured; skipping SonarQube analysis"
+          exit 0
+
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
