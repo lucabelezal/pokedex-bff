@@ -1,0 +1,99 @@
+name: "3 - SonarQube Analysis"
+
+on:
+  # Workflow dispatch manual para análises específicas
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Branch to analyze'
+        required: false
+        default: 'main'
+        type: string
+      
+  # Análise automática semanal na main
+  schedule:
+    - cron: '0 2 * * 1' # Segunda-feira às 2h UTC
+    
+  # Análise para PRs críticos (opcional - pode ser removido se já está no 1-feature.yml)
+  pull_request:
+    types: [opened]
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+
+jobs:
+  # Análise dedicada do SonarQube
+  sonar-analysis:
+    name: 🔍 SonarQube Analysis
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule' || (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'sonar-required'))
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.branch || github.ref }}
+
+      - name: ☕ Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: 🔧 Cache SonarQube packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: 📦 Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: 🔧 Grant execute permission for gradlew
+        run: chmod +x ./gradlew
+
+      - name: 🔍 Build and analyze
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          ./gradlew build jacocoTestReport sonar --parallel --daemon --no-scan \
+            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
+            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'lucabelezal' }} \
+            -Dsonar.branch.name=${{ inputs.branch || github.ref_name }}
+
+      - name: 📊 SonarQube Quality Gate check (via SonarCloud API)
+        timeout-minutes: 5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}
+        run: |
+          if [ -z "${SONAR_TOKEN}" ]; then
+            echo "SONAR_TOKEN missing — skipping SonarQube quality gate check"
+            exit 0
+          fi
+          echo "Requesting SonarCloud quality gate for project: ${SONAR_PROJECT_KEY}"
+          RESPONSE=$(curl -s -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep -o '"status":"[^"]*"' | head -1 | sed -E 's/.*"status":"([^\"]*)".*/\1/')
+          echo "Quality gate status: $STATUS"
+          if [ "$STATUS" != "OK" ]; then
+            echo "Quality gate failed"
+            exit 1
+          fi
+
+      - name: 📋 Analysis Summary
+        run: |
+          echo "🔍 SonarQube Analysis completed for branch: ${{ inputs.branch || github.ref_name }}"
+          echo "📊 View results at: https://sonarcloud.io/project/overview?id=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}"

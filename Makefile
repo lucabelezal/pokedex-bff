@@ -1,44 +1,97 @@
-# ==============================================================================
+# ============================================================================== 
+# Utilitário: Matar processo na porta 8080
+# ============================================================================== 
+kill-port-8080:
+	@echo "🔎 Verificando processo na porta 8080..."
+	@if lsof -i :8080 | grep LISTEN; then \
+		PID=$$(lsof -ti :8080); \
+		echo "⚠️  Processo encontrado na porta 8080: PID=$$PID"; \
+		kill -9 $$PID; \
+		echo "✅ Processo na porta 8080 finalizado."; \
+	else \
+		echo "✅ Nenhum processo escutando na porta 8080."; \
+	fi
+# ============================================================================== 
+# Alvo padrão: exibir help
+# ============================================================================== 
+.DEFAULT_GOAL := help
+
+# ============================================================================== 
 # Variáveis de Configuração
 # ==============================================================================
 DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
 JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
 
-# ==============================================================================
-# Comandos PHONY
-# ==============================================================================
-.PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report
 
-# ==============================================================================
-# Ajuda
-# ==============================================================================
+# Makefile mínimo: apenas help
 help:
 	@echo "==================================================================="
 	@echo "                 Comandos do Makefile para Pokedex BFF             "
 	@echo "==================================================================="
+	@echo "  ⚠️  Para desenvolvimento local, configure o datasource para 'localhost' em application-dev.yml."
+	@echo ""
+	@echo "🔎 AMBIENTE DE DESENVOLVIMENTO:"
+	@echo "  make dev-up       - Banco no container + BFF rodando LOCALMENTE (modo debug, recomendado para desenvolvimento)."
+	@echo "  make dev-db-up    - Banco e BFF rodando em CONTAINERS (ambiente dockerizado, não recomendado para debug local)."
+	@echo ""
+	@echo "  Use 'make dev-up' se quiser rodar o BFF localmente e debugar pelo IntelliJ/VSCode."
+	@echo "  Use 'make dev-db-up' apenas se quiser rodar tudo em containers (sem debug local)."
 	@echo "  make help                   - Exibe esta mensagem de ajuda."
 	@echo ""
+	@echo "🔧 CONFIGURAÇÃO INICIAL:"
+	@echo "  make check-deps             - Verifica se todas as dependências estão instaladas."
 	@echo "  make dev-setup              - Configura e inicia o ambiente (Linux/macOS)."
-	@echo "  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
+
 	@echo ""
-	@echo "  make start-db               - Inicia o banco PostgreSQL com Docker Compose."
-	@echo "  make stop-db                - Para o contêiner do banco."
-	@echo "  make clean-db               - Remove o banco e os volumes (apaga os dados!)."
-	@echo "  make load-data              - Executa o BFF e carrega os dados JSON com o profile DEV.."
-	@echo "  make run-bff                - Executa o BFF sem importar dados com o profile DEV.."
+	@echo "🗄️  BANCO DE DADOS (Isolado):"
+	@echo "  make db-only-up             - Sobe APENAS o banco com dados pré-carregados."
+	@echo "  make db-only-down           - Para o banco isolado."
+	@echo "  make db-only-restart        - Reinicia o banco isolado."
+	@echo "  make db-only-clean          - Remove banco isolado e volumes (apaga dados!)."
+	@echo "  make db-only-shell          - Abre shell psql no banco isolado."
+	@echo "  make db-info                - Exibe informações de conexão para DBeaver/pgAdmin."
+	@echo ""
+	@echo "🚀 DESENVOLVIMENTO COMPLETO:"
+	@echo "  make dev-db-up              - Sobe banco + BFF para desenvolvimento."
+	@echo "  make dev-db-down            - Para ambiente de desenvolvimento."
+	@echo "  make dev-db-clean           - Remove ambiente dev e volumes."
+	@echo "  make dev-db-shell           - Abre shell psql no banco de dev."
+	@echo ""
+	@echo "🏗️  BUILD E EXECUÇÃO:"
 	@echo "  make clean-bff              - Executa './gradlew clean'."
+	@echo "  make run-bff                - Executa o BFF (verifica/sobe banco automaticamente)."
 	@echo ""
+	@echo "📊 SQL E DADOS:"
+	@echo "  make generate-sql-data      - Gera init-data.sql a partir dos JSONs."
+	@echo "  make install-db-deps        - Instala dependências Python para validação do banco."
+	@echo "  make validate-db            - Valida estrutura e dados (verifica/sobe banco automaticamente)."
+	@echo ""
+	@echo "🧪 TESTES:"
 	@echo "  make test                   - Roda todos os testes e gera o relatório JaCoCo."
-	@echo "  make test-class CLASS=<NomeDaClasseTeste> - Roda testes de uma classe específica e gera o relatório JaCoCo."
-	@echo "                                        Ex: make test-class CLASS=PokemonServiceTest"
+	@echo "  make test-class CLASS=<Nome> - Roda testes de uma classe específica."
 	@echo "  make open-jacoco-report     - Abre o relatório JaCoCo HTML no navegador."
 	@echo ""
+	@echo "🧹 LIMPEZA:"
 	@echo "  make clean-all              - Para tudo, limpa DB, Gradle e contêineres."
-	@echo "  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'."
+	@echo "  make force-remove-db-container - Força a remoção do contêiner do banco."
 	@echo "  make deep-clean-gradle      - Limpa caches e artefatos do Gradle."
 	@echo ""
-	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
+	@echo "📚 DOCUMENTAÇÃO:"
+	@echo "  make open-swagger           - Abre Swagger (verifica/sobe banco e BFF automaticamente)."
+	@echo ""
+	@echo "⚡ COMANDOS OTIMIZADOS:"
+	@echo "  make dev-up                 - Inicia ambiente completo (banco + BFF)."
+	@echo "  make dev-down               - Para ambiente de desenvolvimento."
+	@echo "  make db-refresh             - Atualiza dados do banco (recria com dados frescos)."
+	@echo "  make bff-only               - Executa apenas BFF (verifica/sobe banco automaticamente)."
+	@echo "  make dev-status             - Mostra status dos serviços."
+	@echo "  make dev-logs               - Exibe logs em tempo real."
+	@echo ""
+	@echo "💡 FLUXO RECOMENDADO:"
+	@echo "  1. make check-deps          (verifica dependências)"
+	@echo "  2. make dev-up              (sobe ambiente completo)"
+	@echo "  3. make test                (executa testes)"
+	@echo "  4. make dev-status          (verifica se tudo está ok)"
 	@echo "==================================================================="
 
 # ==============================================================================
@@ -46,8 +99,15 @@ help:
 # ==============================================================================
 SWAGGER_URL = http://localhost:8080/swagger-ui/index.html
 
-open-swagger:
-	@echo "--- Abrindo Swagger UI no navegador: $(SWAGGER_URL) ---"
+open-swagger: check-database
+	@echo "🚀 Verificando se o BFF está rodando..."
+	@if ! curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "⚠️  BFF não está rodando. Iniciando..."; \
+		$(MAKE) run-bff & \
+		echo "⏳ Aguardando BFF inicializar..."; \
+		sleep 15; \
+	fi
+	@echo "📖 Abrindo Swagger UI no navegador: $(SWAGGER_URL)"
 	@if command -v xdg-open > /dev/null; then \
 		xdg-open $(SWAGGER_URL); \
 	elif command -v open > /dev/null; then \
@@ -60,23 +120,74 @@ open-swagger:
 	fi
 
 # ==============================================================================
-# Banco de Dados
+# Comandos de Desenvolvimento Otimizados
 # ==============================================================================
 
-start-db:
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
+dev-up:
+	@$(MAKE) kill-port-8080
+	@echo "🚀 INICIANDO AMBIENTE DE DESENVOLVIMENTO COMPLETO..."
+	@echo "   📦 Subindo banco + BFF com recarga automática"
+	@$(MAKE) check-deps
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db
+	@echo "⏳ Aguardando banco ficar disponível..."
 	@sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
+	@$(MAKE) run-bff
 
-stop-db:
-	@echo "--- Parando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) stop db
+dev-down:
+	@echo "🛑 PARANDO AMBIENTE DE DESENVOLVIMENTO..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) down
+	@echo "✅ Ambiente de desenvolvimento parado."
 
-clean-db:
-	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) down -v --remove-orphans
+db-refresh:
+# ============================================================================== 
+# Jacoco
+# ==============================================================================
+jacoco-report:
+	@if [ -f $(JACOCO_REPORT_PATH) ]; then \
+	@echo "🔄 ATUALIZANDO DADOS DO BANCO..."
+	@echo "   ⚠️  Isso irá recriar o banco com dados frescos!"
+	@read -p "Tem certeza? (y/N): " confirm; \
+	if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
+		$(MAKE) db-only-clean; \
+		$(MAKE) generate-sql-data; \
+		$(MAKE) db-only-up; \
+		echo "✅ Banco atualizado com dados frescos!"; \
+	else \
+		echo "❌ Operação cancelada."; \
+	fi
+
+bff-only:
+	@echo "🏗️  EXECUTANDO APENAS O BFF..."
+	@$(MAKE) check-database
+	@$(MAKE) run-bff
+
+dev-status:
+	@echo "📊 STATUS DO AMBIENTE DE DESENVOLVIMENTO:"
+	@echo "----------------------------------------"
+	@if $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "✅ Banco: RODANDO"; \
+	else \
+		echo "❌ Banco: PARADO"; \
+	fi
+	@if curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "✅ BFF: RODANDO (http://localhost:8080)"; \
+	else \
+		echo "❌ BFF: PARADO"; \
+	fi
+	@echo "----------------------------------------"
+
+dev-logs:
+	@echo "📋 LOGS DO AMBIENTE DE DESENVOLVIMENTO:"
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) logs -f
+
+# ======================================================================
+# Comandos Legados (manter compatibilidade)
+# ======================================================================
+
+start-db: db-only-up
+stop-db: db-only-down  
+clean-db: db-only-clean
+restart-db: db-only-restart
 
 # ==============================================================================
 # BFF - Spring Boot / Gradle
@@ -86,96 +197,156 @@ clean-bff:
 	@echo "--- Limpando o projeto BFF (gradle clean) ---"
 	./gradlew clean
 
-run-bff:
-	@echo "--- Iniciando o BFF no profile DEV ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev'
-
-load-data: start-db
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
+run-bff: check-database
+	@echo "🔄 Iniciando o BFF..."
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
-# Testes e JaCoCo
+# Variáveis de Configuração
+# ==============================================================================
+DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
+JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
+
+# Detecção automática dos comandos Docker
+DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>/dev/null || echo "docker")
+DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
+
+# ==============================================================================
+# Funções Helper para Verificação do Banco
 # ==============================================================================
 
-test: clean-bff
-	@echo "--- Rodando todos os testes e gerando relatório JaCoCo ---"
-	./gradlew clean test jacocoTestReport
-	@echo "Relatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
-
-test-class: clean-bff
-ifeq ($(CLASS),)
-	@echo "ERRO: Para rodar testes de uma classe específica, use: make test-class CLASS=<NomeDaClasseTeste>"
-	@exit 1
-else
-	@echo "--- Rodando testes da classe $(CLASS) e gerando relatório JaCoCo ---"
-	./gradlew clean test --tests "*$(CLASS)*" jacocoTestReport
-	@echo "Relocatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
-endif
-
-open-jacoco-report:
-	@echo "--- Abrindo relatório JaCoCo HTML no navegador: $(JACOCO_REPORT_PATH) ---"
-	@if [ ! -f "$(JACOCO_REPORT_PATH)" ]; then \
-		echo "ERRO: Relatório JaCoCo não encontrado em $(JACOCO_REPORT_PATH). Certifique-se de ter rodado os testes primeiro."; \
-		exit 1; \
-	fi
-	@if command -v xdg-open > /dev/null; then \
-		xdg-open $(JACOCO_REPORT_PATH); \
-	elif command -v open > /dev/null; then \
-		open $(JACOCO_REPORT_PATH); \
-	elif command -v start > /dev/null; then \
-		start $(JACOCO_REPORT_PATH); \
+# Verifica se o banco está rodando e oferece para subir se não estiver
+check-database:
+	@if ! $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "⚠️  Banco de dados não está rodando."; \
+		read -p "Deseja subir o banco agora? (y/N): " confirm; \
+		if [ "$$confirm" = "y" ] || [ "$$confirm" = "Y" ]; then \
+			$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db; \
+			echo "⏳ Aguardando banco inicializar..."; \
+			sleep 5; \
+		else \
+			echo "❌ Operação cancelada. O banco é necessário para continuar."; \
+			exit 1; \
+		fi; \
 	else \
-		echo "Não foi possível detectar um comando para abrir URLs/arquivos automaticamente."; \
-		echo "Por favor, abra manualmente: $(JACOCO_REPORT_PATH)"; \
+		echo "✅ Banco de dados já está rodando."; \
 	fi
+
+# ==============================================================================
+# Verificação de Dependências e Geração de Dados SQL
+# ==============================================================================
+
+# Verifica se todas as dependências estão instaladas
+# Uso: make check-deps
+check-deps:
+	@echo "🔍 Verificando dependências do sistema..."
+	python3 tools/database/check_dependencies.py
+
+# Gera o arquivo docker/db/init-data.sql a partir dos JSONs
+# Uso: make generate-sql-data
+# Requer: Python 3
+generate-sql-data:
+	@echo "� Gerando init-data.sql a partir dos JSONs..."
+	python3 tools/database/generate_sql_from_json.py
+
+# Instala dependências Python para validação do banco
+# Uso: make install-db-deps
+install-db-deps:
+	@echo "🔄 Instalando dependências Python para validação do banco..."
+	pip3 install --break-system-packages psycopg2-binary
+	@echo "✅ Dependências instaladas com sucesso!"
+
+# Valida estrutura e dados do banco de dados
+# Uso: make validate-db
+# Requer: banco ativo (use db-only-up primeiro) e dependências (use install-db-deps primeiro)
+validate-db: check-database
+	@echo "🔍 Validando estrutura e dados do banco..."
+	python3 tools/database/validate_database.py
+	@echo "✅ Validação concluída!"
+
+# ==============================================================================
+# Banco de Dados Isolado (apenas para testes do banco)
+# ==============================================================================
+
+# Sobe apenas o banco com dados pré-carregados (teste isolado)
+db-only-up: generate-sql-data
+	@echo "🔄 Subindo banco de dados isolado..."
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml up -d
+	@echo "⏳ Aguardando inicialização do banco..."
+	@sleep 10
+	@echo "📋 Verificando logs de inicialização:"
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml logs db
+	@echo "✅ Banco isolado disponível em localhost:5434"
+
+# Para o banco isolado
+db-only-down:
+	@echo "🔄 Parando banco isolado..."
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml down
+
+# Reinicia o banco isolado
+db-only-restart: db-only-down db-only-up
+
+# Remove banco isolado e volumes
+db-only-clean:
+	@echo "🔄 Removendo banco isolado e volumes..."
+	$(DOCKER_COMPOSE_CMD) -f docker/docker-compose.db-only.yml down -v --remove-orphans
+	@echo "✅ Banco isolado removido"
+
+# Abre shell psql no banco isolado
+db-only-shell: check-isolated-database
+	@echo "🔄 Conectando ao banco isolado..."
+	PGPASSWORD=postgres psql -h localhost -U postgres -p 5434 -d pokedex_dev_db
+
+# Exibe informações de conexão para DBeaver e outras ferramentas
+db-info:
+	@echo "=================================================================="
+	@echo "             📊 INFORMAÇÕES DE CONEXÃO DO BANCO"
+	@echo "=================================================================="
+	@echo "🗄️  BANCO DE DESENVOLVIMENTO (localhost:5434)"
+	@echo ""
+	@echo "📋 Configurações para DBeaver/DataGrip/pgAdmin:"
+	@echo "   Host:      localhost"
+	@echo "   Porta:     5434"
+	@echo "   Database:  pokedex_dev_db"
+	@echo "   Usuário:   postgres"
+	@echo "   Senha:     postgres"
+	@echo ""
+	@echo "🔗 URL de Conexão (JDBC):"
+	@echo "   jdbc:postgresql://localhost:5434/pokedex_dev_db"
+	@echo ""
+	@echo "📊 Tabelas principais:"
+	@echo "   • regions (10 registros)"
+	@echo "   • types (18 registros)"
+	@echo "   • generations (10 registros)"
+	@echo "   • abilities (306 registros)"
+	@echo "   • species (620 registros)"
+	@echo "   • pokemons (25 registros)"
+	@echo "   • pokemon_types, pokemon_abilities, pokemon_weaknesses"
+	@echo ""
+	@echo "💡 Comandos úteis:"
+	@echo "   make db-only-up     - Sobe o banco isoladamente"
+	@echo "   make db-only-shell  - Conecta via psql"
+	@echo "   make validate-db    - Valida estrutura e dados"
+	@echo "=================================================================="
 
 # ==============================================================================
 # Orquestração Completa (Linux/macOS)
 # ==============================================================================
 
 dev-setup:
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker/docker-compose.dev.yml up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
-	sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
+	@echo "🔄 Iniciando setup de desenvolvimento..."
+	@$(MAKE) check-deps
+	@echo "📊 Gerando dados SQL..."
+	python3 tools/database/generate_sql_from_json.py
+	@echo "🔄 Subindo banco de dados..."
+	$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_FILE) up -d db
+	@echo "⏳ Aguardando banco inicializar..."
+	@sleep 10
+	@echo "🔄 Iniciando BFF..."
 	./gradlew bootRun --args='--spring.profiles.active=dev'
 
 # ==============================================================================
-# Orquestração para Windows via Git Bash ou WSL
-# ==============================================================================
 
-# Comando para checar ambiente Windows e orientar instalação do Java e Gradle via Scoop
-check-windows-env:
-	@echo "Verificando Java e Gradle no Windows..."
-	@if ! command -v java > /dev/null 2>&1; then \
-		echo "Java não encontrado! Instale com:"; \
-		echo "  scoop bucket add java"; \
-		echo "  scoop install openjdk21"; \
-		exit 1; \
-	else \
-		echo "Java encontrado:"; java -version; \
-	fi
-	@if ! command -v gradle > /dev/null 2>&1; then \
-		echo "Gradle não encontrado! Instale com:"; \
-		echo "  scoop install gradle"; \
-		exit 1; \
-	else \
-		echo "Gradle encontrado:"; gradle --version; \
-	fi
-
-dev-setup-for-windows: check-windows-env
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker\docker-compose.dev.yml up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
-	sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
-	gradlew.bat bootRun --args='--spring.profiles.active=dev'
 
 
 # ==============================================================================
@@ -198,3 +369,80 @@ deep-clean-gradle:
 	./gradlew clean --refresh-dependencies --no-build-cache
 	rm -rf build .gradle
 	@echo "--- Limpeza profunda do Gradle concluída. ---"
+
+# ======================================================================
+# Ambiente de Desenvolvimento Local
+# ======================================================================
+# make dev-db-up         - Sobe apenas o banco de dev (porta 5433, volume isolado)
+# make dev-db-down       - Para e remove o banco de dev
+# make dev-db-clean      - Remove banco de dev e volume (apaga dados)
+# make dev-db-shell      - Abre um shell psql no banco de dev
+
+# Sobe apenas o banco de dev
+# Uso: make dev-db-up
+dev-db-up: generate-sql-data
+	@echo "🔄 Subindo ambiente de desenvolvimento (DB + BFF)..."
+	docker compose -f docker/docker-compose.dev.yml up -d
+	@echo "⏳ Aguardando inicialização..."
+	@sleep 10
+	@echo "📋 Verificando logs do banco:"
+	docker compose -f docker/docker-compose.dev.yml logs db
+	@echo "✅ Ambiente de desenvolvimento disponível - DB: localhost:5434, BFF: localhost:8081"
+
+# Para e remove o banco de dev
+# Uso: make dev-db-down
+dev-db-down:
+	@echo "🔄 Parando ambiente de desenvolvimento..."
+	docker compose -f docker/docker-compose.dev.yml down
+
+# Remove banco de dev e volume (apaga dados)
+# Uso: make dev-db-clean
+dev-db-clean:
+	@echo "🔄 Removendo ambiente de desenvolvimento e volumes..."
+	docker compose -f docker/docker-compose.dev.yml down -v --remove-orphans
+	@echo "✅ Ambiente de desenvolvimento removido"
+
+# Abre um shell psql no banco de dev
+# Uso: make dev-db-shell
+dev-db-shell: check-dev-database
+	@echo "🔄 Conectando ao banco de desenvolvimento..."
+	PGPASSWORD=postgres psql -h localhost -U postgres -p 5434 -d pokedex_dev_db
+
+# ======================================================================
+# Ambiente de Produção/Deploy (usando docker-compose.yml principal)
+# ======================================================================
+
+prod-up: generate-sql-data
+	@echo "🔄 Subindo ambiente de produção..."
+	./gradlew clean build
+	docker compose up --build -d
+	@echo "✅ Ambiente de produção disponível - DB: localhost:5432, BFF: localhost:8080"
+
+prod-down:
+	@echo "🔄 Parando ambiente de produção..."
+	docker compose down
+
+prod-clean:
+	@echo "🔄 Removendo ambiente de produção e volumes..."
+	docker compose down -v --remove-orphans
+	@echo "✅ Ambiente de produção removido"
+
+prod-shell:
+	@echo "🔄 Conectando ao banco de produção..."
+	PGPASSWORD=pokedex psql -h localhost -U pokedex -p 5432 -d pokedex
+
+clean-docker:
+	@echo "🔄 Removendo containers e volumes..."
+	@docker compose -f docker/docker-compose.dev.yml down -v --remove-orphans
+	@docker compose -f docker/docker-compose.db-only.yml down -v --remove-orphans
+	@docker volume prune -f
+	@echo "✅ Containers e volumes removidos com sucesso!"
+
+# ==============================================================================
+# Lint e Formatação Kotlin
+# ==============================================================================
+lint:
+	./gradlew ktlintCheck detekt
+
+lint-fix:
+	./gradlew ktlintFormat
