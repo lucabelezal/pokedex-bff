@@ -1,0 +1,31 @@
+config:
+  validation: true
+processors:
+  active: true
+console-reports:
+  active: true
+output-reports:
+  active: true
+style:
+  MagicNumber:
+    active: true
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+  UnusedImports:
+    active: true
+  WildcardImport:
+    active: true
+  OptionalUnit:
+    active: true
+  ReturnCount:
+    active: true
+  NewLineAtEndOfFile:
+    active: true
+  SpacingBetweenPackageAndImports:
+    active: true
+  NoTabs:
+    active: true
+  TrailingWhitespace:
+    active: true
+

@@ -11,6 +11,10 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+
+	// Static Analysis
+	id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+	id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "com.pokedex"
@@ -39,6 +43,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	// Kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -47,14 +52,14 @@ dependencies {
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 
-	// CSV
-	implementation("org.apache.commons:commons-csv:1.10.0")
-
 	// Swagger/OpenAPI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
 	// Dev Tools
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	// H2 Database for testing only
+	testRuntimeOnly("com.h2database:h2")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -62,6 +67,10 @@ dependencies {
 	}
 	testImplementation(kotlin("test-junit5"))
 	testImplementation("io.mockk:mockk:1.13.10")
+	
+	springBoot {
+	    mainClass.set("com.pokedex.bff.PokedexBffApplicationKt")
+	}
 }
 
 allOpen {
@@ -78,33 +87,64 @@ jacoco {
 	toolVersion = "0.8.11"
 }
 
-tasks.named<JacocoReport>("jacocoTestReport") {
-    dependsOn(tasks.test)
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
 
-    reports {
-        xml.required.set(true)
-        html.required.set(true)
+	reports {
+		xml.required.set(true)
+		csv.required.set(false)
+		html.required.set(true)
 		html.outputLocation.set(layout.buildDirectory.dir("reports/jacoco/test/html"))
-    }
+	}
 
-    classDirectories.setFrom(
-        fileTree("${buildDir}/classes/kotlin/main") {
-            include("com/pokedex/bff/infrastructure/seeder/runners/**")
-        }
-    )
+	classDirectories.setFrom(
+		fileTree(layout.buildDirectory.dir("classes/kotlin/main").get().asFile) {
+			exclude(
+				"**/com/pokedex/bff/PokedexBffApplication*",
+				"**/com/pokedex/bff/application/dto/**",
+				"**/com/pokedex/bff/domain/entities/**",
+				"**/com/pokedex/bff/infrastructure/configuration/**"
+			)
+		}
+	)
+
+	executionData.setFrom(
+		fileTree(layout.buildDirectory.get().asFile) {
+			include("jacoco/test.exec")
+		}
+	)
+
+	sourceSets(sourceSets.main.get())
 }
 
 sonarqube {
-    properties {
+	properties {
 		property("sonar.projectKey", "lucabelezal_pokedex-bff")
 		property("sonar.organization", "skeleton")
 		property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sources", "src/main/kotlin/com/pokedex/bff/infrastructure")
-        property("sonar.coverage.jacoco.xmlReportPaths", "$buildDir/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.test.exclusions", "**/src/test/**,**/*Test.kt")
-        property("sonar.exclusions", "**/domain/**,**/shared/**,**/dto/**")
-        property("sonar.coverage.exclusions", "**/domain/**,**/shared/**,**/dto/**")
-    }
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get().asFile}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.junit.reportPaths", "${layout.buildDirectory.get().asFile}/test-results/test")
+	}
 }
 
+ktlint {
+    version.set("1.2.1")
+    outputToConsole.set(true)
+}
 
+detekt {
+    config.from(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+// Temporarily disable detekt tasks while refactoring and stabilizing the codebase.
+// Enable again by removing or commenting the block below.
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+	enabled = false
+}
+
+// Temporarily disable ktlint tasks while refactoring and stabilizing the codebase.
+// This disables tasks like ktlintCheck and ktlintFormat. Remove or comment to re-enable.
+tasks.matching { it.name.startsWith("ktlint") }.configureEach {
+    enabled = false
+}
