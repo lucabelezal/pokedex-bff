@@ -13,6 +13,8 @@ Este projeto utiliza uma pilha de tecnologias modernas e ferramentas práticas p
 
 <p><img src="assets/icons/springdata.png" width="24" height="24" /> <strong>Spring Data JPA</strong> — Interação com banco relacional de forma orientada a objetos. <a href="https://spring.io/projects/spring-data-jpa">Documentação</a></p>
 
+<p><img src="assets/icons/springboot.png" width="24" height="24" /> <strong>Spring Security</strong> — Camada de segurança para autenticação/autorização. <a href="https://spring.io/projects/spring-security">Documentação</a></p>
+
 
 <p><img src="assets/icons/gradle.png" width="24" height="24" /> <strong>Gradle</strong> — Automação de build e gerenciamento de dependências. <a href="https://gradle.org/">Documentação</a></p>
 
@@ -20,6 +22,10 @@ Este projeto utiliza uma pilha de tecnologias modernas e ferramentas práticas p
 <p><img src="assets/icons/postgresql.png" width="24" height="24" /> <strong>PostgreSQL</strong> — Banco de dados relacional robusto e extensível. <a href="https://www.postgresql.org/">Site Oficial</a></p>
 
 <p>⚙️ <strong>Apache Commons CSV</strong> — Biblioteca para leitura e processamento de arquivos CSV. <a href="https://commons.apache.org/proper/commons-csv/">Documentação</a></p>
+
+<p>✅ <strong>ktlint</strong> — Padronização e formatação automática de código Kotlin. <a href="https://pinterest.github.io/ktlint/">Documentação</a></p>
+
+<p>🔍 <strong>detekt</strong> — Análise estática para qualidade de código Kotlin. <a href="https://detekt.dev/">Documentação</a></p>
 
 ### 💻 Softwares e Ferramentas
 

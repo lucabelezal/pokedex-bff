@@ -17,8 +17,8 @@ Este repositório contém o código-fonte do **Pokedex BFF (Backend For Frontend
 └──────────────────┬──────────────────────────────────┘
                    │ WebMapper (DTO → Domain)
 ┌──────────────────▼──────────────────────────────────┐
-│       Services & Use Cases (Application)            │
-│    application/services/, application/usecase/      │
+│           Use Cases (Application)                   │
+│    application/port/input/, application/usecase/    │
 └──────────────────┬──────────────────────────────────┘
                    │ Repository Interface
 ┌──────────────────▼──────────────────────────────────┐
@@ -35,7 +35,7 @@ Este repositório contém o código-fonte do **Pokedex BFF (Backend For Frontend
 ### Camadas e Responsabilidades
 
 - **Adapters (Input)**: Controllers REST, DTOs Web, Mappers
-- **Application**: Serviços de negócio, Use Cases, DTOs de aplicação
+- **Application**: Use Cases e portas de entrada
 - **Domain**: Entidades JPA, Repositórios Spring Data, Exceções de domínio
 - **Infrastructure**: Configurações, Exception Handlers, Seeders
 
@@ -60,15 +60,22 @@ Este repositório contém o código-fonte do **Pokedex BFF (Backend For Frontend
 @RestController
 @RequestMapping("/api/v1/pokemons")
 class PokemonController(
-    private val pokedexService: PokedexService,
-    private val webMapper: PokemonWebMapper
+    private val listPokemonsUseCase: ListPokemonsUseCase,
+    private val richWebMapper: PokemonRichWebMapper
 ) {
     @GetMapping
     fun list(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
-    ): PokedexListResponse {
-        return pokedexService.getPokemons(page, size)
+    ): PokemonRichPageResponse {
+        val pageResult = listPokemonsUseCase.findAll(page, size)
+        return richWebMapper.toRichPageResponse(
+            pokemons = pageResult.content,
+            totalElements = pageResult.totalElements,
+            currentPage = pageResult.pageNumber,
+            totalPages = pageResult.totalPages,
+            hasNext = pageResult.hasNext
+        )
     }
 }
 ```
@@ -115,7 +122,7 @@ class GlobalExceptionHandler {
     
     @ExceptionHandler(MismatchedInputException::class)
     fun handleDeserializationError(ex: MismatchedInputException): ResponseEntity<ErrorResponse> {
-        return ResponseEntity.status(500).body(ErrorResponse(
+        return ResponseEntity.status(400).body(ErrorResponse(
             code = "DESERIALIZATION_ERROR",
             message = if (activeProfile == "dev") {
                 "Failed to deserialize: ${ex.originalMessage}"
@@ -147,6 +154,12 @@ class GlobalExceptionHandler {
 - Sem exposição de internos
 - Apenas código de erro
 
+### Segurança e CORS (por ambiente)
+
+- **Dev**: endpoints liberados e CORS amplo para facilitar desenvolvimento.
+- **Prod**: autenticação básica obrigatória e CORS restrito via variáveis de ambiente.
+- **Management**: `health` e `info` expostos em prod; demais apenas em dev.
+
 ## 🚀 Status do Projeto
 
 - ✅ API REST funcional
@@ -166,4 +179,4 @@ class GlobalExceptionHandler {
 
 ---
 
-*Atualizado em 07/12/2025 - Correções JSONB e error handling*
+*Atualizado em 17/01/2026 - Segurança por perfil, CORS configurável e separação de use cases*

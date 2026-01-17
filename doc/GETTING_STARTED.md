@@ -18,7 +18,6 @@ src/main/kotlin/com/pokedex/bff/
 │       ├── exception/         # Exceções de domínio
 │       └── repository/        # Interfaces de repositório (contratos)
 ├── application/               # Camada de aplicação
-│   ├── services/              # Serviços de aplicação (@Service)
 │   ├── dto/                   # DTOs de entrada/saída
 │   ├── valueobjects/          # Value Objects (ex: SpritesVO)
 │   ├── port/input/            # Interfaces de use cases (Hexagonal)
@@ -36,6 +35,7 @@ src/main/kotlin/com/pokedex/bff/
 └── infrastructure/            # Infraestrutura e configurações
     ├── config/                # Configurações Spring (@Configuration)
     ├── exception/             # GlobalExceptionHandler, ErrorResponse
+    ├── security/              # Configuração de segurança
     ├── seeder/                # Populador de dados inicial
     └── utils/                 # Utilitários gerais
 ```
@@ -63,7 +63,9 @@ src/main/kotlin/com/pokedex/bff/
 ./gradlew bootRun           # Inicia aplicação
 ./gradlew test              # Executa testes
 ./gradlew build             # Build completo
-make dev-up                 # Sobe banco + BFF local
+make dev                    # Banco + BFF local
+make run                    # Apenas BFF (banco já rodando)
+make db-up                  # Banco em container
 ```
 
 ## Trabalhando com Entidades e Persistência
@@ -116,7 +118,7 @@ class GlobalExceptionHandler {
     
     @ExceptionHandler(MismatchedInputException::class)
     fun handleError(ex: Exception): ResponseEntity<ErrorResponse> {
-        return ResponseEntity.status(500).body(ErrorResponse(
+        return ResponseEntity.status(400).body(ErrorResponse(
             code = "ERROR",
             message = if (isDevelopmentMode()) ex.message else "Internal error",
             details = if (isDevelopmentMode()) {
@@ -127,11 +129,17 @@ class GlobalExceptionHandler {
 }
 ```
 
+## Perfis, Segurança e CORS
+
+- Não há profile ativo padrão. Defina `--spring.profiles.active=dev` ou variável de ambiente.
+- Em **prod**, Basic Auth é obrigatório via `BASIC_AUTH_USERNAME` e `BASIC_AUTH_PASSWORD`.
+- CORS é configurável por ambiente em `app.cors.*`.
+
 ## Executando o Projeto
 
 ```bash
-make dev-up      # Banco em container + BFF local (recomendado)
-make run-bff     # Apenas BFF (banco já rodando)
+make dev         # Banco em container + BFF local (recomendado)
+make run         # Apenas BFF (banco já rodando)
 make help        # Ver todos comandos
 ```
 
@@ -144,4 +152,4 @@ make help        # Ver todos comandos
 
 ---
 
-*Atualizado em 07/12/2025 - Correções JSONB e error handling*
+*Atualizado em 17/01/2026 - Perfis, segurança e comandos revisados*
