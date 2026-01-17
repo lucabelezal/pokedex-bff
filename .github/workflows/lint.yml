@@ -4,9 +4,16 @@ on:
   pull_request: {}
   push:
     branches:
+      - 'develop'
       - 'feature/**'
       - 'fix/**'
       - 'hotfix/**'
+      - 'release/**'
+      - 'chore/**'
+      - 'refactor/**'
+      - 'test/**'
+      - 'docs/**'
+      - 'ci/**'
 
 jobs:
   lint:
