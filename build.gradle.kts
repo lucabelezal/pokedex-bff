@@ -136,15 +136,3 @@ detekt {
     config.from(files("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
 }
-
-// Temporarily disable detekt tasks while refactoring and stabilizing the codebase.
-// Enable again by removing or commenting the block below.
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
-	enabled = false
-}
-
-// Temporarily disable ktlint tasks while refactoring and stabilizing the codebase.
-// This disables tasks like ktlintCheck and ktlintFormat. Remove or comment to re-enable.
-tasks.matching { it.name.startsWith("ktlint") }.configureEach {
-    enabled = false
-}
