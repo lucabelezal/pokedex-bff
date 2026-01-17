@@ -43,15 +43,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: 📦 Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      - name: 📦 Set up Gradle (cache)
+        uses: gradle/actions/setup-gradle@v3
 
       - name: 🔧 Grant execute permission for gradlew
         run: chmod +x ./gradlew
@@ -72,6 +65,13 @@ jobs:
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
           fail_ci_if_error: false
 
+      - name: 📦 Upload coverage artifact (Jacoco XML)
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/jacocoTestReport.xml
+          if-no-files-found: error
+
       - name: 🏗️ Build application
         run: ./gradlew build -x test --parallel --daemon --no-scan
 
@@ -91,15 +91,14 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
-      - name: 📦 Restore Gradle cache
-        uses: actions/cache/restore@v4
+      - name: 📦 Set up Gradle (cache)
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: 📥 Download coverage artifact (Jacoco XML)
+        uses: actions/download-artifact@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          name: jacoco-report
+          path: build/reports/jacoco/test
 
       - name: 🔐 Check Sonar token
         id: sonar_token
@@ -129,6 +128,7 @@ jobs:
           SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
           SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
         run: |
-          ./gradlew test jacocoTestReport sonar --parallel --daemon --no-scan \
+          ./gradlew sonar -x test --parallel --daemon --no-scan \
             -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
-            -Dsonar.organization="$SONAR_ORGANIZATION"
+            -Dsonar.organization="$SONAR_ORGANIZATION" \
+            -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
