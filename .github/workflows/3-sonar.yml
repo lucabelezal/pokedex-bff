@@ -69,8 +69,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./gradlew build jacocoTestReport sonar --parallel --daemon --no-scan \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'lucabelezal' }} \
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'lucabelezal' }} \
             -Dsonar.branch.name=${{ inputs.branch || github.ref_name }}
 
       - name: 📊 SonarQube Quality Gate check
@@ -83,4 +83,4 @@ jobs:
       - name: 📋 Analysis Summary
         run: |
           echo "🔍 SonarQube Analysis completed for branch: ${{ inputs.branch || github.ref_name }}"
-          echo "📊 View results at: https://sonarcloud.io/project/overview?id=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}"
+          echo "📊 View results at: https://sonarcloud.io/project/overview?id=${{ vars.SONAR_PROJECT_KEY || 'pokedex-bff' }}"

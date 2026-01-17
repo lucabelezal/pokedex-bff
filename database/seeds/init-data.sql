@@ -1,6 +1,6 @@
 -- init-data.sql
 -- Arquivo gerado automaticamente a partir dos JSONs de dados
--- Gerado em: Dom  7 Dez 2025 18:46:31 -03
+-- Gerado em: 2026-01-17T14:36:59.409832
 
 -- Início da carga de dados
 

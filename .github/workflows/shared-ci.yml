@@ -16,13 +16,7 @@ on:
         type: string
         default: 'development'
     secrets:
-      CODECOV_TOKEN:
-        required: false
       SONAR_TOKEN:
-        required: false
-      SONAR_PROJECT_KEY:
-        required: false
-      SONAR_ORGANIZATION:
         required: false
 
 jobs:
@@ -58,14 +52,17 @@ jobs:
       - name: 🔧 Grant execute permission for gradlew
         run: chmod +x ./gradlew
 
+      - name: 🧹 Run lint (ktlint/detekt)
+        run: ./gradlew ktlintCheck detekt --parallel --daemon --no-scan
+
       - name: 🧪 Run tests with coverage
         run: ./gradlew test jacocoTestReport --parallel --daemon --no-scan
 
       - name: 📊 Upload coverage to Codecov
-        if: secrets.CODECOV_TOKEN != ''
+        if: vars.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v4
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ vars.CODECOV_TOKEN }}
           files: ./build/reports/jacoco/test/jacocoTestReport.xml
           fail_ci_if_error: false
 
@@ -125,8 +122,8 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./gradlew test jacocoTestReport sonar --parallel --daemon --no-scan \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'lucabelezal' }}
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'lucabelezal' }}
 
   # Job 3: Deploy (condicional - apenas para main)
   deploy:
