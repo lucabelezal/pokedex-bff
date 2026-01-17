@@ -19,6 +19,9 @@ on:
       SONAR_TOKEN:
         required: false
 
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 jobs:
   # Job 1: Build e Test (sempre executa)
   build-and-test:
@@ -84,7 +87,7 @@ jobs:
   # Job 2: SonarQube Analysis (condicional)
   sonar-analysis:
     needs: build-and-test
-    if: inputs.run-sonar && secrets.SONAR_TOKEN != ''
+    if: inputs.run-sonar && env.SONAR_TOKEN != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
