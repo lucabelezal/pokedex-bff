@@ -82,7 +82,7 @@ jobs:
           echo "📦 Application size: $(du -sh build/libs/*.jar | head -1 | awk '{print $1}')"
 
       - name: 💾 Cache build artifacts
-        if: ${{ github.event_name == 'push' || inputs.run-deployment }}
+        if: github.event_name == 'push' || inputs.run-deployment
         uses: actions/cache@v4
         with:
           path: build/libs/
@@ -90,7 +90,7 @@ jobs:
 
   sonar-analysis:
     needs: build-and-test
-    if: ${{ (github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run-sonar)) && secrets.SONAR_TOKEN != '' }}
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run-sonar)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -115,7 +115,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: 🔐 Check Sonar token
+        id: sonar_token
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -n "$SONAR_TOKEN" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+            echo "SONAR_TOKEN not set; skipping Sonar analysis."
+          fi
+
       - name: 🔧 Cache SonarQube packages
+        if: steps.sonar_token.outputs.has_token == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
@@ -123,6 +136,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: 🔍 SonarQube analysis
+        if: steps.sonar_token.outputs.has_token == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -133,7 +147,7 @@ jobs:
 
   deploy:
     needs: [build-and-test, sonar-analysis]
-    if: ${{ always() && (github.event_name == 'push' || inputs.run-deployment) && needs.build-and-test.result == 'success' && (needs.sonar-analysis.result == 'success' || needs.sonar-analysis.result == 'skipped') }}
+    if: always() && (github.event_name == 'push' || inputs.run-deployment) && needs.build-and-test.result == 'success' && (needs.sonar-analysis.result == 'success' || needs.sonar-analysis.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}

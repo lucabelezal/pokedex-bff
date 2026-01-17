@@ -75,7 +75,6 @@ jobs:
 
   sonar-analysis:
     needs: build-and-test
-    if: ${{ secrets.SONAR_TOKEN != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -100,7 +99,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: 🔐 Check Sonar token
+        id: sonar_token
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -n "$SONAR_TOKEN" ]; then
+            echo "has_token=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "has_token=false" >> "$GITHUB_OUTPUT"
+            echo "SONAR_TOKEN not set; skipping Sonar analysis."
+          fi
+
       - name: 🔧 Cache SonarQube packages
+        if: steps.sonar_token.outputs.has_token == 'true'
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
@@ -108,6 +120,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
 
       - name: 🔍 SonarQube analysis
+        if: steps.sonar_token.outputs.has_token == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
