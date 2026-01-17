@@ -14,15 +14,15 @@ on:
       - 'LICENSE'
   workflow_dispatch:
     inputs:
-      run-deployment:
+      run_deployment:
         description: 'Run deployment steps'
         required: false
-        default: 'true'
+        default: true
         type: boolean
-      run-sonar:
+      run_sonar:
         description: 'Run SonarQube analysis'
         required: false
-        default: 'true'
+        default: true
         type: boolean
       environment:
         description: 'Deployment environment'
@@ -84,7 +84,7 @@ jobs:
           echo "📦 Application size: $(du -sh build/libs/*.jar | head -1 | awk '{print $1}')"
 
       - name: 📦 Upload build artifact (JAR)
-        if: github.event_name == 'push' || inputs.run-deployment
+        if: github.event_name == 'push' || inputs.run_deployment
         uses: actions/upload-artifact@v4
         with:
           name: app-jar
@@ -93,7 +93,7 @@ jobs:
 
   sonar-analysis:
     needs: build-and-test
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run-sonar)
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_sonar)
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -152,7 +152,7 @@ jobs:
 
   deploy:
     needs: [build-and-test, sonar-analysis]
-    if: always() && (github.event_name == 'push' || inputs.run-deployment) && needs.build-and-test.result == 'success' && (needs.sonar-analysis.result == 'success' || needs.sonar-analysis.result == 'skipped')
+    if: always() && (github.event_name == 'push' || inputs.run_deployment) && needs.build-and-test.result == 'success' && (needs.sonar-analysis.result == 'success' || needs.sonar-analysis.result == 'skipped')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
