@@ -15,14 +15,10 @@ jobs:
     uses: ./.github/workflows/shared-ci.yml
     with:
       run-sonar: true
-      run-codecov: true
       run-deployment: true
       environment: 'production'
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}
 
   # Notificação de deploy (opcional)
   notify:

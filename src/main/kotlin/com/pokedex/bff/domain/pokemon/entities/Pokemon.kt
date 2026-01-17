@@ -1,5 +1,7 @@
 package com.pokedex.bff.domain.pokemon.entities
 
+import com.pokedex.bff.domain.pokemon.exception.InvalidPokemonException
+
 // Pure Pokemon entity version, without JPA/framework annotations
 
 data class Pokemon(
@@ -23,4 +25,54 @@ data class Pokemon(
     val abilities: Set<PokemonAbility>,
     val eggGroups: Set<EggGroup>,
     val weaknesses: Set<Type>
-)
+) {
+    init {
+        require(name.isNotBlank()) { "Pokemon name cannot be blank" }
+        require(types.isNotEmpty()) { "Pokemon must have at least one type" }
+        require(types.size <= 2) { "Pokemon cannot have more than 2 types" }
+        height?.let { require(it > 0) { "Height must be positive" } }
+        weight?.let { require(it > 0) { "Weight must be positive" } }
+    }
+
+    // TODO: Adicionar campo 'is_legendary' no banco de dados (tabela species ou pokemons)
+    // A lógica de verificação por ID range é incorreta e não escalável.
+    // Legendary status deve ser uma propriedade persistida, não calculada.
+
+    /**
+     * Formata o número do Pokémon com padding de zeros (ex: 001, 025, 150)
+     */
+    fun formatNumber(): String = number?.padStart(3, '0') ?: id.toString().padStart(3, '0')
+
+    /**
+     * Verifica se o Pokémon possui um tipo específico
+     */
+    fun hasType(type: Type): Boolean = types.contains(type)
+
+    /**
+     * Verifica se o Pokémon pode evoluir
+     */
+    fun canEvolve(): Boolean = evolutionChain != null
+
+    /**
+     * Calcula a efetividade de tipo contra outro Pokémon
+     * Retorna multiplicador: 2.0 (super efetivo), 1.0 (normal), 0.5 (pouco efetivo), 0.0 (sem efeito)
+     */
+    fun calculateTypeEffectiveness(opponent: Pokemon): Double {
+        // Simplificação: verificar se algum tipo do atacante é efetivo contra os tipos do oponente
+        // TODO: Implementar matriz completa de efetividade de tipos
+        return 1.0
+    }
+
+    /**
+     * Verifica se as estatísticas são balanceadas (diferença entre maior e menor stat < 50)
+     */
+    fun hasBalancedStats(): Boolean {
+        stats?.let {
+            val statValues = listOf(it.hp, it.attack, it.defense, it.spAtk, it.spDef, it.speed)
+            val max = statValues.maxOrNull() ?: 0
+            val min = statValues.minOrNull() ?: 0
+            return max - min < 50
+        }
+        return false
+    }
+}

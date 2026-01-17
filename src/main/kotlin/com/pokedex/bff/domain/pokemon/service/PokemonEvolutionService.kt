@@ -1,8 +1,5 @@
 package com.pokedex.bff.domain.pokemon.service
 
-import org.springframework.stereotype.Service
-
-@Service
 class PokemonEvolutionService {
     fun evolve(pokemon: com.pokedex.bff.domain.pokemon.entities.Pokemon): com.pokedex.bff.domain.pokemon.entities.Pokemon {
         // TODO: Implementar lógica real de evolução

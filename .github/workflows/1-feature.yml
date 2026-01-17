@@ -26,14 +26,8 @@ jobs:
           
           # Conventional commit types seguindo o padrão
           if [[ $BRANCH_NAME =~ ^(feat|feature|fix|hotfix|docs|style|refactor|perf|test|ci|build|chore|revert)/.+ ]]; then
-          # Also allow 'pr/' prefix used for PR branch created by helper
-          if [[ $BRANCH_NAME =~ ^(pr)/.+ ]]; then
-            echo "✅ Branch follows conventional naming (pr/)"
-            echo "should-run=true" >> $GITHUB_OUTPUT
-          else
             echo "✅ Branch follows conventional naming"
             echo "should-run=true" >> $GITHUB_OUTPUT
-          fi
           else
             echo "❌ Branch does not follow conventional naming"
             echo "Expected format: type/description (e.g., feat/add-pokemon-search, fix/bug-authentication)"
@@ -46,12 +40,8 @@ jobs:
     if: needs.validate-branch.outputs.should-run == 'true'
     uses: ./.github/workflows/shared-ci.yml
     with:
-      run-sonar: false
-      run-codecov: true
+      run-sonar: true
       run-deployment: false
       environment: 'development'
     secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY }}
-      SONAR_ORGANIZATION: ${{ secrets.SONAR_ORGANIZATION }}

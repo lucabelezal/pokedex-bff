@@ -1,9 +1,11 @@
 
-# Guia Prático: SOLID em Kotlin para Arquitetura Limpa
+# Guia Prático: SOLID em Kotlin
 
 > *Por que dominar SOLID é essencial para microserviços modernos?*
 
-Os princípios SOLID são a espinha dorsal de sistemas robustos, evolutivos e fáceis de manter. Eles não são só "boas práticas": são o alicerce para Clean Architecture, desacoplamento, testabilidade e crescimento sustentável do seu backend. Aqui você encontra explicações aprofundadas, exemplos reais (com comentários em português) e padrões de projeto que ajudam a aplicar cada princípio no seu microserviço Kotlin.
+Os princípios SOLID são a espinha dorsal de sistemas robustos, evolutivos e fáceis de manter. Eles não são só "boas práticas": são fundamentos para desacoplamento, testabilidade e crescimento sustentável do seu backend. Aqui você encontra explicações aprofundadas, exemplos reais (com comentários em português) e padrões de projeto que ajudam a aplicar cada princípio no seu microserviço Kotlin.
+
+**Nota:** Este projeto utiliza uma **arquitetura em camadas pragmática**, não uma Clean Architecture pura. O domínio contém anotações JPA para simplificar o desenvolvimento, mas ainda assim seguimos os princípios SOLID para manter o código desacoplado e testável.
 
 ---
 

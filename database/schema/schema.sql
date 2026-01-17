@@ -69,7 +69,7 @@ CREATE TABLE evolution_chains (
 
 -- Table: pokemons
 CREATE TABLE pokemons (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     number VARCHAR(10),
     name VARCHAR(255) NOT NULL,
     height NUMERIC(5, 2),

@@ -5,6 +5,8 @@
 
 Componentes são as menores entidades implantáveis de um sistema — bibliotecas, módulos, pacotes ou plugins. Um componente bem projetado pode ser desenvolvido, testado e implantado de forma independente, facilitando a evolução do sistema (Martin, 2017).
 
+**Nota:** Este documento apresenta princípios teóricos de organização de componentes. O projeto atual utiliza uma **arquitetura em camadas pragmática** onde o domínio contém anotações JPA, mas ainda aplicamos estes princípios para organizar pacotes e módulos de forma coesa.
+
 ---
 
 ## A Evolução dos Componentes: Da Origem ao Plug-in
@@ -32,7 +34,7 @@ Saber determinar a que componente uma classe pertence é uma tarefa crucial, mui
 
 **Exemplo de Software:** Componentes como arquivos .jar em Java, .dll em .NET ou gem em Ruby são as unidades de implantação e reúso. Ferramentas como Maven e RVM existem para gerenciar esses "kits" de software, que possuem números de versão e são lançados em conjunto.
 
-**No projeto:** Cada camada (domain, application, adapters, infrastructure) é um componente coeso, versionável e documentado.
+**No projeto:** Cada pacote (domain/entities, domain/repositories, application/usecases, web/controllers) agrupa classes que mudam juntas.
 
 ---
 
@@ -43,7 +45,7 @@ Saber determinar a que componente uma classe pertence é uma tarefa crucial, mui
 
 **Exemplo de Software:** Em uma aplicação financeira, regras para calcular impostos (contabilidade) e regras para relatórios de horas (RH) devem estar em componentes separados. Se compartilham código e uma mudança é feita a pedido da contabilidade, pode quebrar os relatórios do RH sem que ninguém perceba. Este é o SRP aplicado a componentes.
 
-**No projeto:** Mudanças de regra de negócio afetam apenas domain/application; mudanças técnicas afetam adapters/infrastructure.
+**No projeto:** Mudanças de regra de negócio afetam domain/application; mudanças técnicas (JSON, REST, JPA) afetam infrastructure/web.
 
 ---
 
@@ -54,7 +56,7 @@ Saber determinar a que componente uma classe pertence é uma tarefa crucial, mui
 
 **Exemplo de Software:** Uma classe de contêiner e seus iteradores associados são sempre usados juntos e pertencem ao mesmo componente. Por outro lado, classes não fortemente ligadas não devem estar no mesmo componente, para evitar dependências desnecessárias.
 
-**No projeto:** Application depende apenas de interfaces do domínio; adapters dependem de application/domain, nunca o contrário.
+**No projeto:** Application/usecases dependem de interfaces do domínio (repositories); controllers dependem de usecases, nunca o contrário.
 
 ---
 
@@ -84,19 +86,6 @@ Os princípios de coesão vivem em tensão:
 - **Violação do CRP:** Um sistema S depende de um framework F, que depende de um banco de dados D. Se D contém recursos não usados por F (e, portanto, por S), qualquer mudança nesses recursos pode forçar a reimplantação de F e S. Pior, uma falha nesses recursos pode causar falhas em cascata.
 
 - **Síndrome da Manhã Seguinte:** Vários desenvolvedores modificam os mesmos arquivos. Você vai para casa com o sistema funcionando, mas no dia seguinte ele quebra porque alguém alterou algo de que você dependia. A solução é particionar o ambiente em componentes com releases e evitar ciclos de dependência (ADP).
-
----
-
-## Relação Visual entre Componentes (Clean Architecture)
-
-```
-Infraestrutura --> Adaptadores --> Aplicação --> Domínio
-		^             ^             ^
-		|             |             |
-		+-------------+-------------+
-
-As dependências sempre apontam para dentro: camadas externas dependem das internas, nunca o contrário.
-```
 
 ---
 

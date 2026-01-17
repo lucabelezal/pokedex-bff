@@ -7,7 +7,7 @@ Verifica se todas as ferramentas necessárias estão instaladas e configuradas.
 import sys
 import subprocess
 import platform
-from typing import List, Tuple, Dict
+from typing import Tuple, Dict
 
 def run_command(command: str) -> Tuple[bool, str]:
     """Executa um comando e retorna status e output."""

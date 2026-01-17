@@ -7,6 +7,7 @@ Este script lê os arquivos JSON numerados de 01 a 10 e gera comandos SQL corres
 import json
 import os
 import sys
+from datetime import datetime
 from typing import Dict, Any, List
 from pathlib import Path
 
@@ -261,7 +262,7 @@ def generate_init_data_sql(data_dir: Path, output_file: Path) -> bool:
     # Header do arquivo SQL
     all_sql_statements.append("-- init-data.sql")
     all_sql_statements.append("-- Arquivo gerado automaticamente a partir dos JSONs de dados")
-    all_sql_statements.append(f"-- Gerado em: {os.popen('date').read().strip()}")
+    all_sql_statements.append(f"-- Gerado em: {datetime.now().isoformat()}")
     all_sql_statements.append("")
     all_sql_statements.append("-- Início da carga de dados")
     all_sql_statements.append("")

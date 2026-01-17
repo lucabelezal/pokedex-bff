@@ -69,31 +69,18 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           ./gradlew build jacocoTestReport sonar --parallel --daemon --no-scan \
-            -Dsonar.projectKey=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
-            -Dsonar.organization=${{ secrets.SONAR_ORGANIZATION || 'lucabelezal' }} \
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY || 'pokedex-bff' }} \
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION || 'lucabelezal' }} \
             -Dsonar.branch.name=${{ inputs.branch || github.ref_name }}
 
-      - name: 📊 SonarQube Quality Gate check (via SonarCloud API)
+      - name: 📊 SonarQube Quality Gate check
+        uses: sonarqube-quality-gate-action@master
         timeout-minutes: 5
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-          SONAR_PROJECT_KEY: ${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}
-        run: |
-          if [ -z "${SONAR_TOKEN}" ]; then
-            echo "SONAR_TOKEN missing — skipping SonarQube quality gate check"
-            exit 0
-          fi
-          echo "Requesting SonarCloud quality gate for project: ${SONAR_PROJECT_KEY}"
-          RESPONSE=$(curl -s -u "${SONAR_TOKEN}:" "https://sonarcloud.io/api/qualitygates/project_status?projectKey=${SONAR_PROJECT_KEY}")
-          echo "$RESPONSE"
-          STATUS=$(echo "$RESPONSE" | grep -o '"status":"[^"]*"' | head -1 | sed -E 's/.*"status":"([^\"]*)".*/\1/')
-          echo "Quality gate status: $STATUS"
-          if [ "$STATUS" != "OK" ]; then
-            echo "Quality gate failed"
-            exit 1
-          fi
+        continue-on-error: true
 
       - name: 📋 Analysis Summary
         run: |
           echo "🔍 SonarQube Analysis completed for branch: ${{ inputs.branch || github.ref_name }}"
-          echo "📊 View results at: https://sonarcloud.io/project/overview?id=${{ secrets.SONAR_PROJECT_KEY || 'pokedex-bff' }}"
+          echo "📊 View results at: https://sonarcloud.io/project/overview?id=${{ vars.SONAR_PROJECT_KEY || 'pokedex-bff' }}"

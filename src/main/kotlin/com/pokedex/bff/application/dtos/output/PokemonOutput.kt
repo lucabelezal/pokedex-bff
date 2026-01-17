@@ -12,7 +12,7 @@ data class PokemonOutput(
             PokemonOutput(
                 id = pokemon.id.toString(),
                 name = pokemon.name,
-                types = pokemon.types.map { it.toString() }
+                types = pokemon.types.map { it.name }
             )
     }
 }

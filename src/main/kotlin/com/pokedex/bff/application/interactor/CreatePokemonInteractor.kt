@@ -5,8 +5,11 @@ import com.pokedex.bff.application.dtos.output.PokemonOutput
 import com.pokedex.bff.application.usecase.CreatePokemonUseCase
 import com.pokedex.bff.domain.pokemon.repository.PokemonRepository
 import com.pokedex.bff.domain.pokemon.entities.Pokemon
-import com.pokedex.bff.domain.shared.Page
 
+@Deprecated(
+    message = "Use CreatePokemonUseCaseImpl (application/usecase) com wiring em UseCaseFactory",
+    level = DeprecationLevel.WARNING
+)
 class CreatePokemonInteractor(
     private val pokemonRepository: PokemonRepository
 ) : CreatePokemonUseCase {
@@ -38,7 +41,4 @@ class CreatePokemonInteractor(
         return PokemonOutput.fromDomain(pokemon)
     }
 
-    override fun findAll(page: Int, size: Int): Page<Pokemon> {
-        return pokemonRepository.findAll(page, size)
-    }
 }

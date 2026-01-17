@@ -6,6 +6,10 @@ import com.pokedex.bff.application.usecase.EvolvePokemonUseCase
 import com.pokedex.bff.domain.pokemon.repository.PokemonRepository
 import com.pokedex.bff.domain.pokemon.service.PokemonEvolutionService
 
+@Deprecated(
+    message = "Use EvolvePokemonUseCaseImpl (application/usecase) com wiring em UseCaseFactory",
+    level = DeprecationLevel.WARNING
+)
 class EvolvePokemonInteractor(
     private val pokemonRepository: PokemonRepository,
     private val evolutionService: PokemonEvolutionService

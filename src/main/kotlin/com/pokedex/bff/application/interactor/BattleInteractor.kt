@@ -4,6 +4,10 @@ import com.pokedex.bff.application.dtos.input.StartBattleInput
 import com.pokedex.bff.application.dtos.output.BattleResultOutput
 import com.pokedex.bff.application.usecase.BattleUseCase
 
+@Deprecated(
+    message = "Use BattleUseCaseImpl (application/usecase) com wiring em UseCaseFactory",
+    level = DeprecationLevel.WARNING
+)
 class BattleInteractor : BattleUseCase {
     override fun execute(input: StartBattleInput): BattleResultOutput {
         // TODO: Implementar lógica de batalha
