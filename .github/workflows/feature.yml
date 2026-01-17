@@ -9,6 +9,23 @@ on:
       - 'doc/**'
       - '.gitignore'
       - 'LICENSE'
+  push:
+    branches:
+      - 'develop'
+      - 'feature/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'release/**'
+      - 'chore/**'
+      - 'refactor/**'
+      - 'test/**'
+      - 'docs/**'
+      - 'ci/**'
+    paths-ignore:
+      - '**.md'
+      - 'doc/**'
+      - '.gitignore'
+      - 'LICENSE'
 
 jobs:
   build-and-test:

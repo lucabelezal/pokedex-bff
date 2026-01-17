@@ -8,7 +8,6 @@ Para documentação completa dos workflows CI/CD, consulte:
 
 - **feature.yml**: Feature CI — acionado em Pull Requests; roda lint, testes, build e Sonar.
 - **main.yml**: Main CI/CD — acionado em push na `main` e também disponível como `workflow_dispatch`; roda testes, Sonar e deployment.
-- **lint.yml**: Lint — checagens de ktlint/detekt (roda em PRs e em pushes para branches de desenvolvimento conforme política do time).
 
 ## 🔐 Variáveis e Secrets
 
