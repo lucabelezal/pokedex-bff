@@ -7,6 +7,10 @@ import com.pokedex.bff.domain.pokemon.repository.PokemonRepository
 import com.pokedex.bff.domain.pokemon.entities.Pokemon
 import com.pokedex.bff.domain.shared.Page
 
+@Deprecated(
+    message = "Use CreatePokemonUseCaseImpl (application/usecase) com wiring em UseCaseFactory",
+    level = DeprecationLevel.WARNING
+)
 class CreatePokemonInteractor(
     private val pokemonRepository: PokemonRepository
 ) : CreatePokemonUseCase {
