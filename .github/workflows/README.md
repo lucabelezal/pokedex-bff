@@ -1,0 +1,33 @@
+# 🚀 GitHub Actions Workflows
+
+Para documentação completa dos workflows CI/CD, consulte:
+
+📖 **[Documentação CI/CD](../../doc/ci/README.md)**
+
+## ✅ Workflows Ativos
+
+- **1-feature.yml**: CI para PRs em `main` (lint + testes + build via `shared-ci.yml`)
+- **2-main.yml**: CI/CD para `main` (testes + sonar + deploy + tag via `shared-ci.yml`)
+- **3-sonar.yml**: análise Sonar sob demanda e agendada
+- **shared-ci.yml**: workflow reutilizável chamado por `1-feature.yml` e `2-main.yml`
+
+## 🔐 Variáveis e Secrets
+
+- **Secrets**: `SONAR_TOKEN`
+- **Variables (vars)**: `SONAR_PROJECT_KEY`, `SONAR_ORGANIZATION`, `CODECOV_TOKEN`
+
+## 📋 Links Rápidos
+
+- **[Guia de Uso](../../doc/ci/README.md)**: Documentação completa dos workflows
+- **[Script de Validação](../../doc/ci/validate-workflows.sh)**: Ferramenta de validação
+
+## 🔧 Validação Rápida
+
+```bash
+# Executar validação dos workflows
+./doc/ci/validate-workflows.sh
+```
+
+---
+
+*Para mais detalhes, consulte a documentação completa em `doc/ci/`*

@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class PokedexBffApplication
 
 fun main(args: Array<String>) {
-	runApplication<PokedexBffApplication>(*args)
+    runApplication<PokedexBffApplication>(*args)
 }

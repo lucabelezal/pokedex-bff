@@ -11,6 +11,10 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.23"
+
+	// Static Analysis
+	id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+	id("io.gitlab.arturbosch.detekt") version "1.23.6"
 }
 
 group = "com.pokedex"
@@ -39,6 +43,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-security")
 
 	// Kotlin
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
@@ -47,14 +52,14 @@ dependencies {
 	// Database
 	runtimeOnly("org.postgresql:postgresql")
 
-	// CSV
-	implementation("org.apache.commons:commons-csv:1.10.0")
-
 	// Swagger/OpenAPI
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 
 	// Dev Tools
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
+
+	// H2 Database for testing only
+	testRuntimeOnly("com.h2database:h2")
 
 	// Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test") {
@@ -62,6 +67,10 @@ dependencies {
 	}
 	testImplementation(kotlin("test-junit5"))
 	testImplementation("io.mockk:mockk:1.13.10")
+	
+	springBoot {
+	    mainClass.set("com.pokedex.bff.PokedexBffApplicationKt")
+	}
 }
 
 allOpen {
@@ -113,7 +122,27 @@ sonarqube {
 		property("sonar.projectKey", "lucabelezal_pokedex-bff")
 		property("sonar.organization", "skeleton")
 		property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.junit.reportPaths", "${buildDir}/test-results/test")
+        property("sonar.coverage.jacoco.xmlReportPaths", "${layout.buildDirectory.get().asFile}/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.junit.reportPaths", "${layout.buildDirectory.get().asFile}/test-results/test")
 	}
+}
+
+ktlint {
+    version.set("1.2.1")
+    outputToConsole.set(true)
+}
+
+detekt {
+    config.from(files("$rootDir/config/detekt/detekt.yml"))
+    buildUponDefaultConfig = true
+}
+
+// Temporariamente desabilitado para reduzir tempo de CI.
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+	enabled = false
+}
+
+// Temporariamente desabilitado para reduzir tempo de CI.
+tasks.matching { it.name.startsWith("ktlint") }.configureEach {
+	enabled = false
 }

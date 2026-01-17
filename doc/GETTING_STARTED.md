@@ -2,62 +2,154 @@
 
 Siga estas instruções para configurar e executar o Pokedex BFF em seu ambiente de desenvolvimento local.
 
+## Arquitetura do Projeto
+
+Este projeto adota uma **arquitetura em camadas pragmática** com Spring Boot, focando em separação de responsabilidades, manutenibilidade e testabilidade.
+
+### Estrutura das Camadas
+
+```
+src/main/kotlin/com/pokedex/bff/
+├── domain/                    # Camada de domínio
+│   ├── entities/              # Entidades JPA (anotadas com @Entity, @Table)
+│   ├── repositories/          # Interfaces Spring Data JPA (extends JpaRepository)
+│   └── pokemon/               # Agregados e entidades de domínio puro (novos use cases)
+│       ├── entities/          # Entidades de domínio (sem anotações JPA)
+│       ├── exception/         # Exceções de domínio
+│       └── repository/        # Interfaces de repositório (contratos)
+├── application/               # Camada de aplicação
+│   ├── dto/                   # DTOs de entrada/saída
+│   ├── valueobjects/          # Value Objects (ex: SpritesVO)
+│   ├── port/input/            # Interfaces de use cases (Hexagonal)
+│   └── usecase/               # Implementações de use cases
+├── adapters/                  # Camada de adaptadores
+│   ├── input/web/             # Adaptadores de entrada (REST)
+│   │   ├── controller/        # @RestController
+│   │   ├── dto/               # Request/Response DTOs Web
+│   │   └── mapper/            # Conversores DTO Web ↔ Domain/Entity
+│   └── output/persistence/    # Adaptadores de saída (Persistência)
+│       ├── converter/         # Conversores JSONB (AttributeConverter)
+│       ├── entity/            # Entidades JPA adicionais
+│       ├── mapper/            # Mapeadores JPA Entity ↔ Domain
+│       └── repository/        # Implementações de repositórios customizados
+└── infrastructure/            # Infraestrutura e configurações
+    ├── config/                # Configurações Spring (@Configuration)
+    ├── exception/             # GlobalExceptionHandler, ErrorResponse
+    ├── security/              # Configuração de segurança
+    ├── seeder/                # Populador de dados inicial
+    └── utils/                 # Utilitários gerais
+```
+
+### Características da Arquitetura
+
+**Estado Atual (Migração em Andamento):**
+- **Domain (Legado)**: Entidades JPA em `domain/entities/` com anotações Spring Data
+- **Domain (Novo)**: Entidades puras em `domain/pokemon/entities/` seguindo DDD
+- **Application**: Serviços, DTOs, value objects e use cases (interfaces + implementações)
+- **Adapters**: Controllers REST (entrada) e conversores/mappers (saída)
+- **Infrastructure**: Configurações técnicas, exception handlers, seeders
+
+## Configuração do Ambiente
+
 ### Pré-requisitos
 
-Certifique-se de ter as seguintes ferramentas instaladas:
 * [Java Development Kit (JDK) 21](https://www.oracle.com/java/technologies/downloads/)
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (inclui Docker e Docker Compose)
-* **GNU Make** (ou `make` no seu sistema, geralmente pré-instalado em sistemas Unix/Linux/macOS; para Windows, você pode usar WSL ou ferramentas como Chocolatey para instalar `make`).
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+* **GNU Make**
 
-### Instalação e Configuração Rápida
-
-1.  **Clone o Repositório:**
-    ```bash
-    git clone [https://github.com/seu-usuario/pokedex-bff.git](https://github.com/seu-usuario/pokedex-bff.git) # Substitua 'seu-usuario' e 'pokedex-bff'
-    cd pokedex-bff
-    ```
-
-2.  **Configuração do Ambiente e Início (Recomendado):**
-    * Para uma configuração rápida e completa do ambiente de desenvolvimento (iniciar DB e carregar dados):
-        ```bash
-        make dev-setup
-        ```
-      Este comando cuidará de:
-        1.  Iniciar o contêiner PostgreSQL via Docker Compose.
-        2.  Aguardar o banco de dados estar pronto.
-        3.  Iniciar o BFF, que por sua vez executará as migrações (se configuradas para rodar no `bootRun` do perfil `dev`) e populará o DB com os dados dos arquivos jsons na pasta resource.
-
-### Executando Apenas o Servidor (se o DB já estiver configurado)
-
-Se o banco de dados já estiver rodando e populado, você pode iniciar apenas a aplicação BFF:
+### Comandos Principais
 
 ```bash
-make run-bff
+./gradlew bootRun           # Inicia aplicação
+./gradlew test              # Executa testes
+./gradlew build             # Build completo
+make dev                    # Banco + BFF local
+make run                    # Apenas BFF (banco já rodando)
+make db-up                  # Banco em container
 ```
 
-### Caso precise ver as opções do comando make
-Rode o comando abaixo:
+## Trabalhando com Entidades e Persistência
+
+### Conversores JSONB (`adapters/output/persistence/converter/`)
+
+Para campos JSONB complexos use `AttributeConverter` com DTOs internos:
+
+```kotlin
+@Converter
+class SpritesJsonConverter : AttributeConverter<Sprites?, String?> {
+    private val objectMapper: ObjectMapper = jacksonObjectMapper()
+    
+    override fun convertToEntityAttribute(json: String?): Sprites? {
+        return json?.let {
+            try {
+                objectMapper.readValue<SpritesDTO>(it).toDomain()
+            } catch (e: Exception) {
+                logger.error("Deserialization error: ${e.message}", e)
+                null // Fallback gracioso
+            }
+        }
+    }
+    
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    private data class SpritesDTO(
+        @JsonProperty("front_default") val frontDefault: String?,
+        @JsonProperty("front_shiny") val frontShiny: String?
+    ) {
+        fun toDomain() = Sprites(frontDefault, frontShiny)
+    }
+}
+```
+
+**Boas práticas:**
+- Use `@JsonProperty` para snake_case → camelCase
+- Adicione `@JsonIgnoreProperties(ignoreUnknown = true)`
+- Implemente fallback gracioso em caso de erro
+- Log erros para debug
+
+### Tratamento de Erros (Dev/Prod)
+
+```kotlin
+@RestControllerAdvice
+class GlobalExceptionHandler {
+    @Value("\${spring.profiles.active:prod}")
+    private lateinit var activeProfile: String
+    
+    private fun isDevelopmentMode() = activeProfile == "dev"
+    
+    @ExceptionHandler(MismatchedInputException::class)
+    fun handleError(ex: Exception): ResponseEntity<ErrorResponse> {
+        return ResponseEntity.status(400).body(ErrorResponse(
+            code = "ERROR",
+            message = if (isDevelopmentMode()) ex.message else "Internal error",
+            details = if (isDevelopmentMode()) {
+                mapOf("stackTrace" to ex.stackTrace.take(5).map { it.toString() })
+            } else null
+        ))
+    }
+}
+```
+
+## Perfis, Segurança e CORS
+
+- Não há profile ativo padrão. Defina `--spring.profiles.active=dev` ou variável de ambiente.
+- Em **prod**, Basic Auth é obrigatório via `BASIC_AUTH_USERNAME` e `BASIC_AUTH_PASSWORD`.
+- CORS é configurável por ambiente em `app.cors.*`.
+
+## Executando o Projeto
+
 ```bash
-make
+make dev         # Banco em container + BFF local (recomendado)
+make run         # Apenas BFF (banco já rodando)
+make help        # Ver todos comandos
 ```
-```bach
-===================================================================
-                 Comandos do Makefile para Pokedex BFF
-===================================================================
-  make help                   - Exibe esta mensagem de ajuda.
 
-  make dev-setup              - Configura e inicia o ambiente (Linux/macOS).
-  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows).
+## Documentação Complementar
 
-  make start-db               - Inicia o banco PostgreSQL com Docker Compose.
-  make stop-db                - Para o contêiner do banco.
-  make clean-db               - Remove o banco e os volumes (apaga os dados!).
-  make load-data              - Executa o BFF e carrega os dados JSON.
-  make run-bff                - Executa o BFF sem importar dados.
-  make clean-bff              - Executa './gradlew clean'.
+- **[OVERVIEW.md](./OVERVIEW.md)**: Visão geral e arquitetura
+- **[TECHNOLOGIES.md](./TECHNOLOGIES.md)**: Stack tecnológico
+- **[database/SCHEMA.md](./database/SCHEMA.md)**: Esquema do banco
+- **[api/SWAGGER.md](./api/SWAGGER.md)**: API REST
 
-  make clean-all              - Para tudo, limpa DB, Gradle e contêineres.
-  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'.
-  make deep-clean-gradle      - Limpa caches e artefatos do Gradle.
-===================================================================
-```
+---
+
+*Atualizado em 17/01/2026 - Perfis, segurança e comandos revisados*

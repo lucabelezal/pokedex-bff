@@ -1,200 +1,270 @@
 # ==============================================================================
+# Makefile - Pokedex BFF
+# ==============================================================================
+# Ambiente de desenvolvimento Kotlin + Spring Boot + PostgreSQL
+# Segue padrões da comunidade e boas práticas de DevOps
+# ==============================================================================
+
+.DEFAULT_GOAL := help
+.PHONY: help
+
+# ==============================================================================
 # Variáveis de Configuração
 # ==============================================================================
-DOCKER_COMPOSE_FILE = docker/docker-compose.dev.yml
-JACOCO_REPORT_PATH = build/reports/jacoco/test/html/index.html
+DOCKER_COMPOSE_DB_ONLY := docker/docker-compose.db-only.yml
+DOCKER_COMPOSE_DEV := docker/docker-compose.dev.yml
+JACOCO_REPORT := build/reports/jacoco/test/html/index.html
+SWAGGER_URL := http://localhost:8080/swagger-ui/index.html
+
+# Detecção automática dos comandos Docker
+DOCKER_CMD := $(shell python3 tools/database/detect_docker_commands.py docker 2>/dev/null || echo "docker")
+DOCKER_COMPOSE_CMD := $(shell python3 tools/database/detect_docker_commands.py docker-compose 2>/dev/null || echo "docker compose")
 
 # ==============================================================================
-# Comandos PHONY
-# ==============================================================================
-.PHONY: help dev-setup dev-setup-for-windows start-db stop-db clean-db load-data clean-bff run-bff clean-all force-remove-db-container deep-clean-gradle \
-		test test-class open-jacoco-report
-
-# ==============================================================================
-# Ajuda
+# Help - Exibe todos os comandos disponíveis
 # ==============================================================================
 help:
 	@echo "==================================================================="
-	@echo "                 Comandos do Makefile para Pokedex BFF             "
+	@echo "           📦 Pokedex BFF - Makefile Commands                      "
 	@echo "==================================================================="
-	@echo "  make help                   - Exibe esta mensagem de ajuda."
 	@echo ""
-	@echo "  make dev-setup              - Configura e inicia o ambiente (Linux/macOS)."
-	@echo "  make dev-setup-for-windows - Configura e inicia o ambiente (Git Bash/WSL no Windows)."
+	@echo "🚀 QUICK START:"
+	@echo "  make setup          - Setup completo (deps + banco + dados)"
+	@echo "  make dev            - Inicia desenvolvimento (banco + BFF local)"
+	@echo "  make test           - Executa testes com cobertura"
 	@echo ""
-	@echo "  make start-db               - Inicia o banco PostgreSQL com Docker Compose."
-	@echo "  make stop-db                - Para o contêiner do banco."
-	@echo "  make clean-db               - Remove o banco e os volumes (apaga os dados!)."
-	@echo "  make load-data              - Executa o BFF e carrega os dados JSON com o profile DEV.."
-	@echo "  make run-bff                - Executa o BFF sem importar dados com o profile DEV.."
-	@echo "  make clean-bff              - Executa './gradlew clean'."
+	@echo "🗄️  BANCO DE DADOS:"
+	@echo "  make db-up          - Sobe banco isolado (porta 5434)"
+	@echo "  make db-down        - Para banco"
+	@echo "  make db-restart     - Reinicia banco"
+	@echo "  make db-shell       - Conecta ao banco via psql"
+	@echo "  make db-clean       - Remove banco e volumes (⚠️  apaga dados)"
+	@echo "  make db-info        - Mostra configurações de conexão"
 	@echo ""
-	@echo "  make test                   - Roda todos os testes e gera o relatório JaCoCo."
-	@echo "  make test-class CLASS=<NomeDaClasseTeste> - Roda testes de uma classe específica e gera o relatório JaCoCo."
-	@echo "                                        Ex: make test-class CLASS=PokemonServiceTest"
-	@echo "  make open-jacoco-report     - Abre o relatório JaCoCo HTML no navegador."
+	@echo "🏗️  BUILD E EXECUÇÃO:"
+	@echo "  make build          - Compila o projeto"
+	@echo "  make run            - Executa BFF localmente"
+	@echo "  make clean          - Limpa build artifacts"
 	@echo ""
-	@echo "  make clean-all              - Para tudo, limpa DB, Gradle e contêineres."
-	@echo "  make force-remove-db-container - Força a remoção do contêiner 'pokedex-db'."
-	@echo "  make deep-clean-gradle      - Limpa caches e artefatos do Gradle."
+	@echo "📊 DADOS:"
+	@echo "  make generate-data  - Gera SQL a partir dos JSONs"
+	@echo "  make validate-db    - Valida estrutura do banco"
 	@echo ""
-	@echo "  make open-swagger           - Abre a documentação Swagger no navegador."
+	@echo "🧪 TESTES:"
+	@echo "  make test           - Executa testes + JaCoCo"
+	@echo "  make test-class CLASS=Nome  - Testa classe específica"
+	@echo "  make coverage       - Abre relatório de cobertura"
+	@echo ""
+	@echo "🔍 QUALIDADE DE CÓDIGO:"
+	@echo "  make lint           - Executa ktlint + detekt"
+	@echo "  make lint-fix       - Corrige problemas de formatação"
+	@echo ""
+	@echo "📚 DOCUMENTAÇÃO:"
+	@echo "  make swagger        - Abre Swagger UI"
+	@echo ""
+	@echo "🧹 LIMPEZA:"
+	@echo "  make clean-all      - Limpa tudo (build + containers + volumes)"
+	@echo "  make clean-docker   - Remove apenas containers e volumes"
+	@echo ""
+	@echo "🛠️  UTILITÁRIOS:"
+	@echo "  make kill-port      - Mata processo na porta 8080"
+	@echo "  make check-deps     - Verifica dependências do sistema"
+	@echo "  make status         - Mostra status dos serviços"
 	@echo "==================================================================="
 
 # ==============================================================================
-# Documentação da API (Swagger)
+# Setup Inicial
 # ==============================================================================
-SWAGGER_URL = http://localhost:8080/swagger-ui/index.html
+setup: check-deps generate-data db-up
+	@echo "✅ Setup completo! Use 'make run' para iniciar o BFF."
 
-open-swagger:
-	@echo "--- Abrindo Swagger UI no navegador: $(SWAGGER_URL) ---"
-	@if command -v xdg-open > /dev/null; then \
-		xdg-open $(SWAGGER_URL); \
-	elif command -v open > /dev/null; then \
-		open $(SWAGGER_URL); \
-	elif command -v start > /dev/null; then \
-		start $(SWAGGER_URL); \
-	else \
-		echo "Não foi possível detectar um comando para abrir URLs automaticamente."; \
-		echo "Por favor, abra manualmente: $(SWAGGER_URL)"; \
-	fi
+check-deps:
+	@echo "🔍 Verificando dependências..."
+	@python3 tools/database/check_dependencies.py
+
+# ==============================================================================
+# Desenvolvimento
+# ==============================================================================
+dev: db-up
+	@echo "🚀 Iniciando ambiente de desenvolvimento..."
+	@$(MAKE) run
+
+run: check-db-running
+	@echo "🔄 Iniciando BFF..."
+	@./gradlew bootRun --args='--spring.profiles.active=dev'
+
+build:
+	@echo "🏗️  Compilando projeto..."
+	@./gradlew clean build -x test
+
+clean:
+	@echo "🧹 Limpando build artifacts..."
+	@./gradlew clean
 
 # ==============================================================================
 # Banco de Dados
 # ==============================================================================
+db-up: generate-data
+	@echo "🔄 Subindo banco de dados..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_DB_ONLY) up -d
+	@echo "⏳ Aguardando banco inicializar..."
+	@sleep 8
+	@echo "✅ Banco disponível em localhost:5434"
 
-start-db:
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
-	@sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
+db-down:
+	@echo "🛑 Parando banco de dados..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_DB_ONLY) down
 
-stop-db:
-	@echo "--- Parando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) stop db
+db-restart: db-down db-up
+	@echo "✅ Banco reiniciado"
 
-clean-db:
-	@echo "--- Removendo o contêiner do DB e volumes de dados (APAGANDO DADOS) ---"
-	docker compose -f $(DOCKER_COMPOSE_FILE) down -v --remove-orphans
+db-clean:
+	@echo "⚠️  Removendo banco e volumes (isso apagará os dados)..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_DB_ONLY) down -v --remove-orphans
+	@echo "✅ Banco removido"
+
+db-shell: check-db-running
+	@echo "🔄 Conectando ao banco..."
+	@PGPASSWORD=postgres psql -h localhost -U postgres -p 5434 -d pokedex_dev_db
+
+db-info:
+	@echo "==================================================================="
+	@echo "           📊 Informações de Conexão - PostgreSQL"
+	@echo "==================================================================="
+	@echo "Host:      localhost"
+	@echo "Porta:     5434"
+	@echo "Database:  pokedex_dev_db"
+	@echo "Usuário:   postgres"
+	@echo "Senha:     postgres"
+	@echo ""
+	@echo "🔗 JDBC URL:"
+	@echo "jdbc:postgresql://localhost:5434/pokedex_dev_db"
+	@echo ""
+	@echo "📊 Comandos úteis:"
+	@echo "  make db-shell    - Conecta via psql"
+	@echo "  make validate-db - Valida estrutura"
+	@echo "==================================================================="
 
 # ==============================================================================
-# BFF - Spring Boot / Gradle
+# Dados
 # ==============================================================================
+generate-data:
+	@echo "📊 Gerando SQL a partir dos JSONs..."
+	@python3 tools/database/generate_sql_from_json.py
 
-clean-bff:
-	@echo "--- Limpando o projeto BFF (gradle clean) ---"
-	./gradlew clean
-
-run-bff:
-	@echo "--- Iniciando o BFF no profile DEV ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev'
-
-load-data: start-db
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev'
+validate-db: check-db-running
+	@echo "🔍 Validando estrutura do banco..."
+	@python3 tools/database/validate_database.py
 
 # ==============================================================================
-# Testes e JaCoCo
+# Testes
 # ==============================================================================
+test:
+	@echo "🧪 Executando testes..."
+	@./gradlew test jacocoTestReport
+	@echo "✅ Testes concluídos! Use 'make coverage' para ver o relatório."
 
-test: clean-bff
-	@echo "--- Rodando todos os testes e gerando relatório JaCoCo ---"
-	./gradlew clean test jacocoTestReport
-	@echo "Relatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
-
-test-class: clean-bff
-ifeq ($(CLASS),)
-	@echo "ERRO: Para rodar testes de uma classe específica, use: make test-class CLASS=<NomeDaClasseTeste>"
+test-class:
+ifndef CLASS
+	@echo "❌ Erro: especifique CLASS=NomeDaClasse"
 	@exit 1
-else
-	@echo "--- Rodando testes da classe $(CLASS) e gerando relatório JaCoCo ---"
-	./gradlew clean test --tests "*$(CLASS)*" jacocoTestReport
-	@echo "Relocatório JaCoCo gerado em: $(JACOCO_REPORT_PATH)"
-	make open-jacoco-report
 endif
+	@echo "🧪 Testando classe $(CLASS)..."
+	@./gradlew test --tests $(CLASS)
 
-open-jacoco-report:
-	@echo "--- Abrindo relatório JaCoCo HTML no navegador: $(JACOCO_REPORT_PATH) ---"
-	@if [ ! -f "$(JACOCO_REPORT_PATH)" ]; then \
-		echo "ERRO: Relatório JaCoCo não encontrado em $(JACOCO_REPORT_PATH). Certifique-se de ter rodado os testes primeiro."; \
+coverage:
+	@if [ -f $(JACOCO_REPORT) ]; then \
+		echo "📊 Abrindo relatório de cobertura..."; \
+		if command -v open > /dev/null; then \
+			open $(JACOCO_REPORT); \
+		elif command -v xdg-open > /dev/null; then \
+			xdg-open $(JACOCO_REPORT); \
+		else \
+			echo "❌ Não foi possível abrir automaticamente."; \
+			echo "Abra manualmente: $(JACOCO_REPORT)"; \
+		fi; \
+	else \
+		echo "❌ Relatório não encontrado. Execute 'make test' primeiro."; \
+	fi
+
+# ==============================================================================
+# Lint
+# ==============================================================================
+lint:
+	@echo "🔍 Executando lint..."
+	@./gradlew ktlintCheck detekt
+
+lint-fix:
+	@echo "🔧 Corrigindo formatação..."
+	@./gradlew ktlintFormat
+
+# ==============================================================================
+# Documentação
+# ==============================================================================
+swagger: check-db-running
+	@echo "📖 Verificando se BFF está rodando..."
+	@if ! curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "⚠️  BFF não está rodando. Execute 'make run' primeiro."; \
 		exit 1; \
 	fi
-	@if command -v xdg-open > /dev/null; then \
-		xdg-open $(JACOCO_REPORT_PATH); \
-	elif command -v open > /dev/null; then \
-		open $(JACOCO_REPORT_PATH); \
-	elif command -v start > /dev/null; then \
-		start $(JACOCO_REPORT_PATH); \
+	@echo "📖 Abrindo Swagger UI..."
+	@if command -v open > /dev/null; then \
+		open $(SWAGGER_URL); \
+	elif command -v xdg-open > /dev/null; then \
+		xdg-open $(SWAGGER_URL); \
 	else \
-		echo "Não foi possível detectar um comando para abrir URLs/arquivos automaticamente."; \
-		echo "Por favor, abra manualmente: $(JACOCO_REPORT_PATH)"; \
+		echo "Abra manualmente: $(SWAGGER_URL)"; \
 	fi
 
 # ==============================================================================
-# Orquestração Completa (Linux/macOS)
+# Limpeza
 # ==============================================================================
+clean-all: clean db-clean clean-docker
+	@echo "✅ Limpeza completa realizada"
 
-dev-setup:
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker/docker-compose.dev.yml up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
-	sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
-	./gradlew bootRun --args='--spring.profiles.active=dev'
+clean-docker:
+	@echo "🧹 Removendo containers Docker..."
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_DB_ONLY) down -v --remove-orphans 2>/dev/null || true
+	@$(DOCKER_COMPOSE_CMD) -f $(DOCKER_COMPOSE_DEV) down -v --remove-orphans 2>/dev/null || true
+	@docker volume prune -f
+	@echo "✅ Containers removidos"
 
 # ==============================================================================
-# Orquestração para Windows via Git Bash ou WSL
+# Utilitários
 # ==============================================================================
+kill-port:
+	@echo "🔎 Verificando porta 8080..."
+	@if lsof -i :8080 | grep LISTEN; then \
+		PID=$$(lsof -ti :8080); \
+		echo "⚠️  Processo encontrado: PID=$$PID"; \
+		kill -9 $$PID; \
+		echo "✅ Processo finalizado."; \
+	else \
+		echo "✅ Porta 8080 livre."; \
+	fi
 
-# Comando para checar ambiente Windows e orientar instalação do Java e Gradle via Scoop
-check-windows-env:
-	@echo "Verificando Java e Gradle no Windows..."
-	@if ! command -v java > /dev/null 2>&1; then \
-		echo "Java não encontrado! Instale com:"; \
-		echo "  scoop bucket add java"; \
-		echo "  scoop install openjdk21"; \
+status:
+	@echo "📊 Status dos Serviços:"
+	@echo "━━━━━━━━━━━━━━━━━━━━━━"
+	@if $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "✅ Banco: RODANDO"; \
+	else \
+		echo "❌ Banco: PARADO"; \
+	fi
+	@if curl -s http://localhost:8080/actuator/health > /dev/null 2>&1; then \
+		echo "✅ BFF: RODANDO (http://localhost:8080)"; \
+	else \
+		echo "❌ BFF: PARADO"; \
+	fi
+	@echo "━━━━━━━━━━━━━━━━━━━━━━"
+
+# ==============================================================================
+# Funções Helper (privadas)
+# ==============================================================================
+check-db-running:
+	@if ! $(DOCKER_CMD) ps | grep -q "pokedex.*db"; then \
+		echo "❌ Banco não está rodando!"; \
+		echo "💡 Execute 'make db-up' primeiro."; \
 		exit 1; \
-	else \
-		echo "Java encontrado:"; java -version; \
-	fi
-	@if ! command -v gradle > /dev/null 2>&1; then \
-		echo "Gradle não encontrado! Instale com:"; \
-		echo "  scoop install gradle"; \
-		exit 1; \
-	else \
-		echo "Gradle encontrado:"; gradle --version; \
 	fi
 
-dev-setup-for-windows: check-windows-env
-	@echo "--- Iniciando o contêiner do banco de dados PostgreSQL ---"
-	docker compose -f docker\docker-compose.dev.yml up -d db
-	@echo "Aguardando alguns segundos para o banco de dados inicializar..."
-	sleep 5
-	@echo "Banco de dados iniciado. Verifique os logs do contêiner 'pokedex-db'."
-	@echo "--- Iniciando o BFF (profile DEV) e carregando dados JSON no DB ---"
-	gradlew.bat bootRun --args='--spring.profiles.active=dev'
-
-
-# ==============================================================================
-# Limpeza Total
-# ==============================================================================
-
-clean-all: deep-clean-gradle stop-db clean-db
-	@echo "==================================================================="
-	@echo " Todos os contêineres, volumes e builds limpos. "
-	@echo "==================================================================="
-
-force-remove-db-container:
-	@echo "--- Forçando a parada e remoção do contêiner 'pokedex-db' ---"
-	-docker stop pokedex-db || true
-	-docker rm pokedex-db || true
-	@echo "Contêiner 'pokedex-db' removido (se existia). Tente 'make dev-setup' novamente."
-
-deep-clean-gradle:
-	@echo "--- Realizando limpeza profunda do Gradle (incluindo caches) ---"
-	./gradlew clean --refresh-dependencies --no-build-cache
-	rm -rf build .gradle
-	@echo "--- Limpeza profunda do Gradle concluída. ---"

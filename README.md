@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="300" src="doc/icons/bff.png" />
+  <img width="300" src="doc/assets/icons/bff.png" />
 </p>
 <p align="center">
   <img src="https://sonarcloud.io/api/project_badges/measure?project=lucabelezal_pokedex-bff&metric=alert_status" />
@@ -9,32 +9,64 @@
   <img src="https://img.shields.io/badge/license-Apache%202.0-orange" />
 </p>
 
-## 📚 Sumário
+# Pokédex BFF - Backend for Frontend
 
-Aqui estão as seções importantes para explorar o **Pokedex BFF**:
+## 🎯 **Visão Geral**
 
-* 📖 [**Visão Geral**](doc/OVERVIEW.md)  
-  _Contexto geral e objetivos do projeto._
+**Pokédex BFF** é um backend especializado que atua como intermediário entre aplicações frontend e múltiplas fontes de dados de Pokémon. Agora implementado com **DDD + Clean Architecture**, o projeto prioriza:
+- **Alta coesão por contexto de negócio**
+- **Separação clara entre domínio, aplicação, infraestrutura e interfaces**
+- **Baixo acoplamento via abstrações e dependências invertidas**
 
-* 🌐 [**Fontes de Dados**](doc/DATA_SOURCES.md)  
-  _Descrição das origens dos dados utilizados._
+## 📁 **Estrutura do Projeto (DDD + Clean Architecture)**
 
-* 🎨 [**Pokédex / Pokémon App (Design)**](doc/POKEDEX_APP.md)  
-  _Visão de como o front interage com o BFF._
+```
+src/main/kotlin/com/pokedex/bff/
+├── domain/           # Modelagem do negócio (core, sem dependências técnicas)
+│   ├── pokemon/      # Agregado Pokémon: entidades, value objects, serviços, eventos, exceções, repositórios
+│   ├── trainer/      # Agregado Trainer: entidades, value objects, exceções, repositórios
+│   └── shared/       # Value objects e exceções compartilhadas
+├── application/      # Casos de uso, orquestração e contratos de comunicação
+│   ├── usecase/      # Interfaces dos casos de uso (input boundary)
+│   ├── interactor/   # Implementações dos casos de uso (application service)
+│   └── dtos/         # DTOs de entrada/saída
+├── adapters/         # Interface com o mundo externo (entrada e saída)
+│   ├── in/web/       # Controllers REST, DTOs REST, mappers
+│   └── out/          # Persistência, integrações externas, mappers
+├── infrastructure/   # Configuração técnica, wiring, segurança, migrações
+│   ├── config/       # Beans/factories, configs Spring
+│   ├── security/     # Configuração de segurança
+│   └── migration/    # Scripts de migração
+└── tests/            # Testes automatizados (unit, integration, e2e)
+```
 
-* 🗄️ [**Informações do Banco de Dados (PostgreSQL)**](doc/DATABASE.md)  
-  _Modelagem e estrutura da base de dados._
+## 🏗️ **Arquitetura**
 
-* 🧰 [**Tecnologias e Softwares Utilizados**](doc/TECHNOLOGIES.md)  
-  _Kotlin, Spring Boot, PostgreSQL, Swagger, etc._
+O projeto segue rigorosamente os princípios de **Domain-Driven Design (DDD)** e **Clean Architecture**:
+- **Domain**: Núcleo puro do negócio, sem dependências técnicas
+- **Application**: Orquestração de casos de uso, coordenação de entidades do domínio
+- **Adapters**: Ponte entre aplicação/domínio e o mundo externo (REST, persistência, integrações)
+- **Infrastructure**: Configurações técnicas, segurança, migrações
 
-* 🚀 [**Como Começar**](doc/GETTING_STARTED.md)  
-  _Guia de instalação e execução local._
+> Consulte a documentação em `doc/` para detalhes, exemplos e guias de cada camada.
 
-* 📘 [**Documentação da API (Swagger)**](doc/SWAGGER.md)  
-  _Endpoints e contratos REST expostos._
+## 🛠️ **Comandos de Desenvolvimento**
 
-* 🏗️ [**Arquitetura do Sistema**](doc/ARCHITECTURE.md)  
-  _Camadas, responsabilidades e organização._
+```bash
+# Desenvolvimento local
+./gradlew bootRun           # Inicia aplicação
+./gradlew test              # Executa testes
+./gradlew build             # Build completo
+./gradlew bootJar           # Gera JAR executável
+```
 
+## 📚 **Documentação**
+- [Visão Geral](doc/OVERVIEW.md)
+- [Getting Started](doc/GETTING_STARTED.md)
+- [Guia de Estilo](doc/development/STYLE_GUIDE.md)
+- [Arquitetura e Princípios](doc/architecture/COMPONENT_PRINCIPLES.md)
+- [Swagger/API](doc/api/SWAGGER.md)
 
+---
+
+> **Nota:** O projeto foi totalmente refatorado para DDD + Clean Architecture. Consulte os arquivos em `doc/` para exemplos, decisões e guias de migração.
