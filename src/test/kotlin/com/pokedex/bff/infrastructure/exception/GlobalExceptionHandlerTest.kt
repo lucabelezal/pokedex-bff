@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.pokedex.bff.domain.pokemon.exception.InvalidPokemonException
 import com.pokedex.bff.domain.pokemon.exception.PokemonNotFoundException
 import com.pokedex.bff.domain.trainer.exception.TrainerNotFoundException
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.BeforeEach
@@ -37,6 +38,13 @@ class GlobalExceptionHandlerTest {
         return handler
     }
 
+    private fun mismatchedInputException(message: String = "Failed to read JSON"): MismatchedInputException {
+        val mapper = jacksonObjectMapper()
+        val parser = mapper.factory.createParser("{}")
+        val javaType = mapper.constructType(Any::class.java)
+        return MismatchedInputException.from(parser, javaType, message)
+    }
+
     @Nested
     inner class DevelopmentMode {
         private lateinit var devHandler: GlobalExceptionHandler
@@ -48,21 +56,17 @@ class GlobalExceptionHandlerTest {
 
         @Test
         fun `deve incluir detalhes completos em MismatchedInputException no modo dev`() {
-            val exception = mockk<MismatchedInputException>(relaxed = true)
-            every { exception.message } returns "Cannot deserialize value"
-            every { exception.originalMessage } returns "Failed to read JSON"
-            every { exception.path } returns emptyList()
-            every { exception.targetType } returns mockk(relaxed = true)
-            every { exception.stackTrace } returns arrayOf(
+            val exception = mismatchedInputException()
+            exception.stackTrace = arrayOf(
                 StackTraceElement("TestClass", "testMethod", "TestClass.kt", 10)
             )
 
             val response = devHandler.handleMismatchedInput(exception, webRequest)
 
-            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.statusCode)
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
             val body = response.body!!
             assertEquals("DESERIALIZATION_ERROR", body.code)
-            assertTrue(body.message.contains("Failed to read JSON"))
+            assertTrue(body.message.contains("Failed to deserialize JSON"))
             assertNotNull(body.details)
             assertTrue(body.details!!.containsKey("stackTrace"))
         }
@@ -93,17 +97,14 @@ class GlobalExceptionHandlerTest {
 
         @Test
         fun `deve ocultar detalhes em MismatchedInputException no modo prod`() {
-            val exception = mockk<MismatchedInputException>(relaxed = true)
-            every { exception.message } returns "Cannot deserialize value"
-            every { exception.originalMessage } returns "Failed to read JSON"
-            every { exception.path } returns emptyList()
-            every { exception.stackTrace } returns arrayOf(
+            val exception = mismatchedInputException()
+            exception.stackTrace = arrayOf(
                 StackTraceElement("TestClass", "testMethod", "TestClass.kt", 10)
             )
 
             val response = prodHandler.handleMismatchedInput(exception, webRequest)
 
-            assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.statusCode)
+            assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
             val body = response.body!!
             assertEquals("DESERIALIZATION_ERROR", body.code)
             assertEquals("Invalid data format", body.message)
