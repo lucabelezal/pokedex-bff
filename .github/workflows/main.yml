@@ -1,4 +1,4 @@
-name: "Main CI/CD"
+name: "Main CI"
 
 permissions:
   contents: read
@@ -12,28 +12,6 @@ on:
       - 'doc/**'
       - '.gitignore'
       - 'LICENSE'
-  workflow_dispatch:
-    inputs:
-      run_deployment:
-        description: 'Run deployment steps'
-        required: false
-        default: true
-        type: boolean
-      run_sonar:
-        description: 'Run SonarQube analysis'
-        required: false
-        default: true
-        type: boolean
-      version:
-        description: 'Release version (SemVer, e.g. 1.2.3). Tag will be v${version}'
-        required: false
-        default: ''
-        type: string
-      environment:
-        description: 'Deployment environment'
-        required: false
-        default: 'production'
-        type: string
 
 jobs:
   build-and-test:
@@ -88,17 +66,9 @@ jobs:
           ls -lh build/libs/
           echo "📦 Application size: $(du -sh build/libs/*.jar | head -1 | awk '{print $1}')"
 
-      - name: 📦 Upload build artifact (JAR)
-        if: github.event_name == 'push' || inputs.run_deployment
-        uses: actions/upload-artifact@v4
-        with:
-          name: app-jar
-          path: build/libs/*.jar
-          if-no-files-found: error
-
   sonar-analysis:
     needs: build-and-test
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.run_sonar)
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -154,56 +124,3 @@ jobs:
             -Dsonar.projectKey="$SONAR_PROJECT_KEY" \
             -Dsonar.organization="$SONAR_ORGANIZATION" \
             -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml
-
-  deploy:
-    needs: [build-and-test, sonar-analysis]
-    if: always() && github.event_name == 'workflow_dispatch' && inputs.run_deployment && needs.build-and-test.result == 'success' && (needs.sonar-analysis.result == 'success' || needs.sonar-analysis.result == 'skipped')
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: write
-    environment: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
-    steps:
-      - name: 📥 Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: 📥 Download build artifact (JAR)
-        uses: actions/download-artifact@v4
-        with:
-          name: app-jar
-          path: build/libs
-
-      - name: 🏷️ Validate version input
-        env:
-          INPUT_VERSION: ${{ inputs.version }}
-        run: |
-          if [ -z "$INPUT_VERSION" ]; then
-            echo "❌ Missing required input: version (example: 1.2.3)" >&2
-            exit 1
-          fi
-
-          if ! echo "$INPUT_VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'; then
-            echo "❌ Invalid SemVer: $INPUT_VERSION" >&2
-            exit 1
-          fi
-
-          echo "VERSION=$INPUT_VERSION" >> "$GITHUB_ENV"
-          echo "TAG=v$INPUT_VERSION" >> "$GITHUB_ENV"
-
-      - name: 🏷️ Create release tag
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git tag -a "$TAG" -m "Release $TAG"
-          git push origin "$TAG"
-
-      - name: 🚀 Deploy
-        run: |
-          DEPLOY_ENV='${{ inputs.environment || 'production' }}'
-          echo "🚀 Deploying to $DEPLOY_ENV environment..."
-          echo "📦 Artifact: $(ls build/libs/*.jar | head -1)"
-          echo "🏷️ Version: ${VERSION}"
-          # Adicionar aqui os passos específicos de deploy
-          echo "✅ Deployment completed successfully!"

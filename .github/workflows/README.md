@@ -6,8 +6,9 @@ Para documentação completa dos workflows CI/CD, consulte:
 
 ## ✅ Workflows Ativos
 
-- **feature.yml**: Feature CI — acionado em Pull Requests; roda lint, testes, build e Sonar.
-- **main.yml**: Main CI/CD — acionado em push na `main` e também disponível como `workflow_dispatch`; roda testes, Sonar e deployment.
+- **feature.yml**: Feature CI — acionado em Pull Requests e pushes em branches de desenvolvimento; roda lint, testes, build e Sonar.
+- **main.yml**: Main CI — acionado em push na `main`; roda lint, testes, build, Codecov e Sonar.
+- **deploy.yml**: Deploy — acionado manualmente (`workflow_dispatch`); cria tag `vX.Y.Z` (bump automático ou versão informada) e executa o deploy.
 
 ## 🔐 Variáveis e Secrets
 
@@ -16,13 +17,13 @@ Para documentação completa dos workflows CI/CD, consulte:
 ## 📋 Links Rápidos
 
 - **[Guia de Uso](../../doc/ci/README.md)**: Documentação completa dos workflows
-- **[Script de Validação](../../doc/ci/validate-workflows.sh)**: Ferramenta de validação
+- **[Script de Validação](../../scripts/ci/validate-workflows.sh)**: Ferramenta de validação
 
 ## 🔧 Validação Rápida
 
 ```bash
 # Executar validação dos workflows
-./doc/ci/validate-workflows.sh
+./scripts/ci/validate-workflows.sh
 ```
 
 ---
