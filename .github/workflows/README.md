@@ -11,8 +11,7 @@ Para documentação completa dos workflows CI/CD, consulte:
 
 ## 🔐 Variáveis e Secrets
 
-- **Secrets**: `SONAR_TOKEN`
-- **Variables (vars)**: `SONAR_PROJECT_KEY`, `SONAR_ORGANIZATION`, `CODECOV_TOKEN`
+- **Secrets**: `SONAR_TOKEN`, `SONAR_PROJECT_KEY`, `SONAR_ORGANIZATION`, `CODECOV_TOKEN`
 
 ## 📋 Links Rápidos
 
