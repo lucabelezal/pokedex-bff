@@ -6,10 +6,10 @@ Para documentação completa dos workflows CI/CD, consulte:
 
 ## ✅ Workflows Ativos
 
-- **1-feature.yml**: CI para PRs em `main` (lint + testes + build via `shared-ci.yml`)
-- **2-main.yml**: CI/CD para `main` (testes + sonar + deploy + tag via `shared-ci.yml`)
-- **3-sonar.yml**: análise Sonar sob demanda e agendada
-- **shared-ci.yml**: workflow reutilizável chamado por `1-feature.yml` e `2-main.yml`
+- **feature.yml**: Feature CI — acionado em Pull Requests para branches de feature; roda lint, testes, build e Sonar via `shared-ci.yml`.
+- **main.yml**: Main CI/CD — acionado em push na `main` e também disponível como `workflow_dispatch`; roda testes, Sonar e deployment via `shared-ci.yml`.
+- **lint.yml**: Lint — checagens de ktlint/detekt (roda em PRs e em pushes para branches de desenvolvimento conforme política do time).
+- **shared-ci.yml**: Shared CI Workflow — job reutilizável com build, teste, Sonar e etapas de deploy; consumido por `feature.yml` e `main.yml`.
 
 ## 🔐 Variáveis e Secrets
 
