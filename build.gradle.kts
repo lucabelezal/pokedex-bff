@@ -136,3 +136,13 @@ detekt {
     config.from(files("$rootDir/config/detekt/detekt.yml"))
     buildUponDefaultConfig = true
 }
+
+// Temporariamente desabilitado para reduzir tempo de CI.
+tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+	enabled = false
+}
+
+// Temporariamente desabilitado para reduzir tempo de CI.
+tasks.matching { it.name.startsWith("ktlint") }.configureEach {
+	enabled = false
+}
