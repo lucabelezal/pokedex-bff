@@ -11,6 +11,8 @@ import org.springframework.security.web.SecurityFilterChain
 class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        // CSRF desabilitado porque este BFF é uma API stateless (sem sessão/cookies).
+        // Para endpoints com autenticação baseada em token, o risco de CSRF não se aplica.
         http.csrf { it.disable() }
             .authorizeHttpRequests { it.anyRequest().permitAll() }
             .httpBasic { it.disable() }

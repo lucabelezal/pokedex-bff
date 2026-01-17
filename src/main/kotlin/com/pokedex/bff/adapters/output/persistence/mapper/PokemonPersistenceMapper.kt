@@ -56,7 +56,7 @@ class PokemonPersistenceMapper {
             eggCycles = entity.eggCycles,
             stats = entity.stats?.let {
                 Stats(
-                    id = 0L, // Stats não tem ID próprio quando embedded
+                    id = entity.id,
                     total = it.total,
                     hp = it.hp,
                     attack = it.attack,

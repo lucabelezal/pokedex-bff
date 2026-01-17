@@ -26,7 +26,11 @@ class SpritesJsonConverter : AttributeConverter<Sprites?, String?> {
                 val dto = objectMapper.readValue<SpritesDTO>(it)
                 dto.toDomain()
             } catch (e: Exception) {
-                logger.error("Error deserializing sprites from JSON: ${e.message}", e)
+                val jsonPreview = it.take(500)
+                logger.error(
+                    "Error deserializing sprites from JSON: ${e.message}. payloadPreview=${jsonPreview}",
+                    e
+                )
                 null
             }
         }

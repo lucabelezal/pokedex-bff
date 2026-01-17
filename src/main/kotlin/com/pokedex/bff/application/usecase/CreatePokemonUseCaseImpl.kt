@@ -27,7 +27,8 @@ class CreatePokemonUseCaseImpl(
             throw InvalidPokemonException("Pokemon name cannot be blank")
         }
         
-        // ID será gerado automaticamente pelo banco de dados (@GeneratedValue)
+        // ID será gerado automaticamente pelo banco de dados (@GeneratedValue).
+        // Usamos 0L como placeholder porque o JPA substitui pelo ID gerado no save.
         val newId = 0L
         
         // Criar Pokémon com dados básicos
