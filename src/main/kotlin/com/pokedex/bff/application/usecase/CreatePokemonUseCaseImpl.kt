@@ -9,7 +9,6 @@ import com.pokedex.bff.domain.pokemon.entities.Type
 import com.pokedex.bff.domain.pokemon.entities.Stats
 import com.pokedex.bff.domain.pokemon.entities.Sprites
 import com.pokedex.bff.domain.pokemon.exception.InvalidPokemonException
-import com.pokedex.bff.domain.shared.Page
 import org.slf4j.LoggerFactory
 import kotlin.random.Random
 
@@ -88,8 +87,4 @@ class CreatePokemonUseCaseImpl(
         return PokemonOutput.fromDomain(savedPokemon)
     }
 
-    override fun findAll(page: Int, size: Int): Page<Pokemon> {
-        logger.debug("Fetching pokemons - page: {}, size: {}", page, size)
-        return pokemonRepository.findAll(page, size)
-    }
 }
