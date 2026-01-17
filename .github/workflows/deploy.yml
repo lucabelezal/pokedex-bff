@@ -63,9 +63,6 @@ jobs:
         run: |
           set -euo pipefail
 
-          # inputs.bump pode vir com "label" (ex.: "patch 1.Y.0")
-          bump_type="${BUMP%% *}"
-
           semver_re='^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$'
 
           if [ -n "$INPUT_VERSION" ]; then
@@ -83,11 +80,11 @@ jobs:
             fi
 
             IFS='.' read -r major minor patch <<<"$base"
-            case "$bump_type" in
+            case "$BUMP" in
               major) major=$((major+1)); minor=0; patch=0;;
               minor) minor=$((minor+1)); patch=0;;
               patch|"") patch=$((patch+1));;
-              *) echo "❌ Unknown bump type: $bump_type (raw: $BUMP)" >&2; exit 1;;
+              *) echo "❌ Unknown bump type: $BUMP" >&2; exit 1;;
             esac
             version="$major.$minor.$patch"
           fi
