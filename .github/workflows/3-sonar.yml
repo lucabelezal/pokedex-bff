@@ -1,4 +1,4 @@
-name: "3 - SonarQube Analysis"
+name: "SonarQube Analysis"
 
 on:
   # Workflow dispatch manual para análises específicas

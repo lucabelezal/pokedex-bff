@@ -1,4 +1,4 @@
-name: "No CI for Push on Non-Main Branches"
+name: "Skip CI on Non-Main Pushes"
 
 on:
   push:

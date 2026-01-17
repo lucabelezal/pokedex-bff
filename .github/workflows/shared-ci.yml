@@ -1,4 +1,4 @@
-name: "Shared CI/CD Workflow"
+name: "Shared CI Workflow"
 
 on:
   workflow_call:

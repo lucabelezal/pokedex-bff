@@ -1,4 +1,4 @@
-name: "Reusable Workflow"
+name: "Reusable: CI Steps"
 
 on:
   workflow_call:
