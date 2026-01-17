@@ -14,7 +14,7 @@ jobs:
   ci:
     uses: ./.github/workflows/shared-ci.yml
     with:
-      run-sonar: true
+      run-sonar: ${{ secrets.SONAR_TOKEN != '' }}
       run-deployment: false
       environment: 'development'
     secrets:

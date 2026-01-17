@@ -30,7 +30,7 @@ jobs:
   cicd:
     uses: ./.github/workflows/shared-ci.yml
     with:
-      run-sonar: ${{ github.event_name == 'push' || github.event.inputs.run-sonar == 'true' }}
+      run-sonar: ${{ (github.event_name == 'push' || github.event.inputs.run-sonar == 'true') && secrets.SONAR_TOKEN != '' }}
       run-deployment: ${{ github.event_name == 'push' || github.event.inputs.run-deployment == 'true' }}
       environment: ${{ github.event.inputs.environment || 'production' }}
     secrets:
