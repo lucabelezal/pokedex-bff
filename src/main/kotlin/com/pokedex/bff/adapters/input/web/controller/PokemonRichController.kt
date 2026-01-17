@@ -3,6 +3,8 @@ package com.pokedex.bff.adapters.input.web.controller
 import com.pokedex.bff.adapters.input.web.dto.response.PokemonRichPageResponse
 import com.pokedex.bff.adapters.input.web.mapper.PokemonRichWebMapper
 import com.pokedex.bff.application.port.input.CreatePokemonUseCase
+import jakarta.validation.constraints.Max
+import jakarta.validation.constraints.Min
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -16,8 +18,8 @@ class PokemonRichController(
 ) {
     @GetMapping
     fun list(
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "10") size: Int
+        @RequestParam(defaultValue = "0") @Min(0) page: Int,
+        @RequestParam(defaultValue = "10") @Min(1) @Max(100) size: Int
     ): PokemonRichPageResponse {
         val pageSize = size.coerceAtMost(100)
         val pageResult = createPokemonUseCase.findAll(page, pageSize)
