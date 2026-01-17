@@ -87,7 +87,7 @@ jobs:
   # Job 2: SonarQube Analysis (condicional)
   sonar-analysis:
     needs: build-and-test
-    if: inputs.run-sonar && env.SONAR_TOKEN != ''
+    if: inputs.run-sonar && (secrets.SONAR_TOKEN || '') != ''
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
