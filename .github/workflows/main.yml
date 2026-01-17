@@ -8,15 +8,32 @@ on:
       - 'doc/**'
       - '.gitignore'
       - 'LICENSE'
+  workflow_dispatch:
+    inputs:
+      run-deployment:
+        description: 'Run deployment steps'
+        required: false
+        default: 'true'
+        type: boolean
+      run-sonar:
+        description: 'Run SonarQube analysis'
+        required: false
+        default: 'true'
+        type: boolean
+      environment:
+        description: 'Deployment environment'
+        required: false
+        default: 'production'
+        type: string
 
 jobs:
   # Job principal que usa o workflow compartilhado
   cicd:
     uses: ./.github/workflows/shared-ci.yml
     with:
-      run-sonar: true
-      run-deployment: true
-      environment: 'production'
+      run-sonar: ${{ github.event.inputs.run-sonar == 'true' || true && (github.event_name == 'push' && true) }}
+      run-deployment: ${{ github.event.inputs.run-deployment == 'true' || true && (github.event_name == 'push' && true) }}
+      environment: ${{ github.event.inputs.environment || 'production' }}
     secrets:
       SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
